@@ -45,6 +45,6 @@ let data = {
 # Explanation: 
 There are two fields inside the data object, users and quizzes.
 
-Inside the users object, there is the id, name(split into first and last), email, successful logins and finally failed logins.
+Inside the users object, there is the id, name(split into first and last), email, successful logins, failed logins and finally the password.
 
 Inside the quizzes object, there is the id, name, creation date, last edited and description.
