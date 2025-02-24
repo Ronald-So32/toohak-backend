@@ -21,6 +21,8 @@ We will mainly use WhatsApp to communicate with each other and use Teams for the
 
 4. What is a reasonable response time for messages/posts when communicating?
 
+The best case scenario is within the same day however if that is not possible within 48 hours is ok.
+
 3. How will we handle conflicts (i.e. differing opinions)? Note: If conflicts cannot resolved this way, please contact your tutor.
 
 4. List the steps a team member does if they get stuck (e.g. stuck debugging).
