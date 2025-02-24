@@ -25,3 +25,7 @@ function adminUserDetails(userId) {
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return {};
 }
+
+function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
+    return {};
+}
