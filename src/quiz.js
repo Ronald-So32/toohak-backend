@@ -5,5 +5,5 @@ function adminQuizList(userId) {
           name: 'My Quiz',
         }
       ]
-    }
+    };
 }
