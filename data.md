@@ -10,6 +10,7 @@ let data = {
             email: 'hayden.smith@unsw.edu.au',
             numSuccessfulLogins: 3,
             numFailedPasswordsSinceLastLogin: 1,
+            password: '123456',
         },
         {
             userId: 2,
@@ -18,6 +19,7 @@ let data = {
             email: 'someone@unsw.edu.au',
             numSuccessfulLogins: 7,
             numFailedPasswordsSinceLastLogin: 0,
+            password: 'qwerty',
         },
     ]
     
