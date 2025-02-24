@@ -7,3 +7,9 @@ function adminQuizList(userId) {
       ]
     };
 }
+
+function adminQuizCreate(userId, name, description) {
+    return {
+        quizId: 2
+    };
+}
