@@ -13,3 +13,8 @@ function adminQuizCreate(userId, name, description) {
         quizId: 2
     };
 }
+
+
+function adminQuizRemove( userId, quizId ) {
+  return {}
+}
