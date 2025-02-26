@@ -16,5 +16,5 @@ function adminQuizCreate(userId, name, description) {
 
 
 function adminQuizRemove( userId, quizId ) {
-  return {}
+  return {};
 }
