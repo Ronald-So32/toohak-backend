@@ -5,7 +5,7 @@ Group:
 | z5585131 | Weiming |
 | z5611727 | Justin  |
 | z5635714 | Sagar   |
-|          |         |
+| z5601318 | Ronald  |
 
 1. When and where will we schedule meetings (e.g. 11am Wednesdays and 2pm Fridays: in-person at X location, on Teams video call, on Discord)?
 
