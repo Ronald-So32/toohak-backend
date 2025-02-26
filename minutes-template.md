@@ -59,11 +59,10 @@ Please note this is a a guide/template which you do not need to use.
 | Attendees | Brian, Justin, Ronald, Sagar, Weiming |
 
 ### Agenda
-| Item      | Discussion/decision |
-| --------  | ------------------- |
-| Format    |                     |
-|           |                     |
-|           |                     |
+| Item      | Discussion/decision                             |
+| --------  | ----------------------------------------------- |
+| Format    | Just remembering the format and making it clear |
+| Git       | Learning how to use git                         |
 
 ### Action Items/reminders
 - [ ] Finish off the function stubs
