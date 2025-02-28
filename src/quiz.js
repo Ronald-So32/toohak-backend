@@ -29,7 +29,7 @@ function adminQuizInfo(userId, quizId) {
 }
 
 function adminQuizNameUpdate(userId, quizId, name) {
-    {
+    return {
 
     };
 }
