@@ -3,7 +3,7 @@
   * 
   * @param {void} - No parameters
   * 
-  * @returns {object} - Always return an empty object
+  * @returns {Object} - Always return an empty object
 */
 function clear() {
   return {};
