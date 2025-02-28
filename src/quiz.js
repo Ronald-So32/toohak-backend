@@ -27,3 +27,9 @@ function adminQuizInfo(userId, quizId) {
         description: 'This is my quiz',
     };
 }
+
+function adminQuizNameUpdate(userId, quizId, name) {
+    return {
+
+    };
+}
