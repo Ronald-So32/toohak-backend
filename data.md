@@ -1,7 +1,5 @@
 ```javascript
 let data = {
-    // TODO: insert your data structure that contains 
-    // users + quizzes here
     users: [
         {
             userId: 1,
@@ -30,6 +28,8 @@ let data = {
             timeCreated: 1683125870,
             timeLastEdited: 1683125871,
             description: 'This is my quiz',
+            createdBy: 1,
+            
         },
         {
             quizId: 2,
@@ -37,6 +37,7 @@ let data = {
             timeCreated: 1123145270,
             timeLastEdited: 1783128871,
             description: 'This is my quiz 2',
+            createdBy: 2,
         },
     ]
 }
@@ -47,4 +48,4 @@ There are two fields inside the data object, users and quizzes.
 
 Inside the users object, there is the id, name(split into first and last), email, successful logins, failed logins and finally the password.
 
-Inside the quizzes object, there is the id, name, creation date, last edited and description.
+Inside the quizzes object, there is the id, name, creation date, last edited, description and the id of the user that created the quiz.
