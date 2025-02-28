@@ -29,7 +29,9 @@ function adminQuizInfo(userId, quizId) {
 }
 
 function adminQuizNameUpdate(userId, quizId, name) {
-    return {
+    return {};
+}
 
-    };
+function adminQuizDescriptionUpdate (userId, quizId, description) {
+    return {};
 }
