@@ -14,7 +14,16 @@ function adminQuizCreate(userId, name, description) {
     };
 }
 
+function adminQuizRemove(userId, quizId) {
+    return {};
+}
 
-function adminQuizRemove( userId, quizId ) {
-  return {};
+function adminQuizInfo(userId, quizId) {
+    return {
+        quizId: 1,
+        name: 'My Quiz',
+        timeCreated: 1683125870,
+        timeLastEdited: 1683125871,
+        description: 'This is my quiz',
+    };
 }
