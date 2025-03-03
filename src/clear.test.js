@@ -34,8 +34,8 @@ describe('clear', () => {
     });
     
     // Verify data exists before clearing
-    expect(dataStore.users.length).toBe(1);
-    expect(dataStore.quizzes.length).toBe(1);
+    expect(dataStore.users.length).toEqual(1);
+    expect(dataStore.quizzes.length).toEqual(1);
     
     // Call clear function
     clear();
