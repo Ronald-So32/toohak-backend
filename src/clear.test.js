@@ -34,8 +34,24 @@ describe('clear', () => {
     });
     
     // Verify data exists before clearing
-    expect(dataStore.users.length).toEqual(1);
-    expect(dataStore.quizzes.length).toEqual(1);
+    expect(dataStore.users).toEqual([{
+      userId: 1,
+      nameFirst: 'Test',
+      nameLast: 'User',
+      email: 'test@example.com',
+      numSuccessfulLogins: 1,
+      numFailedPasswordsSinceLastLogin: 0,
+      password: 'password123',
+    }]);
+
+    expect(dataStore.quizzes).toEqual([{
+      quizId: 1,
+      name: 'Test Quiz',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Test Description',
+      createdBy: 1,
+    }]);
     
     // Call clear function
     clear();
