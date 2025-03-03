@@ -1,5 +1,47 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
-let data = {};
+let data = {
+  users: [
+    {
+        userId: 1,
+        nameFirst: 'Hayden',
+        nameLast: 'Smith',
+        email: 'hayden.smith@unsw.edu.au',
+        numSuccessfulLogins: 3,
+        numFailedPasswordsSinceLastLogin: 1,
+        password: '123456',
+    },
+    {
+        userId: 2,
+        nameFirst: 'Some',
+        nameLast: 'One',
+        email: 'someone@unsw.edu.au',
+        numSuccessfulLogins: 7,
+        numFailedPasswordsSinceLastLogin: 0,
+        password: 'qwerty',
+    },
+  ],
+
+  quizzes: [
+      {
+          quizId: 1,
+          name: 'My Quiz',
+          timeCreated: 1683125870,
+          timeLastEdited: 1683125871,
+          description: 'This is my quiz',
+          createdBy: 1,
+          
+      },
+      {
+          quizId: 2,
+          name: 'My Quiz2',
+          timeCreated: 1123145270,
+          timeLastEdited: 1783128871,
+          description: 'This is my quiz 2',
+          createdBy: 2,
+      },
+  ]
+
+};
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
 
