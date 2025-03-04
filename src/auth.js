@@ -1,3 +1,5 @@
+import { getData } from './dataStore.js';
+
 /**
  * A instance of this object:
  * {
@@ -43,10 +45,40 @@
  * @returns {userId} - Always return UserId object
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
+  let data = getData();
+
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    let id = Math.floor(Math.random() * 727727);
+    unique = true;
+
+    for (let user of data.users) {
+      if (user.userId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+  }
+
+  data.users.push({
+    userId: id,
+    nameFirst: nameFirst,
+    nameLast: nameLast,
+    email: email,
+    numSuccessfulLogins: 1,
+    numFailedPasswordsSinceLastLogin: 0,
+    password: password,
+  });
+  
   return {
-    userId: 1
+    userId: id
   };
 }
+
+export { adminAuthRegister };
 
 /**
  * Given a registered user's email and password, return their userId value.
