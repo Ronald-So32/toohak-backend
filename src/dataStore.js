@@ -1,27 +1,8 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
 let data = {
-  users: [
-    {
-      userId,
-      nameFirst,
-      nameLast,
-      email,
-      numSuccessfulLogins,
-      numFailedPasswordsSinceLastLogin,
-      password,
-    },
-  ],
+  users: [],
 
-  quizzes: [
-      {
-        quizId,
-        name,
-        timeCreated,
-        timeLastEdited,
-        description,
-        createdBy,
-      },
-  ]
+  quizzes: []
 
 };
 

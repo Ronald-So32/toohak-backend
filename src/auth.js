@@ -52,6 +52,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
   while (!unique) {
     let id = Math.floor(Math.random() * 727727);
+    unique = true;
 
     for (let user of data.users) {
       if (user.userId === id) {
