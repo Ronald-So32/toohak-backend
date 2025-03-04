@@ -5,7 +5,7 @@ describe('Test correct return types', () => {
   test('Test if the return is an object', () => {
     clear();
     adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-    let result = adminauthlogin('email@email.com', 'Password1');
+    let result = adminAuthLogin('email@email.com', 'Password1');
 
     // Check if the return value is an object and is not a null
     expect(typeof result).toBe('object');
@@ -15,7 +15,7 @@ describe('Test correct return types', () => {
    test('Test if the return object has a userId', () => {
     clear();
     adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-    let result = adminauthlogin('email@email.com', 'Password1');
+    let result = adminAuthLogin('email@email.com', 'Password1');
 
     // Check if the object has a field of userId and contains a number, also has to be not a null
     expect(typeof result).toEqual({
@@ -32,7 +32,7 @@ describe('Test error cases', () => {
     test('Email exists', () => {
       clear();
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminauthlogin('email@email.com', 'Password1');
+      let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
       expect(typeof result).toEqual({
@@ -45,7 +45,7 @@ describe('Test error cases', () => {
     test('Email doesn\'t exist', () => {
       clear();
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminauthlogin('email@email.com', 'Password1');
+      let result = adminAuthLogin('emailw@email.com', 'Password1');
         
       expect(result).toMatchObject({ error: expect.any(String) });
 
@@ -57,7 +57,7 @@ describe('Test error cases', () => {
     test('Password is correct', () => {
       clear();
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminauthlogin('email@email.com', 'Password1');
+      let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
       expect(typeof result).toEqual({
@@ -70,7 +70,7 @@ describe('Test error cases', () => {
     test('Password is incorrect', () => {
       clear();
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminauthlogin('email@email.com', 'Password2');
+      let result = adminAuthLogin('email@email.com', 'Password2');
         
       expect(result).toMatchObject({ error: expect.any(String) });
 
@@ -86,7 +86,7 @@ describe('Check normal usage cases', () => {
   test('Normal case 1', () => {
       clear();
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminauthlogin('email@email.com', 'Password1');
+      let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
       expect(typeof result).toEqual({
