@@ -1,4 +1,4 @@
-import { clear } from './clear';
+import { clear } from './other';
 import { getData } from './dataStore';
 // Only clearing dataStore for now
 
