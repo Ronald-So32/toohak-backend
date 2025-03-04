@@ -1,5 +1,7 @@
 import { adminAuthRegister} from './auth.js';
 
+import validator from 'validator';
+
 describe('Check correct return types', () => {
   test('Check if the return is an object', () => {
     let result = adminAuthRegister('z1111@ad.unsw.edu.au', '123', 'first', 'last');
