@@ -12,18 +12,18 @@ Interview Questions:
 11. What other features would you like implemented?
 
 
-Name:
-1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.
-9.
-10.
-11.
+Name: Henry Wu
+1. 4 years ago
+2. Short answers
+3. Yes I think they would add more variety
+4. That sounds like fun
+5. Yes
+6. I wouldnt mind it but preferably no
+7. No
+8. I think it would be fun
+9. No
+10. No
+11. No
 Other Questions:
 Question) Answer
 
