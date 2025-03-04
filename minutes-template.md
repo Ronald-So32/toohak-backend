@@ -69,3 +69,24 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * 
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 3                                     |
+| --------  | ------------------------------------- |
+| Date/time | 03/03 09:30                           |
+|   Week    | 3                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item            | Discussion/decision                                  |
+| --------        | ---------------------------------------------------- |
+| Iteration 1     | Went through the entire project description together |
+| Assigning tasks | Discussed who is doing what                          |
+
+### Action Items/reminders
+- [ ] Implement the test cases
+- [ ] Implement the actual functions
+
+### Questions for tutor
+* 
