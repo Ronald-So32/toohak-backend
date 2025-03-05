@@ -22,7 +22,7 @@ describe('Test correct return types', () => {
     expect(result).not.toBeNull();
   });
 
-)};
+});
 
 
 describe('Test error cases', () => {
@@ -458,7 +458,7 @@ describe('Test error cases', () => {
 
   });
 
-)};
+});
 
 
 // All of these should be valid
@@ -475,7 +475,7 @@ describe('Check normal usage cases', () => {
         
   });
 
-)};
+});
 
 
 describe('Random normal test cases', () => {
@@ -483,5 +483,5 @@ describe('Random normal test cases', () => {
 
   });*/
   // TODO: add some random test cases after implementation
-)};
+});
 

@@ -1,5 +1,7 @@
 import { getData } from './dataStore.js';
 
+import validator from 'validator';
+
 /**
  * A instance of this object:
  * {
@@ -46,6 +48,12 @@ import { getData } from './dataStore.js';
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   let data = getData();
+
+  if (!(validator.isEmail(email))) {
+    return { error: 'Email is not valid' };
+  }
+
+
 
   let id;
   let unique = false;
