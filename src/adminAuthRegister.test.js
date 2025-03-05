@@ -16,13 +16,13 @@ describe('Test correct return types', () => {
     let result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 
     // Check if the object has a field of userId and contains a number, also has to be not a null
-    expect(typeof result).toEqual({
+    expect(result).toEqual({
       userId: expect.any(Number)
     });
     expect(result).not.toBeNull();
   });
 
-)};
+});
 
 
 describe('Test error cases', () => {
@@ -34,12 +34,13 @@ describe('Test error cases', () => {
 
       // First one should be valid
       expect(typeof result1).toBe('object');
-      expect(typeof result1).toEqual({
+      expect(result1).toEqual({
         userId: expect.any(Number)
       });
       expect(result1).not.toBeNull();
         
       expect(result2).toMatchObject({ error: expect.any(String) });
+
     });
 
     test('Email is not used', () => {
@@ -49,13 +50,13 @@ describe('Test error cases', () => {
 
       // Both should be valid
       expect(typeof result1).toBe('object');
-      expect(typeof result1).toEqual({
+      expect(result1).toEqual({
         userId: expect.any(Number)
       });
       expect(result1).not.toBeNull();
 
       expect(typeof result2).toBe('object');
-      expect(typeof result2).toEqual({
+      expect(result2).toEqual({
         userId: expect.any(Number)
       });
       expect(result2).not.toBeNull();
@@ -70,7 +71,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -89,7 +90,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('user.name+some+thing@example.com', 'Password1', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -109,7 +110,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('user@sub.domain.com', 'Password1', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -140,7 +141,7 @@ describe('Test error cases', () => {
 
       // Lowercase letters are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -161,7 +162,7 @@ describe('Test error cases', () => {
 
       // Uppercase letters are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -182,7 +183,7 @@ describe('Test error cases', () => {
 
       // Hyphens are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -203,7 +204,7 @@ describe('Test error cases', () => {
 
       // Spaces are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -216,7 +217,7 @@ describe('Test error cases', () => {
 
       // Apostrophes are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -229,7 +230,7 @@ describe('Test error cases', () => {
       
       // Combination of valid characters
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -261,7 +262,7 @@ describe('Test error cases', () => {
 
       // Lowercase letters are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -282,7 +283,7 @@ describe('Test error cases', () => {
 
       // Uppercase letters are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -304,7 +305,7 @@ describe('Test error cases', () => {
 
       // Hyphens are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -325,7 +326,7 @@ describe('Test error cases', () => {
 
       // Spaces are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -338,7 +339,7 @@ describe('Test error cases', () => {
 
       // Apostrophes are legal
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -351,7 +352,7 @@ describe('Test error cases', () => {
 
       // Combination of valid characters
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -382,7 +383,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -403,7 +404,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('email@email.com', 'Testing123', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -424,7 +425,7 @@ describe('Test error cases', () => {
       let result = adminAuthRegister('email@email.com', 'qweerty727@#', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -458,7 +459,7 @@ describe('Test error cases', () => {
 
   });
 
-)};
+});
 
 
 // All of these should be valid
@@ -468,14 +469,14 @@ describe('Check normal usage cases', () => {
       let result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
         
   });
 
-)};
+});
 
 
 describe('Random normal test cases', () => {
@@ -483,5 +484,5 @@ describe('Random normal test cases', () => {
 
   });*/
   // TODO: add some random test cases after implementation
-)};
+});
 
