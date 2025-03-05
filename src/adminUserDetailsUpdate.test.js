@@ -39,16 +39,16 @@ describe('Test error cases', () => {
   describe('Test validity of emails', () => {
 
     test('Invalid email - Email already in use', () => {
-      id2 = adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last').userId;
+      let id2 = adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last').userId;
       let result1 = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Last');
 
-      expect(typeof result).toBe('object');
-      expect(result).toEqual({});
-      expect(result).not.toBeNull();
+      expect(typeof result1).toBe('object');
+      expect(result1).toEqual({});
+      expect(result1).not.toBeNull();
 
       let result2 = adminUserDetailsUpdate(id, 'email2@email.com', 'First', 'Last');
 
-      expect(result1).toMatchObject({ error: expect.any(String) });
+      expect(result2).toMatchObject({ error: expect.any(String) });
     })
 
     test.each([
@@ -75,8 +75,8 @@ describe('Test error cases', () => {
     test.each([
       { email: 'email@email.com', nameFirst: 'Fir st', nameLast: 'Last' },
       { email: 'email@email.com', nameFirst: 'Fir\'st', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'Fi _\'St', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'F i _\'S t', nameLast: 'Last' },
+      { email: 'email@email.com', nameFirst: 'Fi -\'St', nameLast: 'Last' },
+      { email: 'email@email.com', nameFirst: 'F i -\'S t', nameLast: 'Last' },
     ])('Valid first name (containing valid characters) - %s', ({email, nameFirst, nameLast}) => {
       let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
       
@@ -122,14 +122,14 @@ describe('Test error cases', () => {
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'Last123' },
     ])('Invalid last name (containing invalid characters) - %s', ({email, nameFirst, nameLast}) => {
       let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      expect(result).toEqual({ error: expect.any(String) });
+      expect(result).toMatchObject({ error: expect.any(String) });
     })
 
     test.each([
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La st' },
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La\'st' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La_\'St' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'L a_\'S t' },
+      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La-\'St' },
+      { email: 'email@email.com', nameFirst: 'First', nameLast: 'L a-\'S t' },
     ])('Valid last name (containing valid characters) - %s', ({email, nameFirst, nameLast}) => {
       let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
       
