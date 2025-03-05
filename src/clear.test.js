@@ -1,5 +1,6 @@
-import { clear } from './clear';
-import { getData } from './dataStore';
+import { clear } from './other.js';
+import { getData } from './dataStore.js';
+
 // Only clearing dataStore for now
 
 describe('clear', () => {
