@@ -1,5 +1,29 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
-let data = {};
+let data = {
+  users: [
+    {
+      userId,
+      nameFirst,
+      nameLast,
+      email,
+      numSuccessfulLogins,
+      numFailedPasswordsSinceLastLogin,
+      password,
+    },
+  ],
+
+  quizzes: [
+      {
+        quizId,
+        name,
+        timeCreated,
+        timeLastEdited,
+        description,
+        createdBy,
+      },
+  ]
+
+};
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
 
