@@ -24,7 +24,7 @@ describe('Test correct return types', () => {
     expect(result).not.toBeNull();
   });
 
-)};
+});
 
 
 describe('Test error cases', () => {
@@ -96,7 +96,7 @@ describe('Check normal usage cases', () => {
         
   });
 
-)};
+});
 
 
 
