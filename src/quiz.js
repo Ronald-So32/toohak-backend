@@ -1,3 +1,5 @@
+import { getData } from './dataStore.js';
+
 /**
  * A instance of this object:
  * {
@@ -71,10 +73,79 @@ function adminQuizList(userId) {
   * @returns {quizId} - Always return quizId object
 */
 function adminQuizCreate(userId, name, description) {
-    return {
-        quizId: 2
-    };
+  let data = getData();
+
+  let validUserId = false;
+
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      validUserId = true;
+    }
+  }
+
+  if (validUserId === false) {;
+    return { error: 'UserId does not exist' };
+  }
+
+  if (name === null) {
+    return { error: 'A name is required'};
+  }
+
+  if (name.match(/[^\w\-\s]/) != null) {
+    return { error: 'Quiz name contains special characters' };
+  }
+
+  if (name.length < 3) {
+    return { error: 'Quiz name is lesser than 3' };
+  }
+  
+  if (name.length > 30) {
+    return { error: 'Quiz name is greater than 30'} ;
+  }
+
+  for (const quiz of data.quizzes) {
+    if (quiz.name === name && quiz.createdBy === userId) {
+      return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
+    }
+  }
+
+  if (description.length > 100) {
+    return { error: 'Quiz description is more than 100 characters'};
+  }
+
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    id = Math.floor(Math.random() * 999999);
+    unique = true;
+
+    for (let quiz of data.quizzes) {
+      if (quiz.quizId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+  }
+
+  const timeStamp = Math.floor(Date.now() / 1000)
+
+  data.quizzes.push({
+    quizId: id,
+    name: name,
+    timeCreated: timeStamp,
+    timeLastEdited: timeStamp,
+    description: description,
+    createdBy: userId,
+  })
+
+  return {
+    quizId: id
+  };
 }
+
+export { adminQuizCreate };
 
 /**
   * Given a particular quiz, permanently remove the quiz.
