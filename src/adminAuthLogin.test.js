@@ -18,7 +18,7 @@ describe('Test correct return types', () => {
     let result = adminAuthLogin('email@email.com', 'Password1');
 
     // Check if the object has a field of userId and contains a number, also has to be not a null
-    expect(typeof result).toEqual({
+    expect(result).toEqual({
       userId: expect.any(Number)
     });
     expect(result).not.toBeNull();
@@ -35,7 +35,7 @@ describe('Test error cases', () => {
       let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -60,7 +60,7 @@ describe('Test error cases', () => {
       let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
@@ -89,7 +89,7 @@ describe('Check normal usage cases', () => {
       let result = adminAuthLogin('email@email.com', 'Password1');
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: expect.any(Number)
       });
       expect(result).not.toBeNull();
