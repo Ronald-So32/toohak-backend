@@ -243,7 +243,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
-  if (nameFirst.match(/[^\w\-\s\'\_]/) !== null) {
+  if (nameFirst.match(/[^a-z\-\s\'\-]/i) !== null) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 
@@ -255,7 +255,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'First name is longer than 20 characters' };
   }
 
-  if (nameLast.match(/[^\w\-\s\'\_]/) !== null) {
+  if (nameLast.match(/[^a-z\-\s\'\-]/i) !== null) {
     return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 
