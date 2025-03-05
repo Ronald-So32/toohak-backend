@@ -44,18 +44,18 @@ Question) Answer
 
 
 
-Name:
-1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.
-9.
-10.
-11.
+Name: Ryan Cheam
+1. High school
+2. ⁠Drawing as a part of the quiz
+3. ⁠Yes
+4. ⁠Yes
+5. ⁠No
+6. ⁠Yes
+7. ⁠Yes I would 
+8. ⁠Good, I would use it
+9. ⁠Nope
+10. ⁠No
+11. Don't have any i'd like added
 Other Questions:
 Question) Answer
 
