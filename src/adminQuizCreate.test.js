@@ -13,7 +13,7 @@ describe('Test correct return type and normal usage case', () => {
     test('Test if the returned is object which has a quizId and quizId is a number', () => {
         let result = adminQuizCreate(id, 'Quiz Name', 'Description');
         expect(typeof result).toBe('object');
-        expect(typeof result).toEqual({
+        expect(result).toEqual({
             quizId: expect.any(Number)
         });
         expect(result).not.toBeNull();
