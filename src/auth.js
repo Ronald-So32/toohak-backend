@@ -176,16 +176,34 @@ export { adminAuthLogin };
  * @returns {user} - Always return userDetails object
 */
 function adminUserDetails(userId) {
-  return { user:
-    {
-      userId: 1,
-      name: 'Hayden Smith',
-      email: 'hayden.smith@unsw.edu.au',
-      numSuccessfulLogins: 3,
-      numFailedPasswordsSinceLastLogin: 1,
+  let data = getData();
+
+  let userData;
+  let userFound = false;
+  
+  for (let user of data.users) {
+    if (user.userId === userId) {
+      userData = user;
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not found` };
+  }
+
+  return {
+    user: {
+      userId: userData.userId,
+      name: `${userData.nameFirst} ${userData.nameLast}`,
+      email: userData.email,
+      numSuccessfulLogins: userData.numSuccessfulLogins,
+      numFailedPasswordsSinceLastLogin: userData.numFailedPasswordsSinceLastLogin,
     }
   };
 }
+
+export { adminUserDetails };
 
 /**
   * Given an admin user's userId and a set of properties, update the properties 
