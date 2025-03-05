@@ -91,7 +91,7 @@ function adminQuizCreate(userId, name, description) {
     return { error: 'A name is required'};
   }
 
-  if (name.match(/[^\w\-\s]/) != null) {
+  if (name.match(/[^\w\-\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
   }
 
