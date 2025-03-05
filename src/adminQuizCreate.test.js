@@ -55,7 +55,7 @@ describe('Test error cases', () => {
         ])('Valid name - "%s" %s', (name, description) => {
             let result = adminQuizCreate(id, name, description);
             expect(typeof result).toBe('object');
-            expect(typeof result).toEqual({
+            expect(result).toEqual({
                 quizId: expect.any(Number)
             });
             expect(result).not.toBeNull();
@@ -65,7 +65,7 @@ describe('Test error cases', () => {
             let result1 = adminQuizCreate(id, 'Quiz Name', 'Description');
 
             expect(typeof result1).toBe('object');
-            expect(typeof result1).toEqual({
+            expect(result1).toEqual({
                 quizId: expect.any(Number)
             });
             expect(result1).not.toBeNull();
@@ -94,7 +94,7 @@ describe('Test error cases', () => {
         test('Valid description - Empty string', () => {
             let result = adminQuizCreate(id, 'Quiz Name', '');
             expect(typeof result).toBe('object');
-            expect(typeof result).toEqual({
+            expect(result).toEqual({
                 quizId: expect.any(Number)
             });
             expect(result).not.toBeNull();
@@ -103,7 +103,7 @@ describe('Test error cases', () => {
         test('Valid description - Description with 100 characters', () => {
             let result = adminQuizCreate(id, 'Quiz Name', 'abcdefg hijklm nopq rstu vwxyz ABCDE FGHIJK LMNOPQ RSTU VWXYZ 1234567890 ! @ # $ % ^ & * ( ) _ + - =');
             expect(typeof result).toBe('object');
-            expect(typeof result).toEqual({
+            expect(result).toEqual({
                 quizId: expect.any(Number)
             });
             expect(result).not.toBeNull();
