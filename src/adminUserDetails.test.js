@@ -8,7 +8,7 @@ describe('Test correct return types', () => {
       let result = adminUserDetails(id);
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
@@ -27,7 +27,7 @@ describe('Test correct return types', () => {
       let result2 = adminUserDetails(id);
 
       expect(typeof result1).toBe('object');
-      expect(typeof result1).toEqual({
+      expect(result1).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
@@ -38,7 +38,7 @@ describe('Test correct return types', () => {
 
       // The value of numSuccessfulLogins should increase by 1
       expect(typeof result2).toBe('object');
-      expect(typeof result2).toEqual({
+      expect(result2).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
@@ -59,7 +59,7 @@ describe('Test correct return types', () => {
       let result3 = adminUserDetails(id);
 
       expect(typeof result1).toBe('object');
-      expect(typeof result1).toEqual({
+      expect(result1).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
@@ -70,7 +70,7 @@ describe('Test correct return types', () => {
 
       // The value of numFailedPasswordsSinceLastLogin should increase by 1
       expect(typeof result2).toBe('object');
-      expect(typeof result2).toEqual({
+      expect(result2).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
@@ -116,7 +116,7 @@ describe('Check normal usage cases', () => {
       let result = adminUserDetails(id);
 
       expect(typeof result).toBe('object');
-      expect(typeof result).toEqual({
+      expect(result).toEqual({
         userId: id,
         name: 'first last',
         email: 'email@email.com',
