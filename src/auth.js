@@ -217,8 +217,64 @@ export { adminUserDetails };
   * @returns {Object} - Always return an empty object
 */
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
+
+  let data = getData();
+
+  let userData;
+  let userFound = false;
+  
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      userData = user;
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not found` };
+  }
+
+  for (const user of data.users) {
+    if (user.email === email && user.userId != userId) {	
+      return { error: 'Email has already been used by another user' };
+    }
+  }
+
+  if (!(validator.isEmail(email))) {
+    return { error: 'Email is not valid' };
+  }
+  if (nameFirst.match(/[^\w\-\s\'\_]/) !== null) {
+    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  }
+
+  if (nameFirst.length < 2) {
+    return { error: 'First name is shorter than 2 characters' };
+  }
+
+  if (nameFirst.length > 20) {
+    return { error: 'First name is longer than 20 characters' };
+  }
+
+  if (nameLast.match(/[^\w\-\s\'\_]/) !== null) {
+    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  }
+
+  if (nameLast.length < 2) {
+    return { error: 'Last name is shorter than 2 characters' };
+  }
+  
+  if (nameLast.length > 20) {
+    return { error: 'Last name is longer than 20 characters' };
+  }
+
+  userData.email = email;
+  userData.nameFirst = nameFirst;
+  userData.nameLast = nameLast;
+
   return {};
 }
+
+export { adminUserDetailsUpdate };
 
 /**
   * Given details relating to a password change, update the password of a 
