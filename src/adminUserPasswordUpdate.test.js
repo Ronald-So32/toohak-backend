@@ -25,12 +25,12 @@ describe ('update password', () => {
   });
    
   test ('New password does not contain at least 1', () => {
-    expect(adminUserPasswordUpdate(1, 'password1', 'qwertyyu')).
+    expect(adminUserPasswordUpdate(id, 'password1', 'qwertyyu')).
     toEqual({error: 'New password does not contain at least one letter'});
   });
   
   test('Old Password is the same as password', () => {
-    expect(adminUserPasswordUpdate(1, 'password1', 'password1')).
+    expect(adminUserPasswordUpdate(id, 'password1', 'password1')).
     toEqual('oldPassword is the same as new one');
   });
 
