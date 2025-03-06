@@ -6,7 +6,7 @@ describe ('update password', () => {
 
   beforeEach(() => {
     clear();
-    id = adminAuthRegister('email@email.com', 'password1', 'First', 'Last').userId;
+    let id = adminAuthRegister('email@email.com', 'password1', 'First', 'Last').userId;
   });
   
   test('greater than or equal to 8 characters', () => {
