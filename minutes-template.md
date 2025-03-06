@@ -80,7 +80,7 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Agenda
 | Item            | Discussion/decision                                  |
-| --------        | ---------------------------------------------------- |
+| --------------- | ---------------------------------------------------- |
 | Iteration 1     | Went through the entire project description together |
 | Assigning tasks | Discussed who is doing what                          |
 
@@ -89,4 +89,25 @@ Please note this is a a guide/template which you do not need to use.
 - [ ] Implement the actual functions
 
 ### Questions for tutor
-* 
+*
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 4                                     |
+| --------- | ------------------------------------- |
+| Date/time | 06/03 14:00, 15:00 for Sagar          |
+|   Week    | 3                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests and helping | Went through the merge requests and helped each other with problems |
+
+### Action Items/reminders
+- [ ] Implement the actual functions
+
+### Questions for tutor
+* Do we split each function / merge the tests
+* Black boxing old passwords + passwords
+* Check the interview format + stories + whatever is in it
