@@ -1,0 +1,50 @@
+import { adminUserPasswordUpdate, adminAuthRegister } from './auth.js';
+import { clear } from './other.js';
+
+
+describe ('update password', () => {
+
+  beforeEach(() => {
+    clear();
+    id = adminAuthRegister('email@email.com', 'password1', 'First', 'Last').userId;
+  });
+  
+  test('greater than or equal to 8 characters', () => {
+    expect(adminUserPasswordUpdate(id, 'password1', 'passowr')).
+    toEqual({error: 'New password has less than 8 characters'});
+  });
+
+  test('User Id invalid', () => {
+    expect(adminUserPasswordUpdate(-1, 'password1', 'newPass1')).
+    toEqual({error: 'User Id invalid'});
+  });
+
+  test ('New password does not contain at least one letter', () => {
+    expect(adminUserPasswordUpdate(id, 'password1', '12345678')).
+    toEqual({error: 'New password does not contain at least one letter'});
+  });
+   
+  test ('New password does not contain at least 1', () => {
+    expect(adminUserPasswordUpdate(id, 'password1', 'qwertyyu')).
+    toEqual({error: 'New password does not contain at least one letter'});
+  });
+  
+  test('Old Password is the same as password', () => {
+    expect(adminUserPasswordUpdate(id, 'password1', 'password1')).
+    toEqual('oldPassword is the same as new one');
+  });
+
+  test('User Id, oldPassword, and newPassword are valid', () => {
+    expect(adminUserPasswordUpdate(id, password1, newPassword1)).
+    toEqual({});
+  });
+
+  // how to test for if old password is not entered correclty? 
+
+  adminUserPasswordUpdate(id, password1, oldPassword1);
+  test('New Password has already been used before by this user', () => {
+    expect(adminUserPasswordUpdate(id, oldPassword1, password1)).
+    toEqual({error: 'New Password has already been used before by this user'});
+  });
+
+})
