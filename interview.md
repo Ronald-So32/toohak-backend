@@ -93,8 +93,13 @@ Other Questions:
 Question) Answer
 
  
+--------------------------------------------------------------------------------
 
 
 
+What do you think of the level of competitiveness of kahoot/toohak/app right now, is ther any problems with it? (chat, emotes, ranked)
+What do you think of the current format of kahoot, what other formats would you like to see? (short answers, essays, drawing, sending pictures, multiple choice, audio)
+Do you like the current mode of the app, what is a gamemode you would like to see? (team formats, tournaments, elimination)
+Name a feature you currenly don't like in the app and name a feature you would like to get added.
 
 
