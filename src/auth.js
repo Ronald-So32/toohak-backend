@@ -86,7 +86,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   }
 
   if (password.length < 8) {
-    return {error: 'Password is shorter than 8 characters' };
+    return { error: 'Password is shorter than 8 characters' };
   }
 
   let passwordLetter = password.search(/[a-zA-Z]/);
@@ -287,5 +287,69 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
+
+  // invalid user id
+  let data = getData();
+ 
+  let userData;
+  let userFound = false;
+  
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      userData = user;
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    return { error: `User Id of ${userId} is invalid` };
+  }
+
+  // check password of same userId then see if match oldPassword
+  
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      if (user.password !== oldPassword) {
+        return { error: 'Old Password is not the correct old password' };
+      }
+    }
+  }
+
+  if (oldPassword === newPassword) {
+    return { error: 'oldPassword is the same as new one' };
+  }
+
+  let target_user;
+
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      target_user = user; 
+    }
+  }
+
+  target_user.old_passwords.push(target_user.user.password);
+
+  for (const past_password of target_user.old_passwords) {
+    if (past_password === newPassword) {
+      return { error: 'New Password has already been used before by this user' };
+    }
+  }
+
+  if (newPassword.length < 8) {
+    return { error: 'New password has less than 8 characters' };
+  }
+
+  const number = /\d/.test(newPassword);
+
+  const letter = /[a-zA-Z]/.test(newPassword);
+
+  if (!number || !letter) {
+    return { error: 'New Password does not contain at least one number and at least one letter' };
+  }    
+
+  target_user.password = newPassword;
+
   return {};
 }
+
+export { adminUserPasswordUpdate };
