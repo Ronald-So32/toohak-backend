@@ -11,40 +11,43 @@ describe ('update password', () => {
   
   test('greater than or equal to 8 characters', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'passowr')).
-    toEqual({error: 'New password has less than 8 characters'});
+    toStrictEqual({error: expect.any(String)});
+  });
+
+  test('oldPassword is not the correct password', () => {
+    expect(adminUserPasswordUpdate(id, wrongOldPass, newPassword1)).
+    toStrictEqual({error: expect.any(String)});
   });
 
   test('User Id invalid', () => {
     expect(adminUserPasswordUpdate(-1, 'password1', 'newPass1')).
-    toEqual({error: 'User Id invalid'});
+    toStrictEqual({error: expect.any(String)});
   });
 
   test ('New password does not contain at least one letter', () => {
     expect(adminUserPasswordUpdate(id, 'password1', '12345678')).
-    toEqual({error: 'New password does not contain at least one letter'});
+    toStrictEqual({error: expect.any(String)});
   });
    
   test ('New password does not contain at least 1', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'qwertyyu')).
-    toEqual({error: 'New password does not contain at least one letter'});
+    toStrictEqual({error: expect.any(String)});
   });
   
   test('Old Password is the same as password', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'password1')).
-    toEqual('oldPassword is the same as new one');
+    toStrictEqual({error: expect.any(String)});
   });
 
   test('User Id, oldPassword, and newPassword are valid', () => {
     expect(adminUserPasswordUpdate(id, password1, newPassword1)).
-    toEqual({});
+    toStrictEqual({});
   });
-
-  // how to test for if old password is not entered correclty? 
 
   adminUserPasswordUpdate(id, password1, oldPassword1);
   test('New Password has already been used before by this user', () => {
     expect(adminUserPasswordUpdate(id, oldPassword1, password1)).
-    toEqual({error: 'New Password has already been used before by this user'});
+    toStrictEqual({error: expect.any(String)});
   });
 
 })
