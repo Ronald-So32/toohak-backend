@@ -53,14 +53,38 @@ import { getData } from './dataStore.js';
   * @returns {quizzes: [...]} - Always return quizzes object
 */
 function adminQuizList(userId) {
-    return { quizzes: [
-        {
-          quizId: 1,
-          name: 'My Quiz',
-        }
-      ]
-    };
+
+  let data = getData();
+
+  let userData;
+  let userFound = false;
+  
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      userData = user;
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
+  }
+
+  let quizzes = [];
+
+  for (const quiz of data.quizzes) {
+    if (quiz.createdBy === userId) {
+      quizzes.push({
+        quizId: quiz.quizId,
+        name: quiz.name,
+      }); 
+    }
+  }
+
+  return {quizzes};
 }
+
+export { adminQuizList };
 
 /**
   * Given basic details about a new quiz, create one for the logged in user.
