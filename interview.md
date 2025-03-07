@@ -27,6 +27,7 @@ Name: Henry Wu
 Other Questions:
 Question) Answer
 
+
 Name: Matthew Cai
 1. I have last used kahoot sometime during term two of 2024.
 2. Other formats that I am keen to see Kahoot innovate into their systems with would be to integrate sending images as a function to answer questions.
@@ -43,37 +44,34 @@ Other Questions:
 Question) Answer
 
 
-
 Name: Ryan Cheam
 1. High school
-2. ⁠Drawing as a part of the quiz
-3. ⁠Yes
-4. ⁠Yes
-5. ⁠No
-6. ⁠Yes
-7. ⁠Yes I would 
-8. ⁠Good, I would use it
-9. ⁠Nope
-10. ⁠No
+2. Drawing as a part of the quiz
+3. Yes
+4. Yes
+5. No
+6. Yes
+7. Yes I would 
+8. Good, I would use it
+9. Nope
+10. No
 11. Don't have any i'd like added
 Other Questions:
 Question) Answer
 
 
-
 Name: Nilay Vashisht
-1.⁠⁠today(4 march 2025)
-2.⁠mcq’s
-3.⁠yes
-4.⁠yes
-5.do not mind
-6.yes
-7.yes
-8.its good
-9.no
-10.childish UI 
-11.team based quizzes so we can know in group projects if everyone is on the same  boat or not.
-Email : nilayvashisht112@gmail.com
+1. today(4 march 2025)
+2. mcq’s
+3. yes
+4. yes
+5. do not mind
+6. yes
+7. yes
+8. its good
+9. no
+10. childish UI 
+11. team based quizzes so we can know in group projects if everyone is on the same  boat or not.
 Other Questions:
 Question) Answer
 
