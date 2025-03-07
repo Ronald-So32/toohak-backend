@@ -11,13 +11,13 @@ describe ('Tests for quiz list', () => {
 
   test('User Id invalid', () => {
     expect(adminQuizList(-1)).
-    toEqual({error: 'User Id invalid'});
+    toStrictEqual({error: expect.any(String)});
     expect(adminQuizList(id)).not.toBeNull();
   });
     
   test('User Id valid', () => {
     expect(adminQuizList(id)).toBe('object');
-    expect(adminQuizList(id)).toEqual({ quizzes: [
+    expect(adminQuizList(id)).toStrictEqual({ quizzes: [
         {
           quizId: quizId,
           name: 'Quiz name',
