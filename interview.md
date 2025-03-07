@@ -61,18 +61,19 @@ Question) Answer
 
 
 
-Name:
-1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.
-9.
-10.
-11.
+Name: Nilay Vashisht
+1.⁠⁠today(4 march 2025)
+2.⁠mcq’s
+3.⁠yes
+4.⁠yes
+5.do not mind
+6.yes
+7.yes
+8.its good
+9.no
+10.childish UI 
+11.team based quizzes so we can know in group projects if everyone is on the same  boat or not.
+Email : nilayvashisht112@gmail.com
 Other Questions:
 Question) Answer
 
