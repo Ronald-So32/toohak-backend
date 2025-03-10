@@ -1,4 +1,4 @@
-Interview Questions:
+Old Questions:
 1. When was the last time you used kahoot/toohak/any-other-quiz-app?
 2. What other formats do you want to see the app have? (short answers, essays, drawing, sending pictures, multiple choice, audio)
 3. Do you think that other question formats such as short answers, drawing systems, sending images, etc would be beneficial to the app?  
@@ -96,11 +96,11 @@ Question) Answer
 --------------------------------------------------------------------------------
 
 
-
-What do you think of the level of competitiveness of kahoot/toohak/app right now, is ther any problems with it? (chat, emotes, ranked)
-What do you think of the current format of kahoot, what other formats would you like to see? (short answers, essays, drawing, sending pictures, multiple choice, audio)
-Do you like the current mode of the app, what is a gamemode you would like to see? (team formats, tournaments, elimination)
-Name a feature you currenly don't like in the app and name a feature you would like to get added.
+New Questions:
+1. What do you think of the level of competitiveness of kahoot/toohak/app right now, is ther any problems with it? (chat, emotes, ranked)
+2. What do you think of the current format of kahoot, what other formats would you like to see? (short answers, essays, drawing, sending pictures, multiple choice, audio)
+3. Do you like the current mode of the app, what is a gamemode you would like to see? (team formats, tournaments, elimination)
+4. Name a feature you currenly don't like in the app and name a feature you would like to get added.
 
 Name: Zhengyang
 1. I believe the current level of competitveness of kahoot is enough as I mostly use it in class the competitveness is dependent on the classes atmosphere.
@@ -113,3 +113,13 @@ Name: Mathew McCarthy
 2. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. 
 3. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. 
 4. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. More than 4 answers for questions.
+
+Name: Matthew Cai
+1. As of now, I believe Kahoot has set a solid foundation in its level of competitiveness as it allows users of varying levels to be able to compete with other users. Personally speaking, I do not believe there are any issues with the state of Kahoot, however including quality of life features such as including an emotes option definitely has their pros and cons. More specifically, the introduction of emotes can make users more engaged in the quiz, however may also have the side effect of distracting other users and stirring up arbitrary emotions (namely rage).
+2. Kahoot’s current format is both beginner-friendly and simple, encouraging users to stay entertained while focusing on deciphering the answer to the question. From this, Kahoot can definitely utilise innovative features that may elevate its beginner-friendly format to one that offers users more opportunities to express their answers allowing further growth on their critical thinking skills. In many instances, I believe that images speak louder than words which can make for a more immersive experience for users, making them more engaged and focused in answering questions.
+3. The current mode holds a simplistic design which is easy to navigate and fun to interact with. Kahoot can elevate their product by including a new gamemode that is more designed for intermediate to advanced users. Formats such as team mode adds a whole new dimension to the quiz making the user work with others users to come out victorious. Alternatively, adding an elimination mode includes a new element into the quiz where one wrong answer could be the end for the user; this adds a new layer of pressure onto users.
+4. One feature that I currently despise in Kahoot is the fact that students with different academic levels will take vastly contrasting amounts of time to answer certain questions. This hassle stems from some users having to wait for other users to finish before proceeding to the next question. A simple feature that can address this is to provide a hint when either half the users have answered or if half the time has passed. This feature will effectively help weaker users to answer the questions more efficiently while still offering them a chance to gain a reduced amount of points.
+
+
+
+
