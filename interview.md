@@ -107,3 +107,9 @@ Name: Zhengyang
 2. I think having other formats like short answers will defeat the purpose of kahoot as it's a fast paced game but other formats like drawing would be interesting.
 3. From what I remember some of the gamemodes listed already exists in kahoot and for other gamemode like tournaments will need kahoot to implement a queueing system.
 4. I can't really think of a feature I don't like but I would like to see a queueing system.
+
+Name: Mathew McCarthy
+1. I think the level of competitiveness currently existent in Kahoot is quite lacking. With only two aspects being getting the answer correct and the speed of answering. Although I think Kahoot is best played with friends so there is additional motivation to win the game. 
+2. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. 
+3. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. 
+4. I think maps could be cool with the current format of Kahoot. Where you ask where something is on a map with a photo of a place then the contestants have to pin it to a map. More than 4 answers for questions.
