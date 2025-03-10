@@ -227,6 +227,38 @@ function adminQuizNameUpdate(userId, quizId, name) {
   * 
   * @returns {Object} - Always return an empty object
 */
-function adminQuizDescriptionUpdate (userId, quizId, description) {
-    return {};
+function adminQuizDescriptionUpdate(userId, quizId, description) {
+  const data = getData();
+  
+  // Check if userId is valid
+  const user = data.users.find(user => user.userId === userId);
+  if (!user) {
+    return { error: 'Invalid user ID' };
+  }
+  
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return { error: 'Invalid quiz ID' };
+  }
+  
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return { error: 'User does not own this quiz' };
+  }
+  
+  // Check if description length is valid (max 100 characters)
+  if (description.length > 100) {
+    return { error: 'Description is too long' };
+  }
+  
+  // Update the quiz description
+  quiz.description = description;
+  
+  // Update timeLastEdited
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  
+  return {};
 }
+
+export { adminQuizDescriptionUpdate };
