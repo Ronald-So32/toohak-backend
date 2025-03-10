@@ -102,4 +102,8 @@ What do you think of the current format of kahoot, what other formats would you 
 Do you like the current mode of the app, what is a gamemode you would like to see? (team formats, tournaments, elimination)
 Name a feature you currenly don't like in the app and name a feature you would like to get added.
 
-
+Name: Zhengyang
+1. I believe the current level of competitveness of kahoot is enough as I mostly use it in class the competitveness is dependent on the classes atmosphere.
+2. I think having other formats like short answers will defeat the purpose of kahoot as it's a fast paced game but other formats like drawing would be interesting.
+3. From what I remember some of the gamemodes listed already exists in kahoot and for other gamemode like tournaments will need kahoot to implement a queueing system.
+4. I can't really think of a feature I don't like but I would like to see a queueing system.
