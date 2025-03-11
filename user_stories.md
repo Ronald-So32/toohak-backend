@@ -18,3 +18,10 @@ As the end user, I want the scoring system to account for factors beyond correct
 # User story 6
 As the end user, I want to be able to have more than 4 multiple choice answer to select from, or even be able to write short answer, so that the difficulty of the quizzes are increased.
 
+# Zhengyang user story:
+
+# User Story 7
+As the end user, I want the game to have a queueing system so that the competitiveness of the game doesn't rely on atmosphere of the current environment
+
+# User Story 8
+As the end user, I would want the game to stay fast-paced and so implementing short answer question can slow down the tempo of the game and reduce the desire of playing.
