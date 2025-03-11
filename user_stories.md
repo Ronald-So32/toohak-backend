@@ -9,6 +9,12 @@ As the end user, I would like some quality of life features such as emotes, so t
 
 # Mathew McCarthy user story (email: matthewmccarthy0331@gmail.com):
 
-As a kahoot user, I want to be able to play with others online, adding elements such as maps or answers in the form of pictures, uncensored nicknames and having more than just four multiple choice answers so that I can have more competitive games. 
+# User Story 4
+As the end user, I want to be able to play with others online, so that I can play more competitive games.
 
+# User Story 5
+As the end user, I want the scoring system to account for factors beyond correctness and speed, so that I can focus on understanding material snd learning rather than just memorizing.
+
+# User story 6
+As the end user, I want to be able to have more than 4 multiple choice answer to select from, or even be able to write short answer, so that the difficulty of the quizzes are increased.
 
