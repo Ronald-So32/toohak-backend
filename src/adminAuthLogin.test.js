@@ -1,4 +1,4 @@
-import { adminAuthLogin, adminAuthRegister } from './auth.js';
+import { adminAuthLogin, adminAuthRegister, adminUserDetails, adminUserPasswordUpdate } from './auth.js';
 import { clear } from './other.js';
 
 describe('Test correct return types', () => {
@@ -15,7 +15,7 @@ describe('Test correct return types', () => {
 
   test('Test if the return object has a userId', () => {
     const result = adminAuthLogin('email@email.com', 'Password1');
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       userId: expect.any(Number)
     });
     expect(result).not.toBeNull();
@@ -34,7 +34,7 @@ describe('Test error cases', () => {
       ['Email doesn\'t exist', 'emailw@email.com', 'Password1', { error: expect.any(String) }]
     ])('%s', (description, email, password, expected) => {
       const result = adminAuthLogin(email, password);
-      expect(result).toMatchObject(expected);
+      expect(result).toStrictEqual(expected);
     });
   });
 
@@ -44,26 +44,53 @@ describe('Test error cases', () => {
       ['Password is incorrect', 'email@email.com', 'Password2', { error: expect.any(String) }]
     ])('%s', (description, email, password, expected) => {
       const result = adminAuthLogin(email, password);
-      expect(result).toMatchObject(expected);
+      expect(result).toStrictEqual(expected);
     });
   });
 });
 
-describe('Check normal usage cases', () => {
+describe('Test that the function works as intended', () => {
   beforeEach(() => {
     clear();
     adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
   });
 
-  test('Normal case 1', () => {
+  test('Verify user details after registration and login', () => {
     const result = adminAuthLogin('email@email.com', 'Password1');
-    expect(typeof result).toBe('object');
-    expect(result).toEqual({
-      userId: expect.any(Number)
+    const details = adminUserDetails(result.userId);
+    expect(details).toStrictEqual({
+      user: {
+        userId: result.userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
     });
-    expect(result).not.toBeNull();
+  });
+
+  test('Verify login after password update', () => {
+    const register = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+
+    adminUserPasswordUpdate(registerResult.userId, 'Password1', 'Password2');
+
+    const result = adminAuthLogin('email@email.com', 'Password2');
+    expect(result).toStrictEqual({ userId: register.userId });
+
+    const details = adminUserDetails(register.userId);
+    expect(details.user.numSuccessfulLogins).toStrictEqual(2);
+    expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+  });
+
+  test('Verify failed login attempts', () => {
+    const register = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+
+    const failedLogin = adminAuthLogin('email@email.com', 'WrongPassword');
+    expect(failedLogin).toStrictEqual({ error: expect.any(String) });
+
+    const details = adminUserDetails(register.userId);
+    expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 });
-
 
 
