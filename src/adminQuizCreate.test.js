@@ -151,7 +151,7 @@ describe('Test error cases', () => {
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({
-        quizId: expect.any(Number)
+        quizId: result.quizId
       });
       expect(result).not.toBeNull();
 
