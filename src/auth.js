@@ -137,10 +137,35 @@ export { adminAuthRegister };
  * @returns {userId} - Always return userId object
 */
 function adminAuthLogin(email, password) {
+  let data = getData();
+
+  let emailFound = false;
+  let userData;
+
+  for (let user of data.users) {
+    if (user.email === email) {
+      emailFound = true;
+      userData = user;
+    }
+  }
+
+  if (!emailFound) {
+    return { error: 'Email does not exit' };
+  }
+
+  if (userData.password !== password) {
+    userData.numFailedPasswordsSinceLastLogin += 1;
+    return { error: 'Password is wrong' };
+  }
+
+  userData.numSuccessfulLogins += 1;
+
   return {
-    userId: 1
+    userId: userData.userId,
   };
 }
+
+export { adminAuthLogin };
 
 /**
  * Given an admin user's userId, return details about the user."name" is the
