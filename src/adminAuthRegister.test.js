@@ -14,7 +14,7 @@ describe('Test correct return types', () => {
 
   test('Test if the return object has a userId', () => {
     const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       userId: expect.any(Number)
     });
     expect(result).not.toBeNull();
@@ -30,14 +30,14 @@ describe('Test error cases', () => {
     test('Email is already used', () => {
       adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
       const result = adminAuthRegister('email@email.com', 'Password2', 'first', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Email is not used', () => {
       const result1 = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
       const result2 = adminAuthRegister('email2@email.com', 'Password2', 'firstt', 'lastt');
-      expect(result1).toEqual({ userId: expect.any(Number) });
-      expect(result2).toEqual({ userId: expect.any(Number) });
+      expect(result1).toStrictEqual({ userId: expect.any(Number) });
+      expect(result2).toStrictEqual({ userId: expect.any(Number) });
     });
   });
 
@@ -48,7 +48,7 @@ describe('Test error cases', () => {
       ['Valid email 3', 'user@sub.domain.com']
     ])('%s', (description, email) => {
       const result = adminAuthRegister(email, 'Password1', 'first', 'last');
-      expect(result).toEqual({ userId: expect.any(Number) });
+      expect(result).toStrictEqual({ userId: expect.any(Number) });
     });
 
     test.each([
@@ -58,7 +58,7 @@ describe('Test error cases', () => {
       ['Invalid email 4', 'user@.com']
     ])('%s', (description, email) => {
       const result = adminAuthRegister(email, 'Password1', 'first', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 
@@ -72,7 +72,7 @@ describe('Test error cases', () => {
       ['Valid characters 6', 'Fi _r\'St']
     ])('%s', (description, nameFirst) => {
       const result = adminAuthRegister('email@email.com', 'Password1', nameFirst, 'last');
-      expect(result).toEqual({ userId: expect.any(Number) });
+      expect(result).toStrictEqual({ userId: expect.any(Number) });
     });
 
     test.each([
@@ -81,17 +81,17 @@ describe('Test error cases', () => {
       ['Invalid characters 3', '!@#$%%*']
     ])('%s', (description, nameFirst) => {
       const result = adminAuthRegister('email@email.com', 'Password1', nameFirst, 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains less than 2 characters', () => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'f', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains more than 20 characters', () => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'firstfirstfirstfirstfirstfirst', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 
@@ -105,7 +105,7 @@ describe('Test error cases', () => {
       ['Valid characters 6', 'L\'a_S t']
     ])('%s', (description, nameLast) => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'first', nameLast);
-      expect(result).toEqual({ userId: expect.any(Number) });
+      expect(result).toStrictEqual({ userId: expect.any(Number) });
     });
 
     test.each([
@@ -114,17 +114,17 @@ describe('Test error cases', () => {
       ['Invalid characters 3', '*/-%$#']
     ])('%s', (description, nameLast) => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'first', nameLast);
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains less than 2 characters', () => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'l');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains more than 20 characters', () => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'lastlastlastlastlastlastlastlastlastlastlastlast');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 
@@ -135,7 +135,7 @@ describe('Test error cases', () => {
       ['Valid password 3', 'qweerty727@#']
     ])('%s', (description, password) => {
       const result = adminAuthRegister('email@email.com', password, 'first', 'last');
-      expect(result).toEqual({ userId: expect.any(Number) });
+      expect(result).toStrictEqual({ userId: expect.any(Number) });
     });
 
     test.each([
@@ -144,17 +144,17 @@ describe('Test error cases', () => {
       ['Invalid password 3', ')@*(#$&@#$&*#*%']
     ])('%s', (description, password) => {
       const result = adminAuthRegister('email@email.com', password, 'first', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains less than 8 characters with valid characters', () => {
       const result = adminAuthRegister('email@email.com', 'P1', 'first', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Contains less than 8 characters with invalid characters', () => {
       const result = adminAuthRegister('email@email.com', '*', 'first', 'last');
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 });
@@ -166,7 +166,7 @@ describe('Check normal usage cases', () => {
 
   test('Normal case 1', () => {
     const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-    expect(result).toEqual({ userId: expect.any(Number) });
+    expect(result).toStrictEqual({ userId: expect.any(Number) });
   });
 });
 
@@ -180,7 +180,7 @@ describe('Test if the function actually works', () => {
     const details = adminUserDetails(result.userId);
     const login = adminAuthLogin('email@email.com', 'Password1');
 
-    expect(details).toEqual({
+    expect(details).toStrictEqual({
       user: {
         userId: result.userId,
         name: 'first last',
@@ -190,7 +190,7 @@ describe('Test if the function actually works', () => {
       },
     });
 
-    expect(login).toEqual({ userId: result.userId });
+    expect(login).toStrictEqual({ userId: result.userId });
   });
 });
 
