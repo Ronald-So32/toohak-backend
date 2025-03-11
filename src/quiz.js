@@ -193,15 +193,44 @@ function adminQuizRemove(userId, quizId) {
   * 
   * @returns {quiz} - Always return quiz object
 */
+
+
 function adminQuizInfo(userId, quizId) {
-    return {
-        quizId: 1,
-        name: 'My Quiz',
-        timeCreated: 1683125870,
-        timeLastEdited: 1683125871,
-        description: 'This is my quiz',
-    };
+  // Retrieve data from the data store
+  let data = getData();
+
+  // Check if user exists
+  let userFound = false;
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    // Return error if user is not found
+    return { error: `User Id of ${userId} is not valid` };
+  }
+
+  // Finds the quiz that matches both quizId and userId
+  const quiz = data.quizzes.find(q => q.quizId === quizId && q.createdBy === userId);
+
+  if (!quiz) {
+    // Returns error if quiz is not found or not owned by user
+    return { error: 'Quiz not found or not owned by user' };
+  }
+
+  // Return quiz details if found
+  return {
+    quizId: quiz.quizId,
+    name: quiz.name,
+    timeCreated: quiz.timeCreated,
+    timeLastEdited: quiz.timeLastEdited,
+    description: quiz.description
+  };
 }
+
+export { adminQuizInfo };
 
 /**
   * Update the name of the relevant quiz.
