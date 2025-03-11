@@ -1,3 +1,7 @@
+import { getData } from './dataStore.js';
+
+import validator from 'validator';
+
 /**
  * A instance of this object:
  * {
@@ -43,10 +47,86 @@
  * @returns {userId} - Always return UserId object
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
+  let data = getData();
+
+  for (let user of data.users) {
+    if (user.email === email) {	
+      return { error: 'Email has already been used by another user' };
+    }
+  }
+
+  if (!(validator.isEmail(email))) {
+    return { error: 'Email is not valid' };
+  }
+
+  let firstHasSpecial = nameFirst.search(/[^a-zA-Z _']/);
+  if (firstHasSpecial !== -1) {
+    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  }
+
+  if (nameFirst.length < 2) {
+    return { error: 'First name is shorter than 2 characters' };
+  }
+
+  if (nameFirst.length > 20) {
+    return { error: 'First name is longer than 20 characters' };
+  }
+
+  let lastHasSpecial = nameLast.search(/[^a-zA-Z _']/);
+  if (lastHasSpecial !== -1) {
+    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  }
+
+  if (nameLast.length < 2) {
+    return { error: 'Last name is shorter than 2 characters' };
+  }
+
+  if (nameLast.length > 20) {
+    return { error: 'Last name is longer than 20 characters' };
+  }
+
+  if (password.length < 8) {
+    return {error: 'Password is shorter than 8 characters' };
+  }
+
+  let passwordLetter = password.search(/[a-zA-Z]/);
+  let passwordNumber = password.search(/\d/);
+  if (passwordLetter === -1 || passwordNumber === -1) {
+    return { error: 'Password does not contain at least one number and at least one letter' };
+  }
+
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    id = Math.floor(Math.random() * 727727);
+    unique = true;
+
+    for (let user of data.users) {
+      if (user.userId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+  }
+
+  data.users.push({
+    userId: id,
+    nameFirst: nameFirst,
+    nameLast: nameLast,
+    email: email,
+    numSuccessfulLogins: 1,
+    numFailedPasswordsSinceLastLogin: 0,
+    password: password,
+  });
+  
   return {
-    userId: 1
+    userId: id
   };
 }
+
+export { adminAuthRegister };
 
 /**
  * Given a registered user's email and password, return their userId value.
