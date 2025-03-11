@@ -1,147 +1,111 @@
-import { adminUserDetails, adminAuthRegister, adminAuthLogin } from './auth.js';
+import { adminUserDetails, adminAuthRegister, adminAuthLogin, adminUserPasswordUpdate, adminUserDetailsUpdate } from './auth.js';
 import { clear } from './other.js';
 
-describe('Test correct return types', () => {
+describe('Test adminUserDetails functionality', () => {
+  let userId;
+
+  beforeEach(() => {
+    clear();
+    const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+    userId = result.userId;
+  });
+
   test('Test if the return type is expected', () => {
-      clear();
-      let id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminUserDetails(id.userId);
-
-      expect(typeof result).toBe('object');
-      expect(result).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 1,
-          numFailedPasswordsSinceLastLogin: 0,
-	}
-      });
-      expect(result).not.toBeNull();
-        
+    const result = adminUserDetails(userId);
+    expect(typeof result).toBe('object');
+    expect(result).toStrictEqual({
+      user: {
+        userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
+    expect(result).not.toBeNull();
   });
 
-  test('Test if the logins change', () => {
-      clear();
-      let id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result1 = adminUserDetails(id.userId);
-      adminAuthLogin('email@email.com', 'Password1');
-      let result2 = adminUserDetails(id.userId);
-
-      expect(typeof result1).toBe('object');
-      expect(result1).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 1,
-          numFailedPasswordsSinceLastLogin: 0,
-	}
-      });
-      expect(result1).not.toBeNull();
-
-      // The value of numSuccessfulLogins should increase by 1
-      expect(typeof result2).toBe('object');
-      expect(result2).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 2,
-          numFailedPasswordsSinceLastLogin: 0,
-	}
-      });
-      expect(result2).not.toBeNull();
-
-  });
-
-  test('Test if the failed logins change as well', () => {
-      clear();
-      let id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result1 = adminUserDetails(id.userId);
+  test.each([
+    ['Initial login', 'Password1', 1, 0],
+    ['After successful login', 'Password1', 2, 0],
+    ['After failed login', 'Password2', 1, 1],
+    ['After successful login post failed attempt', 'Password1', 2, 1],
+  ])('Test login counts: %s', (description, password, expectedSuccessfulLogins, expectedFailedLogins) => {
+    if (description === 'After successful login') {
+      adminAuthLogin('email@email.com', password);
+    } else if (description === 'After failed login') {
+      adminAuthLogin('email@email.com', password);
+    } else if (description === 'After successful login post failed attempt') {
       adminAuthLogin('email@email.com', 'Password2');
-      let result2 = adminUserDetails(id.userId);
-      adminAuthLogin('email@email.com', 'Password1');
-      let result3 = adminUserDetails(id.userId);
+      adminAuthLogin('email@email.com', password);
+    }
 
-      expect(typeof result1).toBe('object');
-      expect(result1).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 1,
-          numFailedPasswordsSinceLastLogin: 0,
-	}
-      });
-      expect(result1).not.toBeNull();
-
-      // The value of numFailedPasswordsSinceLastLogin should increase by 1
-      expect(typeof result2).toBe('object');
-      expect(result2).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 1,
-          numFailedPasswordsSinceLastLogin: 1,
-	}
-      });
-      expect(result2).not.toBeNull();
-
-      // The value of numSuccessfulLogins should increase by 1
-      expect(typeof result3).toBe('object');
-      expect(result3).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 2,
-          numFailedPasswordsSinceLastLogin: 1,
-	}
-      });
-      expect(result3).not.toBeNull();
-        
+    const result = adminUserDetails(userId);
+    expect(result).toStrictEqual({
+      user: {
+        userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: expectedSuccessfulLogins,
+        numFailedPasswordsSinceLastLogin: expectedFailedLogins,
+      },
+    });
   });
 
-});
-
-
-describe('Test error cases', () => {
-  test('Test when the id doesn\'t exist', () => {
-      clear();
-      let id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminUserDetails(id.userId + 727);
-
-      expect(result).toMatchObject({ error: expect.any(String) });
-	  
+  test('Test user details update', () => {
+    adminUserDetailsUpdate(userId, 'newemail@email.com', 'newfirst', 'newlast');
+    const result = adminUserDetails(userId);
+    expect(result).toStrictEqual({
+      user: {
+        userId,
+        name: 'newfirst newlast',
+        email: 'newemail@email.com',
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
   });
 
+  test('Test password update and login', () => {
+    adminUserPasswordUpdate(userId, 'Password1', 'NewPassword1');
+    const loginResult = adminAuthLogin('email@email.com', 'NewPassword1');
+    expect(loginResult).toStrictEqual({ userId });
+
+    const details = adminUserDetails(userId);
+    expect(details).toStrictEqual({
+      user: {
+        userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: 2,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
+  });
+
+  test('Test invalid userId', () => {
+    const result = adminUserDetails(userId + 727);
+    expect(result).toStrictEqual({ error: expect.any(String) });
+  });
 });
 
-
-// All of these should be valid
 describe('Check normal usage cases', () => {
-  test('Normal case 1', () => {
-      clear();
-      let id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      let result = adminUserDetails(id.userId);
-
-      expect(typeof result).toBe('object');
-      expect(result).toEqual({
-	user: {
-          userId: id.userId,
-          name: 'first last',
-          email: 'email@email.com',
-          numSuccessfulLogins: 1,
-          numFailedPasswordsSinceLastLogin: 0,
-	}
-      });
-      expect(result).not.toBeNull();
-        
+  beforeEach(() => {
+    clear();
+    adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
   });
 
+  test('Normal case 1', () => {
+    const result = adminAuthRegister('email2@email.com', 'Password2', 'first2', 'last2');
+    const details = adminUserDetails(result.userId);
+    expect(details).toStrictEqual({
+      user: {
+        userId: result.userId,
+        name: 'first2 last2',
+        email: 'email2@email.com',
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
+  });
 });
-
-
-
