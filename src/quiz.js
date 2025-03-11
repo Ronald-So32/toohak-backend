@@ -85,9 +85,49 @@ function adminQuizCreate(userId, name, description) {
   * 
   * @returns {Object} - Always return an empty object
 */
+import { getData } from './dataStore.js';
+
+/**
+ * Given a particular quiz, permanently remove the quiz.
+ * 
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ * 
+ * @returns {Object} - Always return an empty object or an error object
+ */
+
+
 function adminQuizRemove(userId, quizId) {
-    return {};
+  // Retrieving data from the data stored
+  let data = getData();
+
+  // Validating if the user exists
+  const userExists = data.users.some(user => user.userId === userId);
+  if (!userExists) {
+    return { error: `User Id ${userId} is not valid` };
+  }
+
+  // Finds the quiz index of the quiz in the quizzes array
+  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+
+  // Validates if the quiz exists
+  if (quizIndex === -1) {
+    return { error: `Quiz with Id ${quizId} does not exist` };
+  }
+
+  // Checks if the user owns the quiz
+  const quiz = data.quizzes[quizIndex];
+  if (quiz.createdBy !== userId) {
+    return { error: 'You do not have permission to remove this quiz' };
+  }
+
+  // Removes the quiz from the quizzes array
+  data.quizzes.splice(quizIndex, 1);
+
+  return {};
 }
+
+export { adminQuizRemove };
 
 /**
   * Get all of the relevant information about the current quiz.
