@@ -1,6 +1,7 @@
 import { getData } from './dataStore.js';
 
 import validator from 'validator';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -95,21 +96,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  let id;
-  let unique = false;
-
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (let user of data.users) {
-      if (user.userId === id) {
-        isUnique = false;
-        break;
-      }
-    }
-
-  }
+  let id = uuidv4(); // This better be unique
 
   data.users.push({
     userId: id,
