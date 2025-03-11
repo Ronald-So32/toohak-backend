@@ -1,4 +1,4 @@
-import { adminAuthRegister } from './auth.js';
+import { adminAuthRegister, adminAuthLogin, adminUserDetails } from './auth.js';
 import { clear } from './other.js';
 
 describe('Test correct return types', () => {
@@ -170,10 +170,27 @@ describe('Check normal usage cases', () => {
   });
 });
 
-describe('Random normal test cases', () => {
-  /*test('', () => {
+describe('Test if the function actually works', () => {
+  beforeEach(() => {
+    clear();
+  });
 
-  });*/
-  // TODO: add some random test cases after implementation
+  test('Test user details after registration', () => {
+    const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+    const details = adminUserDetails(result.userId);
+    const login = adminAuthLogin('email@email.com', 'Password1');
+
+    expect(details).toEqual({
+      user: {
+        userId: result.userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
+
+    expect(login).toEqual({ userId: result.userId });
+  });
 });
 
