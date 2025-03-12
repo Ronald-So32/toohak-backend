@@ -1,7 +1,8 @@
 import {
   adminQuizCreate,
   adminQuizNameUpdate,
-  adminQuizList
+  adminQuizList,
+  adminQuizInfo
 } from './quiz.js';
 import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
@@ -81,13 +82,15 @@ describe('Test error cases', () => {
         description: 'Name is too long with normal spaces'
       },
     ])('Invalid name - $description', ({ name, description }) => {
+      const listBefore = adminQuizList(userId);
+      const infoBefore = adminQuizInfo(userId, quizId);
       const result = adminQuizNameUpdate(userId, quizId, name);
 
       expect(result).toStrictEqual({ error: expect.any(String) });
 
-      // To test that no quizzes is created
-      expect(adminQuizList(userId)).toStrictEqual({ quizzes: [] });
-      expect(adminQuizInfo).toStrictEqual({});
+      // To test that the quiz name didn't change
+      expect(adminQuizList(userId)).toStrictEqual(listBefore);
+      expect(adminQuizInfo(userId, quizId)).toStrictEqual(infoBefore);
     });
 
     // To test valid names
