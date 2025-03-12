@@ -1,19 +1,14 @@
 {
   "ignorePatterns": ["build"],
-  "parser": "@typescript-eslint/parser",
+  "parser": "espree",
   "plugins": [
-    "@typescript-eslint",
     "jest"
   ],
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "eslint:recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 2022,
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "sourceType": "module"
   },
   "env": {
@@ -34,10 +29,6 @@
       "ignoreRestSiblings": true,
       "vars": "all"
     }],
-
-    "@typescript-eslint/no-var-requires": 0,
-    "@typescript-eslint/no-unused-vars": 0,
-    "@typescript-eslint/no-explicit-any": 0,
  
     "no-var": "warn",
     "object-shorthand": 0,
