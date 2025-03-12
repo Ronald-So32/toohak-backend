@@ -85,4 +85,6 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({
         quizId: result.quizId
       });
+    });
+  });
 });
