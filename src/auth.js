@@ -306,7 +306,6 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   }
 
   // check password of same userId then see if match oldPassword
-  
   for (const user of data.users) {
     if (user.userId === userId) {
       if (user.password !== oldPassword) {
@@ -333,6 +332,10 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     if (past_password === newPassword) {
       return { error: 'New Password has already been used before by this user' };
     }
+  }
+
+  if (newPassword.length < 8) {
+    return { error: 'New password is shorter than 8 characters' };
   }
 
   let passwordLetter = password.search(/[a-zA-Z]/);
