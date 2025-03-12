@@ -121,6 +121,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
     password: password,
+    old_passwords: [],
   });
 
   return {
@@ -324,10 +325,6 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     if (user.userId === userId) {
       target_user = user;
     }
-  }
-
-  if (!target_user.old_passwords) {
-    target_user.old_passwords = [];
   }
 
   target_user.old_passwords.push(target_user.user.password);
