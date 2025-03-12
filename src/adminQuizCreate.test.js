@@ -56,11 +56,11 @@ describe('Test error cases', () => {
     // To get the object containing the quizId made by a user which doesn't exist
     let result = adminQuizCreate(id + 999, 'Quiz Name', 'Description');
 
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
 
     // To test that no quizzes is created
-    expect(adminQuizList).toMatchObject({quizzes: []});
-    expect(adminQuizInfo).toMatchObject({});
+    expect(adminQuizList).toStrictEqual({quizzes: []});
+    expect(adminQuizInfo).toStrictEqual({});
   })
 
   // To test names which are valid and invalid
@@ -102,11 +102,11 @@ describe('Test error cases', () => {
     ])('Invalid name - $description', ({name, description}) => {
       let result = adminQuizCreate(id, name, description);
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toMatchObject({quizzes: []});
-      expect(adminQuizInfo).toMatchObject({});
+      expect(adminQuizList).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo).toStrictEqual({});
     });
 
     // To test valid names
@@ -213,11 +213,11 @@ describe('Test error cases', () => {
       });
       expect(adminQuizInfo(id, result.quizId)).not.toBeNull();
       
-      expect(result2).toMatchObject({ error: expect.any(String) });
+      expect(result2).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toMatchObject({quizzes: []});
-      expect(adminQuizInfo).toMatchObject({});
+      expect(adminQuizList).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo).toStrictEqual({});
     });
   });
     
@@ -240,11 +240,11 @@ describe('Test error cases', () => {
     ])('Invalid description - $reason', ({description, reason}) => {
       let result = adminQuizCreate(id, 'Quiz Name', description);
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toMatchObject({quizzes: []});
-      expect(adminQuizInfo).toMatchObject({});
+      expect(adminQuizList).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo).toStrictEqual({});
     })
 
     // To test valid descriptions
