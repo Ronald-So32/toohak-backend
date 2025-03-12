@@ -15,7 +15,7 @@ describe('Test correct return type and normal usage case', () => {
   test('Test if the returned is object which is empty', () => {
     const result = adminQuizNameUpdate(userId, quizId, 'New Quiz Name');
     expect(typeof result).toBe('object');
-    expect(result).toEqual({});
+    expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
   });
 });
@@ -128,7 +128,7 @@ describe('Test error cases', () => {
       const result = adminQuizNameUpdate(userId, quizId, name);
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
 

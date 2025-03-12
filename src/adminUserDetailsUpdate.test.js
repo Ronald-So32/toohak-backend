@@ -23,7 +23,7 @@ describe('Test correct return type and normal case usage', () => {
     const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
 
     expect(typeof result).toBe('object');
-    expect(result).toEqual({});
+    expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
   });
 });
@@ -40,7 +40,7 @@ describe('Test error cases', () => {
       const result1 = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Last');
 
       expect(typeof result1).toBe('object');
-      expect(result1).toEqual({});
+      expect(result1).toStrictEqual({});
       expect(result1).not.toBeNull();
 
       const result2 = adminUserDetailsUpdate(id, 'email2@email.com', 'First', 'Last');
@@ -55,7 +55,7 @@ describe('Test error cases', () => {
       { email: 'user@.com', nameFirst: 'First', nameLast: 'Last' },
     ])('Invalid email format - %s', ({ email, nameFirst, nameLast }) => {
       const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      expect(result).toEqual({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 
@@ -66,7 +66,7 @@ describe('Test error cases', () => {
       { email: 'email@email.com', nameFirst: 'First123', nameLast: 'Last' },
     ])('Invalid first name (containing invalid characters) - %s', ({ email, nameFirst, nameLast }) => {
       const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      expect(result).toEqual({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test.each([
@@ -78,7 +78,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
 
@@ -98,7 +98,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'Fi', 'Last');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
 
@@ -106,7 +106,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'Firstfirstfirstfirst', 'Last');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
   });
@@ -130,7 +130,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
 
@@ -150,7 +150,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'La');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
 
@@ -158,7 +158,7 @@ describe('Test error cases', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlast');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
     });
   });

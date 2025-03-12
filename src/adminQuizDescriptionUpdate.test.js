@@ -14,7 +14,7 @@ describe('Test correct return type and normal usage case', () => {
     const quizId = adminQuizCreate(id.userId, 'Quiz Name', 'Description').quizId;
     const result = adminQuizDescriptionUpdate(id.userId, quizId, 'New Description');
     expect(typeof result).toBe('object');
-    expect(result).toEqual({});
+    expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
   });
 });
