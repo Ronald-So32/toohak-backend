@@ -1,8 +1,8 @@
 {
     "scripts": {
         "test": "jest",
-        "lint": "eslint '**/*.js'",
-        "lint-fix": "eslint --fix '**/*.js'"
+        "lint": "eslint **/*.js",
+        "lint-fix": "eslint --fix **/*.js"
     },
     "dependencies": {
         "uuid": "^11.1.0",
@@ -12,7 +12,7 @@
         "@babel/cli": "^7.22.5",
         "@babel/core": "^7.22.5",
         "@babel/preset-env": "^7.22.5",
-        "eslint": "^9.22.0",
+        "eslint": "^8.57.1",
         "jest": "^28.1.0"
     },
     "type": "module"
