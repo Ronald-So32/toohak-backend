@@ -16,7 +16,8 @@ describe ('Tests for quiz list', () => {
     
   test('User Id valid', () => {
     expect(adminQuizList(id)).toBe('object');
-    expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+    expect(adminQuizList(id)).toStrictEqual({ 
+      quizzes: [
         {
           quizId: quizId,
           name: 'Quiz name',
@@ -33,7 +34,8 @@ describe ('Valid User Id with multiple quizzess', () => {
 
   test('User Id valid', () => {
     expect(adminQuizList(id)).toBe('object');
-    expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+    expect(adminQuizList(id)).toStrictEqual({ 
+      quizzes: [
         {
           quizId: quizId,
           name: 'Quiz name',
