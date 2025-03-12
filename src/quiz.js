@@ -1,4 +1,5 @@
 import { getData } from './dataStore.js';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -8,7 +9,7 @@ import { getData } from './dataStore.js';
  * 
  * @typedef {Object} userId - Object containing just the user Id
  * 
- * @property {number} userId - Id of user
+ * @property {string} userId - Id of user
  */
 
 /**
@@ -21,14 +22,14 @@ import { getData } from './dataStore.js';
  * @typedef {Object} quizzes - Data structure containing an array of 
  * quiz summaries
  * 
- * @property {number} quizId - Id of the quiz
+ * @property {string} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
  */
 
 /**
  * A instance of this object:
  * {
- *    quizId: 1,
+ *    quizId: shdije28wjeheidjd,
  *    name: 'My Quiz',
  *    timeCreated: 1683125870,
  *    timeLastEdited: 1683125871,
@@ -37,8 +38,8 @@ import { getData } from './dataStore.js';
  * 
  * @typedef {Object} quiz - Data structure containing the details of the quiz
  * 
- * @property {number} quizId - Id of the quiz
- * @property {string} name - Full name of the quiz
+ * @property {string} quizId - Id of the quiz
+ * @property {string} name - F6ull name of the quiz
  * @property {number} timeCreated - Time created of the quiz
  * @property {number} timeLastEdited - Time of the last edit made to the quiz
  * @property {string} description - Description of the quiz
@@ -47,7 +48,7 @@ import { getData } from './dataStore.js';
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   * 
-  * @param {number} userId - Id of the user
+  * @param {string} userId - Id of the user
   * ...
   * 
   * @returns {quizzes: [...]} - Always return quizzes object
@@ -65,7 +66,7 @@ function adminQuizList(userId) {
 /**
   * Given basic details about a new quiz, create one for the logged in user.
   * 
-  * @param {number} userId - Id of the user
+  * @param {string} userId - Id of the user
   * @param {string} name - Name of quiz
   * @param {string} description - Description of quiz
   * ...
@@ -113,21 +114,8 @@ function adminQuizCreate(userId, name, description) {
     return { error: 'Quiz description is more than 100 characters'};
   }
 
-  let id;
+  let id = uuidv4();
   let unique = false;
-
-  while (!unique) {
-    id = Math.floor(Math.random() * 999999);
-    unique = true;
-
-    for (let quiz of data.quizzes) {
-      if (quiz.quizId === id) {
-        isUnique = false;
-        break;
-      }
-    }
-
-  }
 
   const timeStamp = Math.floor(Date.now() / 1000)
 
@@ -150,8 +138,8 @@ export { adminQuizCreate };
 /**
   * Given a particular quiz, permanently remove the quiz.
   * 
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
+  * @param {string} userId - Id of the user
+  * @param {string} quizId - Id of the quiz
   * ...
   * 
   * @returns {Object} - Always return an empty object
@@ -163,8 +151,8 @@ function adminQuizRemove(userId, quizId) {
 /**
   * Get all of the relevant information about the current quiz.
   * 
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
+  * @param {string} userId - Id of the user
+  * @param {string} quizId - Id of the quiz
   * ...
   * 
   * @returns {quiz} - Always return quiz object
@@ -182,8 +170,8 @@ function adminQuizInfo(userId, quizId) {
 /**
   * Update the name of the relevant quiz.
   * 
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
+  * @param {string} userId - Id of the user
+  * @param {string} quizId - Id of the quiz
   * @param {string} name - Name of the quiz
   * ...
   * 
@@ -196,8 +184,8 @@ function adminQuizNameUpdate(userId, quizId, name) {
 /**
   * Update the description of the relevant quiz.
   * 
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
+  * @param {string} userId - Id of the user
+  * @param {string} quizId - Id of the quiz
   * @param {string} description - Description of the quiz
   * ...
   * 
