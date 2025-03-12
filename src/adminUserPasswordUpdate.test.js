@@ -85,7 +85,7 @@ describe('Check password is updated successfully', () => {
   });
 });
 
-describe('Password updated unssuccessfully, confrim cannot login with unsuccessful password', () => {
+describe('Password updated unssuccessfully, confirm cannot login with unsuccessful password', () => {
   test('Password test password updated unsuccessfully and confirm with failed login', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'passwor'))
       .toStrictEqual({ error: expect.any(String) });

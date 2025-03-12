@@ -326,6 +326,10 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     }
   }
 
+  if (!target_user.old_passwords) {
+    target_user.old_passwords = [];
+  }
+
   target_user.old_passwords.push(target_user.user.password);
 
   for (const past_password of target_user.old_passwords) {
