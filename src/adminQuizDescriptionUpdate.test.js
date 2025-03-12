@@ -23,13 +23,13 @@ describe('Test error cases', () => {
   test('Invalid userId - When id doesn\'t exist', () => {
     const quizId = adminQuizCreate(id.userId, 'Quiz for Invalid User Test', 'Description').quizId;
     const result = adminQuizDescriptionUpdate(id.userId + 999, quizId, 'New Description');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Invalid quizId - When quiz doesn\'t exist', () => {
     const quizId = adminQuizCreate(id.userId, 'Quiz for Invalid Quiz Test', 'Description').quizId;
     const result = adminQuizDescriptionUpdate(id.userId, quizId + 999, 'New Description');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Invalid quizId - When quiz is not owned by user', () => {
@@ -40,7 +40,7 @@ describe('Test error cases', () => {
 
     // Try to update first user's quiz with second user's ID
     const result = adminQuizDescriptionUpdate(userId2, quizId, 'New Description');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   // To test the vadility of descriptions
@@ -62,11 +62,11 @@ describe('Test error cases', () => {
     ])('Invalid description - $reason', ({ description, reason }) => {
       const result = adminQuizCreate(id, 'Quiz Name', description);
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toMatchObject({ quizzes: [] });
-      expect(adminQuizInfo).toMatchObject({});
+      expect(adminQuizList).toStrictEqual({ quizzes: [] });
+      expect(adminQuizInfo).toStrictEqual({});
     });
 
     // To test valid descriptions

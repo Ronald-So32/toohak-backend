@@ -31,7 +31,7 @@ describe('Test correct return type and normal case usage', () => {
 describe('Test error cases', () => {
   test('Invalid userId - When id doens\'t exist', () => {
     const result = adminUserDetailsUpdate(id + 999, 'email@email.com', 'First', 'Last');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   describe('Test validity of emails', () => {
@@ -45,7 +45,7 @@ describe('Test error cases', () => {
 
       const result2 = adminUserDetailsUpdate(id, 'email2@email.com', 'First', 'Last');
 
-      expect(result2).toMatchObject({ error: expect.any(String) });
+      expect(result2).toStrictEqual({ error: expect.any(String) });
     });
 
     test.each([
@@ -85,13 +85,13 @@ describe('Test error cases', () => {
     test('Invalid first name - Containing less then 2 characters', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'F', 'Last');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Invalid first name - containing more then 20 characters', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'firstfirstfirstfirstfirst', 'Last');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Valid first name - Containing exactly 2 characters', () => {
@@ -118,7 +118,7 @@ describe('Test error cases', () => {
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'Last123' },
     ])('Invalid last name (containing invalid characters) - %s', ({ email, nameFirst, nameLast }) => {
       const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test.each([
@@ -137,13 +137,13 @@ describe('Test error cases', () => {
     test('Invalid last name - Containing less then 2 characters', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'L');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Invalid last name - containing more then 20 characters', () => {
       const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlastlast');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Valid last name - Containing exactly 2 characters', () => {

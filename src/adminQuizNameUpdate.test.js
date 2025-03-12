@@ -23,12 +23,12 @@ describe('Test correct return type and normal usage case', () => {
 describe('Test error cases', () => {
   test('Invalid userId - When id doesn\'t exist', () => {
     const result = adminQuizNameUpdate(userId + 999, quizId, 'New Quiz Name');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Invalid quizId - When quiz doesn\'t exist', () => {
     const result = adminQuizNameUpdate(userId, quizId + 999, 'New Quiz Name');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   test('Invalid quizId - When quiz is not owned by user', () => {
@@ -39,7 +39,7 @@ describe('Test error cases', () => {
 
     // Try to update first user's quiz with second user's ID
     const result = adminQuizNameUpdate(userId2, quizId, 'New Quiz Name');
-    expect(result).toMatchObject({ error: expect.any(String) });
+    expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
   describe('Test validity of name', () => {
@@ -79,11 +79,11 @@ describe('Test error cases', () => {
     ])('Invalid name - $description', ({ name, description }) => {
       const result = adminQuizNameUpdate(userId, quizId, name);
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toMatchObject({ quizzes: [] });
-      expect(adminQuizInfo).toMatchObject({});
+      expect(adminQuizList).toStrictEqual({ quizzes: [] });
+      expect(adminQuizInfo).toStrictEqual({});
     });
 
     // To test valid names
@@ -139,7 +139,7 @@ describe('Test error cases', () => {
       // Try to update the name of this quiz to the name of the first quiz
       const result = adminQuizNameUpdate(userId, anotherQuizId, 'Quiz Name');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
 });
