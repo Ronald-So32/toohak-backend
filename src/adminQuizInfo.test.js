@@ -73,6 +73,7 @@ describe('Test quiz info details', () => {
   test('Verify time last edited updates after quiz modification', () => {
     const initialInfo = adminQuizInfo(userId, quizId);
     // Simulating some passing of time
+    jest.useFakeTimers();
     jest.advanceTimersByTime(1000);
     // Modify the quiz
     adminQuizNameUpdate(userId, quizId, 'Updated Quiz Name');

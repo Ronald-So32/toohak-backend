@@ -86,7 +86,7 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toStrictEqual({ quizzes: [] });
+      expect(adminQuizList(userId)).toStrictEqual({ quizzes: [] });
       expect(adminQuizInfo).toStrictEqual({});
     });
 
