@@ -43,26 +43,46 @@ describe('Test error cases', () => {
     expect(result).toMatchObject({ error: expect.any(String) });
   })
   
-  describe('Test validity of Description', () => {
+  // To test the vadility of descriptions
+  describe('Test vadility of Description', () => {
+    // To test the Invalid descriptions
     test.each([
-      { description: 'abcdefg hijklm nopq rstu vwxyz ABCDE FGHIJK LMNOPQ RSTU VWXYZ 123456 7890 ! @ # $ % ^ & * ( ) _ + - =', reason: 'Description is more than 100 characters with normal spaces' },
-      { description: '  abcdefg hijklm nopq rstu vwxyz ABCDE FGHIJK LMNOPQ RSTUVWXYZ 1234567890 ! @ # $ % ^ & * ( ) _ + - =', reason: 'Description is more than 100 characters with spaces at the front' },
-      { description: 'abcdefg hijklm nopq rstu vwxyz ABCDE FGHIJK LMNOPQ RSTUVWXYZ 1234567890 ! @ # $ % ^ & * ( ) _ + - =  ', reason: 'Description is more than 100 characters with spaces at the end' },
-    ])('Invalid description - $reason', ({description}) => {
-      let quizId = adminQuizCreate(id.userId, 'Quiz for Description Test', 'Description').quizId;
-      let result = adminQuizDescriptionUpdate(id.userId, quizId, description);
-      expect(result).toMatchObject({ error: expect.any(String) });
-    });
+      { 
+        description: 'ab 12 '.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
+        reason: 'Description is more than 100 characters with normal spaces'
+      },
+      { 
+        description: ' ab 12'.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
+        reason: 'Description is more than 100 characters with spaces at the front'
+      },
+      { 
+        description: 'aB 12 '.repeat(20) + '! @ # $ % ^ & * ( ) _ + - = ',
+        reason: 'Description is more than 100 characters with spaces at the end'
+      },
+    ])('Invalid description - $reason', ({description, reason}) => {
+      let result = adminQuizCreate(id, 'Quiz Name', description);
 
+      expect(result).toMatchObject({ error: expect.any(String) });
+
+      // To test that no quizzes is created
+      expect(adminQuizList).toMatchObject({quizzes: []});
+      expect(adminQuizInfo).toMatchObject({});
+    })
+
+    // To test valid descriptions
     test.each([
-      { description: '', reason: 'Empty string' },
-      { description: 'abcdefg hijklm nopq rstu vwxyz ABCDE FGHIJK LMNOPQ RSTU VWXYZ 1234567890 ! @ # $ % ^ & * ( ) _ + - =', reason: 'Description with 100 characters' },
-    ])('Valid description - $reason', ({description}) => {
-      let quizId = adminQuizCreate(id.userId, 'Quiz for Valid Description Test', 'Description').quizId;
-      let result = adminQuizDescriptionUpdate(id.userId, quizId, description);
+      { 
+        description: '',
+        reason: 'Empty string'
+      },
+      { 
+        description: 'aB 12 '.repeat(12) + ' ! @ # $ % ^ & * ( ) _ + - =',
+        reason: 'Description with 100 characters'
+      },
+    ])('Valid description - $reason', ({ description, reason }) => {
+      let result = adminQuizCreate(id, 'Quiz Name', description);
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
-      expect(result).not.toBeNull();
-    });
-  })
+      expect(result).toStrictEqual({
+        quizId: result.quizId
+      });
 });
