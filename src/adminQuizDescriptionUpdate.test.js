@@ -47,11 +47,11 @@ describe('Test error cases', () => {
   describe('Test vadility of Description', () => {
     // To test the Invalid descriptions
     test.each([
-      { 
+      {
         description: 'ab 12 '.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
         reason: 'Description is more than 100 characters with normal spaces'
       },
-      { 
+      {
         description: ' ab 12'.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
         reason: 'Description is more than 100 characters with spaces at the front'
       },
@@ -85,4 +85,6 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({
         quizId: result.quizId
       });
-});
+    });
+  });
+})
