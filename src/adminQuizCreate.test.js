@@ -1,4 +1,8 @@
-import { adminQuizCreate, adminQuizList, adminQuizInfo } from './quiz.js';
+import {
+  adminQuizCreate,
+  adminQuizList,
+  adminQuizInfo
+} from './quiz.js';
 import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
 

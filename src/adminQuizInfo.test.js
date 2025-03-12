@@ -5,7 +5,7 @@ import {
   adminQuizDescriptionUpdate,
   adminQuizRemove
 } from './quiz.js';
-import { adminAuthRegister, adminAuthLogin } from './auth.js';
+import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
 
 let userId;

@@ -1,4 +1,9 @@
-import { adminAuthLogin, adminAuthRegister, adminUserDetails, adminUserPasswordUpdate } from './auth.js';
+import {
+  adminAuthLogin,
+  adminAuthRegister,
+  adminUserDetails,
+  adminUserPasswordUpdate
+} from './auth.js';
 import { clear } from './other.js';
 
 describe('Test correct return types', () => {

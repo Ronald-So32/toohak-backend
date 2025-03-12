@@ -1,4 +1,9 @@
-import { adminUserPasswordUpdate, adminAuthRegister, adminAuthLogin, adminUserDetails } from './auth.js';
+import {
+  adminUserPasswordUpdate,
+  adminAuthRegister,
+  adminAuthLogin,
+  adminUserDetails
+} from './auth.js';
 import { clear } from './other.js';
 
 let id;
