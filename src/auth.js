@@ -1,6 +1,7 @@
 import { getData } from './dataStore.js';
 
 import validator from 'validator';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -10,7 +11,7 @@ import validator from 'validator';
  * 
  * @typedef {Object} userId - Object containing just the user Id
  * 
- * @property {number} userId - Id of user
+ * @property {string} userId - Id of user
  */
 
 /**
@@ -25,7 +26,7 @@ import validator from 'validator';
  * 
  * @typedef {Object} user - Data structure containing the details of the user
  * 
- * @property {number} userId - Id of the user
+ * @property {string} userId - Id of the user
  * @property {string} name - Full name of the user
  * @property {string} email - Email address of the user
  * @property {number} numSuccessfulLogins - The number of times that the user
@@ -95,21 +96,9 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  let id;
-  let unique = false;
+  // Can't have specific error messages if using validator to replace above code
 
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (let user of data.users) {
-      if (user.userId === id) {
-        isUnique = false;
-        break;
-      }
-    }
-
-  }
+  let id = uuidv4(); // This better be unique
 
   data.users.push({
     userId: id,
@@ -171,7 +160,7 @@ export { adminAuthLogin };
  * Given an admin user's userId, return details about the user."name" is the
  * first and last name concatenated with a single space between them.
  * 
- * @param {number} userId - Id of the user
+ * @param {string} userId - Id of the user
  * 
  * @returns {user} - Always return userDetails object
 */
