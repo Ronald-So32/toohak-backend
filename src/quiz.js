@@ -180,10 +180,38 @@ export { adminQuizCreate };
   * 
   * @returns {Object} - Always return an empty object
 */
+
 function adminQuizRemove(userId, quizId) {
-    return {};
+  // Retrieves data from the data store
+  let data = getData();
+
+  // Validates if the user exists
+  const userExists = data.users.some(user => user.userId === userId);
+  if (!userExists) {
+    return { error: `User Id ${userId} is not valid` };
+  }
+
+  // Finds the quiz index of the quiz in the quizzes array
+  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+
+  // Validates if the quiz exists
+  if (quizIndex === -1) {
+    return { error: `Quiz with Id ${quizId} does not exist` };
+  }
+
+  // Checks if the user owns the quiz
+  const quiz = data.quizzes[quizIndex];
+  if (quiz.createdBy !== userId) {
+    return { error: 'You do not have permission to remove this quiz' };
+  }
+
+  // Removes the quiz from the quizzes array
+  data.quizzes.splice(quizIndex, 1);
+
+  return {};
 }
 
+export { adminQuizRemove };
 /**
   * Get all of the relevant information about the current quiz.
   * 
