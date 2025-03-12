@@ -30,7 +30,7 @@ describe('Test correct return type and normal case usage', () => {
 
 });
 
-describe('Test error cases', () => {
+describe('Test error cases', () => { 
   test('Invalid userId - When id doens\'t exist', () => {
     let result = adminUserDetailsUpdate(id + 999, 'email@email.com', 'First', 'Last');
     expect(result).toMatchObject({ error: expect.any(String) });

@@ -1,6 +1,7 @@
 import { getData } from './dataStore.js';
 
 import validator from 'validator';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -10,7 +11,7 @@ import validator from 'validator';
  * 
  * @typedef {Object} userId - Object containing just the user Id
  * 
- * @property {number} userId - Id of user
+ * @property {string} userId - Id of user
  */
 
 /**
@@ -25,7 +26,7 @@ import validator from 'validator';
  * 
  * @typedef {Object} user - Data structure containing the details of the user
  * 
- * @property {number} userId - Id of the user
+ * @property {string} userId - Id of the user
  * @property {string} name - Full name of the user
  * @property {string} email - Email address of the user
  * @property {number} numSuccessfulLogins - The number of times that the user
@@ -86,7 +87,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   }
 
   if (password.length < 8) {
-    return {error: 'Password is shorter than 8 characters' };
+    return { error: 'Password is shorter than 8 characters' };
   }
 
   let passwordLetter = password.search(/[a-zA-Z]/);
@@ -95,21 +96,9 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  let id;
-  let unique = false;
+  // Can't have specific error messages if using validator to replace above code
 
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (let user of data.users) {
-      if (user.userId === id) {
-        isUnique = false;
-        break;
-      }
-    }
-
-  }
+  let id = uuidv4(); // This better be unique
 
   data.users.push({
     userId: id,
@@ -171,7 +160,7 @@ export { adminAuthLogin };
  * Given an admin user's userId, return details about the user."name" is the
  * first and last name concatenated with a single space between them.
  * 
- * @param {number} userId - Id of the user
+ * @param {string} userId - Id of the user
  * 
  * @returns {user} - Always return userDetails object
 */
@@ -287,5 +276,66 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
+
+  // invalid user id
+  let data = getData();
+ 
+  let userData;
+  let userFound = false;
+  
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      userData = user;
+      userFound = true;
+    }
+  }
+
+  if (!userFound) {
+    return { error: `User Id of ${userId} is invalid` };
+  }
+
+  // check password of same userId then see if match oldPassword
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      if (user.password !== oldPassword) {
+        return { error: 'Old Password is not the correct old password' };
+      }
+    }
+  }
+
+  if (oldPassword === newPassword) {
+    return { error: 'oldPassword is the same as new one' };
+  }
+
+  let target_user;
+
+  for (const user of data.users) {
+    if (user.userId === userId) {
+      target_user = user; 
+    }
+  }
+
+  target_user.old_passwords.push(target_user.user.password);
+
+  for (const past_password of target_user.old_passwords) {
+    if (past_password === newPassword) {
+      return { error: 'New Password has already been used before by this user' };
+    }
+  }
+
+  if (newPassword.length < 8) {
+    return { error: 'New password is shorter than 8 characters' };
+  }
+
+  let passwordLetter = password.search(/[a-zA-Z]/);
+  let passwordNumber = password.search(/\d/);
+  if (passwordLetter === -1 || passwordNumber === -1) {
+    return { error: 'Password does not contain at least one number and at least one letter' };
+  }
+
+  target_user.password = newPassword;
+
   return {};
 }
+
+export { adminUserPasswordUpdate };
