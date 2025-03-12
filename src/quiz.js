@@ -137,8 +137,21 @@ function adminQuizCreate(userId, name, description) {
     return { error: 'Quiz description is more than 100 characters' };
   }
 
-  const id = uuidv4();
-  const unique = false;
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    id = Math.floor(Math.random() * 727727);
+    unique = true;
+
+    for (let user of data.users) {
+      if (user.userId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+  }
 
   const timeStamp = Math.floor(Date.now() / 1000);
 

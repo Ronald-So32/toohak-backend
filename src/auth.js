@@ -97,7 +97,21 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
   // Can't have specific error messages if using validator to replace above code
 
-  const id = uuidv4(); // This better be unique
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    id = Math.floor(Math.random() * 727727);
+    unique = true;
+
+    for (let user of data.users) {
+      if (user.userId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+
+  }
 
   data.users.push({
     userId: id,
