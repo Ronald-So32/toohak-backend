@@ -1,5 +1,5 @@
-import { adminQuizCreate, admiQuizList, adminQuizInfo } from './quiz.js';
-import { adminAuthRegister } from './auth.js';
+import { adminQuizCreate, adminQuizList, adminQuizInfo } from './quiz.js';
+import { adminAuthRegister } from './auth.js'
 import { clear } from './other.js';
 
 let id;
@@ -25,24 +25,23 @@ describe('Test correct return type and normal usage case', () => {
     expect(result).not.toBeNull();
 
     // To test if the quiz created is under the list of quiz the user has
-    expect(adminQuizList(id)).toBe('object');
-    expect(adminQuizList(id)).toStrictEqual({
-      quizzes: [
-        {
-          quizId: result.quizId,
-          name: expect.any(String),
-        }
-      ]
+    expect(typeof adminQuizList(id)).toBe('object');
+    expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+      {
+        quizId: result.quizId,
+        name: expect.any(String),
+      }
+    ]
     });
     expect(adminQuizList(id)).not.toBeNull();
 
     // To test if the quiz created sucessfully pushes the information of the quiz
-    expect(adminQuizInfo(id, result.quizId)).toBe('object');
+    expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
     expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
       quizId: result.quizId,
       name: 'Quiz Name',
-      timeCreated: expect.any(Number).toBeLessThanOrEqual(Date.now()),
-      timeLastEdited: expect.any(Number).toBeLessThanOrEqual(Date.now()),
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
       description: 'Description'
     });
 
@@ -60,9 +59,9 @@ describe('Test error cases', () => {
     expect(result).toStrictEqual({ error: expect.any(String) });
 
     // To test that no quizzes is created
-    expect(adminQuizList).toStrictEqual({ quizzes: [] });
-    expect(adminQuizInfo).toStrictEqual({});
-  });
+    expect(adminQuizList(id)).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo(result.quizId)).toStrictEqual({ error: expect.any(String) });
+  })
 
   // To test names which are valid and invalid
   describe('Test vadility of name', () => {
@@ -106,8 +105,8 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toStrictEqual({ quizzes: [] });
-      expect(adminQuizInfo).toStrictEqual({});
+      expect(adminQuizList(id)).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo(result.quizId)).toStrictEqual({ error: expect.any(String) });
     });
 
     // To test valid names
@@ -137,7 +136,7 @@ describe('Test error cases', () => {
         reason: 'Name with 30 or less valid characters with no spaces'
       },
       {
-        name: ' Hi I am Quiz 1234567890 abcde',
+        name: ' Hi I am Quiz 1234567890 abcde', 
         reason: 'Name with 30 or less valid characters with spaces at front'
       },
       {
@@ -145,7 +144,7 @@ describe('Test error cases', () => {
         reason: 'Name with 30 or less valid characters with spaces at end'
       },
       {
-        name: 'Hi I am Quiz 12345 67890 abcde',
+        name: 'Hi I am Quiz 12345 67890 abcde', 
         reason: 'Name with 30 or less valid characters with normal spaces'
       },
     ])('Valid name - $reason', ({ name, reason }) => {
@@ -158,24 +157,23 @@ describe('Test error cases', () => {
       expect(result).not.toBeNull();
 
       // To test if the quiz created is under the list of quiz the user has
-      expect(adminQuizList(id)).toBe('object');
-      expect(adminQuizList(id)).toStrictEqual({
-        quizzes: [
-          {
-            quizId: result1.quizId,
-            name: name,
-          }
-        ]
+      expect(typeof adminQuizList(id)).toBe('object');
+      expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+        {
+          quizId: result.quizId,
+          name: name,
+        }
+      ]
       });
       expect(adminQuizList(id)).not.toBeNull();
 
       // To test if the quiz created sucessfully pushes the information of the quiz
-      expect(adminQuizInfo(id, result.quizId)).toBe('object');
+      expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
       expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
-        quizId: result1.quizId,
+        quizId: result.quizId,
         name: name,
-        timeCreated: expect.any(Number).toBeLessThanOrEqual(Date.now()),
-        timeLastEdited: expect.any(Number).toBeLessThanOrEqual(Date.now()),
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
         description: 'Description'
       });
       expect(adminQuizInfo(id, result.quizId)).not.toBeNull();
@@ -194,33 +192,37 @@ describe('Test error cases', () => {
       expect(result1).not.toBeNull();
 
       // To test if the quiz created is under the list of quiz the user has
-      expect(adminQuizList(id)).toBe('object');
-      expect(adminQuizList(id)).toStrictEqual({
-        quizzes: [
-          {
-            quizId: result1.quizId,
-            name: 'Quiz Name',
-          }
-        ]
+      expect(typeof adminQuizList(id)).toBe('object');
+      expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+        {
+          quizId: result1.quizId,
+          name: 'Quiz Name',
+        }
+      ]
       });
       expect(adminQuizList(id)).not.toBeNull();
 
       // To test if the quiz created sucessfully pushes the information of the quiz
-      expect(adminQuizInfo(id, result.quizId)).toBe('object');
-      expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
+      expect(typeof adminQuizInfo(id, result1.quizId)).toBe('object');
+      expect(adminQuizInfo(id, result1.quizId)).toStrictEqual({
         quizId: result1.quizId,
         name: 'Quiz Name',
-        timeCreated: expect.any(Number).toBeLessThanOrEqual(Date.now()),
-        timeLastEdited: expect.any(Number).toBeLessThanOrEqual(Date.now()),
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
         description: 'Description'
       });
-      expect(adminQuizInfo(id, result.quizId)).not.toBeNull();
-
+      expect(adminQuizInfo(id, result1.quizId)).not.toBeNull();
+      
       expect(result2).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toStrictEqual({ quizzes: [] });
-      expect(adminQuizInfo).toStrictEqual({});
+      expect(adminQuizList(id)).toStrictEqual({quizzes: [
+        {
+          quizId: result1.quizId,
+          name: 'Quiz Name',
+        }
+      ]});
+      expect(adminQuizInfo(id, result2.quizId)).toStrictEqual({ error: expect.any(String) });
     });
   });
 
@@ -246,9 +248,9 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({ error: expect.any(String) });
 
       // To test that no quizzes is created
-      expect(adminQuizList).toStrictEqual({ quizzes: [] });
-      expect(adminQuizInfo).toStrictEqual({});
-    });
+      expect(adminQuizList(id)).toStrictEqual({quizzes: []});
+      expect(adminQuizInfo(id, result.quizId)).toStrictEqual({ error: expect.any(String) });
+    })
 
     // To test valid descriptions
     test.each([
@@ -270,25 +272,24 @@ describe('Test error cases', () => {
       expect(result).not.toBeNull();
 
       // To test if the quiz created is under the list of quiz the user has
-      expect(adminQuizList(id)).toBe('object');
-      expect(adminQuizList(id)).toStrictEqual({
-        quizzes: [
-          {
-            quizId: result.quizId,
-            name: 'Quiz Name',
-          }
-        ]
+      expect(typeof adminQuizList(id)).toBe('object');
+      expect(adminQuizList(id)).toStrictEqual({ quizzes: [
+        {
+          quizId: result.quizId,
+          name: 'Quiz Name',
+        }
+      ]
       });
       expect(adminQuizList(id)).not.toBeNull();
 
       // To test if the quiz created sucessfully pushes the information of the quiz
-      expect(adminQuizInfo(id, result.quizId)).toBe('object');
+      expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
       expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
         quizId: result.quizId,
         name: 'Quiz Name',
-        timeCreated: expect.any(Number).toBeLessThanOrEqual(Date.now()),
-        timeLastEdited: expect.any(Number).toBeLessThanOrEqual(Date.now()),
-        description: 'Description'
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
+        description: description
       });
       expect(adminQuizInfo(id, result.quizId)).not.toBeNull();
     });
