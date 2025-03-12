@@ -1,4 +1,4 @@
-import { adminQuizList, adminQuizCreate } from './quiz';
+import { adminQuizList, adminQuizCreate, adminQuizRemove } from './quiz';
 import { clear } from './other.js';
 import { authAdminRegister } from './auth.js';
 
@@ -52,5 +52,28 @@ describe ('Valid User Id with multiple quizzess', () => {
       });
       expect(adminQuizList(id)).not.toBeNull();
   });
+})
 
+
+describe ('Valid User Id with multiple quizzess', () => {
+  const quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
+  const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
+  adminQuizRemove(id, quizId2);
+
+  test('User Id valid', () => {
+    expect(adminQuizList(id)).toBe('object');
+    expect(adminQuizList(id)).toStrictEqual({ 
+      quizzes: [
+        {
+          quizId: quizId,
+          name: 'Quiz name',
+        },
+        {
+          quizId: quizId3,
+          name: 'Quiz3 name',
+        },
+      ]
+      });
+      expect(adminQuizList(id)).not.toBeNull();
+  });
 })
