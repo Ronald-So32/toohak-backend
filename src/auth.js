@@ -335,17 +335,11 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     }
   }
 
-  if (newPassword.length < 8) {
-    return { error: 'New password has less than 8 characters' };
+  let passwordLetter = password.search(/[a-zA-Z]/);
+  let passwordNumber = password.search(/\d/);
+  if (passwordLetter === -1 || passwordNumber === -1) {
+    return { error: 'Password does not contain at least one number and at least one letter' };
   }
-
-  const number = /\d/.test(newPassword);
-
-  const letter = /[a-zA-Z]/.test(newPassword);
-
-  if (!number || !letter) {
-    return { error: 'New Password does not contain at least one number and at least one letter' };
-  }    
 
   target_user.password = newPassword;
 
