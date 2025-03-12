@@ -47,9 +47,9 @@ describe('Invalid new passwords', () => {
       newPassword: 'password1', 
       description: 'Old Password is the same as password' 
     },
-  ])('Cases where new password cannot be made (invalid new password or useeId)', 
-    ({ id, oldPassword, newPassword, description }) => {
-      let result = adminUserPasswordUpdate(id, oldPassword, newPassword);
+  ])('Cases where new password cannot be made - $description)', 
+    ({ userId, oldPassword, newPassword, description }) => {
+      let result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
       expect(result).toStrictEqual({ error: expect.any(String) });
     })
 })
