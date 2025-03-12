@@ -193,4 +193,3 @@ describe('Test if the function actually works', () => {
     expect(login).toStrictEqual({ userId: result.userId });
   });
 });
-

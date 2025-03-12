@@ -92,5 +92,3 @@ describe('Test that the function works as intended', () => {
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 });
-
-
