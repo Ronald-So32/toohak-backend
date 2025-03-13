@@ -134,7 +134,8 @@ describe('Test error cases', () => {
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
-      expect(result).not.toBeNull();z
+      expect(result).not.toBeNull();
+
       // To make sure that the first name is updated
       expect(typeof adminUserDetails(id));
       expect(adminUserDetails(id)).toStrictEqual({
@@ -149,36 +150,60 @@ describe('Test error cases', () => {
       expect(adminUserDetails(id)).not.toBeNull();
     })
 
-    test('Invalid first name - Containing less then 2 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'F', 'Last');
-      
-      expect(result).toMatchObject({ error: expect.any(String) });
-    });
-
-    test('Invalid first name - containing more then 20 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'firstfirstfirstfirstfirst', 'Last');
+    test.each([
+      {
+        nameFirst: 'F', description: 'Containing less then 2 characters'
+      },
+      {
+        nameFirst: 'firstfirstfirstfirstfirst', description: 'Containing more then 20 characters'
+      }
+    ])('Invalid first name - $description', ({nameFirst, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
 
       expect(result).toStrictEqual({ error: expect.any(String) });
-    });
+      // To make sure that the first name is not updated
+      expect(typeof adminUserDetails(id));
+      expect(adminUserDetails(id)).toStrictEqual({
+        user: {
+          userId: id,
+          name: 'First Last',
+          email: 'email@email.com',
+          numSuccessfulLogins: expect.any(Number),
+          numFailedPasswordsSinceLastLogin: expect.any(Number),
+        },
+      });
+      expect(adminUserDetails(id)).not.toBeNull();
+    })
 
-    test('Valid first name - Containing exactly 2 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'Fi', 'Last');
+    test.each([
+      {
+        nameFirst: 'Fi', description: 'Containing exactly 2 characters'
+      },
+      {
+        nameFirst: 'Firstfirstfirstfirst', description: 'Containing exactly 20 characters'
+      }
+    ])('Valid first name - $description', ({nameFirst, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    });
+      
+      // To make sure that the first name is not updated
+      expect(typeof adminUserDetails(id));
+      expect(adminUserDetails(id)).toStrictEqual({
+        user: {
+          userId: id,
+          name: nameFirst + ' Last',
+          email: 'email@email.com',
+          numSuccessfulLogins: expect.any(Number),
+          numFailedPasswordsSinceLastLogin: expect.any(Number),
+        },
+      });
+      expect(adminUserDetails(id)).not.toBeNull();
+    })
 
-    test('Valid first name - Containing exactly 20 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'Firstfirstfirstfirst', 'Last');
-
-      expect(typeof result).toBe('object');
-      expect(result).toStrictEqual({});
-      expect(result).not.toBeNull();
-    });
-  });
-
-  describe('Test validity of first names', () => {
+  describe('Test validity of last names', () => {
     test.each([
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La@% $/st' },
       { email: 'email@email.com', nameFirst: 'First', nameLast: '!@#$%%*' },
@@ -200,6 +225,7 @@ describe('Test error cases', () => {
       });
       expect(adminUserDetails(id)).not.toBeNull();
     })
+  })
 
     test.each([
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La st' },
@@ -228,32 +254,58 @@ describe('Test error cases', () => {
 
     })
 
-    test('Invalid last name - Containing less then 2 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'L');
+    test.each([
+      {
+        nameLast: 'L', description: 'Containing less then 2 characters'
+      },
+      {
+        nameLast: 'fLastlastlastlastlastlast', description: 'Containing more then 20 characters'
+      }
+    ])('Invalid last name - $description', ({nameLast, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
 
       expect(result).toStrictEqual({ error: expect.any(String) });
-    });
+      // To make sure that the first name is not updated
+      expect(typeof adminUserDetails(id));
+      expect(adminUserDetails(id)).toStrictEqual({
+        user: {
+          userId: id,
+          name: 'First Last',
+          email: 'email@email.com',
+          numSuccessfulLogins: expect.any(Number),
+          numFailedPasswordsSinceLastLogin: expect.any(Number),
+        },
+      });
+      expect(adminUserDetails(id)).not.toBeNull();
+    })
 
-    test('Invalid last name - containing more then 20 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlastlast');
-
-      expect(result).toStrictEqual({ error: expect.any(String) });
-    });
-
-    test('Valid last name - Containing exactly 2 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'La');
+    test.each([
+      {
+        nameLast: 'La', description: 'Containing exactly 2 characters'
+      },
+      {
+        nameLast: 'Lastlastlastlastlast', description: 'Containing exactly 20 characters'
+      }
+    ])('Valid last name - $description', ({nameLast, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    });
+      
+      // To make sure that the first name is not updated
+      expect(typeof adminUserDetails(id));
+      expect(adminUserDetails(id)).toStrictEqual({
+        user: {
+          userId: id,
+          name: 'First ' + nameLast,
+          email: 'email@email.com',
+          numSuccessfulLogins: expect.any(Number),
+          numFailedPasswordsSinceLastLogin: expect.any(Number),
+        },
+      });
+      expect(adminUserDetails(id)).not.toBeNull();
+    })
 
-    test('Valid first name - Containing exactly 20 characters', () => {
-      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlast');
-
-      expect(typeof result).toBe('object');
-      expect(result).toStrictEqual({});
-      expect(result).not.toBeNull();
-    });
   });
 });
