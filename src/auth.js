@@ -319,17 +319,9 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  let target_user;
+  userData.old_passwords.push(userData.password);
 
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      target_user = user;
-    }
-  }
-
-  target_user.old_passwords.push(target_user.user.password);
-
-  for (const past_password of target_user.old_passwords) {
+  for (const past_password of userData.old_passwords) {
     if (past_password === newPassword) {
       return { error: 'New Password has already been used before by this user' };
     }
@@ -345,7 +337,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  target_user.password = newPassword;
+  userData.password = newPassword;
 
   return {};
 }
