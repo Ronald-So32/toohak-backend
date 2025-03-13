@@ -209,7 +209,7 @@ function adminQuizRemove(userId, quizId) {
 
 export { adminQuizRemove };
 /**
-  * Get all of the relevant information about the current quiz.
+  * Get all the relevant information about the current quiz.
   *
   * @param {string} userId - Id of the user
   * @param {string} quizId - Id of the quiz
@@ -285,7 +285,7 @@ function adminQuizNameUpdate(userId, quizId, name) {
     return { error: 'User does not own this quiz' };
   }
 
-  // Check if name contains only alphanumerics and spaces
+  // Check if name contains only alphanumeric characters and spaces
   const validNameRegex = /^[a-zA-Z0-9 ]+$/;
   if (!validNameRegex.test(name)) {
     return { error: 'Name contains invalid characters' };

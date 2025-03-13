@@ -8,7 +8,7 @@ import { clear } from './other.js';
 
 let id;
 
-// To clear the datas and register a user before each test
+// To clear all the data and register a user before each test
 beforeEach(() => {
   clear();
   id = adminAuthRegister('email@email.com', 'Password1', 'First', 'Last').userId;
@@ -40,7 +40,7 @@ describe('Test correct return type and normal usage case', () => {
     });
     expect(adminQuizList(id)).not.toBeNull();
 
-    // To test if the quiz created sucessfully pushes the information of the quiz
+    // To test if the quiz created successfully pushes the information of the quiz
     expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
     expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
       quizId: result.quizId,
@@ -173,7 +173,7 @@ describe('Test error cases', () => {
       });
       expect(adminQuizList(id)).not.toBeNull();
 
-      // To test if the quiz created sucessfully pushes the information of the quiz
+      // To test if the quiz created successfully pushes the information of the quiz
       expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
       expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
         quizId: result.quizId,
@@ -209,7 +209,7 @@ describe('Test error cases', () => {
       });
       expect(adminQuizList(id)).not.toBeNull();
 
-      // To test if the quiz created sucessfully pushes the information of the quiz
+      // To test if the quiz created successfully pushes the information of the quiz
       expect(typeof adminQuizInfo(id, result1.quizId)).toBe('object');
       expect(adminQuizInfo(id, result1.quizId)).toStrictEqual({
         quizId: result1.quizId,
@@ -235,8 +235,8 @@ describe('Test error cases', () => {
     });
   });
 
-  // To test the vadility of descriptions
-  describe('Test vadility of Description', () => {
+  // To test the validity of descriptions
+  describe('Test validity of Description', () => {
     // To test the Invalid descriptions
     test.each([
       {
@@ -292,7 +292,7 @@ describe('Test error cases', () => {
       });
       expect(adminQuizList(id)).not.toBeNull();
 
-      // To test if the quiz created sucessfully pushes the information of the quiz
+      // To test if the quiz created successfully pushes the information of the quiz
       expect(typeof adminQuizInfo(id, result.quizId)).toBe('object');
       expect(adminQuizInfo(id, result.quizId)).toStrictEqual({
         quizId: result.quizId,

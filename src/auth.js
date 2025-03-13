@@ -29,7 +29,7 @@ import validator from 'validator';
  * @property {string} name - Full name of the user
  * @property {string} email - Email address of the user
  * @property {number} numSuccessfulLogins - The number of times that the user
- * logs in sucessfully
+ * logs in successfully
  * @property {number} numFailedPasswordsSinceLastLogin - The number of failed
  * login attempts by the user since the last login
  */
@@ -287,7 +287,7 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
-  // invalid user id
+  // Invalid user id
   const data = getData();
 
   let userData;
@@ -304,7 +304,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: `User Id of ${userId} is invalid` };
   }
 
-  // check password of same userId then see if match oldPassword
+  // Check password of same userId then see if match oldPassword
   for (const user of data.users) {
     if (user.userId === userId) {
       if (user.password !== oldPassword) {

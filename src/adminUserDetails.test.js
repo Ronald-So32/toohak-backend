@@ -1,4 +1,10 @@
-import { adminUserDetails, adminAuthRegister, adminAuthLogin, adminUserPasswordUpdate, adminUserDetailsUpdate } from './auth.js';
+import {
+  adminUserDetails,
+  adminAuthRegister,
+  adminAuthLogin,
+  adminUserPasswordUpdate,
+  adminUserDetailsUpdate
+} from './auth.js';
 import { clear } from './other.js';
 
 describe('Test adminUserDetails functionality', () => {

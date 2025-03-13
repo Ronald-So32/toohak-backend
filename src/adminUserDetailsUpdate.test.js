@@ -1,4 +1,7 @@
-import { adminUserDetailsUpdate, adminUserDetails } from './auth.js';
+import {
+  adminUserDetailsUpdate,
+  adminUserDetails
+} from './auth.js';
 import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
 
@@ -66,7 +69,7 @@ describe('Test correct return type and normal case usage', () => {
     expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
 
-    // To make sure taht the details are updated
+    // To make sure that the details are updated
     expect(typeof adminUserDetails(id));
     expect(adminUserDetails(id)).toStrictEqual({
       user: {

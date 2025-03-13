@@ -15,7 +15,6 @@ beforeEach(() => {
   quizId = adminQuizCreate(id, 'Quiz Name', 'Description').quizId;
 });
 
-// Toa test that
 describe('Test correct return type and normal usage case', () => {
   test('Test if the returned is object which is empty', () => {
     const result = adminQuizDescriptionUpdate(id, quizId, 'New Description');
