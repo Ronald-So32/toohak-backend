@@ -6,60 +6,64 @@ import {
 } from './auth.js';
 import { clear } from './other.js';
 
-describe('Test correct return types', () => {
-  beforeEach(() => {
-    clear();
-    adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-  });
+let id;
 
-  test('Test if the return is an object', () => {
+beforeEach(() => {
+  clear();
+  id = adminAuthRegister('email@email.com', 'Password1', 'first', 'last').userId;
+});
+
+describe('Test correct return types', () => {
+  test('Test if the return is an object and is an userId', () => {
     const result = adminAuthLogin('email@email.com', 'Password1');
     expect(typeof result).toBe('object');
-    expect(result).not.toBeNull();
-  });
-
-  test('Test if the return object has a userId', () => {
-    const result = adminAuthLogin('email@email.com', 'Password1');
     expect(result).toStrictEqual({
-      userId: expect.any(Number)
+      userId: id
     });
     expect(result).not.toBeNull();
   });
+  
 });
 
 describe('Test error cases', () => {
-  beforeEach(() => {
-    clear();
-    adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-  });
-
   describe('Test if the email exists', () => {
-    test.each([
-      ['Email exists', 'email@email.com', 'Password1', { userId: expect.any(Number) }],
-      ['Email doesn\'t exist', 'emailw@email.com', 'Password1', { error: expect.any(String) }]
-    ])('%s', (description, email, password, expected) => {
-      const result = adminAuthLogin(email, password);
-      expect(result).toStrictEqual(expected);
-    });
+    test('Email exists', () => {
+      const result = adminAuthLogin('email@email.com', 'Password1')
+
+      expect(typeof result).toBe('object');
+      expect(result).toStrictEqual({
+        userId: id
+      });
+      expect(result).not.toBeNull();
+    })
+
+    test('Email doesn\'t exists', () => {
+      const result = adminAuthLogin('emailw@email.com', 'Password1')
+
+      expect(result).toStrictEqual({ error: expect.any(String) });
+    })
   });
 
   describe('Test if the password is correct', () => {
-    test.each([
-      ['Password is correct', 'email@email.com', 'Password1', { userId: expect.any(Number) }],
-      ['Password is incorrect', 'email@email.com', 'Password2', { error: expect.any(String) }]
-    ])('%s', (description, email, password, expected) => {
-      const result = adminAuthLogin(email, password);
-      expect(result).toStrictEqual(expected);
-    });
+    test('Password is correct', () => {
+      const result = adminAuthLogin('email@email.com', 'Password1');
+
+      expect(typeof result).toBe('object');
+      expect(result).toStrictEqual({
+        userId: id
+      });
+      expect(result).not.toBeNull();
+    })
+
+    test('Password is incorrect', () => {
+      const result = adminAuthLogin('email@email.com', 'Password2');
+
+      expect(result).toStrictEqual({ error: expect.any(String) });
+    })
   });
 });
 
 describe('Test that the function works as intended', () => {
-  let registerDetails;
-  beforeEach(() => {
-    clear();
-    registerDetails = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-  });
 
   test('Verify user details after registration and login', () => {
     const result = adminAuthLogin('email@email.com', 'Password1');
@@ -76,13 +80,13 @@ describe('Test that the function works as intended', () => {
   });
 
   test('Verify login after password update', () => {
-    const update = adminUserPasswordUpdate(registerDetails.userId, 'Password1', 'Password2');
+    const update = adminUserPasswordUpdate(id, 'Password1', 'Password2');
     expect(update).toStrictEqual({});
 
     const result = adminAuthLogin('email@email.com', 'Password2');
-    expect(result).toStrictEqual({ userId: registerDetails.userId });
+    expect(result).toStrictEqual({ userId: id });
 
-    const details = adminUserDetails(registerDetails.userId);
+    const details = adminUserDetails(id);
     expect(details.user.numSuccessfulLogins).toStrictEqual(2);
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
   });
@@ -91,7 +95,7 @@ describe('Test that the function works as intended', () => {
     const failedLogin = adminAuthLogin('email@email.com', 'WrongPassword');
     expect(failedLogin).toStrictEqual({ error: expect.any(String) });
 
-    const details = adminUserDetails(registerDetails.userId);
+    const details = adminUserDetails(id);
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 });
