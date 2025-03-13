@@ -1,10 +1,4 @@
-import {
-  adminUserDetails,
-  adminAuthRegister,
-  adminAuthLogin,
-  adminUserPasswordUpdate,
-  adminUserDetailsUpdate
-} from './auth.js';
+import { adminUserDetails, adminAuthRegister, adminAuthLogin, adminUserPasswordUpdate, adminUserDetailsUpdate } from './auth.js';
 import { clear } from './other.js';
 
 describe('Test adminUserDetails functionality', () => {
@@ -12,8 +6,7 @@ describe('Test adminUserDetails functionality', () => {
 
   beforeEach(() => {
     clear();
-    const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-    userId = result.userId;
+    userId = adminAuthRegister('email@email.com', 'Password1', 'first', 'last').userId;
   });
 
   test('Test if the return type is expected', () => {
@@ -92,5 +85,21 @@ describe('Test adminUserDetails functionality', () => {
   test('Test invalid userId', () => {
     const result = adminUserDetails(userId + 727);
     expect(result).toStrictEqual({ error: expect.any(String) });
+  });
+});
+
+describe('Check normal usage cases', () => {
+  test('Normal case 1', () => {
+    const result = adminAuthLogin('email@email.com', 'Password1');
+    const details = adminUserDetails(result.userId);
+    expect(details).toStrictEqual({
+      user: {
+        userId: result.userId,
+        name: 'first last',
+        email: 'email@email.com',
+        numSuccessfulLogins: 2,
+        numFailedPasswordsSinceLastLogin: 0,
+      },
+    });
   });
 });
