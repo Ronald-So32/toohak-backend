@@ -40,7 +40,7 @@ describe('Valid User Id with multiple quizzes', () => {
   test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
-    
+
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [

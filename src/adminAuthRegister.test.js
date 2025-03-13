@@ -77,14 +77,14 @@ describe('Test error cases', () => {
         description: 'Missing domain'
       },
       {
-        email: '@missingusername.com', 
+        email: '@missingusername.com',
         description: 'Missing username before domain'
       },
       {
         email: 'user@.com',
         description: 'Missing domain name'
       },
-    ])('Invalid email - $description', ({ email, description}) => {
+    ])('Invalid email - $description', ({ email, description }) => {
       const result = adminAuthRegister(email, 'Password1', 'first', 'last');
 
       expect(result).toStrictEqual({ error: expect.any(String) });
@@ -145,12 +145,10 @@ describe('Test error cases', () => {
         nameFirst: 'firstfirstfirstfirstfirst',
         description: 'Containing more then 20 characters'
       }
-    ])('Invalid first name - $description', ({nameFirst, description}) => {
+    ])('Invalid first name - $description', ({ nameFirst, description }) => {
       const result = adminAuthRegister('email@email.com', 'Password1', nameFirst, 'last');
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
-
-    
   });
 
   describe('NameLast test cases', () => {
@@ -175,7 +173,7 @@ describe('Test error cases', () => {
         nameLast: 'Lastlastlastlastlastlast',
         description: 'Containing more then 20 characters'
       }
-    ])('Invalid last name - $description', ({nameLast, description}) => {
+    ])('Invalid last name - $description', ({ nameLast, description }) => {
       const result = adminAuthRegister('email@email.com', 'Password1', 'first', nameLast);
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
@@ -257,12 +255,10 @@ describe('Test error cases', () => {
       const result = adminAuthRegister('email@email.com', password, 'first', 'last');
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
-
   });
 });
 
 describe('Test if the function actually works', () => {
-
   test('Test user details after registration', () => {
     const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
     const details = adminUserDetails(result.userId);

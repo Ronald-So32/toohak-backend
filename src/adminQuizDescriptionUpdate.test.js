@@ -15,7 +15,7 @@ beforeEach(() => {
   quizId = adminQuizCreate(id, 'Quiz Name', 'Description').quizId;
 });
 
-// Toa test that 
+// Toa test that
 describe('Test correct return type and normal usage case', () => {
   test('Test if the returned is object which is empty', () => {
     const result = adminQuizDescriptionUpdate(id, quizId, 'New Description');
@@ -28,7 +28,6 @@ describe('Test correct return type and normal usage case', () => {
 
 describe('Test error cases', () => {
   test('Invalid userId - When id doesn\'t exist', () => {
-    
     const result = adminQuizDescriptionUpdate(id + 999, quizId, 'New Description');
 
     expect(result).toStrictEqual({ error: expect.any(String) });
@@ -43,7 +42,6 @@ describe('Test error cases', () => {
       description: 'Description'
     });
     expect(adminQuizInfo(id, quizId)).not.toBeNull();
-
   });
 
   test('Invalid quizId - When quiz doesn\'t exist', () => {
@@ -60,7 +58,6 @@ describe('Test error cases', () => {
       description: 'Description'
     });
     expect(adminQuizInfo(id, quizId)).not.toBeNull();
-
   });
 
   test('Invalid quizId - When quiz is not owned by user', () => {
@@ -72,7 +69,6 @@ describe('Test error cases', () => {
     // Try to update first user's quiz with second user's ID
     const result = adminQuizDescriptionUpdate(userId2, quizId, 'New Description');
     expect(result).toStrictEqual({ error: expect.any(String) });
-    
   });
 
   // To test the validity of descriptions
@@ -130,7 +126,7 @@ describe('Test error cases', () => {
         timeLastEdited: expect.any(Number),
         description: description
       });
-  
+
       expect(adminQuizInfo(id, quizId)).not.toBeNull();
     });
   });
