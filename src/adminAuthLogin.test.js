@@ -55,9 +55,10 @@ describe('Test error cases', () => {
 });
 
 describe('Test that the function works as intended', () => {
+  let registerDetails;
   beforeEach(() => {
     clear();
-    adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+    registerDetails = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
   });
 
   test('Verify user details after registration and login', () => {
@@ -75,25 +76,22 @@ describe('Test that the function works as intended', () => {
   });
 
   test('Verify login after password update', () => {
-    const register = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-
-    adminUserPasswordUpdate(register.userId, 'Password1', 'Password2');
+    const update = adminUserPasswordUpdate(registerDetails.userId, 'Password1', 'Password2');
+    expect(update).toStrictEqual({});
 
     const result = adminAuthLogin('email@email.com', 'Password2');
-    expect(result).toStrictEqual({ userId: register.userId });
+    expect(result).toStrictEqual({ userId: registerDetails.userId });
 
-    const details = adminUserDetails(register.userId);
+    const details = adminUserDetails(registerDetails.userId);
     expect(details.user.numSuccessfulLogins).toStrictEqual(2);
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
   });
 
   test('Verify failed login attempts', () => {
-    const register = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-
     const failedLogin = adminAuthLogin('email@email.com', 'WrongPassword');
     expect(failedLogin).toStrictEqual({ error: expect.any(String) });
 
-    const details = adminUserDetails(register.userId);
+    const details = adminUserDetails(registerDetails.userId);
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 });

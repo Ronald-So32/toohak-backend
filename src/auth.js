@@ -158,7 +158,7 @@ function adminAuthLogin(email, password) {
 
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
-    return { error: 'Password is wrong' };
+    return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
   userData.numSuccessfulLogins += 1;
