@@ -31,7 +31,7 @@ describe('Tests for quiz list', () => {
   });
 });
 
-describe('Valid User Id with multiple quizzess', () => {
+describe('Valid User Id with multiple quizzes', () => {
   const quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
   const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
 
@@ -57,7 +57,7 @@ describe('Valid User Id with multiple quizzess', () => {
   });
 });
 
-describe('Valid User Id with multiple quizzess', () => {
+describe('Valid User Id with multiple quizzes', () => {
   const quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
   const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
   adminQuizRemove(id, quizId2);
