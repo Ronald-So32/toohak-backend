@@ -4,10 +4,10 @@ import {
   adminQuizRemove
 } from './quiz';
 import { clear } from './other.js';
-import { authAdminRegister } from './auth.js';
+import { adminAuthRegister } from './auth.js';
 
 clear();
-const id = authAdminRegister('email@email.com', 'password1', 'first', 'last').userId;
+const id = adminAuthRegister('email@email.com', 'password1', 'first', 'last').userId;
 const quizId = adminQuizCreate(id, 'Quiz name', 'Description').quizId;
 
 describe('Tests for quiz list', () => {
