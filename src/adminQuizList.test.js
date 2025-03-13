@@ -17,8 +17,7 @@ beforeEach(() => {
 
 describe('Tests for quiz list', () => {
   test('User Id invalid', () => {
-    expect(adminQuizList(-1))
-      .toStrictEqual({ error: expect.any(String) });
+    expect(adminQuizList(-1)).toStrictEqual({ error: expect.any(String) });
     expect(adminQuizList(id)).not.toBeNull();
   });
 
@@ -37,25 +36,23 @@ describe('Tests for quiz list', () => {
 });
 
 describe('Valid User Id with multiple quizzes', () => {
-  beforeEach(() => {
+  test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
-  });
 
-  test('User Id valid', () => {
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
-          quizId: expect.any(Number),
+          quizId: quizId,
           name: 'Quiz name',
         },
         {
-          quizId: expect.any(Number),
+          quizId: quizId2,
           name: 'Quiz2 name',
         },
         {
-          quizId: expect.any(Number),
+          quizId: quizId3,
           name: 'Quiz3 name',
         },
       ]
@@ -65,22 +62,20 @@ describe('Valid User Id with multiple quizzes', () => {
 });
 
 describe('Valid User Id with multiple quizzes after removal', () => {
-  beforeEach(() => {
+  test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
     adminQuizRemove(id, quizId2);
-  });
 
-  test('User Id valid', () => {
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
-          quizId: expect.any(Number),
+          quizId: quizId,
           name: 'Quiz name',
         },
         {
-          quizId: expect.any(Number),
+          quizId: quizId3,
           name: 'Quiz3 name',
         },
       ]

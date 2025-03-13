@@ -56,12 +56,10 @@ import { v4 as uuidv4 } from 'uuid';
 function adminQuizList(userId) {
   const data = getData();
 
-  let userData;
   let userFound = false;
 
   for (const user of data.users) {
     if (user.userId === userId) {
-      userData = user;
       userFound = true;
     }
   }
@@ -138,11 +136,11 @@ function adminQuizCreate(userId, name, description) {
   }
 
   let id;
-  let unique = false;
+  let isUnique = false;
 
-  while (!unique) {
+  while (!isUnique) {
     id = Math.floor(Math.random() * 727727);
-    unique = true;
+    isUnique = true;
 
     for (const user of data.users) {
       if (user.userId === id) {
