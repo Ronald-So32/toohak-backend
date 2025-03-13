@@ -31,11 +31,31 @@ describe('Test adminUserDetails functionality', () => {
   });
 
   test.each([
-    ['Initial login', 'Password1', 1, 0],
-    ['After successful login', 'Password1', 2, 0],
-    ['After failed login', 'Password2', 1, 1],
-    ['After successful login post failed attempt', 'Password1', 2, 1],
-  ])('Test login counts: %s', (description, password, expectedSuccessfulLogins, expectedFailedLogins) => {
+    {
+      description: 'Initial login',
+      password: 'Password1',
+      expectedSuccessfulLogins: 1,
+      expectedFailedLogins: 0,
+    },
+    {
+      description: 'After successful login',
+      password: 'Password1',
+      expectedSuccessfulLogins: 2,
+      expectedFailedLogins: 0,
+    },
+    {
+      description: 'After failed login',
+      password: 'Password2',
+      expectedSuccessfulLogins: 1,
+      expectedFailedLogins: 1,
+    },
+    {
+      description: 'After successful login post failed attempt',
+      password: 'Password1',
+      expectedSuccessfulLogins: 2,
+      expectedFailedLogins: 1,
+    },
+  ])('Test login counts: %s', ({ description, password, expectedSuccessfulLogins, expectedFailedLogins }) => {
     if (description === 'After successful login') {
       adminAuthLogin('email@email.com', password);
     } else if (description === 'After failed login') {
@@ -44,7 +64,7 @@ describe('Test adminUserDetails functionality', () => {
       adminAuthLogin('email@email.com', 'Password2');
       adminAuthLogin('email@email.com', password);
     }
-
+  
     const result = adminUserDetails(userId);
     expect(result).toStrictEqual({
       user: {
