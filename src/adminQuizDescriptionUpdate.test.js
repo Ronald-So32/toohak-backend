@@ -7,17 +7,19 @@ import {
 import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
 
-let id;
+let id, quizId;
 
-beforeAll(() => {
+beforeEach(() => {
   clear();
   id = adminAuthRegister('email@email.com', 'Password1', 'First', 'Last').userId;
+  quizId = adminQuizCreate(id, 'Quiz Name', 'Description').quizId;
 });
 
+// Toa test that 
 describe('Test correct return type and normal usage case', () => {
   test('Test if the returned is object which is empty', () => {
-    const quizId = adminQuizCreate(id, 'Quiz Name', 'Description').quizId;
     const result = adminQuizDescriptionUpdate(id, quizId, 'New Description');
+
     expect(typeof result).toBe('object');
     expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
@@ -26,15 +28,39 @@ describe('Test correct return type and normal usage case', () => {
 
 describe('Test error cases', () => {
   test('Invalid userId - When id doesn\'t exist', () => {
-    const quizId = adminQuizCreate(id, 'Quiz for Invalid User Test', 'Description').quizId;
+    
     const result = adminQuizDescriptionUpdate(id + 999, quizId, 'New Description');
+
     expect(result).toStrictEqual({ error: expect.any(String) });
+
+    // To make sure that it doe not change any existing quiz
+    expect(typeof adminQuizInfo(id, quizId)).toBe('object');
+    expect(adminQuizInfo(id, quizId)).toStrictEqual({
+      quizId: quizId,
+      name: 'Quiz Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description'
+    });
+    expect(adminQuizInfo(id, quizId)).not.toBeNull();
+
   });
 
   test('Invalid quizId - When quiz doesn\'t exist', () => {
-    const quizId = adminQuizCreate(id, 'Quiz for Invalid Quiz Test', 'Description').quizId;
     const result = adminQuizDescriptionUpdate(id, quizId + 999, 'New Description');
     expect(result).toStrictEqual({ error: expect.any(String) });
+
+    // To make sure that it does not change any exist quiz of the user
+    expect(typeof adminQuizInfo(id, quizId)).toBe('object');
+    expect(adminQuizInfo(id, quizId)).toStrictEqual({
+      quizId: quizId,
+      name: 'Quiz Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description'
+    });
+    expect(adminQuizInfo(id, quizId)).not.toBeNull();
+
   });
 
   test('Invalid quizId - When quiz is not owned by user', () => {
@@ -46,17 +72,11 @@ describe('Test error cases', () => {
     // Try to update first user's quiz with second user's ID
     const result = adminQuizDescriptionUpdate(userId2, quizId, 'New Description');
     expect(result).toStrictEqual({ error: expect.any(String) });
+    
   });
 
   // To test the validity of descriptions
   describe('Test validity of Description', () => {
-    let id;
-
-    beforeEach(() => {
-      clear();
-      id = adminAuthRegister('email@email.com', 'Password1', 'First', 'Last').userId;
-    });
-
     // To test the Invalid descriptions
     test.each([
       {
@@ -95,11 +115,23 @@ describe('Test error cases', () => {
         reason: 'Description with 100 characters'
       },
     ])('Valid description - $reason', ({ description, reason }) => {
-      const result = adminQuizCreate(id, 'Quiz Name', description);
+      const result = adminQuizDescriptionUpdate(id, quizId, description);
+
       expect(typeof result).toBe('object');
-      expect(result).toStrictEqual({
-        quizId: result.quizId
+      expect(result).toStrictEqual({});
+      expect(result).not.toBeNull();
+
+      // To make sure that description is actually updated
+      expect(typeof adminQuizInfo(id, quizId)).toBe('object');
+      expect(adminQuizInfo(id, quizId)).toStrictEqual({
+        quizId: quizId,
+        name: 'Quiz Name',
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
+        description: description
       });
+  
+      expect(adminQuizInfo(id, quizId)).not.toBeNull();
     });
   });
 });
