@@ -105,7 +105,7 @@ describe('Test interactions with other functions', () => {
 
   test('Verify quiz removal and info retrieval', () => {
     adminQuizRemove(userId, quizId);
-    //expect(() => adminQuizInfo(userId, quizId)).toThrowError();
+    // expect(() => adminQuizInfo(userId, quizId)).toThrowError();
     expect(adminQuizInfo(userId, quizId)).toStrictEqual({ error: expect.any(String) });
   });
 });

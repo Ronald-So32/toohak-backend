@@ -104,13 +104,12 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     id = Math.floor(Math.random() * 727727);
     unique = true;
 
-    for (let user of data.users) {
+    for (const user of data.users) {
       if (user.userId === id) {
         isUnique = false;
         break;
       }
     }
-
   }
 
   data.users.push({
