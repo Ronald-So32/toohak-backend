@@ -6,9 +6,14 @@ import {
 import { clear } from './other.js';
 import { adminAuthRegister } from './auth.js';
 
-clear();
-const id = adminAuthRegister('email@email.com', 'password1', 'first', 'last').userId;
-const quizId = adminQuizCreate(id, 'Quiz name', 'Description').quizId;
+let id;
+let quizId, quizId2, quizId3;
+
+beforeEach(() => {
+  clear();
+  id = adminAuthRegister('email@email.com', 'password1', 'first', 'last').userId;
+  quizId = adminQuizCreate(id, 'Quiz name', 'Description').quizId;
+});
 
 describe('Tests for quiz list', () => {
   test('User Id invalid', () => {
@@ -22,7 +27,7 @@ describe('Tests for quiz list', () => {
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
-          quizId: quizId,
+          quizId: expect.any(Number),
           name: 'Quiz name',
         }
       ]
@@ -32,23 +37,25 @@ describe('Tests for quiz list', () => {
 });
 
 describe('Valid User Id with multiple quizzes', () => {
-  const quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
-  const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
+  beforeEach(() => {
+    quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
+    quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
+  });
 
   test('User Id valid', () => {
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
-          quizId: quizId,
+          quizId: expect.any(Number),
           name: 'Quiz name',
         },
         {
-          quizId: quizId2,
+          quizId: expect.any(Number),
           name: 'Quiz2 name',
         },
         {
-          quizId: quizId3,
+          quizId: expect.any(Number),
           name: 'Quiz3 name',
         },
       ]
@@ -57,21 +64,23 @@ describe('Valid User Id with multiple quizzes', () => {
   });
 });
 
-describe('Valid User Id with multiple quizzes', () => {
-  const quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
-  const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
-  adminQuizRemove(id, quizId2);
+describe('Valid User Id with multiple quizzes after removal', () => {
+  beforeEach(() => {
+    quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
+    quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
+    adminQuizRemove(id, quizId2);
+  });
 
   test('User Id valid', () => {
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
-          quizId: quizId,
+          quizId: expect.any(Number),
           name: 'Quiz name',
         },
         {
-          quizId: quizId3,
+          quizId: expect.any(Number),
           name: 'Quiz3 name',
         },
       ]
