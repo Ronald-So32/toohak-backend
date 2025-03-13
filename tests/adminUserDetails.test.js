@@ -70,7 +70,7 @@ describe('Test adminUserDetails functionality', () => {
     actions.forEach((action) => {
       adminAuthLogin('email@email.com', action.password);
     });
-  
+
     const result = adminUserDetails(userId);
     expect(result).toStrictEqual({
       user: {
