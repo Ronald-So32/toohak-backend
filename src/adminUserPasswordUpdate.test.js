@@ -68,18 +68,18 @@ describe('new Password already used', () => {
 describe('Check password is updated successfully', () => {
   test('Password updated correctly', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'newPassword1')).toStrictEqual({});
-    expect(adminAuthLogin('email@email.com', 'newPassword1').toStrictEqual({ id }));
+    expect(adminAuthLogin('email@email.com', 'newPassword1')).toStrictEqual({ userId: id });
     adminAuthLogin('email@email.com', 'newPassword1');
-    expect(adminUserDetails(id).toStrictEqual({
+    expect(adminUserDetails(id)).toStrictEqual({
       user:
       {
         userId: id,
-        name: id.name,
-        email: id.email,
-        numSuccessfulLogins: '1',
-        numFailedPasswordsSinceLastLogin: '0',
+        name: expect.any(String),
+        email: expect.any(String),
+        numSuccessfulLogins: 3,
+        numFailedPasswordsSinceLastLogin: 0,
       }
-    }));
+    });
   });
 });
 
