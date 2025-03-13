@@ -70,13 +70,12 @@ describe('Test quiz info details', () => {
     expect(result.timeLastEdited).toBeLessThanOrEqual(Date.now());
   });
 
-  test('Verify time last edited updates after quiz modification', () => {
+  test('Verify time last edited updates after quiz modification', async () => {
     const initialInfo = adminQuizInfo(userId, quizId);
     // Simulating some passing of time
-    jest.useFakeTimers();
-    jest.advanceTimersByTime(1000);
+    await new Promise((delay) => setTimeout(delay, 2000));
     // Modify the quiz
-    adminQuizNameUpdate(userId, quizId, 'Updated Quiz Name');
+    const update = adminQuizNameUpdate(userId, quizId, 'Updated Quiz Name');
     const updatedInfo = adminQuizInfo(userId, quizId);
     expect(updatedInfo.timeLastEdited).toBeGreaterThan(initialInfo.timeLastEdited);
     expect(updatedInfo.name).toBe('Updated Quiz Name');
