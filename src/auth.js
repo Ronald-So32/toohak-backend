@@ -8,9 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
  * {
  *    userId: 1,
  * }
- * 
+ *
  * @typedef {Object} userId - Object containing just the user Id
- * 
+ *
  * @property {string} userId - Id of user
  */
 
@@ -23,9 +23,9 @@ import { v4 as uuidv4 } from 'uuid';
  *    numSuccessfulLogins: 3,
  *    numFailedPasswordsSinceLastLogin: 1,
  * }
- * 
+ *
  * @typedef {Object} user - Data structure containing the details of the user
- * 
+ *
  * @property {string} userId - Id of the user
  * @property {string} name - Full name of the user
  * @property {string} email - Email address of the user
@@ -35,23 +35,22 @@ import { v4 as uuidv4 } from 'uuid';
  * login attempts by the user since the last login
  */
 
-
 /**
  * Register a user with an email, password, and names, then return their
  * userId value.
- * 
+ *
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
- * 
+ *
  * @returns {userId} - Always return UserId object
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
-  let data = getData();
+  const data = getData();
 
-  for (let user of data.users) {
-    if (user.email === email) {	
+  for (const user of data.users) {
+    if (user.email === email) {
       return { error: 'Email has already been used by another user' };
     }
   }
@@ -60,7 +59,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Email is not valid' };
   }
 
-  let firstHasSpecial = nameFirst.search(/[^a-zA-Z _']/);
+  const firstHasSpecial = nameFirst.search(/[^a-zA-Z _']/);
   if (firstHasSpecial !== -1) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
@@ -73,7 +72,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'First name is longer than 20 characters' };
   }
 
-  let lastHasSpecial = nameLast.search(/[^a-zA-Z _']/);
+  const lastHasSpecial = nameLast.search(/[^a-zA-Z _']/);
   if (lastHasSpecial !== -1) {
     return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
@@ -90,15 +89,28 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password is shorter than 8 characters' };
   }
 
-  let passwordLetter = password.search(/[a-zA-Z]/);
-  let passwordNumber = password.search(/\d/);
+  const passwordLetter = password.search(/[a-zA-Z]/);
+  const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
   // Can't have specific error messages if using validator to replace above code
 
-  let id = uuidv4(); // This better be unique
+  let id;
+  let unique = false;
+
+  while (!unique) {
+    id = Math.floor(Math.random() * 727727);
+    unique = true;
+
+    for (const user of data.users) {
+      if (user.userId === id) {
+        isUnique = false;
+        break;
+      }
+    }
+  }
 
   data.users.push({
     userId: id,
@@ -108,8 +120,9 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
     password: password,
+    oldPasswords: [],
   });
-  
+
   return {
     userId: id
   };
@@ -119,19 +132,19 @@ export { adminAuthRegister };
 
 /**
  * Given a registered user's email and password, return their userId value.
- * 
+ *
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
- * 
+ *
  * @returns {userId} - Always return userId object
 */
 function adminAuthLogin(email, password) {
-  let data = getData();
+  const data = getData();
 
   let emailFound = false;
   let userData;
 
-  for (let user of data.users) {
+  for (const user of data.users) {
     if (user.email === email) {
       emailFound = true;
       userData = user;
@@ -144,7 +157,7 @@ function adminAuthLogin(email, password) {
 
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
-    return { error: 'Password is wrong' };
+    return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
   userData.numSuccessfulLogins += 1;
@@ -159,18 +172,18 @@ export { adminAuthLogin };
 /**
  * Given an admin user's userId, return details about the user."name" is the
  * first and last name concatenated with a single space between them.
- * 
+ *
  * @param {string} userId - Id of the user
- * 
+ *
  * @returns {user} - Always return userDetails object
 */
 function adminUserDetails(userId) {
-  let data = getData();
+  const data = getData();
 
   let userData;
   let userFound = false;
-  
-  for (let user of data.users) {
+
+  for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
       userFound = true;
@@ -195,23 +208,22 @@ function adminUserDetails(userId) {
 export { adminUserDetails };
 
 /**
-  * Given an admin user's userId and a set of properties, update the properties 
+  * Given an admin user's userId and a set of properties, update the properties
   * of this logged in admin user.
-  * 
+  *
   * @param {number} - Id of the user
   * @param {string} - Email address of the user
   * @param {string} - First name of the user
   * @param {string} - Last name of the user
-  * 
+  *
   * @returns {Object} - Always return an empty object
 */
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
-
-  let data = getData();
+  const data = getData();
 
   let userData;
   let userFound = false;
-  
+
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -224,7 +236,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   }
 
   for (const user of data.users) {
-    if (user.email === email && user.userId != userId) {	
+    if (user.email === email && user.userId != userId) {
       return { error: 'Email has already been used by another user' };
     }
   }
@@ -251,7 +263,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (nameLast.length < 2) {
     return { error: 'Last name is shorter than 2 characters' };
   }
-  
+
   if (nameLast.length > 20) {
     return { error: 'Last name is longer than 20 characters' };
   }
@@ -266,23 +278,22 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
 export { adminUserDetailsUpdate };
 
 /**
-  * Given details relating to a password change, update the password of a 
+  * Given details relating to a password change, update the password of a
   * logged in user.
-  * 
+  *
   * @param {number} - Id of the user
   * @param {string} - The old password of the user
   * @param {string} - The new password of the user
-  * 
+  *
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
-
   // invalid user id
-  let data = getData();
- 
+  const data = getData();
+
   let userData;
   let userFound = false;
-  
+
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -307,18 +318,10 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  let target_user;
+  userData.oldPasswords.push(userData.password);
 
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      target_user = user; 
-    }
-  }
-
-  target_user.old_passwords.push(target_user.user.password);
-
-  for (const past_password of target_user.old_passwords) {
-    if (past_password === newPassword) {
+  for (const pastPassword of userData.oldPasswords) {
+    if (pastPassword === newPassword) {
       return { error: 'New Password has already been used before by this user' };
     }
   }
@@ -327,13 +330,13 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'New password is shorter than 8 characters' };
   }
 
-  let passwordLetter = password.search(/[a-zA-Z]/);
-  let passwordNumber = password.search(/\d/);
+  const passwordLetter = newPassword.search(/[a-zA-Z]/);
+  const passwordNumber = newPassword.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  target_user.password = newPassword;
+  userData.password = newPassword;
 
   return {};
 }

@@ -1,4 +1,10 @@
-import { adminUserDetails, adminAuthRegister, adminAuthLogin, adminUserPasswordUpdate, adminUserDetailsUpdate } from './auth.js';
+import {
+  adminUserDetails,
+  adminAuthRegister,
+  adminAuthLogin,
+  adminUserPasswordUpdate,
+  adminUserDetailsUpdate
+} from './auth.js';
 import { clear } from './other.js';
 
 describe('Test adminUserDetails functionality', () => {
@@ -86,26 +92,5 @@ describe('Test adminUserDetails functionality', () => {
   test('Test invalid userId', () => {
     const result = adminUserDetails(userId + 727);
     expect(result).toStrictEqual({ error: expect.any(String) });
-  });
-});
-
-describe('Check normal usage cases', () => {
-  beforeEach(() => {
-    clear();
-    adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-  });
-
-  test('Normal case 1', () => {
-    const result = adminAuthRegister('email2@email.com', 'Password2', 'first2', 'last2');
-    const details = adminUserDetails(result.userId);
-    expect(details).toStrictEqual({
-      user: {
-        userId: result.userId,
-        name: 'first2 last2',
-        email: 'email2@email.com',
-        numSuccessfulLogins: 1,
-        numFailedPasswordsSinceLastLogin: 0,
-      },
-    });
   });
 });

@@ -10,7 +10,6 @@ beforeEach(() => {
 });
 
 describe('Test correct return type and normal case usage', () => {
-
   test.each([
     { email: 'email@email.com', nameFirst: 'First', nameLast: 'Last', description: 'No changes made to user\'s details' },
     { email: 'Email2@email.com', nameFirst: 'First', nameLast: 'Last', description: 'Changes made to user\'s email' },
@@ -24,7 +23,7 @@ describe('Test correct return type and normal case usage', () => {
     let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
     
     expect(typeof result).toBe('object');
-    expect(result).toEqual({});
+    expect(result).toStrictEqual({});
     expect(result).not.toBeNull();
 
     // To make sure taht the details are updated
@@ -44,24 +43,22 @@ describe('Test correct return type and normal case usage', () => {
 
 });
 
-describe('Test error cases', () => { 
+describe('Test error cases', () => {
   test('Invalid userId - When id doens\'t exist', () => {
-    let result = adminUserDetailsUpdate(id + 999, 'email@email.com', 'First', 'Last');
-    expect(result).toMatchObject({ error: expect.any(String) });
-  })
+    const result = adminUserDetailsUpdate(id + 999, 'email@email.com', 'First', 'Last');
+    expect(result).toStrictEqual({ error: expect.any(String) });
+  });
 
   describe('Test validity of emails', () => {
-
     test('Invalid email - Email already in use', () => {
       let id2 = adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last').userId;
       let result1 = adminUserDetailsUpdate(id, 'email1@email.com', 'First', 'Last');
 
       expect(typeof result1).toBe('object');
-      expect(result1).toEqual({});
+      expect(result1).toStrictEqual({});
       expect(result1).not.toBeNull();
 
-      let result2 = adminUserDetailsUpdate(id, 'email2@email.com', 'First', 'Last');
-
+      const result2 = adminUserDetailsUpdate(id, 'email2@email.com', 'First', 'Last');
       expect(result2).toMatchObject({ error: expect.any(String) });
 
       // To make sure that the email is not updated
@@ -126,18 +123,18 @@ describe('Test error cases', () => {
 
     })
 
+
     test.each([
       { email: 'email@email.com', nameFirst: 'Fir st', nameLast: 'Last' },
       { email: 'email@email.com', nameFirst: 'Fir\'st', nameLast: 'Last' },
       { email: 'email@email.com', nameFirst: 'Fi -\'St', nameLast: 'Last' },
       { email: 'email@email.com', nameFirst: 'F i -\'S t', nameLast: 'Last' },
-    ])('Valid first name (containing valid characters) - %s', ({email, nameFirst, nameLast}) => {
-      let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      
-      expect(typeof result).toBe('object');
-      expect(result).toEqual({});
-      expect(result).not.toBeNull();
+    ])('Valid first name (containing valid characters) - %s', ({ email, nameFirst, nameLast }) => {
+      const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
 
+      expect(typeof result).toBe('object');
+      expect(result).toStrictEqual({});
+      expect(result).not.toBeNull();z
       // To make sure that the first name is updated
       expect(typeof adminUserDetails(id));
       expect(adminUserDetails(id)).toStrictEqual({
@@ -157,30 +154,29 @@ describe('Test error cases', () => {
       
       expect(result).toMatchObject({ error: expect.any(String) });
     });
-    
-    test('Invalid first name - containing more then 20 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'firstfirstfirstfirstfirst', 'Last');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+    test('Invalid first name - containing more then 20 characters', () => {
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'firstfirstfirstfirstfirst', 'Last');
+
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Valid first name - Containing exactly 2 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'Fi', 'Last');
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'Fi', 'Last');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    })
+    });
 
     test('Valid first name - Containing exactly 20 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'Firstfirstfirstfirst', 'Last');
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'Firstfirstfirstfirst', 'Last');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    })
-
-  }) 
+    });
+  });
 
   describe('Test validity of first names', () => {
     test.each([
@@ -210,11 +206,11 @@ describe('Test error cases', () => {
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La\'st' },
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'La-\'St' },
       { email: 'email@email.com', nameFirst: 'First', nameLast: 'L a-\'S t' },
-    ])('Valid last name (containing valid characters) - %s', ({email, nameFirst, nameLast}) => {
-      let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
-      
+    ])('Valid last name (containing valid characters) - %s', ({ email, nameFirst, nameLast }) => {
+      const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
 
       // To make sure that the last name is updated
@@ -233,33 +229,31 @@ describe('Test error cases', () => {
     })
 
     test('Invalid last name - Containing less then 2 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'L');
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'L');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
-    
-    test('Invalid last name - containing more then 20 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlastlast');
 
-      expect(result).toMatchObject({ error: expect.any(String) });
+    test('Invalid last name - containing more then 20 characters', () => {
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlastlast');
+
+      expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Valid last name - Containing exactly 2 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'La');
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'La');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    })
+    });
 
     test('Valid first name - Containing exactly 20 characters', () => {
-      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlast');
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', 'Lastlastlastlastlast');
 
       expect(typeof result).toBe('object');
-      expect(result).toEqual({});
+      expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
-    })
-
-  })
-
-})
+    });
+  });
+});
