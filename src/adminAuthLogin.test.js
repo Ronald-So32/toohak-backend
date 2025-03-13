@@ -68,7 +68,7 @@ describe('Test that the function works as intended', () => {
         userId: result.userId,
         name: 'first last',
         email: 'email@email.com',
-        numSuccessfulLogins: 1,
+        numSuccessfulLogins: 2,
         numFailedPasswordsSinceLastLogin: 0,
       },
     });
@@ -77,7 +77,7 @@ describe('Test that the function works as intended', () => {
   test('Verify login after password update', () => {
     const register = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 
-    adminUserPasswordUpdate(registerResult.userId, 'Password1', 'Password2');
+    adminUserPasswordUpdate(register.userId, 'Password1', 'Password2');
 
     const result = adminAuthLogin('email@email.com', 'Password2');
     expect(result).toStrictEqual({ userId: register.userId });

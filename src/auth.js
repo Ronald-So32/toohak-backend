@@ -331,8 +331,8 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'New password is shorter than 8 characters' };
   }
 
-  const passwordLetter = userData.password.search(/[a-zA-Z]/);
-  const passwordNumber = userData.password.search(/\d/);
+  const passwordLetter = newPassword.search(/[a-zA-Z]/);
+  const passwordNumber = newPassword.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
