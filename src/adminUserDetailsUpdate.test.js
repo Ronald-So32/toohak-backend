@@ -11,14 +11,54 @@ beforeEach(() => {
 
 describe('Test correct return type and normal case usage', () => {
   test.each([
-    { email: 'email@email.com', nameFirst: 'First', nameLast: 'Last', description: 'No changes made to user\'s details' },
-    { email: 'Email2@email.com', nameFirst: 'First', nameLast: 'Last', description: 'Changes made to user\'s email' },
-    { email: 'email@email.com', nameFirst: 'Second', nameLast: 'Last', description: 'Changes made to user\'s first name' },
-    { email: 'email@email.com', nameFirst: 'First', nameLast: 'SecondLast', description: 'Changes made to user\'s last name' },
-    { email: 'Email@email.com', nameFirst: 'Second', nameLast: 'Last', description: 'Changes made to user\'s email and first name' },
-    { email: 'Email@email.com', nameFirst: 'First', nameLast: 'SecondLast', description: 'Changes made to user\'s email and last name' },
-    { email: 'email@email.com', nameFirst: 'Second', nameLast: 'SecondLast', description: 'Changes made to user\'s first and last name' },
-    { email: 'Email@email.com', nameFirst: 'Second', nameLast: 'SecondLast', description: 'Changes made to all of user\'s details' },
+    {
+      email: 'email@email.com',
+      nameFirst: 'First',
+      nameLast: 'Last',
+      description: 'No changes made to user\'s details'
+    },
+    {
+      email:'Email2@email.com',
+      nameFirst: 'First',
+      nameLast: 'Last',
+      description: 'Changes made to user\'s email'
+    },
+    {
+      email: 'email@email.com',
+      nameFirst: 'Second',
+      nameLast: 'Last',
+      description: 'Changes made to user\'s first name'
+    },
+    {
+      email: 'email@email.com',
+      nameFirst: 'First',
+      nameLast: 'SecondLast',
+      description: 'Changes made to user\'s last name'
+    },
+    {
+      email: 'Email@email.com',
+      nameFirst: 'Second',
+      nameLast: 'Last',
+      description: 'Changes made to user\'s email and first name'
+    },
+    {
+      email: 'Email@email.com',
+      nameFirst: 'First',
+      nameLast: 'SecondLast',
+      description: 'Changes made to user\'s email and last name'
+    },
+    {
+      email: 'email@email.com',
+      nameFirst: 'Second',
+      nameLast: 'SecondLast', 
+      description: 'Changes made to user\'s first and last name'
+    },
+    {
+      email: 'Email@email.com',
+      nameFirst: 'Second',
+      nameLast: 'SecondLast',
+      description: 'Changes made to all of user\'s details'
+    },
   ])('Valid return types and normal case usage - %s', ({email, nameFirst, nameLast, description}) => {
     let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
     
@@ -47,6 +87,19 @@ describe('Test error cases', () => {
   test('Invalid userId - When id doens\'t exist', () => {
     const result = adminUserDetailsUpdate(id + 999, 'email@email.com', 'First', 'Last');
     expect(result).toStrictEqual({ error: expect.any(String) });
+
+    // To make sure that it doesn't update the existing user
+    expect(typeof adminUserDetails(id));
+    expect(adminUserDetails(id)).toStrictEqual({
+      user: {
+        userId: id,
+        name: 'First Last',
+        email: 'email@email.com',
+        numSuccessfulLogins: expect.any(Number),
+        numFailedPasswordsSinceLastLogin: expect.any(Number),
+      },
+    });
+    expect(adminUserDetails(id)).not.toBeNull();
   });
 
   describe('Test validity of emails', () => {
@@ -76,12 +129,24 @@ describe('Test error cases', () => {
     })
 
     test.each([
-      { email: 'emailemail.com', nameFirst: 'First', nameLast: 'Last' },
-      { email: 'invalid-email', nameFirst: 'First', nameLast: 'Last' },
-      { email: '@missingusername.com', nameFirst: 'First', nameLast: 'Last' },
-      { email: 'user@.com', nameFirst: 'First', nameLast: 'Last' },
-    ])('Invalid email format - %s', ({email, nameFirst, nameLast}) => {
-      let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+      {
+        email: 'emailemail.com',
+        description: 'Missing username for domain'
+      },
+      {
+        email: 'invalid-email',
+        description: 'Missing domain'
+      },
+      {
+        email: '@missingusername.com', 
+        description: 'Missing username before domain'
+      },
+      {
+        email: 'user@.com',
+        description: 'Missing domain name'
+      },
+    ])('Invalid email format - $description', ({email, description}) => {
+      let result = adminUserDetailsUpdate(id, email, 'First', 'Last');
       expect(result).toEqual({ error: expect.any(String) });
 
       // To make sure that the email is not updated
@@ -101,11 +166,20 @@ describe('Test error cases', () => {
   
   describe('Test validity of first names', () => {
     test.each([
-      { email: 'email@email.com', nameFirst: 'Fi@ %$/st*', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: '!@#$%%*', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'First123', nameLast: 'Last' },
-    ])('Invalid first name (containing invalid characters) - %s', ({email, nameFirst, nameLast}) => {
-      let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+      {
+        nameFirst: 'Fi@ %$/st*',
+        description: 'Contains valid and invalid characters'
+      },
+      {
+        nameFirst: '!@#$%%*',
+        description: 'Contains only invalid characters'
+      },
+      {
+        nameFirst: 'First123',
+        description: 'Contains invalid characters (numbers)'
+      },
+    ])('Invalid first name - $description', ({nameFirst, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
       expect(result).toEqual({ error: expect.any(String) });
 
       // To make sure that the first name is not updated
@@ -125,12 +199,24 @@ describe('Test error cases', () => {
 
 
     test.each([
-      { email: 'email@email.com', nameFirst: 'Fir st', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'Fir\'st', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'Fi -\'St', nameLast: 'Last' },
-      { email: 'email@email.com', nameFirst: 'F i -\'S t', nameLast: 'Last' },
-    ])('Valid first name (containing valid characters) - %s', ({ email, nameFirst, nameLast }) => {
-      const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+      {
+        nameFirst: 'Fir st',
+        description: 'Containing space'
+      },
+      {
+        nameFirst: 'Fir\'st',
+        description: 'Containing apostraphe'
+      },
+      {
+        nameFirst: 'Fi -\'St',
+        description: 'Containing space, apostraphe and hyphen'
+      },
+      {
+        nameFirst: 'F i -\'S t',
+        description: 'Containing multiple spaces with apostraphe and hyphen'
+      },
+    ])('Valid first name (containing valid characters) - $description', ({ nameFirst, description }) => {
+      const result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
@@ -152,10 +238,12 @@ describe('Test error cases', () => {
 
     test.each([
       {
-        nameFirst: 'F', description: 'Containing less then 2 characters'
+        nameFirst: 'F',
+        description: 'Containing less then 2 characters'
       },
       {
-        nameFirst: 'firstfirstfirstfirstfirst', description: 'Containing more then 20 characters'
+        nameFirst: 'firstfirstfirstfirstfirst',
+        description: 'Containing more then 20 characters'
       }
     ])('Invalid first name - $description', ({nameFirst, description}) => {
       let result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
@@ -177,10 +265,12 @@ describe('Test error cases', () => {
 
     test.each([
       {
-        nameFirst: 'Fi', description: 'Containing exactly 2 characters'
+        nameFirst: 'Fi',
+        description: 'Containing exactly 2 characters'
       },
       {
-        nameFirst: 'Firstfirstfirstfirst', description: 'Containing exactly 20 characters'
+        nameFirst: 'Firstfirstfirstfirst',
+        description: 'Containing exactly 20 characters'
       }
     ])('Valid first name - $description', ({nameFirst, description}) => {
       let result = adminUserDetailsUpdate(id, 'email@email.com', nameFirst, 'Last');
@@ -205,11 +295,20 @@ describe('Test error cases', () => {
 
   describe('Test validity of last names', () => {
     test.each([
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La@% $/st' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: '!@#$%%*' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'Last123' },
-    ])('Invalid last name (containing invalid characters) - %s', ({email, nameFirst, nameLast}) => {
-      let result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+      {
+        nameLast: 'La@% $/st',
+        description: 'Contains valid and invalid characters'
+      },
+      {
+        nameLast: '!@#$%%*',
+        description: 'Contains only invalid characters'
+      },
+      {
+        nameLast: 'Last123',
+        description: 'Contains invalid characters (numbers)'
+      },
+    ])('Invalid last name (containing invalid characters) - $description', ({nameLast, description}) => {
+      let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
       expect(result).toMatchObject({ error: expect.any(String) });
 
       // To make sure that the last name is not updated
@@ -225,15 +324,27 @@ describe('Test error cases', () => {
       });
       expect(adminUserDetails(id)).not.toBeNull();
     })
-  })
+  
 
     test.each([
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La st' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La\'st' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'La-\'St' },
-      { email: 'email@email.com', nameFirst: 'First', nameLast: 'L a-\'S t' },
-    ])('Valid last name (containing valid characters) - %s', ({ email, nameFirst, nameLast }) => {
-      const result = adminUserDetailsUpdate(id, email, nameFirst, nameLast);
+      {
+        nameLast: 'La st',
+        description: 'Containing space'
+      },
+      {
+        nameLast: 'La\'st',
+        description: 'Containing apostraphe'
+      },
+      {
+        nameLast: 'La-\'St',
+        description: 'Containing space, apostraphe and hyphen'
+      },
+      {
+        nameLast: 'L a-\'S t',
+        description: 'Containing multiple spaces with apostraphe and hyphen'
+      },
+    ])('Valid last name (containing valid characters) - $description', ({ nameLast, description }) => {
+      const result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
 
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
@@ -256,10 +367,12 @@ describe('Test error cases', () => {
 
     test.each([
       {
-        nameLast: 'L', description: 'Containing less then 2 characters'
+        nameLast: 'L',
+        description: 'Containing less then 2 characters'
       },
       {
-        nameLast: 'fLastlastlastlastlastlast', description: 'Containing more then 20 characters'
+        nameLast: 'fLastlastlastlastlastlast',
+        description: 'Containing more then 20 characters'
       }
     ])('Invalid last name - $description', ({nameLast, description}) => {
       let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
@@ -281,10 +394,12 @@ describe('Test error cases', () => {
 
     test.each([
       {
-        nameLast: 'La', description: 'Containing exactly 2 characters'
+        nameLast: 'La',
+        description: 'Containing exactly 2 characters'
       },
       {
-        nameLast: 'Lastlastlastlastlast', description: 'Containing exactly 20 characters'
+        nameLast: 'Lastlastlastlastlast',
+        description: 'Containing exactly 20 characters'
       }
     ])('Valid last name - $description', ({nameLast, description}) => {
       let result = adminUserDetailsUpdate(id, 'email@email.com', 'First', nameLast);
@@ -306,6 +421,6 @@ describe('Test error cases', () => {
       });
       expect(adminUserDetails(id)).not.toBeNull();
     })
-
+    })
   });
 });
