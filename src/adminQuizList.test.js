@@ -18,7 +18,7 @@ describe('Tests for quiz list', () => {
   });
 
   test('User Id valid', () => {
-    expect(adminQuizList(id)).toBe('object');
+    expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
@@ -36,7 +36,7 @@ describe('Valid User Id with multiple quizzess', () => {
   const quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
 
   test('User Id valid', () => {
-    expect(adminQuizList(id)).toBe('object');
+    expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
@@ -63,7 +63,7 @@ describe('Valid User Id with multiple quizzess', () => {
   adminQuizRemove(id, quizId2);
 
   test('User Id valid', () => {
-    expect(adminQuizList(id)).toBe('object');
+    expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
         {
