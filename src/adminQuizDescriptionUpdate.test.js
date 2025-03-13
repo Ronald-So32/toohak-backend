@@ -1,6 +1,8 @@
 import {
   adminQuizCreate,
-  adminQuizDescriptionUpdate
+  adminQuizDescriptionUpdate,
+  adminQuizInfo,
+  adminQuizList
 } from './quiz.js';
 import { adminAuthRegister } from './auth.js';
 import { clear } from './other.js';
@@ -46,8 +48,8 @@ describe('Test error cases', () => {
     expect(result).toStrictEqual({ error: expect.any(String) });
   });
 
-  // To test the vadility of descriptions
-  describe('Test vadility of Description', () => {
+  // To test the validity of descriptions
+  describe('Test validity of Description', () => {
     // To test the Invalid descriptions
     test.each([
       {
@@ -63,13 +65,16 @@ describe('Test error cases', () => {
         reason: 'Description is more than 100 characters with spaces at the end'
       },
     ])('Invalid description - $reason', ({ description, reason }) => {
-      const result = adminQuizCreate(id, 'Quiz Name', description);
+      const quizId = adminQuizCreate(id, 'Quiz Name', 'valid description');
+      const listBefore = adminQuizList(id);
+      const infoBefore = adminQuizInfo(id, quizId);
+      const result = adminQuizDescriptionUpdate(id, quizId, description);
 
       expect(result).toStrictEqual({ error: expect.any(String) });
 
-      // To test that no quizzes is created
-      expect(adminQuizList).toStrictEqual({ quizzes: [] });
-      expect(adminQuizInfo).toStrictEqual({});
+      // To test that the quiz description didn't change
+      expect(adminQuizList(id)).toStrictEqual(listBefore);
+      expect(adminQuizInfo(id, result)).toStrictEqual(infoBefore);
     });
 
     // To test valid descriptions
