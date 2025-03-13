@@ -102,7 +102,7 @@ describe('Test error cases', () => {
 
   describe('Test validity of emails', () => {
     test('Invalid email - Email already in use', () => {
-      const id2 = adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last').userId;
+      adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last');
       const result1 = adminUserDetailsUpdate(id, 'email1@email.com', 'First', 'Last');
 
       expect(typeof result1).toBe('object');

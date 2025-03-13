@@ -40,7 +40,7 @@ describe('Test error cases', () => {
     // Create a second user
     const userId2 = adminAuthRegister('email2@email.com', 'Password1', 'First', 'Last').userId;
     // Create a quiz for second user
-    const quizId2 = adminQuizCreate(userId2, 'Quiz Name 2', 'Description').quizId;
+    adminQuizCreate(userId2, 'Quiz Name 2', 'Description');
 
     // Try to update first user's quiz with second user's ID
     const result = adminQuizNameUpdate(userId2, quizId, 'New Quiz Name');

@@ -1,7 +1,6 @@
 import { getData } from './dataStore.js';
 
 import validator from 'validator';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -106,7 +105,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
     for (const user of data.users) {
       if (user.userId === id) {
-        isUnique = false;
+        unique = false;
         break;
       }
     }
@@ -236,7 +235,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   }
 
   for (const user of data.users) {
-    if (user.email === email && user.userId != userId) {
+    if (user.email === email && user.userId !== userId) {
       return { error: 'Email has already been used by another user' };
     }
   }
@@ -244,7 +243,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
-  if (nameFirst.match(/[^a-z\-\s\'\-]/i) !== null) {
+  if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 
@@ -256,7 +255,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'First name is longer than 20 characters' };
   }
 
-  if (nameLast.match(/[^a-z\-\s\'\-]/i) !== null) {
+  if (nameLast.match(/[^a-z\-\s'-]/i) !== null) {
     return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 

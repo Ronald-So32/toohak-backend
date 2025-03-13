@@ -1,5 +1,4 @@
 import { getData } from './dataStore.js';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -56,12 +55,10 @@ import { v4 as uuidv4 } from 'uuid';
 function adminQuizList(userId) {
   const data = getData();
 
-  let userData;
   let userFound = false;
 
   for (const user of data.users) {
     if (user.userId === userId) {
-      userData = user;
       userFound = true;
     }
   }
@@ -146,7 +143,7 @@ function adminQuizCreate(userId, name, description) {
 
     for (const user of data.users) {
       if (user.userId === id) {
-        isUnique = false;
+        unique = false;
         break;
       }
     }

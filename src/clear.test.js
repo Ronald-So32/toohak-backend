@@ -1,5 +1,5 @@
 import { clear } from './other.js';
-import { adminAuthRegister, adminAuthLogin, adminUserDetails } from './auth.js';
+import { adminAuthRegister, adminAuthLogin } from './auth.js';
 import { adminQuizCreate, adminQuizList } from './quiz.js';
 
 describe('clear', () => {
@@ -14,14 +14,14 @@ describe('clear', () => {
     const user1 = adminAuthRegister('user1@example.com', 'password123', 'First', 'User');
 
     // Create a quiz with this user
-    const quiz = adminQuizCreate(user1.userId, 'Test Quiz', 'Test Description');
+    adminQuizCreate(user1.userId, 'Test Quiz', 'Test Description');
 
     // Check the user can log in
     const loginResult = adminAuthLogin('user1@example.com', 'password123');
     expect(loginResult).toHaveProperty('userId');
 
     // Verify a quiz exists
-    const quizList = adminQuizList(user1.userId);
+    adminQuizList(user1.userId);
 
     clear();
 

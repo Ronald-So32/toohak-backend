@@ -75,7 +75,7 @@ describe('Test quiz info details', () => {
     // Simulating some passing of time
     await new Promise((delay) => setTimeout(delay, 2000));
     // Modify the quiz
-    const update = adminQuizNameUpdate(userId, quizId, 'Updated Quiz Name');
+    adminQuizNameUpdate(userId, quizId, 'Updated Quiz Name');
     const updatedInfo = adminQuizInfo(userId, quizId);
     expect(updatedInfo.timeLastEdited).toBeGreaterThan(initialInfo.timeLastEdited);
     expect(updatedInfo.name).toBe('Updated Quiz Name');
