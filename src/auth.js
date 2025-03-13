@@ -59,7 +59,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Email is not valid' };
   }
 
-  const firstHasSpecial = nameFirst.search(/[^a-zA-Z _']/);
+  const firstHasSpecial = nameFirst.search(/[^a-zA-Z\s-']/);
   if (firstHasSpecial !== -1) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
@@ -72,7 +72,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'First name is longer than 20 characters' };
   }
 
-  const lastHasSpecial = nameLast.search(/[^a-zA-Z _']/);
+  const lastHasSpecial = nameLast.search(/[^a-zA-Z\s-']/);
   if (lastHasSpecial !== -1) {
     return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
