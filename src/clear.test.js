@@ -21,7 +21,7 @@ describe('clear', () => {
     expect(loginResult).toHaveProperty('userId');
 
     // Verify a quiz exists
-    adminQuizList(user1.userId);
+    const quizList = adminQuizList(user1.userId);
 
     clear();
 

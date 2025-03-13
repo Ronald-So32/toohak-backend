@@ -98,11 +98,11 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   // Can't have specific error messages if using validator to replace above code
 
   let id;
-  let isUnique = false;
+  let unique = false;
 
-  while (!isUnique) {
+  while (!unique) {
     id = Math.floor(Math.random() * 727727);
-    isUnique = true;
+    unique = true;
 
     for (const user of data.users) {
       if (user.userId === id) {
@@ -236,7 +236,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   }
 
   for (const user of data.users) {
-    if (user.email === email && user.userId !== userId) {
+    if (user.email === email && user.userId != userId) {
       return { error: 'Email has already been used by another user' };
     }
   }
@@ -244,7 +244,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
-  if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
+  if (nameFirst.match(/[^a-z\-\s\'\-]/i) !== null) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 
@@ -256,7 +256,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'First name is longer than 20 characters' };
   }
 
-  if (nameLast.match(/[^a-z\-\s'-]/i) !== null) {
+  if (nameLast.match(/[^a-z\-\s\'\-]/i) !== null) {
     return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
 
