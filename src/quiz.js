@@ -8,7 +8,7 @@ import { getData } from './dataStore.js';
  *
  * @typedef {Object} userId - Object containing just the user Id
  *
- * @property {string} userId - Id of user
+ * @property {number} userId - Id of user
  */
 
 /**
@@ -21,7 +21,7 @@ import { getData } from './dataStore.js';
  * @typedef {Object} quizzes - Data structure containing an array of
  * quiz summaries
  *
- * @property {string} quizId - Id of the quiz
+ * @property {number} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
  */
 
@@ -37,7 +37,7 @@ import { getData } from './dataStore.js';
  *
  * @typedef {Object} quiz - Data structure containing the details of the quiz
  *
- * @property {string} quizId - Id of the quiz
+ * @property {number} quizId - Id of the quiz
  * @property {string} name - F6ull name of the quiz
  * @property {number} timeCreated - Time created of the quiz
  * @property {number} timeLastEdited - Time of the last edit made to the quiz
@@ -47,7 +47,7 @@ import { getData } from './dataStore.js';
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   *
-  * @param {string} userId - Id of the user
+  * @param {number} userId - Id of the user
   * ...
   *
   * @returns {quizzes: [...]} - Always return quizzes object
@@ -86,7 +86,7 @@ export { adminQuizList };
 /**
   * Given basic details about a new quiz, create one for the logged in user.
   *
-  * @param {string} userId - Id of the user
+  * @param {number} userId - Id of the user
   * @param {string} name - Name of quiz
   * @param {string} description - Description of quiz
   * ...
@@ -170,8 +170,8 @@ export { adminQuizCreate };
 /**
   * Given a particular quiz, permanently remove the quiz.
   *
-  * @param {string} userId - Id of the user
-  * @param {string} quizId - Id of the quiz
+  * @param {number} userId - Id of the user
+  * @param {number} quizId - Id of the quiz
   * ...
   *
   * @returns {Object} - Always return an empty object
@@ -211,8 +211,8 @@ export { adminQuizRemove };
 /**
   * Get all the relevant information about the current quiz.
   *
-  * @param {string} userId - Id of the user
-  * @param {string} quizId - Id of the quiz
+  * @param {number} userId - Id of the user
+  * @param {number} quizId - Id of the quiz
   * ...
   *
   * @returns {quiz} - Always return quiz object
@@ -258,8 +258,8 @@ export { adminQuizInfo };
 /**
   * Update the name of the relevant quiz.
   *
-  * @param {string} userId - Id of the user
-  * @param {string} quizId - Id of the quiz
+  * @param {number} userId - Id of the user
+  * @param {number} quizId - Id of the quiz
   * @param {string} name - Name of the quiz
   * ...
   *
@@ -321,8 +321,8 @@ export { adminQuizNameUpdate };
 /**
   * Update the description of the relevant quiz.
   *
-  * @param {string} userId - Id of the user
-  * @param {string} quizId - Id of the quiz
+  * @param {number} userId - Id of the user
+  * @param {number} quizId - Id of the quiz
   * @param {string} description - Description of the quiz
   * ...
   *

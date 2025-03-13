@@ -10,7 +10,7 @@ import validator from 'validator';
  *
  * @typedef {Object} userId - Object containing just the user Id
  *
- * @property {string} userId - Id of user
+ * @property {number} userId - Id of user
  */
 
 /**
@@ -25,7 +25,7 @@ import validator from 'validator';
  *
  * @typedef {Object} user - Data structure containing the details of the user
  *
- * @property {string} userId - Id of the user
+ * @property {number} userId - Id of the user
  * @property {string} name - Full name of the user
  * @property {string} email - Email address of the user
  * @property {number} numSuccessfulLogins - The number of times that the user
@@ -172,7 +172,7 @@ export { adminAuthLogin };
  * Given an admin user's userId, return details about the user."name" is the
  * first and last name concatenated with a single space between them.
  *
- * @param {string} userId - Id of the user
+ * @param {number} userId - Id of the user
  *
  * @returns {user} - Always return userDetails object
 */
