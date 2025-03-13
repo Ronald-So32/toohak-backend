@@ -2,9 +2,9 @@ import {
   adminQuizList,
   adminQuizCreate,
   adminQuizRemove
-} from './quiz.js';
-import { clear } from './other.js';
-import { adminAuthRegister } from './auth.js';
+} from '../src/quiz.js';
+import { clear } from '../src/other.js';
+import { adminAuthRegister } from '../src/auth.js';
 
 let id;
 let quizId, quizId2, quizId3;

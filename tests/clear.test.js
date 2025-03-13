@@ -1,6 +1,6 @@
-import { clear } from './other.js';
-import { adminAuthRegister, adminAuthLogin } from './auth.js';
-import { adminQuizCreate, adminQuizList } from './quiz.js';
+import { clear } from '../src/other.js';
+import { adminAuthRegister, adminAuthLogin } from '../src/auth.js';
+import { adminQuizCreate, adminQuizList } from '../src/quiz.js';
 
 describe('clear', () => {
   test('clear returns an empty object', () => {

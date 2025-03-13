@@ -3,9 +3,9 @@ import {
   adminQuizNameUpdate,
   adminQuizList,
   adminQuizInfo
-} from './quiz.js';
-import { adminAuthRegister } from './auth.js';
-import { clear } from './other.js';
+} from '../src/quiz.js';
+import { adminAuthRegister } from '../src/auth.js';
+import { clear } from '../src/other.js';
 
 let userId;
 let quizId;

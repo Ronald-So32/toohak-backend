@@ -4,8 +4,8 @@ import {
   adminAuthLogin,
   adminUserPasswordUpdate,
   adminUserDetailsUpdate
-} from './auth.js';
-import { clear } from './other.js';
+} from '../src/auth.js';
+import { clear } from '../src/other.js';
 
 describe('Test adminUserDetails functionality', () => {
   let userId;
