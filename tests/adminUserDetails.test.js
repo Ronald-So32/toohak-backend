@@ -33,37 +33,43 @@ describe('Test adminUserDetails functionality', () => {
   test.each([
     {
       description: 'Initial login',
-      password: 'Password1',
-      expectedSuccessfulLogins: 1,
+      actions: [
+        { type: 'login', password: 'Password1' },
+      ],
+      expectedSuccessfulLogins: 2,
       expectedFailedLogins: 0,
     },
     {
       description: 'After successful login',
-      password: 'Password1',
-      expectedSuccessfulLogins: 2,
+      actions: [
+        { type: 'login', password: 'Password1' },
+        { type: 'login', password: 'Password1' },
+      ],
+      expectedSuccessfulLogins: 3,
       expectedFailedLogins: 0,
     },
     {
       description: 'After failed login',
-      password: 'Password2',
-      expectedSuccessfulLogins: 1,
+      actions: [
+        { type: 'login', password: 'Password1' },
+        { type: 'login', password: 'Password2' },
+      ],
+      expectedSuccessfulLogins: 2,
       expectedFailedLogins: 1,
     },
     {
       description: 'After successful login post failed attempt',
-      password: 'Password1',
+      actions: [
+        { type: 'login', password: 'Password2' },
+        { type: 'login', password: 'Password1' },
+      ],
       expectedSuccessfulLogins: 2,
       expectedFailedLogins: 1,
     },
-  ])('Test login counts: %s', ({ description, password, expectedSuccessfulLogins, expectedFailedLogins }) => {
-    if (description === 'After successful login') {
-      adminAuthLogin('email@email.com', password);
-    } else if (description === 'After failed login') {
-      adminAuthLogin('email@email.com', password);
-    } else if (description === 'After successful login post failed attempt') {
-      adminAuthLogin('email@email.com', 'Password2');
-      adminAuthLogin('email@email.com', password);
-    }
+  ])('Test login counts: %s', ({ actions, expectedSuccessfulLogins, expectedFailedLogins }) => {
+    actions.forEach((action) => {
+      adminAuthLogin('email@email.com', action.password);
+    });
   
     const result = adminUserDetails(userId);
     expect(result).toStrictEqual({
