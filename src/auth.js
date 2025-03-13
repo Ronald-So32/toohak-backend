@@ -120,7 +120,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
     password: password,
-    old_passwords: [],
+    oldPasswords: [],
   });
 
   return {
@@ -318,10 +318,10 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  userData.old_passwords.push(userData.password);
+  userData.oldPasswords.push(userData.password);
 
-  for (const past_password of userData.old_passwords) {
-    if (past_password === newPassword) {
+  for (const pastPassword of userData.oldPasswords) {
+    if (pastPassword === newPassword) {
       return { error: 'New Password has already been used before by this user' };
     }
   }
