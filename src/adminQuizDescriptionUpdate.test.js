@@ -50,6 +50,13 @@ describe('Test error cases', () => {
 
   // To test the validity of descriptions
   describe('Test validity of Description', () => {
+    let id;
+
+    beforeEach(() => {
+      clear();
+      id = adminAuthRegister('email@email.com', 'Password1', 'First', 'Last').userId;
+    });
+
     // To test the Invalid descriptions
     test.each([
       {
