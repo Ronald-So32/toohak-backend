@@ -287,12 +287,12 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
-  // Invalid user id
+
   const data = getData();
 
   let userData;
   let userFound = false;
-
+  // check if userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -304,7 +304,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: `User Id of ${userId} is invalid` };
   }
 
-  // Check password of same userId then see if match oldPassword
+  // Check if password of passed in userId is correct oldPassword
   for (const user of data.users) {
     if (user.userId === userId) {
       if (user.password !== oldPassword) {
@@ -317,6 +317,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
+  // check if neewPassword has been used before
   userData.oldPasswords.push(userData.password);
 
   for (const pastPassword of userData.oldPasswords) {
@@ -329,12 +330,14 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'New password is shorter than 8 characters' };
   }
 
+  // check if newPassword contains at least one letter and one number
   const passwordLetter = newPassword.search(/[a-zA-Z]/);
   const passwordNumber = newPassword.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
+  // password is correct so make userId's password the newPassword
   userData.password = newPassword;
 
   return {};
