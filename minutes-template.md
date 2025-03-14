@@ -111,3 +111,25 @@ Please note this is a a guide/template which you do not need to use.
 * Do we split each function / merge the tests
 * Black boxing old passwords + passwords
 * Check the interview format + stories + whatever is in it
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 5                                     |
+| --------- | ------------------------------------- |
+| Date/time | 19/03 14:25                           |
+|   Week    | 3                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests and helping | Went through the merge requests and helped each other with problems |
+| Talked about the feedback  | Discussed the feedback and also how to use it to improve            |
+
+### Action Items/reminders
+- [ ] Fix any bugs caused by the merging
+
+### Questions for tutor
+* Can we spam reruns
+* Feedback on everything so far
