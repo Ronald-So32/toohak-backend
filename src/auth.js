@@ -47,6 +47,7 @@ import validator from 'validator';
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
+  
   // Check if email has already been used
   for (const user of data.users) {
     if (user.email === email) {
