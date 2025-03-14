@@ -47,7 +47,7 @@ import validator from 'validator';
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
-  
+
   // Check if email has already been used
   for (const user of data.users) {
     if (user.email === email) {
@@ -89,6 +89,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password is shorter than 8 characters' };
   }
 
+  // check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
@@ -189,7 +190,7 @@ function adminUserDetails(userId) {
   let userData;
   let userFound = false;
 
-  // check if userId is valid
+  // Check if userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -232,7 +233,6 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   let userData;
   let userFound = false;
 
-  // check if passed in userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -304,7 +304,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
 
   let userData;
   let userFound = false;
-  // check if userId is valid
+  
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -342,7 +342,6 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'New password is shorter than 8 characters' };
   }
 
-  // check if newPassword contains at least one letter and one number
   const passwordLetter = newPassword.search(/[a-zA-Z]/);
   const passwordNumber = newPassword.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {

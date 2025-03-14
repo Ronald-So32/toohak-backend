@@ -57,6 +57,7 @@ function adminQuizList(userId) {
 
   let userFound = false;
 
+  // check if passed in userId is valid 
   for (const user of data.users) {
     if (user.userId === userId) {
       userFound = true;
