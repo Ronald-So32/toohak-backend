@@ -47,7 +47,7 @@ import validator from 'validator';
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
-
+  // Check if email has already been used
   for (const user of data.users) {
     if (user.email === email) {
       return { error: 'Email has already been used by another user' };
@@ -96,6 +96,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
   // Can't have specific error messages if using validator to replace above code
 
+  // Make unique id
   let id;
   let unique = false;
 
@@ -111,6 +112,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     }
   }
 
+  // All user details are correct so push append them to the users array
   data.users.push({
     userId: id,
     nameFirst: nameFirst,
@@ -122,6 +124,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     oldPasswords: [],
   });
 
+  // New User registered correclty, return id
   return {
     userId: id
   };
