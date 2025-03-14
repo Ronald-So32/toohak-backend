@@ -1,4 +1,5 @@
 *.json
+!.eslintrc.json
 !package.json
 node_modules
 build

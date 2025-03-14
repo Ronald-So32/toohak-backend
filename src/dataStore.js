@@ -1,5 +1,5 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
-let data = {
+const data = {
   users: [],
 
   quizzes: []
@@ -8,7 +8,7 @@ let data = {
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
 
-// YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
+// YOU SHOULDN'T NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
 /*
 Example usage
