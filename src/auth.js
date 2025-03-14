@@ -143,6 +143,7 @@ function adminAuthLogin(email, password) {
   let emailFound = false;
   let userData;
 
+  // check if userId is valid
   for (const user of data.users) {
     if (user.email === email) {
       emailFound = true;
@@ -154,11 +155,13 @@ function adminAuthLogin(email, password) {
     return { error: 'Email does not exit' };
   }
 
+  // user password is not correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
+  // update number of successful logins
   userData.numSuccessfulLogins += 1;
 
   return {
@@ -182,6 +185,7 @@ function adminUserDetails(userId) {
   let userData;
   let userFound = false;
 
+  // check if userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -193,6 +197,7 @@ function adminUserDetails(userId) {
     return { error: `User Id of ${userId} is not found` };
   }
 
+  // userId exists, return user details
   return {
     user: {
       userId: userData.userId,
@@ -223,6 +228,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   let userData;
   let userFound = false;
 
+  // check if passed in userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -234,6 +240,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: `User Id of ${userId} is not found` };
   }
 
+  // check if new email has been used by other user
   for (const user of data.users) {
     if (user.email === email && user.userId !== userId) {
       return { error: 'Email has already been used by another user' };
@@ -243,6 +250,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
+
   if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
@@ -267,6 +275,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'Last name is longer than 20 characters' };
   }
 
+  // all new user details have been verified, user details are updated
   userData.email = email;
   userData.nameFirst = nameFirst;
   userData.nameLast = nameLast;
@@ -287,7 +296,6 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
-
   const data = getData();
 
   let userData;
@@ -337,7 +345,8 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
-  // password is correct so make userId's password the newPassword
+  // newPassword is meets all requirements,
+  // so make userId's password the newPassword
   userData.password = newPassword;
 
   return {};
