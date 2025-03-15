@@ -102,10 +102,9 @@ function adminQuizCreate(userId, name, description) {
     return validName;
   }
 
-  for (const quiz of data.quizzes) {
-    if (quiz.name === name && quiz.createdBy === userId) {
-      return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
-    }
+  const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
+  if (duplicate) {
+    return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
   }
 
   if (description.length > 100) {
