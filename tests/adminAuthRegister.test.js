@@ -5,13 +5,16 @@ import {
 } from '../src/auth.js';
 import { clear } from '../src/other.js';
 
+let result;
+
+// Clears existing datas then registers a user
 beforeEach(() => {
   clear();
+  result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
 });
 
 describe('Test correct return types', () => {
   test('Test if the return is an object and has a userId for normal usage case', () => {
-    const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
     expect(typeof result).toBe('object');
     expect(result).toStrictEqual({
       userId: expect.any(Number)
@@ -21,35 +24,27 @@ describe('Test correct return types', () => {
 });
 
 describe('Test error cases', () => {
-  beforeEach(() => {
-    clear();
-  });
-
   describe('Test if the email is already used by another user', () => {
     test('Email is already used', () => {
-      adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      const result = adminAuthRegister('email@email.com', 'Password2', 'first', 'last');
+      // To override existing result though the previous result still remains within the data
+      result = adminAuthRegister('email@email.com', 'Password2', 'first', 'last');
 
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
     test('Email is not used', () => {
-      const result1 = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
-      const result2 = adminAuthRegister('email2@email.com', 'Password2', 'firstt', 'lastt');
+      expect(result).toStrictEqual({ userId: result.userId });
 
-      expect(result1).toStrictEqual({
-        userId: result1.userId
-      });
-      expect(result2).toStrictEqual({
-        userId: result2.userId
-      });
+      result = adminAuthRegister('email2@email.com', 'Password2', 'firstt', 'lastt');
+      
+      expect(result).toStrictEqual({ userId: result.userId });
     });
   });
 
   describe('Test valid emails', () => {
     test.each([
       {
-        email: 'email@email.com',
+        email: 'email1@email.com',
         description: 'Standard email format'
       },
       {
@@ -61,10 +56,8 @@ describe('Test error cases', () => {
         description: 'Use of subdomains in domain section'
       }
     ])('Valid email - $description', ({ email, description }) => {
-      const result = adminAuthRegister(email, 'Password1', 'first', 'last');
-      expect(result).toStrictEqual({
-        userId: result.userId
-      });
+      result = adminAuthRegister(email, 'Password1', 'first', 'last');
+      expect(result).toStrictEqual({ userId: result.userId });
     });
 
     test.each([
@@ -85,7 +78,7 @@ describe('Test error cases', () => {
         description: 'Missing domain name'
       },
     ])('Invalid email - $description', ({ email, description }) => {
-      const result = adminAuthRegister(email, 'Password1', 'first', 'last');
+      result = adminAuthRegister(email, 'Password1', 'first', 'last');
 
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
@@ -118,10 +111,9 @@ describe('Test error cases', () => {
         description: 'Containing exactly 20 characters'
       }
     ])('Valid first name (containing valid characters) - $description', ({ nameFirst, description }) => {
-      const result = adminAuthRegister('email@email.com', 'Password1', nameFirst, 'last');
-      expect(result).toStrictEqual({
-        userId: result.userId
-      });
+      result = adminAuthRegister('email1@email.com', 'Password1', nameFirst, 'last');
+
+      expect(result).toStrictEqual({ userId: result.userId });
     });
 
     test.each([
@@ -146,7 +138,8 @@ describe('Test error cases', () => {
         description: 'Containing more then 20 characters'
       }
     ])('Invalid first name - $description', ({ nameFirst, description }) => {
-      const result = adminAuthRegister('email@email.com', 'Password1', nameFirst, 'last');
+      result = adminAuthRegister('email1@email.com', 'Password1', nameFirst, 'last');
+
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
@@ -174,7 +167,8 @@ describe('Test error cases', () => {
         description: 'Containing more then 20 characters'
       }
     ])('Invalid last name - $description', ({ nameLast, description }) => {
-      const result = adminAuthRegister('email@email.com', 'Password1', 'first', nameLast);
+      result = adminAuthRegister('email1@email.com', 'Password1', 'first', nameLast);
+
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
 
@@ -204,7 +198,8 @@ describe('Test error cases', () => {
         description: 'Containing exactly 20 characters'
       }
     ])('Valid last name (containing valid characters) - $description', ({ nameLast, description }) => {
-      const result = adminAuthRegister('email@email.com', 'Password1', 'first', nameLast);
+      result = adminAuthRegister('email1@email.com', 'Password1', 'first', nameLast);
+
       expect(result).toStrictEqual({ userId: result.userId });
     });
   });
@@ -224,10 +219,9 @@ describe('Test error cases', () => {
         description: 'Password meeting requirements with special characters'
       }
     ])('Valid passowrd - $description', ({ password, description }) => {
-      const result = adminAuthRegister('email@email.com', password, 'first', 'last');
-      expect(result).toStrictEqual({
-        userId: result.userId
-      });
+      result = adminAuthRegister('email1@email.com', password, 'first', 'last');
+
+      expect(result).toStrictEqual({ userId: result.userId });
     });
 
     test.each([
@@ -252,7 +246,8 @@ describe('Test error cases', () => {
         description: 'Contains less than 8 characters with invalid characters'
       }
     ])('Invalid password - $description', ({ password, description }) => {
-      const result = adminAuthRegister('email@email.com', password, 'first', 'last');
+      result = adminAuthRegister('email1@email.com', password, 'first', 'last');
+
       expect(result).toStrictEqual({ error: expect.any(String) });
     });
   });
@@ -260,8 +255,9 @@ describe('Test error cases', () => {
 
 describe('Test if the function actually works', () => {
   test('Test user details after registration', () => {
-    const result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
+    // To makes sure that detail of user is registered correctly
     const details = adminUserDetails(result.userId);
+    // To make sure that the login feature works
     const login = adminAuthLogin('email@email.com', 'Password1');
 
     expect(details).toStrictEqual({
