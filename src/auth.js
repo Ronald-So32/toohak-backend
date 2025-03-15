@@ -218,28 +218,14 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'Email is not valid' };
   }
 
-  if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
-    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  const validFirst = validName(nameFirst, true);
+  if (validFirst !== true) {
+    return validFirst;
   }
 
-  if (nameFirst.length < 2) {
-    return { error: 'First name is shorter than 2 characters' };
-  }
-
-  if (nameFirst.length > 20) {
-    return { error: 'First name is longer than 20 characters' };
-  }
-
-  if (nameLast.match(/[^a-z\-\s'-]/i) !== null) {
-    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
-  }
-
-  if (nameLast.length < 2) {
-    return { error: 'Last name is shorter than 2 characters' };
-  }
-
-  if (nameLast.length > 20) {
-    return { error: 'Last name is longer than 20 characters' };
+  const validLast = validName(nameLast, false);
+  if (validLast !== true) {
+    return validLast;
   }
 
   // all new user details have been verified, user details are updated
@@ -301,14 +287,9 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     }
   }
 
-  if (newPassword.length < 8) {
-    return { error: 'New password is shorter than 8 characters' };
-  }
-
-  const passwordLetter = newPassword.search(/[a-zA-Z]/);
-  const passwordNumber = newPassword.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
+  const validPass = validPassword(newPassword);
+  if (validPass !== true) {
+    return validPass;
   }
 
   // newPassword is meets all requirements,
