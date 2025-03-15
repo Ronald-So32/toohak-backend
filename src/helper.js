@@ -58,7 +58,7 @@ function validPassword(password) {
 export { validPassword };
 
 function validQuizName(name) {
-  if (name.match(/[^\w\-\s]/) !== null) {
+  if (name.match(/[^\w\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
   }
 
