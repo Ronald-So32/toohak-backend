@@ -1,4 +1,5 @@
 import { getData } from './dataStore.js';
+import { createUUID, validQuizName } from './helper.js';
 
 /**
  * A instance of this object:
@@ -55,20 +56,15 @@ import { getData } from './dataStore.js';
 function adminQuizList(userId) {
   const data = getData();
 
-  let userFound = false;
-
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userFound = true;
-    }
-  }
-
+  const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
     return { error: `User Id of ${userId} is not valid` };
   }
 
   const quizzes = [];
 
+  // Iterate through all quizzes and put in quizzes array if quiz is created by
+  // user of passed in userId
   for (const quiz of data.quizzes) {
     if (quiz.createdBy === userId) {
       quizzes.push({
@@ -96,61 +92,30 @@ export { adminQuizList };
 function adminQuizCreate(userId, name, description) {
   const data = getData();
 
-  let validUserId = false;
-
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      validUserId = true;
-    }
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
   }
 
-  if (validUserId === false) {
-    return { error: 'UserId does not exist' };
+  const validName = validQuizName(name);
+  if (validName !== true) {
+    return validName;
   }
 
-  if (name === null) {
-    return { error: 'A name is required' };
-  }
-
-  if (name.match(/[^\w\-\s]/) !== null) {
-    return { error: 'Quiz name contains special characters' };
-  }
-
-  if (name.length < 3) {
-    return { error: 'Quiz name is lesser than 3' };
-  }
-
-  if (name.length > 30) {
-    return { error: 'Quiz name is greater than 30' };
-  }
-
-  for (const quiz of data.quizzes) {
-    if (quiz.name === name && quiz.createdBy === userId) {
-      return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
-    }
+  const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
+  if (duplicate) {
+    return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
   }
 
   if (description.length > 100) {
     return { error: 'Quiz description is more than 100 characters' };
   }
 
-  let id;
-  let unique = false;
-
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (const user of data.users) {
-      if (user.userId === id) {
-        unique = false;
-        break;
-      }
-    }
-  }
+  const id = createUUID();
 
   const timeStamp = Math.floor(Date.now() / 1000);
 
+  // All details are correct so append new quiz to data.quizzes
   data.quizzes.push({
     quizId: id,
     name: name,
@@ -223,15 +188,8 @@ function adminQuizInfo(userId, quizId) {
   const data = getData();
 
   // Check if user exists
-  let userFound = false;
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userFound = true;
-    }
-  }
-
+  const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    // Return error if user is not found
     return { error: `User Id of ${userId} is not valid` };
   }
 
@@ -285,15 +243,9 @@ function adminQuizNameUpdate(userId, quizId, name) {
     return { error: 'User does not own this quiz' };
   }
 
-  // Check if name contains only alphanumeric characters and spaces
-  const validNameRegex = /^[a-zA-Z0-9 ]+$/;
-  if (!validNameRegex.test(name)) {
-    return { error: 'Name contains invalid characters' };
-  }
-
-  // Check name length
-  if (name.length < 3 || name.length > 30) {
-    return { error: 'Name must be between 3 and 30 characters long' };
+  const validName = validQuizName(name);
+  if (validName !== true) {
+    return validName;
   }
 
   // Check if name is already used by the same user for another quiz
