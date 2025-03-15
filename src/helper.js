@@ -1,14 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
-import { parse as uuidParse } from 'uuid';
+import { getData } from "./dataStore.js";
 
-createUUID();
+function createUUID(type) {
+  const data = getData();
 
-function createUUID() {
-  const ID1 = uuidv4();
-  const ID2 = uuidParse(ID1);
+  data.highestID += 1;
 
-  console.log(ID1);
-  console.log(ID2);
+  return data.highestID;
 }
 
 export { createUUID };
