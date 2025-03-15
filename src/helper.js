@@ -40,10 +40,23 @@ function validName(name, isFirst) {
 
 export { validName };
 
-function validPassword() {
-    
+function validPassword(password) {
+  if (password.length < 8) {
+    return { error: 'Password is shorter than 8 characters' };
+  }
+
+  // check if newPassword contains at least one letter and one number
+  const passwordLetter = password.search(/[a-zA-Z]/);
+  const passwordNumber = password.search(/\d/);
+  if (passwordLetter === -1 || passwordNumber === -1) {
+    return { error: 'Password does not contain at least one number and at least one letter' };
+  }
+  
+  return true;
 }
 
+export { validPassword };
+
 function valid() {
-    
+  
 }

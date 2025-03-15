@@ -1,5 +1,5 @@
 import { getData } from './dataStore.js';
-import { createUUID, validName } from './helper.js';
+import { createUUID, validName, validPassword } from './helper.js';
 
 import validator from 'validator';
 
@@ -65,23 +65,15 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return validFirst;
   }
 
-  const validLast = validName(nameLast, true);
+  const validLast = validName(nameLast, false);
   if (validLast !== true) {
     return validLast;
   }
 
-  if (password.length < 8) {
-    return { error: 'Password is shorter than 8 characters' };
+  const validPass = validPassword(password);
+  if (validPass !== true) {
+    return validPass;
   }
-
-  // check if newPassword contains at least one letter and one number
-  const passwordLetter = password.search(/[a-zA-Z]/);
-  const passwordNumber = password.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
-  }
-
-  // Can't have specific error messages if using validator to replace above code
 
   const id = createUUID();
 
