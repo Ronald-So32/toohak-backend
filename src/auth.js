@@ -50,10 +50,9 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
 
   // Check if email has already been used
-  for (const user of data.users) {
-    if (user.email === email) {
-      return { error: 'Email has already been used by another user' };
-    }
+  const emailUsed = data.users.some(user => user.email === email);
+  if (emailUsed) {
+    return { error: 'Email has already been used by another user' };
   }
 
   if (!(validator.isEmail(email))) {
