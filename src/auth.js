@@ -98,22 +98,6 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
   // Can't have specific error messages if using validator to replace above code
 
-  // Make unique id
-  let id;
-  let unique = false;
-
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (const user of data.users) {
-      if (user.userId === id) {
-        unique = false;
-        break;
-      }
-    }
-  }
-
   // All user details are correct so push append them to the users array
   data.users.push({
     userId: id,
