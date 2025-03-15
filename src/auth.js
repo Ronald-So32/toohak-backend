@@ -178,10 +178,9 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   }
 
   // check if new email has been used by other user
-  for (const user of data.users) {
-    if (user.email === email && user.userId !== userId) {
-      return { error: 'Email has already been used by another user' };
-    }
+  const isEmailUsedByOtherUser = data.users.some(user => user.email === email && user.userId !== userId);
+  if (isEmailUsedByOtherUser) {
+    return { error: 'Email has already been used by another user' };
   }
 
   if (!(validator.isEmail(email))) {
