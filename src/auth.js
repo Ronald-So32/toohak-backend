@@ -1,4 +1,5 @@
 import { getData } from './dataStore.js';
+import { createUUID, validName, validPassword } from './helper.js';
 
 import validator from 'validator';
 
@@ -49,70 +50,31 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
 
   // Check if email has already been used
-  for (const user of data.users) {
-    if (user.email === email) {
-      return { error: 'Email has already been used by another user' };
-    }
+  const emailUsed = data.users.some(user => user.email === email);
+  if (emailUsed) {
+    return { error: 'Email has already been used by another user' };
   }
 
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
 
-  const firstHasSpecial = nameFirst.search(/[^a-zA-Z\s-']/);
-  if (firstHasSpecial !== -1) {
-    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  const validFirst = validName(nameFirst, true);
+  if (validFirst !== true) {
+    return validFirst;
   }
 
-  if (nameFirst.length < 2) {
-    return { error: 'First name is shorter than 2 characters' };
+  const validLast = validName(nameLast, false);
+  if (validLast !== true) {
+    return validLast;
   }
 
-  if (nameFirst.length > 20) {
-    return { error: 'First name is longer than 20 characters' };
+  const validPass = validPassword(password);
+  if (validPass !== true) {
+    return validPass;
   }
 
-  const lastHasSpecial = nameLast.search(/[^a-zA-Z\s-']/);
-  if (lastHasSpecial !== -1) {
-    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
-  }
-
-  if (nameLast.length < 2) {
-    return { error: 'Last name is shorter than 2 characters' };
-  }
-
-  if (nameLast.length > 20) {
-    return { error: 'Last name is longer than 20 characters' };
-  }
-
-  if (password.length < 8) {
-    return { error: 'Password is shorter than 8 characters' };
-  }
-
-  // check if newPassword contains at least one letter and one number
-  const passwordLetter = password.search(/[a-zA-Z]/);
-  const passwordNumber = password.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
-  }
-
-  // Can't have specific error messages if using validator to replace above code
-
-  // Make unique id
-  let id;
-  let unique = false;
-
-  while (!unique) {
-    id = Math.floor(Math.random() * 727727);
-    unique = true;
-
-    for (const user of data.users) {
-      if (user.userId === id) {
-        unique = false;
-        break;
-      }
-    }
-  }
+  const id = createUUID();
 
   // All user details are correct so push append them to the users array
   data.users.push({
@@ -145,19 +107,9 @@ export { adminAuthRegister };
 function adminAuthLogin(email, password) {
   const data = getData();
 
-  let emailFound = false;
-  let userData;
-
-  // check if userId is valid
-  for (const user of data.users) {
-    if (user.email === email) {
-      emailFound = true;
-      userData = user;
-    }
-  }
-
-  if (!emailFound) {
-    return { error: 'Email does not exit' };
+  const userData = data.users.find(user => user.email === email);
+  if (!userData) {
+    return { error: 'Email does not exist' };
   }
 
   // user password is not correct
@@ -187,18 +139,8 @@ export { adminAuthLogin };
 function adminUserDetails(userId) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-
-  // Check if userId is valid
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
     return { error: `User Id of ${userId} is not found` };
   }
 
@@ -230,53 +172,29 @@ export { adminUserDetails };
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
     return { error: `User Id of ${userId} is not found` };
   }
 
   // check if new email has been used by other user
-  for (const user of data.users) {
-    if (user.email === email && user.userId !== userId) {
-      return { error: 'Email has already been used by another user' };
-    }
+  const isEmailUsedByOtherUser = data.users.some(user => user.email === email && user.userId !== userId);
+  if (isEmailUsedByOtherUser) {
+    return { error: 'Email has already been used by another user' };
   }
 
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
 
-  if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
-    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  const validFirst = validName(nameFirst, true);
+  if (validFirst !== true) {
+    return validFirst;
   }
 
-  if (nameFirst.length < 2) {
-    return { error: 'First name is shorter than 2 characters' };
-  }
-
-  if (nameFirst.length > 20) {
-    return { error: 'First name is longer than 20 characters' };
-  }
-
-  if (nameLast.match(/[^a-z\-\s'-]/i) !== null) {
-    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
-  }
-
-  if (nameLast.length < 2) {
-    return { error: 'Last name is shorter than 2 characters' };
-  }
-
-  if (nameLast.length > 20) {
-    return { error: 'Last name is longer than 20 characters' };
+  const validLast = validName(nameLast, false);
+  if (validLast !== true) {
+    return validLast;
   }
 
   // all new user details have been verified, user details are updated
@@ -302,50 +220,32 @@ export { adminUserDetailsUpdate };
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-  
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
-    return { error: `User Id of ${userId} is invalid` };
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
+    return { error: `User Id of ${userId} is not found` };
   }
 
   // Check if password of passed in userId is correct oldPassword
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      if (user.password !== oldPassword) {
-        return { error: 'Old Password is not the correct old password' };
-      }
-    }
+  const user = data.users.find(user => user.userId === userId);
+  if (!user || user.password !== oldPassword) {
+    return { error: 'Old Password is not the correct old password' };
   }
 
   if (oldPassword === newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  // check if neewPassword has been used before
+  // check if newPassword has been used before
   userData.oldPasswords.push(userData.password);
 
-  for (const pastPassword of userData.oldPasswords) {
-    if (pastPassword === newPassword) {
-      return { error: 'New Password has already been used before by this user' };
-    }
+  const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
+  if (isPasswordReused) {
+    return { error: 'New Password has already been used before by this user' };
   }
 
-  if (newPassword.length < 8) {
-    return { error: 'New password is shorter than 8 characters' };
-  }
-
-  const passwordLetter = newPassword.search(/[a-zA-Z]/);
-  const passwordNumber = newPassword.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
+  const validPass = validPassword(newPassword);
+  if (validPass !== true) {
+    return validPass;
   }
 
   // newPassword is meets all requirements,

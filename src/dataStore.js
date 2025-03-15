@@ -2,8 +2,9 @@
 const data = {
   users: [],
 
-  quizzes: []
+  quizzes: [],
 
+  highestID: 0
 };
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
