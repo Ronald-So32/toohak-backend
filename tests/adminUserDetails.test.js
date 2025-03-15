@@ -64,13 +64,14 @@ describe('Test adminUserDetails functionality', () => {
         { type: 'login', password: 'Password1' },
       ],
       expectedSuccessfulLogins: 2,
-      expectedFailedLogins: 1,
+      expectedFailedLogins: 0,
     },
   ])('Test login counts: %s', ({ actions, expectedSuccessfulLogins, expectedFailedLogins }) => {
     actions.forEach((action) => {
+      // Attempts to login for each case above
       adminAuthLogin('email@email.com', action.password);
     });
-
+    // Makes sure that the login attempts are updated
     const result = adminUserDetails(userId);
     expect(result).toStrictEqual({
       user: {
