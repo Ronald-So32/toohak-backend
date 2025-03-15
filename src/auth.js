@@ -107,19 +107,9 @@ export { adminAuthRegister };
 function adminAuthLogin(email, password) {
   const data = getData();
 
-  let emailFound = false;
-  let userData;
-
-  // check if userId is valid
-  for (const user of data.users) {
-    if (user.email === email) {
-      emailFound = true;
-      userData = user;
-    }
-  }
-
-  if (!emailFound) {
-    return { error: 'Email does not exit' };
+  const userData = data.users.find(user => user.email === email);
+  if (!userData) {
+    return { error: 'Email does not exist' };
   }
 
   // user password is not correct
@@ -149,18 +139,8 @@ export { adminAuthLogin };
 function adminUserDetails(userId) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-
-  // Check if userId is valid
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
     return { error: `User Id of ${userId} is not found` };
   }
 
@@ -192,17 +172,8 @@ export { adminUserDetails };
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
     return { error: `User Id of ${userId} is not found` };
   }
 
@@ -250,18 +221,9 @@ export { adminUserDetailsUpdate };
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   const data = getData();
 
-  let userData;
-  let userFound = false;
-  
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userData = user;
-      userFound = true;
-    }
-  }
-
-  if (!userFound) {
-    return { error: `User Id of ${userId} is invalid` };
+  const userData = data.users.find(user => user.userId === userId);
+  if (!userData) {
+    return { error: `User Id of ${userId} is not found` };
   }
 
   // Check if password of passed in userId is correct oldPassword
