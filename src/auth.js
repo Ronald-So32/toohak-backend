@@ -1,7 +1,7 @@
 import { getData } from './dataStore.js';
+import { createUUID, validName } from './helper.js';
 
 import validator from 'validator';
-import { createUUID } from './helper.js';
 
 /**
  * A instance of this object:
@@ -60,30 +60,14 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Email is not valid' };
   }
 
-  const firstHasSpecial = nameFirst.search(/[^a-zA-Z\s-']/);
-  if (firstHasSpecial !== -1) {
-    return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+  const validFirst = validName(nameFirst, true);
+  if (validFirst !== true) {
+    return validFirst;
   }
 
-  if (nameFirst.length < 2) {
-    return { error: 'First name is shorter than 2 characters' };
-  }
-
-  if (nameFirst.length > 20) {
-    return { error: 'First name is longer than 20 characters' };
-  }
-
-  const lastHasSpecial = nameLast.search(/[^a-zA-Z\s-']/);
-  if (lastHasSpecial !== -1) {
-    return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
-  }
-
-  if (nameLast.length < 2) {
-    return { error: 'Last name is shorter than 2 characters' };
-  }
-
-  if (nameLast.length > 20) {
-    return { error: 'Last name is longer than 20 characters' };
+  const validLast = validName(nameLast, true);
+  if (validLast !== true) {
+    return validLast;
   }
 
   if (password.length < 8) {

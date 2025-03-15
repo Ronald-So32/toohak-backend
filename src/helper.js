@@ -47,7 +47,3 @@ function validPassword() {
 function valid() {
     
 }
-
-function valid() {
-    
-}
