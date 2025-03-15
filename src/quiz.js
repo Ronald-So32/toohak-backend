@@ -92,16 +92,9 @@ export { adminQuizList };
 function adminQuizCreate(userId, name, description) {
   const data = getData();
 
-  let validUserId = false;
-
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      validUserId = true;
-    }
-  }
-
-  if (validUserId === false) {
-    return { error: 'UserId does not exist' };
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
   }
 
   const validName = validQuizName(name);
@@ -196,15 +189,8 @@ function adminQuizInfo(userId, quizId) {
   const data = getData();
 
   // Check if user exists
-  let userFound = false;
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userFound = true;
-    }
-  }
-
+  const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    // Return error if user is not found
     return { error: `User Id of ${userId} is not valid` };
   }
 
