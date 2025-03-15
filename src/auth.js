@@ -226,25 +226,21 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   }
 
   // Check if password of passed in userId is correct oldPassword
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      if (user.password !== oldPassword) {
-        return { error: 'Old Password is not the correct old password' };
-      }
-    }
+  const user = data.users.find(user => user.userId === userId);
+  if (!user || user.password !== oldPassword) {
+    return { error: 'Old Password is not the correct old password' };
   }
 
   if (oldPassword === newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  // check if neewPassword has been used before
+  // check if newPassword has been used before
   userData.oldPasswords.push(userData.password);
 
-  for (const pastPassword of userData.oldPasswords) {
-    if (pastPassword === newPassword) {
-      return { error: 'New Password has already been used before by this user' };
-    }
+  const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
+  if (isPasswordReused) {
+    return { error: 'New Password has already been used before by this user' };
   }
 
   const validPass = validPassword(newPassword);
