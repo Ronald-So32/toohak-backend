@@ -9,6 +9,7 @@ import { adminAuthRegister } from '../src/auth.js';
 let id;
 let quizId, quizId2, quizId3;
 
+// To clear existing data and register a user to create a quiz
 beforeEach(() => {
   clear();
   id = adminAuthRegister('email@email.com', 'password1', 'first', 'last').userId;
@@ -40,7 +41,7 @@ describe('Valid User Id with multiple quizzes', () => {
   test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
-
+    // To make sure that all 3 quizzez exist in the list
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
@@ -66,8 +67,9 @@ describe('Valid User Id with multiple quizzes after removal', () => {
   test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
+    // Removes Quiz 2 from the data
     adminQuizRemove(id, quizId2);
-
+    // To make sure that Quiz 2 doesn't exist in the list
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
