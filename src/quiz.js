@@ -57,6 +57,7 @@ function adminQuizList(userId) {
 
   let userFound = false;
 
+  // Check if passed in userId is valid 
   for (const user of data.users) {
     if (user.userId === userId) {
       userFound = true;
@@ -69,6 +70,8 @@ function adminQuizList(userId) {
 
   const quizzes = [];
 
+  // Iterate through all quizzes and put in quizzes array if quiz is created by
+  // user of passed in userId
   for (const quiz of data.quizzes) {
     if (quiz.createdBy === userId) {
       quizzes.push({
@@ -108,6 +111,7 @@ function adminQuizCreate(userId, name, description) {
     return { error: 'UserId does not exist' };
   }
 
+  // Check if name is null
   if (name === null) {
     return { error: 'A name is required' };
   }
@@ -137,6 +141,7 @@ function adminQuizCreate(userId, name, description) {
   let id;
   let unique = false;
 
+  // Create unique quizId
   while (!unique) {
     id = Math.floor(Math.random() * 727727);
     unique = true;
@@ -151,6 +156,7 @@ function adminQuizCreate(userId, name, description) {
 
   const timeStamp = Math.floor(Date.now() / 1000);
 
+  // All details are correct so append new quiz to data.quizzes
   data.quizzes.push({
     quizId: id,
     name: name,

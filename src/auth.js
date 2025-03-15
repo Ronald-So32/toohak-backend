@@ -48,6 +48,7 @@ import validator from 'validator';
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
 
+  // Check if email has already been used
   for (const user of data.users) {
     if (user.email === email) {
       return { error: 'Email has already been used by another user' };
@@ -88,6 +89,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     return { error: 'Password is shorter than 8 characters' };
   }
 
+  // check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
@@ -96,6 +98,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
   // Can't have specific error messages if using validator to replace above code
 
+  // Make unique id
   let id;
   let unique = false;
 
@@ -111,6 +114,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     }
   }
 
+  // All user details are correct so push append them to the users array
   data.users.push({
     userId: id,
     nameFirst: nameFirst,
@@ -122,6 +126,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     oldPasswords: [],
   });
 
+  // New User registered correclty, return id
   return {
     userId: id
   };
@@ -143,6 +148,7 @@ function adminAuthLogin(email, password) {
   let emailFound = false;
   let userData;
 
+  // check if userId is valid
   for (const user of data.users) {
     if (user.email === email) {
       emailFound = true;
@@ -154,11 +160,13 @@ function adminAuthLogin(email, password) {
     return { error: 'Email does not exit' };
   }
 
+  // user password is not correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
+  // update number of successful logins
   userData.numSuccessfulLogins += 1;
 
   return {
@@ -182,6 +190,7 @@ function adminUserDetails(userId) {
   let userData;
   let userFound = false;
 
+  // Check if userId is valid
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -193,6 +202,7 @@ function adminUserDetails(userId) {
     return { error: `User Id of ${userId} is not found` };
   }
 
+  // userId exists, return user details
   return {
     user: {
       userId: userData.userId,
@@ -234,6 +244,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: `User Id of ${userId} is not found` };
   }
 
+  // check if new email has been used by other user
   for (const user of data.users) {
     if (user.email === email && user.userId !== userId) {
       return { error: 'Email has already been used by another user' };
@@ -243,6 +254,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   if (!(validator.isEmail(email))) {
     return { error: 'Email is not valid' };
   }
+
   if (nameFirst.match(/[^a-z\-\s'-]/i) !== null) {
     return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
   }
@@ -267,6 +279,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: 'Last name is longer than 20 characters' };
   }
 
+  // all new user details have been verified, user details are updated
   userData.email = email;
   userData.nameFirst = nameFirst;
   userData.nameLast = nameLast;
@@ -287,12 +300,11 @@ export { adminUserDetailsUpdate };
   * @returns {Object} - Always return an empty object
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
-  // Invalid user id
   const data = getData();
 
   let userData;
   let userFound = false;
-
+  
   for (const user of data.users) {
     if (user.userId === userId) {
       userData = user;
@@ -304,7 +316,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: `User Id of ${userId} is invalid` };
   }
 
-  // Check password of same userId then see if match oldPassword
+  // Check if password of passed in userId is correct oldPassword
   for (const user of data.users) {
     if (user.userId === userId) {
       if (user.password !== oldPassword) {
@@ -317,6 +329,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
+  // check if neewPassword has been used before
   userData.oldPasswords.push(userData.password);
 
   for (const pastPassword of userData.oldPasswords) {
@@ -335,6 +348,8 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
 
+  // newPassword is meets all requirements,
+  // so make userId's password the newPassword
   userData.password = newPassword;
 
   return {};
