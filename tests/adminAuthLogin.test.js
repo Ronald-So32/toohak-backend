@@ -36,6 +36,8 @@ describe('Test error cases', () => {
       expect(result).not.toBeNull();
 
       expect(details.user.numSuccessfulLogins).toStrictEqual(2);
+      // Makes sure that it doesn't count to failed login attempt
+      expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
     });
 
     test('Email doesn\'t exists', () => {
@@ -43,6 +45,9 @@ describe('Test error cases', () => {
       result = adminAuthLogin('emailw@email.com', 'Password1');
 
       expect(result).toStrictEqual({ error: expect.any(String) });
+      // Makes sure that attempt to login with invalid email doesn't count toward existing user's login count
+      expect(details.user.numSuccessfulLogins).toStrictEqual(2);
+      expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
     });
   });
 
@@ -54,6 +59,7 @@ describe('Test error cases', () => {
       });
       expect(result).not.toBeNull();
       expect(details.user.numSuccessfulLogins).toStrictEqual(2);
+      expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
     });
 
     test('Password is incorrect', () => {
@@ -63,6 +69,8 @@ describe('Test error cases', () => {
       // To retrives the latest details of user
       details = adminUserDetails(id);
       expect(result).toStrictEqual({ error: expect.any(String) });
+
+      expect(details.user.numSuccessfulLogins).toStrictEqual(2);
       // Makes sure that the login attempt is registered as a unsucessful login in userDetails
       expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
     });
@@ -91,7 +99,7 @@ describe('Test that the function works as intended', () => {
     expect(result).toStrictEqual({ userId: id });
 
     details = adminUserDetails(id);
-    expect(details.user.numSuccessfulLogins).toStrictEqual(2);
+    expect(details.user.numSuccessfulLogins).toStrictEqual(3);
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
   });
 
@@ -103,4 +111,18 @@ describe('Test that the function works as intended', () => {
     expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 
+  describe('Test that the numFailedPasswordSinceLastLogin will reset', () => {
+    test('Record of logins will reset', () => {
+      const failedLogin = adminAuthLogin('email@email.com', 'WrongPassword');
+      expect(failedLogin).toStrictEqual({ error: expect.any(String) });
+      details = adminUserDetails(id);
+      expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
+
+      adminAuthLogin('email@email.com', 'Password1');
+      details = adminUserDetails(id);
+      expect(details.user.numSuccessfulLogins).toStrictEqual(3);
+      // The failed attempts to login with wrong password should reset after a sucessful login
+      expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+    })
+  })
 });
