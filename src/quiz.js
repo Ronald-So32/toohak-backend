@@ -56,15 +56,7 @@ import { createUUID, validQuizName } from './helper.js';
 function adminQuizList(userId) {
   const data = getData();
 
-  let userFound = false;
-
-  // Check if passed in userId is valid 
-  for (const user of data.users) {
-    if (user.userId === userId) {
-      userFound = true;
-    }
-  }
-
+  const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
     return { error: `User Id of ${userId} is not valid` };
   }
