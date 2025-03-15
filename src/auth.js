@@ -120,6 +120,7 @@ function adminAuthLogin(email, password) {
 
   // update number of successful logins
   userData.numSuccessfulLogins += 1;
+  userData.numFailedPasswordsSinceLastLogin = 0;
 
   return {
     userId: userData.userId,
