@@ -51,12 +51,26 @@ function validPassword(password) {
   if (passwordLetter === -1 || passwordNumber === -1) {
     return { error: 'Password does not contain at least one number and at least one letter' };
   }
-  
+
   return true;
 }
 
 export { validPassword };
 
-function valid() {
-  
+function validQuizName(name) {
+  if (name.match(/[^\w\-\s]/) !== null) {
+    return { error: 'Quiz name contains special characters' };
+  }
+
+  if (name.length < 3) {
+    return { error: 'Quiz name is lesser than 3' };
+  }
+
+  if (name.length > 30) {
+    return { error: 'Quiz name is greater than 30' };
+  }
+
+  return true;
 }
+
+export { validQuizName };

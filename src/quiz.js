@@ -112,21 +112,9 @@ function adminQuizCreate(userId, name, description) {
     return { error: 'UserId does not exist' };
   }
 
-  // Check if name is null
-  if (name === null) {
-    return { error: 'A name is required' };
-  }
-
-  if (name.match(/[^\w\-\s]/) !== null) {
-    return { error: 'Quiz name contains special characters' };
-  }
-
-  if (name.length < 3) {
-    return { error: 'Quiz name is lesser than 3' };
-  }
-
-  if (name.length > 30) {
-    return { error: 'Quiz name is greater than 30' };
+  const validName = validQuizName(name);
+  if (validName !== true) {
+    return validName;
   }
 
   for (const quiz of data.quizzes) {
