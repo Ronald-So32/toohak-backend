@@ -1,6 +1,7 @@
 import { getData } from './dataStore.js';
 
 import validator from 'validator';
+import { createUUID } from './helper.js';
 
 /**
  * A instance of this object:
@@ -97,6 +98,8 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   }
 
   // Can't have specific error messages if using validator to replace above code
+
+  const id = createUUID();
 
   // All user details are correct so push append them to the users array
   data.users.push({

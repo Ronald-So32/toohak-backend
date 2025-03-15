@@ -1,6 +1,6 @@
 import { getData } from "./dataStore.js";
 
-function createUUID(type) {
+function createUUID() {
   const data = getData();
 
   data.highestID += 1;
