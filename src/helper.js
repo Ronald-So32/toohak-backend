@@ -1,5 +1,21 @@
 import { getData } from "./dataStore.js";
+/**
+ * A instance of this object:
+ * {
+ *    error: error message,
+ * }
+ *
+ * @typedef {object} error - Object containing just the error message
+ *
+ * @property {string} error - Error message relevant to the problem
+ */
 
+
+/**
+ * Creates a unique user id from the current registered users
+ * 
+ * @returns {number} - Returns the created uuid
+ */
 function createUUID() {
   const data = getData();
 
@@ -10,7 +26,18 @@ function createUUID() {
 
 export { createUUID };
 
+
+/**
+ * Validates the name the first or last name the user intends to use for their account
+ * 
+ * @param {string} name - The first or the last name of the user
+ * @param {boolean} isFirst - Whether or not it is the user's first name
+ * 
+ * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
+ */
+
 function validName(name, isFirst) {
+  // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
       return { error: 'First name is shorter than 2 characters' };
@@ -18,7 +45,7 @@ function validName(name, isFirst) {
       return { error: 'Last name is shorter than 2 characters' };
     }
   }
-
+  // Checks if there is more than 20 characters in the name
   if (name.length > 20) {
     if (isFirst) {
       return { error: 'First name is longer than 20 characters' };
@@ -26,7 +53,7 @@ function validName(name, isFirst) {
       return { error: 'Last name is longer than 20 characters' };
     }
   }
-
+  // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
       return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
@@ -40,12 +67,19 @@ function validName(name, isFirst) {
 
 export { validName };
 
+/**
+ * Validate the password that the user intends to use for their account
+ * 
+ * @param {string} password - Intended password of user
+ * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
+ */
 function validPassword(password) {
+  // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     return { error: 'Password is shorter than 8 characters' };
   }
 
-  // check if newPassword contains at least one letter and one number
+  // Check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1 || passwordNumber === -1) {
@@ -57,15 +91,22 @@ function validPassword(password) {
 
 export { validPassword };
 
+/**
+ * Validates the name that the user intends to use for their quiz
+ * 
+ * @param {string} name - Intended quiz name user wants
+ * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
+ */
 function validQuizName(name) {
+  // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
   }
-
+ // Checks if the quiz name has less than 3
   if (name.length < 3) {
     return { error: 'Quiz name is lesser than 3' };
   }
-
+  // Checks if the quiz name has more than 30
   if (name.length > 30) {
     return { error: 'Quiz name is greater than 30' };
   }
