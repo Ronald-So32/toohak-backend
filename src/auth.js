@@ -88,7 +88,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     oldPasswords: [],
   });
 
-  // New User registered correclty, return id
+  // New User registered correctly, return id
   return {
     userId: id
   };
@@ -112,13 +112,13 @@ function adminAuthLogin(email, password) {
     return { error: 'Email does not exist' };
   }
 
-  // user password is not correct
+  // User password is not correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
-  // update number of successful logins
+  // Update number of successful logins
   userData.numSuccessfulLogins += 1;
   userData.numFailedPasswordsSinceLastLogin = 0;
 
@@ -145,7 +145,7 @@ function adminUserDetails(userId) {
     return { error: `User Id of ${userId} is not found` };
   }
 
-  // userId exists, return user details
+  // If the variable userId exists, return user details
   return {
     user: {
       userId: userData.userId,
@@ -178,7 +178,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return { error: `User Id of ${userId} is not found` };
   }
 
-  // check if new email has been used by other user
+  // Check if new email has been used by other user
   const isEmailUsedByOtherUser = data.users.some(user => user.email === email && user.userId !== userId);
   if (isEmailUsedByOtherUser) {
     return { error: 'Email has already been used by another user' };
@@ -198,7 +198,7 @@ function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
     return validLast;
   }
 
-  // all new user details have been verified, user details are updated
+  // All new user details have been verified, user details are updated
   userData.email = email;
   userData.nameFirst = nameFirst;
   userData.nameLast = nameLast;
@@ -236,7 +236,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return { error: 'oldPassword is the same as new one' };
   }
 
-  // check if newPassword has been used before
+  // Check if newPassword has been used before
   userData.oldPasswords.push(userData.password);
 
   const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
@@ -249,8 +249,7 @@ function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
     return validPass;
   }
 
-  // newPassword is meets all requirements,
-  // so make userId's password the newPassword
+  // The variable newPassword is meets all requirements, so replace password with newPassword
   userData.password = newPassword;
 
   return {};
