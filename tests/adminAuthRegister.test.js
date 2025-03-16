@@ -7,7 +7,7 @@ import { clear } from '../src/other.js';
 
 let result;
 
-// Clears existing datas then registers a user
+// Clears the existing data then registers a user
 beforeEach(() => {
   clear();
   result = adminAuthRegister('email@email.com', 'Password1', 'first', 'last');
