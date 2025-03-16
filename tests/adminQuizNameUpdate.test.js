@@ -154,7 +154,6 @@ describe('Test error cases', () => {
         timeLastEdited: expect.any(Number),
         description: 'Description'
       });
-
     });
 
     test('Invalid name - Name is already used by current logged in user', () => {

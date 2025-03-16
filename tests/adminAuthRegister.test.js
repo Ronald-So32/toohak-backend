@@ -36,7 +36,7 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({ userId: result.userId });
 
       result = adminAuthRegister('email2@email.com', 'Password2', 'firstt', 'lastt');
-      
+
       expect(result).toStrictEqual({ userId: result.userId });
     });
   });

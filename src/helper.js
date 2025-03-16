@@ -1,4 +1,4 @@
-import { getData } from "./dataStore.js";
+import { getData } from './dataStore.js';
 /**
  * A instance of this object:
  * {
@@ -10,10 +10,9 @@ import { getData } from "./dataStore.js";
  * @property {string} error - Error message relevant to the problem
  */
 
-
 /**
  * Creates a unique user id from the current registered users
- * 
+ *
  * @returns {number} - Returns the created uuid
  */
 function createUUID() {
@@ -26,13 +25,12 @@ function createUUID() {
 
 export { createUUID };
 
-
 /**
  * Validates the name the first or last name the user intends to use for their account
- * 
+ *
  * @param {string} name - The first or the last name of the user
  * @param {boolean} isFirst - Whether or not it is the user's first name
- * 
+ *
  * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
  */
 
@@ -69,7 +67,7 @@ export { validName };
 
 /**
  * Validate the password that the user intends to use for their account
- * 
+ *
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
  */
@@ -93,7 +91,7 @@ export { validPassword };
 
 /**
  * Validates the name that the user intends to use for their quiz
- * 
+ *
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
  */
@@ -102,7 +100,7 @@ function validQuizName(name) {
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
   }
- // Checks if the quiz name has less than 3
+  // Checks if the quiz name has less than 3
   if (name.length < 3) {
     return { error: 'Quiz name is lesser than 3' };
   }

@@ -175,7 +175,7 @@ describe('Test error cases', () => {
       });
       expect(adminQuizInfo(id, result.quizId)).not.toBeNull();
     });
-    
+
     test('Invalid name - Name is already used by current logged in user', () => {
       const result1 = adminQuizCreate(id, 'Quiz Name', 'Description');
       const result2 = adminQuizCreate(id, 'Quiz Name', 'Description');

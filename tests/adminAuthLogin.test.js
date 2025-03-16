@@ -123,6 +123,6 @@ describe('Test that the function works as intended', () => {
       expect(details.user.numSuccessfulLogins).toStrictEqual(3);
       // The failed attempts to login with wrong password should reset after a sucessful login
       expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
-    })
-  })
+    });
+  });
 });

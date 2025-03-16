@@ -27,7 +27,7 @@ describe('clear', () => {
     const loginResult = adminAuthLogin('user1@example.com', 'password123');
     expect(loginResult).toHaveProperty('userId');
     // Checks that the user details exist and the succeful login attempt is updated
-    const userDetails = adminUserDetails(user1.userId)
+    const userDetails = adminUserDetails(user1.userId);
     expect(userDetails).toStrictEqual({
       user: {
         userId: user1.userId,
