@@ -69,6 +69,7 @@ describe('Check password is updated successfully', () => {
   test('Password updated correctly', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'newPassword1')).toStrictEqual({});
     expect(adminAuthLogin('email@email.com', 'newPassword1')).toStrictEqual({ userId: id });
+    // Makes sure that user can login with new password and successful logins update for user details
     adminAuthLogin('email@email.com', 'newPassword1');
     expect(adminUserDetails(id)).toStrictEqual({
       user:
@@ -86,6 +87,17 @@ describe('Check password is updated successfully', () => {
 describe('Password updated unssuccessfully, confirm cannot login with unsuccessful password', () => {
   test('Password test password updated unsuccessfully and confirm with failed login', () => {
     expect(adminUserPasswordUpdate(id, 'password1', 'passwor')).toStrictEqual({ error: expect.any(String) });
+    // Makes sure that user can't login with password which was updated unsuccessfully and that it counts towards failed login attempts
     expect(adminAuthLogin('email@email.com', 'passwor')).toStrictEqual({ error: expect.any(String) });
+    expect(adminUserDetails(id)).toStrictEqual({
+      user:
+      {
+        userId: id,
+        name: expect.any(String),
+        email: expect.any(String),
+        numSuccessfulLogins: 1,
+        numFailedPasswordsSinceLastLogin: 1,
+      }
+    });
   });
 });

@@ -137,6 +137,23 @@ describe('Test error cases', () => {
       expect(typeof result).toBe('object');
       expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
+
+      // To make sure that the name of quiz updates
+      expect(adminQuizList(userId)).toStrictEqual({
+        quizzes: [
+          {
+            quizId: quizId,
+            name: name,
+          }
+        ]
+      });
+      expect(adminQuizInfo(userId, quizId)).toStrictEqual({
+        quizId: quizId,
+        name: name,
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
+        description: 'Description'
+      });
     });
 
     test('Invalid name - Name is already used by current logged in user', () => {
