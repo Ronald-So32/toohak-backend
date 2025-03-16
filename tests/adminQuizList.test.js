@@ -41,7 +41,7 @@ describe('Valid User Id with multiple quizzes', () => {
   test('User Id valid', () => {
     quizId2 = adminQuizCreate(id, 'Quiz2 name', 'Description2').quizId;
     quizId3 = adminQuizCreate(id, 'Quiz3 name', 'Description3').quizId;
-    // To make sure that all 3 quizzez exist in the list
+    // To make sure that all 3 quizzes exist in the list
     expect(typeof adminQuizList(id)).toBe('object');
     expect(adminQuizList(id)).toStrictEqual({
       quizzes: [
