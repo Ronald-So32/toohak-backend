@@ -23,7 +23,7 @@ describe('Test correct return types and the registeration of a sucessful login',
     expect(typeof result).toBe('object');
     expect(result).toStrictEqual({ userId: id });
     expect(result).not.toBeNull();
-    // Makes sure that the login attempt is registered as a sucessful login in userDetails
+    // Makes sure that the login attempt is registered as a successful login in userDetails
     expect(details.user.numSuccessfulLogins).toStrictEqual(2);
   });
 });
@@ -66,12 +66,12 @@ describe('Test error cases', () => {
       // Overrides the result from beforeEach with a failed attempt to login with a non-existent email
       result = adminAuthLogin('email@email.com', 'Password2');
 
-      // To retrives the latest details of user
+      // To retrieve the latest details of user
       details = adminUserDetails(id);
       expect(result).toStrictEqual({ error: expect.any(String) });
 
       expect(details.user.numSuccessfulLogins).toStrictEqual(2);
-      // Makes sure that the login attempt is registered as a unsucessful login in userDetails
+      // Makes sure that the login attempt is registered as an unsuccessful login in userDetails
       expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
     });
   });
@@ -121,7 +121,7 @@ describe('Test that the function works as intended', () => {
       adminAuthLogin('email@email.com', 'Password1');
       details = adminUserDetails(id);
       expect(details.user.numSuccessfulLogins).toStrictEqual(3);
-      // The failed attempts to login with wrong password should reset after a sucessful login
+      // The failed attempts to login with wrong password should reset after a successful login
       expect(details.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
     });
   });
