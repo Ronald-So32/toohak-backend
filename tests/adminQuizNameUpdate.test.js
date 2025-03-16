@@ -138,7 +138,7 @@ describe('Test error cases', () => {
       expect(result).toStrictEqual({});
       expect(result).not.toBeNull();
 
-      // To makes sure that the name of quiz updates
+      // To make sure that the name of quiz updates
       expect(adminQuizList(userId)).toStrictEqual({
         quizzes: [
           {
