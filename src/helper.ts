@@ -1,4 +1,4 @@
-import { getData } from './dataStore.js';
+import { getData } from './dataStore.ts';
 /**
  * A instance of this object:
  * {

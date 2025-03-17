@@ -1,4 +1,4 @@
-import { getData } from './dataStore.js';
+import { getData } from './dataStore.ts';
 
 /**
   * Reset the state of the application back to the start.

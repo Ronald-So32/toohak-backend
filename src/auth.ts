@@ -1,5 +1,5 @@
-import { getData } from './dataStore.js';
-import { createUUID, validName, validPassword } from './helper.js';
+import { getData } from './dataStore.ts';
+import { createUUID, validName, validPassword } from './helper.ts';
 
 import validator from 'validator';
 
