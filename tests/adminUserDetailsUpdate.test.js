@@ -1,9 +1,9 @@
 import {
   adminUserDetailsUpdate,
   adminUserDetails
-} from '../src/auth.js';
-import { adminAuthRegister } from '../src/auth.js';
-import { clear } from '../src/other.js';
+} from '../src/auth.ts';
+import { adminAuthRegister } from '../src/auth.ts';
+import { clear } from '../src/other.ts';
 
 let id;
 

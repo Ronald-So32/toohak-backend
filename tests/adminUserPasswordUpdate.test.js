@@ -3,8 +3,8 @@ import {
   adminAuthRegister,
   adminAuthLogin,
   adminUserDetails
-} from '../src/auth.js';
-import { clear } from '../src/other.js';
+} from '../src/auth.ts';
+import { clear } from '../src/other.ts';
 
 let id;
 
