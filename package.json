@@ -5,6 +5,7 @@
         "lint-fix": "eslint --fix **/*.js"
     },
     "dependencies": {
+        "express": "^4.21.2",
         "uuid": "^11.1.0",
         "validator": "^13.12.0"
     },
