@@ -227,7 +227,7 @@ export { adminUserDetailsUpdate };
   * @param {string} - The old password of the user
   * @param {string} - The new password of the user
   *
-  * @returns {object} - Always return an empty object otherwise an error object with relevant error message 
+  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   const data = getData();
