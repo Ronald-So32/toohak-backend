@@ -6,10 +6,21 @@ import validator from 'validator';
 /**
  * A instance of this object:
  * {
+ *    error: error message,
+ * }
+ *
+ * @typedef {object} error - Object containing just the error message
+ *
+ * @property {string} error - Error message relevant to the problem
+ */
+
+/**
+ * A instance of this object:
+ * {
  *    userId: 1,
  * }
  *
- * @typedef {Object} userId - Object containing just the user Id
+ * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
  */
@@ -24,7 +35,7 @@ import validator from 'validator';
  *    numFailedPasswordsSinceLastLogin: 1,
  * }
  *
- * @typedef {Object} user - Data structure containing the details of the user
+ * @typedef {object} user - Data structure containing the details of the user
  *
  * @property {number} userId - Id of the user
  * @property {string} name - Full name of the user
@@ -44,7 +55,7 @@ import validator from 'validator';
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
  *
- * @returns {userId} - Always return UserId object
+ * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
@@ -102,7 +113,7 @@ export { adminAuthRegister };
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  *
- * @returns {userId} - Always return userId object
+ * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
 function adminAuthLogin(email, password) {
   const data = getData();
@@ -135,7 +146,7 @@ export { adminAuthLogin };
  *
  * @param {number} userId - Id of the user
  *
- * @returns {user} - Always return userDetails object
+ * @returns {user | error} - Always return userDetails object otherwise an error object with relevant error message
 */
 function adminUserDetails(userId) {
   const data = getData();
@@ -168,7 +179,7 @@ export { adminUserDetails };
   * @param {string} - First name of the user
   * @param {string} - Last name of the user
   *
-  * @returns {Object} - Always return an empty object
+  * @returns {object | error} - Always return an empty object otherwise an error object with relevant error message
 */
 function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
   const data = getData();
@@ -216,7 +227,7 @@ export { adminUserDetailsUpdate };
   * @param {string} - The old password of the user
   * @param {string} - The new password of the user
   *
-  * @returns {Object} - Always return an empty object
+  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
   const data = getData();

@@ -4,10 +4,21 @@ import { createUUID, validQuizName } from './helper.js';
 /**
  * A instance of this object:
  * {
+ *    error: error message,
+ * }
+ *
+ * @typedef {object} error - Object containing just the error message
+ *
+ * @property {string} error - Error message relevant to the problem
+ */
+
+/**
+ * A instance of this object:
+ * {
  *    userId: 1,
  * }
  *
- * @typedef {Object} userId - Object containing just the user Id
+ * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
  */
@@ -19,7 +30,7 @@ import { createUUID, validQuizName } from './helper.js';
     name: 'My Quiz',
   }
  *
- * @typedef {Object} quizzes - Data structure containing an array of
+ * @typedef {object} quizzes - Data structure containing an array of
  * quiz summaries
  *
  * @property {number} quizId - Id of the quiz
@@ -36,7 +47,7 @@ import { createUUID, validQuizName } from './helper.js';
  *    description: 'This is my quiz',
  * }
  *
- * @typedef {Object} quiz - Data structure containing the details of the quiz
+ * @typedef {object} quiz - Data structure containing the details of the quiz
  *
  * @property {number} quizId - Id of the quiz
  * @property {string} name - F6ull name of the quiz
@@ -87,7 +98,7 @@ export { adminQuizList };
   * @param {string} description - Description of quiz
   * ...
   *
-  * @returns {quizId} - Always return quizId object
+  * @returns {quizId | error} - Always return quizId object otherwise an error object with relevant error message
 */
 function adminQuizCreate(userId, name, description) {
   const data = getData();
@@ -139,7 +150,7 @@ export { adminQuizCreate };
   * @param {number} quizId - Id of the quiz
   * ...
   *
-  * @returns {Object} - Always return an empty object
+  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 
 function adminQuizRemove(userId, quizId) {
@@ -180,7 +191,7 @@ export { adminQuizRemove };
   * @param {number} quizId - Id of the quiz
   * ...
   *
-  * @returns {quiz} - Always return quiz object
+  * @returns {quiz | error} - Always return quiz object otherwise an error object with relevant error message
 */
 
 function adminQuizInfo(userId, quizId) {
@@ -221,7 +232,7 @@ export { adminQuizInfo };
   * @param {string} name - Name of the quiz
   * ...
   *
-  * @returns {Object} - Always return an empty object
+  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 function adminQuizNameUpdate(userId, quizId, name) {
   const data = getData();
@@ -278,7 +289,7 @@ export { adminQuizNameUpdate };
   * @param {string} description - Description of the quiz
   * ...
   *
-  * @returns {Object} - Always return an empty object
+  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 function adminQuizDescriptionUpdate(userId, quizId, description) {
   const data = getData();
