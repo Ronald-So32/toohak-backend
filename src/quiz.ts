@@ -291,7 +291,7 @@ export { adminQuizNameUpdate };
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminQuizDescriptionUpdate(userId, quizId, description) {
+function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): Record<string, unknown> | { error: string } {
   const data = getData();
 
   // Check if userId is valid
