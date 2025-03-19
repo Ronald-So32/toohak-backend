@@ -34,7 +34,7 @@ export { createUUID };
  * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
  */
 
-function validName(name, isFirst) {
+function validName(name: string, isFirst: boolean) {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
@@ -71,7 +71,7 @@ export { validName };
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
  */
-function validPassword(password) {
+function validPassword(password: string) {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     return { error: 'Password is shorter than 8 characters' };
@@ -95,7 +95,7 @@ export { validPassword };
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
  */
-function validQuizName(name) {
+function validQuizName(name: string) {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
