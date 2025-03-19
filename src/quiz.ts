@@ -3,7 +3,8 @@ import {
   createUUID,
   validQuizName,
   errorInterface,
-  quizSummariesInterface
+  quizSummariesInterface,
+  quizIdInterface
 } from './helper.ts';
 
 /**
@@ -48,7 +49,7 @@ export function adminQuizList(userId: number): { quizzes: quizSummariesInterface
   *
   * @returns {quizId | error} - Always return quizId object otherwise an error object with relevant error message
 */
-export function adminQuizCreate(userId: number, name: string, description: string) {
+export function adminQuizCreate(userId: number, name: string, description: string): quizIdInterface | errorInterface {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -58,7 +59,7 @@ export function adminQuizCreate(userId: number, name: string, description: strin
 
   const validName = validQuizName(name);
   if (validName !== true) {
-    return validName;
+    return validName as errorInterface;
   }
 
   const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
