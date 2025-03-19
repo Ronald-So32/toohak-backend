@@ -18,3 +18,118 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * Q1
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 1                             |
+| --------  | ----------------------------- |
+| Date/time | 24/02 16:00                   |
+|   Week    | 2                             |
+| Attendees | Brian, Justin, Sagar, Weiming |
+
+### Agenda
+| Item      | Discussion/decision                          |
+| --------  | -------------------------------------------- |
+| Format    | Everyone was content with the current format |
+| Contract  | Discussed answers for each question together |
+| Data      | Nothing had to be changed                    |
+
+### Action Items/reminders
+- [ ] Finish off the function stubs
+
+### Questions for tutor
+* 
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 2                                     |
+| --------  | ------------------------------------- |
+| Date/time | 26/02 16:00                           |
+|   Week    | 2                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item      | Discussion/decision                             |
+| --------  | ----------------------------------------------- |
+| Format    | Just remembering the format and making it clear |
+| Git       | Learning how to use git                         |
+
+### Action Items/reminders
+- [ ] Finish off the function stubs
+
+### Questions for tutor
+* 
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 3                                     |
+| --------  | ------------------------------------- |
+| Date/time | 03/03 09:30                           |
+|   Week    | 3                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item            | Discussion/decision                                  |
+| --------------- | ---------------------------------------------------- |
+| Iteration 1     | Went through the entire project description together |
+| Assigning tasks | Discussed who is doing what                          |
+
+### Action Items/reminders
+- [ ] Implement the test cases
+- [ ] Implement the actual functions
+
+### Questions for tutor
+*
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 4                                     |
+| --------- | ------------------------------------- |
+| Date/time | 06/03 14:00, 15:00 for Sagar          |
+|   Week    | 3                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests and helping | Went through the merge requests and helped each other with problems |
+
+### Action Items/reminders
+- [ ] Implement the actual functions
+
+### Questions for tutor
+* Do we split each function / merge the tests
+* Black boxing old passwords + passwords
+* Check the interview format + stories + whatever is in it
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 5                                     |
+| --------- | ------------------------------------- |
+| Date/time | 12/03 14:25                           |
+|   Week    | 4                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests and helping | Went through the merge requests and helped each other with problems |
+| Talked about the feedback  | Discussed the feedback and also how to use it to improve            |
+
+### Action Items/reminders
+- [ ] Fix any bugs caused by the merging
+
+### Questions for tutor
+* Can we spam reruns
+* Feedback on everything so far
