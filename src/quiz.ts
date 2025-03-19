@@ -5,61 +5,6 @@ import {
 } from './helper.ts';
 
 /**
- * A instance of this object:
- * {
- *    error: error message,
- * }
- *
- * @typedef {object} error - Object containing just the error message
- *
- * @property {string} error - Error message relevant to the problem
- */
-
-/**
- * A instance of this object:
- * {
- *    userId: 1,
- * }
- *
- * @typedef {object} userId - Object containing just the user Id
- *
- * @property {number} userId - Id of user
- */
-
-/**
- * A instance of this object:
- *{
-    quizId: 1,
-    name: 'My Quiz',
-  }
- *
- * @typedef {object} quizzes - Data structure containing an array of
- * quiz summaries
- *
- * @property {number} quizId - Id of the quiz
- * @property {string} name - Full name of the quiz
- */
-
-/**
- * A instance of this object:
- * {
- *    quizId: 1,
- *    name: 'My Quiz',
- *    timeCreated: 1683125870,
- *    timeLastEdited: 1683125871,
- *    description: 'This is my quiz',
- * }
- *
- * @typedef {object} quiz - Data structure containing the details of the quiz
- *
- * @property {number} quizId - Id of the quiz
- * @property {string} name - F6ull name of the quiz
- * @property {number} timeCreated - Time created of the quiz
- * @property {number} timeLastEdited - Time of the last edit made to the quiz
- * @property {string} description - Description of the quiz
- */
-
-/**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   *
   * @param {number} userId - Id of the user

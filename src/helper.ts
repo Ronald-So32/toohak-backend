@@ -24,7 +24,9 @@ export interface errorInterface {
  *
  * @property {number} userId - Id of user
  */
-
+export interface userIdInterface {
+  userId: number;
+}
 
 /**
  * A instance of this object:
@@ -39,7 +41,10 @@ export interface errorInterface {
  * @property {number} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
  */
-
+export interface quizSummariesInterface {
+  quizId: number;
+  name: string;
+}
 
 /**
  * A instance of this object:
@@ -59,7 +64,13 @@ export interface errorInterface {
  * @property {number} timeLastEdited - Time of the last edit made to the quiz
  * @property {string} description - Description of the quiz
  */
-
+export interface quizDetailsInterface {
+  quizId: number;
+  name: string;
+  timeCreated: number;
+  timeLastEdited: number;
+  description: string;
+}
 
 /**
  * A instance of this object:
@@ -81,7 +92,13 @@ export interface errorInterface {
  * @property {number} numFailedPasswordsSinceLastLogin - The number of failed
  * login attempts by the user since the last login
  */
-
+export interface userDetailsInterface {
+  userId: number;
+  name: string;
+  email: string;
+  numSuccessfulLogins: number;
+  numFailedPasswordsSinceLastLogin: number;
+}
 
 /**
  * Creates a unique user id from the current registered users

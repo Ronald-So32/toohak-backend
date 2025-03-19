@@ -8,49 +8,6 @@ import {
 import validator from 'validator';
 
 /**
- * A instance of this object:
- * {
- *    error: error message,
- * }
- *
- * @typedef {object} error - Object containing just the error message
- *
- * @property {string} error - Error message relevant to the problem
- */
-
-/**
- * A instance of this object:
- * {
- *    userId: 1,
- * }
- *
- * @typedef {object} userId - Object containing just the user Id
- *
- * @property {number} userId - Id of user
- */
-
-/**
- * A instance of this object:
- * {
- *    userId: 1,
- *    name: 'Hayden Smith',
- *    email: 'hayden.smith@unsw.edu.au',
- *    numSuccessfulLogins: 3,
- *    numFailedPasswordsSinceLastLogin: 1,
- * }
- *
- * @typedef {object} user - Data structure containing the details of the user
- *
- * @property {number} userId - Id of the user
- * @property {string} name - Full name of the user
- * @property {string} email - Email address of the user
- * @property {number} numSuccessfulLogins - The number of times that the user
- * logs in successfully
- * @property {number} numFailedPasswordsSinceLastLogin - The number of failed
- * login attempts by the user since the last login
- */
-
-/**
  * Register a user with an email, password, and names, then return their
  * userId value.
  *
