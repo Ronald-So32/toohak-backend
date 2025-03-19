@@ -7,7 +7,7 @@ import { getData } from './dataStore.ts';
   *
   * @returns {Object} - Always return an empty object
 */
-function clear() {
+export function clear(): {} {
   const data = getData();
 
   data.users = [];
@@ -15,5 +15,3 @@ function clear() {
 
   return {};
 }
-
-export { clear };
