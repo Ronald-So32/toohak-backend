@@ -10,13 +10,16 @@ import { getData } from './dataStore.ts';
  *
  * @property {string} error - Error message relevant to the problem
  */
+export interface errorInterface {
+  error: string;
+}
 
 /**
  * Creates a unique user id from the current registered users
  *
  * @returns {number} - Returns the created uuid
  */
-export function createUUID() {
+export function createUUID(): number {
   const data = getData();
 
   data.highestID += 1;
@@ -33,7 +36,7 @@ export function createUUID() {
  * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
  */
 
-export function validName(name: string, isFirst: boolean) {
+export function validName(name: string, isFirst: boolean): boolean | errorInterface {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
@@ -68,7 +71,7 @@ export function validName(name: string, isFirst: boolean) {
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
  */
-export function validPassword(password: string) {
+export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     return { error: 'Password is shorter than 8 characters' };
@@ -90,7 +93,7 @@ export function validPassword(password: string) {
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
  */
-export function validQuizName(name: string) {
+export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
