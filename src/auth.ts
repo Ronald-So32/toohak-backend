@@ -2,7 +2,10 @@ import { getData } from './dataStore.ts';
 import {
   createUUID,
   validName,
-  validPassword
+  validPassword,
+  errorInterface,
+  userIdInterface,
+  userDetailsInterface
 } from './helper.ts';
 
 import validator from 'validator';
@@ -18,7 +21,7 @@ import validator from 'validator';
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-export function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
+export function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string): userIdInterface | errorInterface {
   const data = getData();
 
   // Check if email has already been used
@@ -33,17 +36,17 @@ export function adminAuthRegister(email: string, password: string, nameFirst: st
 
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
-    return validFirst;
+    return validFirst as errorInterface;
   }
 
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
-    return validLast;
+    return validLast as errorInterface;
   }
 
   const validPass = validPassword(password);
   if (validPass !== true) {
-    return validPass;
+    return validPass as errorInterface;
   }
 
   const id = createUUID();
@@ -74,7 +77,7 @@ export function adminAuthRegister(email: string, password: string, nameFirst: st
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-export function adminAuthLogin(email: string, password: string) {
+export function adminAuthLogin(email: string, password: string): userIdInterface | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.email === email);
@@ -105,7 +108,7 @@ export function adminAuthLogin(email: string, password: string) {
  *
  * @returns {user | error} - Always return userDetails object otherwise an error object with relevant error message
 */
-export function adminUserDetails(userId: number) {
+export function adminUserDetails(userId: number): { user: userDetailsInterface} | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -136,7 +139,7 @@ export function adminUserDetails(userId: number) {
   *
   * @returns {object | error} - Always return an empty object otherwise an error object with relevant error message
 */
-export function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string) {
+export function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string): {} | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -182,7 +185,7 @@ export function adminUserDetailsUpdate(userId: number, email: string, nameFirst:
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-export function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string) {
+export function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string): {} | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
