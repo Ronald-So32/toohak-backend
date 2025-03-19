@@ -1,5 +1,9 @@
 import { getData } from './dataStore.ts';
-import { createUUID, validName, validPassword } from './helper.ts';
+import {
+  createUUID,
+  validName,
+  validPassword
+} from './helper.ts';
 
 import validator from 'validator';
 

@@ -1,5 +1,8 @@
 import { getData } from './dataStore.ts';
-import { createUUID, validQuizName } from './helper.ts';
+import {
+  createUUID,
+  validQuizName
+} from './helper.ts';
 
 /**
  * A instance of this object:
