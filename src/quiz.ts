@@ -12,7 +12,7 @@ import {
   * @param {number} userId - Id of the user
   * ...
   *
-  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always return quizzes object
+  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns an object, quizzes with an array of quizSummariesInterface inside of it unless there is an error which returns errorInterface
 */
 export function adminQuizList(userId: number): { quizzes: quizSummariesInterface[] } | errorInterface {
   const data = getData();
