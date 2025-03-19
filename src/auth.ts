@@ -57,7 +57,7 @@ import validator from 'validator';
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-function adminAuthRegister(email, password, nameFirst, nameLast) {
+function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   const data = getData();
 
   // Check if email has already been used
@@ -115,7 +115,7 @@ export { adminAuthRegister };
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-function adminAuthLogin(email, password) {
+function adminAuthLogin(email: string, password: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.email === email);
@@ -148,7 +148,7 @@ export { adminAuthLogin };
  *
  * @returns {user | error} - Always return userDetails object otherwise an error object with relevant error message
 */
-function adminUserDetails(userId) {
+function adminUserDetails(userId: number) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -181,7 +181,7 @@ export { adminUserDetails };
   *
   * @returns {object | error} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminUserDetailsUpdate(userId, email, nameFirst, nameLast) {
+function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -229,7 +229,7 @@ export { adminUserDetailsUpdate };
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminUserPasswordUpdate(userId, oldPassword, newPassword) {
+function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
