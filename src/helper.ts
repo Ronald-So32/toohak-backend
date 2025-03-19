@@ -16,15 +16,13 @@ import { getData } from './dataStore.ts';
  *
  * @returns {number} - Returns the created uuid
  */
-function createUUID() {
+export function createUUID() {
   const data = getData();
 
   data.highestID += 1;
 
   return data.highestID;
 }
-
-export { createUUID };
 
 /**
  * Validates the name the first or last name the user intends to use for their account
@@ -35,7 +33,7 @@ export { createUUID };
  * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
  */
 
-function validName(name: string, isFirst: boolean) {
+export function validName(name: string, isFirst: boolean) {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
@@ -64,15 +62,13 @@ function validName(name: string, isFirst: boolean) {
   return true;
 }
 
-export { validName };
-
 /**
  * Validate the password that the user intends to use for their account
  *
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
  */
-function validPassword(password: string) {
+export function validPassword(password: string) {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     return { error: 'Password is shorter than 8 characters' };
@@ -88,15 +84,13 @@ function validPassword(password: string) {
   return true;
 }
 
-export { validPassword };
-
 /**
  * Validates the name that the user intends to use for their quiz
  *
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
  */
-function validQuizName(name: string) {
+export function validQuizName(name: string) {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
@@ -112,5 +106,3 @@ function validQuizName(name: string) {
 
   return true;
 }
-
-export { validQuizName };
