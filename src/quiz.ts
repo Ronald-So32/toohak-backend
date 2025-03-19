@@ -1,7 +1,9 @@
 import { getData } from './dataStore.ts';
 import {
   createUUID,
-  validQuizName
+  validQuizName,
+  errorInterface,
+  quizSummariesInterface
 } from './helper.ts';
 
 /**
@@ -10,9 +12,9 @@ import {
   * @param {number} userId - Id of the user
   * ...
   *
-  * @returns {quizzes: [...]} - Always return quizzes object
+  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always return quizzes object
 */
-export function adminQuizList(userId: number) {
+export function adminQuizList(userId: number): { quizzes: quizSummariesInterface[] } | errorInterface {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -20,7 +22,7 @@ export function adminQuizList(userId: number) {
     return { error: `User Id of ${userId} is not valid` };
   }
 
-  const quizzes = [];
+  const quizzes: quizSummariesInterface[] = [];
 
   // Iterate through all quizzes and put in quizzes array if quiz is created by
   // user of passed in userId

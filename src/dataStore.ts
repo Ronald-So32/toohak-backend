@@ -1,5 +1,5 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
-interface user {
+interface userInterface {
   userId: number;
   nameFirst: string;
   nameLast: string;
@@ -10,7 +10,7 @@ interface user {
   oldPasswords: string[];
 }
 
-interface quiz {
+interface quizInterface {
   quizId: number;
   name: string;
   timeCreated: number;
@@ -20,8 +20,8 @@ interface quiz {
 }
 
 interface data {
-  users: user[];
-  quizzes: quiz[];
+  users: userInterface[];
+  quizzes: quizInterface[];
 
   highestID: number;
 }
