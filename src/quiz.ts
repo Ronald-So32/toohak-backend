@@ -40,7 +40,7 @@ import { createUUID, validQuizName } from './helper.ts';
 /**
  * A instance of this object:
  * {
- *    quizId: shdije28wjeheidjd,
+ *    quizId: 1,
  *    name: 'My Quiz',
  *    timeCreated: 1683125870,
  *    timeLastEdited: 1683125871,

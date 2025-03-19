@@ -1,4 +1,5 @@
 import { getData } from './dataStore.ts';
+
 /**
  * A instance of this object:
  * {
