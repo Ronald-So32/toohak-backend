@@ -1,7 +1,33 @@
 // YOU MAY MODIFY THIS OBJECT BELOW
+interface user {
+  userId: number;
+  nameFirst: string;
+  nameLast: string;
+  email: string;
+  numSuccessfulLogins: number;
+  numFailedPasswordsSinceLastLogin: number;
+  password: string;
+  oldPasswords: string[];
+}
+
+interface quiz {
+  quizId: number;
+  name: string;
+  timeCreated: number;
+  timeLastEdited: number;
+  description: string;
+  createdBy: number;
+}
+
+interface data {
+  users: user[];
+  quizzes: quiz[];
+
+  highestID: number;
+}
+
 const data = {
   users: [],
-
   quizzes: [],
 
   highestID: 0
@@ -23,8 +49,6 @@ Example usage
 */
 
 // Use getData() to access the data
-function getData() {
+export function getData(): data {
   return data;
 }
-
-export { getData };
