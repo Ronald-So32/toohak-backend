@@ -4,7 +4,8 @@ import {
   validQuizName,
   errorInterface,
   quizSummariesInterface,
-  quizIdInterface
+  quizIdInterface,
+  quizDetailsInterface
 } from './helper.ts';
 
 /**
@@ -100,7 +101,7 @@ export function adminQuizCreate(userId: number, name: string, description: strin
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 
-export function adminQuizRemove(userId: number, quizId: number) {
+export function adminQuizRemove(userId: number, quizId: number): {} | errorInterface {
   // Retrieves data from the data store
   const data = getData();
 
@@ -140,7 +141,7 @@ export function adminQuizRemove(userId: number, quizId: number) {
   * @returns {quiz | error} - Always return quiz object otherwise an error object with relevant error message
 */
 
-export function adminQuizInfo(userId: number, quizId: number) {
+export function adminQuizInfo(userId: number, quizId: number): quizDetailsInterface | errorInterface {
   // Retrieve data from the data store
   const data = getData();
 
@@ -178,7 +179,7 @@ export function adminQuizInfo(userId: number, quizId: number) {
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-export function adminQuizNameUpdate(userId: number, quizId: number, name: string): Record<string, unknown> | { error: string } {
+export function adminQuizNameUpdate(userId: number, quizId: number, name: string): {} | errorInterface {
   const data = getData();
 
   // Check if userId is valid
@@ -200,7 +201,7 @@ export function adminQuizNameUpdate(userId: number, quizId: number, name: string
 
   const validName = validQuizName(name);
   if (validName !== true) {
-    return validName;
+    return validName as errorInterface;
   }
 
   // Check if name is already used by the same user for another quiz
@@ -233,7 +234,7 @@ export function adminQuizNameUpdate(userId: number, quizId: number, name: string
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-export function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): Record<string, unknown> | { error: string } {
+export function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): {} | errorInterface {
   const data = getData();
 
   // Check if userId is valid
