@@ -64,7 +64,7 @@ import { createUUID, validQuizName } from './helper.ts';
   *
   * @returns {quizzes: [...]} - Always return quizzes object
 */
-function adminQuizList(userId: number) {
+export function adminQuizList(userId: number) {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -88,8 +88,6 @@ function adminQuizList(userId: number) {
   return { quizzes };
 }
 
-export { adminQuizList };
-
 /**
   * Given basic details about a new quiz, create one for the logged in user.
   *
@@ -100,7 +98,7 @@ export { adminQuizList };
   *
   * @returns {quizId | error} - Always return quizId object otherwise an error object with relevant error message
 */
-function adminQuizCreate(userId: number, name: string, description: string) {
+export function adminQuizCreate(userId: number, name: string, description: string) {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -141,8 +139,6 @@ function adminQuizCreate(userId: number, name: string, description: string) {
   };
 }
 
-export { adminQuizCreate };
-
 /**
   * Given a particular quiz, permanently remove the quiz.
   *
@@ -153,7 +149,7 @@ export { adminQuizCreate };
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 
-function adminQuizRemove(userId: number, quizId: number) {
+export function adminQuizRemove(userId: number, quizId: number) {
   // Retrieves data from the data store
   const data = getData();
 
@@ -183,7 +179,6 @@ function adminQuizRemove(userId: number, quizId: number) {
   return {};
 }
 
-export { adminQuizRemove };
 /**
   * Get all the relevant information about the current quiz.
   *
@@ -194,7 +189,7 @@ export { adminQuizRemove };
   * @returns {quiz | error} - Always return quiz object otherwise an error object with relevant error message
 */
 
-function adminQuizInfo(userId: number, quizId: number) {
+export function adminQuizInfo(userId: number, quizId: number) {
   // Retrieve data from the data store
   const data = getData();
 
@@ -222,8 +217,6 @@ function adminQuizInfo(userId: number, quizId: number) {
   };
 }
 
-export { adminQuizInfo };
-
 /**
   * Update the name of the relevant quiz.
   *
@@ -234,7 +227,7 @@ export { adminQuizInfo };
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminQuizNameUpdate(userId: number, quizId: number, name: string): Record<string, unknown> | { error: string } {
+export function adminQuizNameUpdate(userId: number, quizId: number, name: string): Record<string, unknown> | { error: string } {
   const data = getData();
 
   // Check if userId is valid
@@ -279,8 +272,6 @@ function adminQuizNameUpdate(userId: number, quizId: number, name: string): Reco
   return {};
 }
 
-export { adminQuizNameUpdate };
-
 /**
   * Update the description of the relevant quiz.
   *
@@ -291,7 +282,7 @@ export { adminQuizNameUpdate };
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): Record<string, unknown> | { error: string } {
+export function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): Record<string, unknown> | { error: string } {
   const data = getData();
 
   // Check if userId is valid
@@ -324,5 +315,3 @@ function adminQuizDescriptionUpdate(userId: number, quizId: number, description:
 
   return {};
 }
-
-export { adminQuizDescriptionUpdate };
