@@ -41,327 +41,7 @@ We highly recommend **creating and playing** a Kahoot game to better understand 
 
 ## 🐭 2. Iteration 0: Getting Started
 
-[You can watch the iteration 0 introductory video here.](https://youtu.be/YhBwRQN--gs) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
-
-### 🐭 2.1. Task
-
-This iteration is designed as a warm-up to help you setup your project, learn Git and project management practices (see Marking Criteria), and understand how your team works together.
-
-In this iteration, you are expected to:
-1. Write stub code for the basic functionality of Toohak. The basic functionality is defined in the interface section below.
-    * A stub is a function declaration and sample return value (see example below). **Do NOT write the implementation** for the stubbed functions. That is for the next iteration. In this iteration you are just focusing on setting up your function declarations and getting familiar with Git.
-    * Each team member must stub **AT LEAST 1** function each.
-    * Function stub locations should be inside files specified in the interface section below.
-    * Return values should exactly match the interface table below (see example below).
-```javascript
-// Sample stub for the authLoginV1 function
-// Return stub value matches table below
-function adminAuthLogin(email, password) {
-  return {
-    userId: 1,
-  }
-}
-```
-2. Design a structure to store all the data needed for Toohak, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `data.md` file. Specifically, you must consider how to store information about **users** and **quizzes** and populate ONE example `user` and `quiz` in your data structure (any values are fine - see example below).
-    * Use the interface table (2.2) to help you decide what data might need to be stored. This will require making some educated guesses about what would be required to be stored in order to return the types of data you see. **Whilst the data structure you describe in data.md might be similar to the interface, it is a different thing to the interface.** If you're still confused, think of the interface like a restaurant menu, and `data.md` like where the food is stored in the back. It's all the same food, but the menu is about how it's packaged up and received from the kitchen, and `data.md` is describing the structure of how it's all stored behind the scenes. 
-    * As functions are called, this structure would be populated with more users and quizzes, so consider this in your solution.
-    * Focus on the structure itself (object/list composition), rather than the example contents.
-```javascript
-// Example values inside of a 'user' object might look like this
-// NOTE: this object's data is not exhaustive, you may need more/fewer fields stored as you complete this project. 
-{
-  uId: 1,
-  nameFirst: 'Rani',
-  nameLast: 'Jiang',
-  email: 'ranivorous@gmail.com',
-}
-```
-
-3. Follow best practices for git and teamwork as discussed in lectures.
-    * Create a group contract by completing `contract.md` - you may add/edit this template as you see fit.
-    * You are expected to have **at least 1 meeting** with your group, and document the meeting(s) in meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo Wiki after each meeting). We have provided you with a `minutes-template.md` which you may use if you choose.
-    * For this iteration each team member will need to make a minimum of **1 merge request (MR) per person** in your group into the `master` branch.
-    * **1 merge request per function** must be made (12 in total). Each merge request needs to be approved by a team member that did not create the MR. 
-    * Check out the lab on Git from week 1 to get familiar with using Git.
-
-### 🐭 2.2. Functions to stub
-
-The following are strings: `email`, `password`, `nameFirst`, `nameLast`, `name`, `description`, `oldPassword`, `newPassword`.
-
-The following are integers: `userId`, `quizId`.
-
-In terms of file structure:
- * All functions starting with `adminAuth` or `adminUser` go in `auth.js`.
- * All functions starting with `adminQuiz` go in `quiz.js`.
- * `clear` goes in `other.js`.
-
-<table>
-  <tr>
-    <th>Name & Description</th>
-    <th style="width:18%">Data Types</th>
-  </tr>
-  <tr>
-    <td>
-      <code>adminAuthRegister</code>
-      <br /><br />
-      Register a user with an email, password, and names, then return their <code>userId</code> value.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( email, password, nameFirst, nameLast )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{
-  userId: 1
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminAuthLogin</code>
-      <br /><br />
-      Given a registered user's email and password, return their <code>userId</code> value.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( email, password )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{
-  userId: 1
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminUserDetails</code>
-      <br /><br />
-      Given an admin user's userId, return details about the user.
-      <li>"<code>name</code>" is the first and last name concatenated with a single space between them.</li>
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ user:
-  {
-    userId: 1,
-    name: 'Hayden Smith',
-    email: 'hayden.smith@unsw.edu.au',
-    numSuccessfulLogins: 3,
-    numFailedPasswordsSinceLastLogin: 1,
-  }
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminUserDetailsUpdate</code>
-      <br /><br />
-      Given an admin user's userId and a set of properties, update the properties of this logged in admin user.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, email, nameFirst, nameLast )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminUserPasswordUpdate</code>
-      <br /><br />
-      Given details relating to a password change, update the password of a logged in user.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, oldPassword, newPassword )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizList</code>
-      <br /><br />
-      Provide a list of all quizzes that are owned by the currently logged in user.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ quizzes: [
-    {
-      quizId: 1,
-      name: 'My Quiz',
-    }
-  ]
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizCreate</code>
-      <br /><br />
-      Given basic details about a new quiz, create one for the logged in user.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, name, description )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{
-  quizId: 2
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizRemove</code>
-      <br /><br />
-      Given a particular quiz, permanently remove the quiz.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, quizId )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizInfo</code>
-      <br /><br />
-      Get all of the relevant information about the current quiz.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, quizId )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{
-  quizId: 1,
-  name: 'My Quiz',
-  timeCreated: 1683125870,
-  timeLastEdited: 1683125871,
-  description: 'This is my quiz',
-}</code>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizNameUpdate</code>
-      <br /><br />
-      Update the name of the relevant quiz.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, quizId, name )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>adminQuizDescriptionUpdate</code>
-      <br /><br />
-      Update the description of the relevant quiz.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>( userId, quizId, description )</code>
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>clear</code>
-      <br /><br />
-      Reset the state of the application back to the start.
-    </td>
-    <td>
-      <b>Parameters:</b><br />
-      <code>()</code> no parameters
-      <br /><br />
-      <b>Return object:</b><br />
-      <code>{ }</code> empty object
-    </td>
-  </tr>
-</table>
-
-### 🐭 2.3 Marking Criteria
-<table>
-  <tr>
-    <th>Section</th>
-    <th>Weighting</th>
-    <th>Criteria</th>
-  </tr>
-  <tr>
-    <td>Automarking (Implementation)</td>
-    <td>40%</td>
-    <td><ul>
-      <li>Correct implementation of specified stubs.</li>
-    </ul></td>
-  </tr>
-  <tr>
-  <tr>
-    <td>Documentation</td>
-    <td>20%</td>
-    <td><ul>
-      <li>Clear and obvious effort and time gone into thinking about possible representation of data structure for the project containing users and quizzes, inside of <code>data.md</code>.</li>
-    </ul></td>
-  </tr>
-  <tr>
-    <td>Git Practices</td>
-    <td>30%</td>
-    <td><ul>
-      <li>Meaningful, informative and consistent git commit messages and branch names being used (see <a href="https://initialcommit.com/blog/git-commit-messages-best-practices#:~:text=commit%20message%20style.-,General%20Commit%20Message%20Guidelines,-As%20a%20general">examples</a>).</li>
-      <li>Effective use of merge requests (from branches being made) across the team (as covered in lectures). Repeated commit names are avoided.</li>
-      <li>At least 1 merge request per person and 1 merge request per function (12 in total) made into the <code>master</code> branch. Each merge request is approved by a team member that did not create the MR. </li>
-    </ul></td>
-  </tr>
-  <tr>
-    <td>Project Management & Teamwork</td>
-    <td>10%</td>
-    <td><ul>
-      <li>Completed group contract.</li>
-      <li>A generally equal contribution between team members.</li>
-      <li>Effective and regular use of course-provided MS Teams for communication (or another app approved by your tutor with evidence added to Teams), demonstrating an ability to competently manage teamwork online.</li>
-      <li>Had a meeting together that involves planning and managing tasks, and taken notes from said meeting (and stored in a logical place in the repo e.g. Wiki section).</li>
-    </ul></td>
-  </tr>
-</table>
-
-### 🐭 2.4. Dryrun
-
-We have provided a dryrun for iteration 0 consisting of one test for each function. Passing these tests means you have a correct implementation for your stubs, and have earned the marks for the automarking component iteration 0.
-
-To run the dryrun, you should on a CSE machine (i.e. using `VLAB` or `ssh`'ed into CSE) and in the root directory of your project (e.g. `/project-backend`) and use the command:
-
-```bash
-1531 dryrun 0
-```
-
-To view the dryrun tests, you can run the following command on CSE machines:
-```bash
-cat ~cs1531/bin/iter0.test.js
-```
-
-### 🐭 2.4. FAQs
-
-Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425606">this EdStem megapost</a> for iteration 0 FAQs.
-
-### 🐭 2.5. Submission
-
-Please see section 6 for information on **due date**.
+Completed! 
 
 ## 🐶 3. Iteration 1: Requirements, Basic Functionality and Tests
 
@@ -852,7 +532,7 @@ This iteration provides challenges for many groups when it comes to working in p
 There are several approaches that you can consider to overcome these challenges:
 
 * Have people working on down-stream tasks (like the quiz implementation) work with stubbed versions of the up-stream tasks. E.g. The register function is stubbed to return a successful dummy response, and therefore two people can start work in parallel.
-* Co-ordinate with your team to ensure prerequisite features are completed first (e.g. Giuliana completes `adminAuthRegister` on Monday meaning Hayden can start `adminQuizCreate` on Tuesday).
+* Co-ordinate with your team to ensure prerequisite features are completed first (e.g. Giuliana completes `adminAuthRegister` on Monday meaning Yuchao can start `adminQuizCreate` on Tuesday).
 * You can pull any other remote branch into your own using the command `git pull origin <branch_name>`.
     * This can be helpful when two people are working on functions on separate branches where one function is a prerequisite of the other, and an implementation is required to keep tests from failing.
 * You should pull from `master` on a regular basis to ensure your code remains up-to-date.
@@ -978,7 +658,361 @@ Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425607">
 
 ## 🐝 4. Iteration 2: Building a Web Server
 
-Coming soon.
+
+### 🐝 4.1. Task
+
+In this iteration, we will add more features to our project, and the focus has been changed to HTTP endpoints. Most of the theory surrounding iteration 2 is covered in week 4-5 lectures. 
+
+Iteration 2 both reuses a lot of work from iteration 1, as well as has new work.
+
+In this iteration, you are expected to:
+
+1. Make adjustments to your existing code as per any feedback given by your tutor for iteration 1.
+2. Migrate your Javascript files to Typescript.
+3. Implement and test the HTTP Express server according to the [interface provided in the specification](swagger.yaml).
+
+    * Your implementation should build upon your work in iteration 1, and ideally your HTTP layer is just a wrapper for underlying functions you've written that handle the logic, see week 4&5 content.
+
+    * Your implementation will need to include persistence of data (see section 4.7).
+
+    * Introduce user sessions for your login system (see 4.9).
+
+    * You can structure your tests inside a `/tests` folder, as long as they are appended with `.test.ts`. For this iteration and iteration 3 we will only be testing your HTTP layer of tests. You may still wish to use your iteration 1 tests and simply wrap up them - that is a design choice up to you. An example of an HTTP test can be found in section 4.4.
+
+    * You do not have to rewrite all of your iteration 1 tests as HTTP tests - the latter can test the system at a higher level. For example, to test a success case for `POST /v1/admin/quiz/{quizid}/transfer` via HTTP routes you will need to call `POST /v1/admin/auth/register` and `POST /v1/admin/quiz`; this means you do not need the success case for those two functions seperately. Your HTTP tests will need to cover all success/error conditions for each endpoint, however.
+
+    * You should not change the provided tsconfig.json file, as this configuration is also used by the automarker.
+
+4. Ensure your code is linted to the provided style guide.
+
+    * `eslint` should be added to your repo via `npm` and then added to your `package.json` file to run when the command `npm run lint` is run. The provided `.eslintrc.json` file and files scanned by `npm run lint` is *very* lenient, so there is no reason you should have to disable any additional checks. This is the exact configuration used by the automarking, so you should not change it.
+
+    * You need to edit the `gitlab-ci.yml` file, as per section 4.5 to add linting to the code on `master`. **You must do this BEFORE merging anything from iteration 2 into `master`**, so that you ensure `master` is always stable. See section 4.6 below for instructions on adding linting to your pipeline.
+
+5. Continue demonstrating effective project management and effective git usage.
+
+    * This includes thoughtful project management and use of git effectively, including working effectively with your team.
+
+    * All task tracking and management will need to be done via the GitLab Issue Board or another tracking application approved by your tutor (The course has set up Jira/Confluence for your group too).
+
+    * Regular group meetings must be documented with meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo wiki after each meeting).
+
+    * You need to demonstrate evidence of regular standups.
+
+    * You need to regularly and thoughtfully make merge requests for the smallest reasonable units, and merge them into `master`.
+
+6. (Recommended) Remove any type errors in your code
+
+    * Run `npm run tsc` and incrementally fix all type errors.
+    
+    * Either choose to change one file at a time, or change all file extensions and use `// @ts-nocheck` at the beginning of select files to disable checking on that specific file, omitting errors.
+
+    * You will receive marks for typescript compliance in iteration 3. We recommend you begin in iteration 2 since groups who ensure their code are type-safe tend to perform much better in the automarker.
+
+**As part of this iteration it is required that your backend code can correctly power the frontend**. Note that an incomplete backend will mean the frontend cannot work. You should conduct acceptance tests (run your backend, run the frontend and check that it works) prior to submission.
+
+In this iteration we also expect for you to improve on any feedback left by tutors in iteration 1.
+
+### 🐝 4.2. Running the server
+
+To run the server you can use the following command from the root directory of your project:
+
+```bash
+npm start
+```
+
+This will start the server on the port in the src/server.ts file, using `ts-node`.
+
+If you get an error stating that the address is already in use, you can change the port number in `config.json` to any number from `49152` to `65535`. It is likely that another student is using your original port number.
+
+Do **NOT** move the location of either `config.json` or `server.ts`. You must utilise the host/port combination from the `config.json` for the server, and any auxilliary calls to routes within your test files. You may edit the port/host field within the `config.json` file, but be sure to dynamically import the port from this file for all your tests and do **NOT** hard-code its value since this may result in automarking failures.
+
+### 🐝 4.3. Implementing and testing features
+
+You should first approach this project by considering its distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+2. Write tests for that feature and commit them to the branch. These will fail as you have not yet implemented the feature.
+3. Implement that feature.
+4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on your tests.
+5. Create a merge request for the branch.
+6. Get someone in your team who **did not** work on the feature to review the merge request. When reviewing, **not only should you ensure the new feature has tests that pass,** but you should also evaluate their correctness and completeness against the spec.
+7. Fix any issues identified in the review.
+8. Merge the merge request into master.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.ts`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features, especially to help those who may still be coming to grips with Javascript.
+
+Please pay careful attention to the following:
+
+* We want to see **evidence that you wrote your tests before writing your implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. 
+* You should have black-box tests for all tests required (i.e. testing each function/endpoint).
+* Merging requests with failing pipelines can lead to issues and should be avoided to maintain code quality and stability. Not only does this interfere with your teams ability to work on different features at the same time, and thus slow down development, it is something you will be penalised for in marking.
+* Similarly, you need to only merge in branches with tested features. 
+* Direct pushes to `master` are restricted in this repository. The only way to get code into `master` is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
+* As is the case with any system or functionality, there will be some things that you can test extensively, some things that you can test sparsely/fleetingly, and some things that you can't meaningfully test at all. You should aim to test as extensively as you can, and make judgements as to what things fall into what categories.
+
+#### 🐝 4.3.1 LLM API
+The `/v1/admin/quiz/{quizId}/question/suggestion` route requires interfacing with an LLM API. In this course, we will use the Hugging Face API to interface with Google's Gemma 2 model. You can learn more about it and play around with examples <a href="https://huggingface.co/google/gemma-2-2b-it">here</a>.
+
+You will need to create a free account to generate an <b>Access Token</b> to utilise this API within your implementation. You may use one account per group and share this Access Token, but be mindful of the Inference API <a href="https://huggingface.co/docs/api-inference/en/rate-limits"> rate limits<a>, especially when writing tests and running pipelines.
+
+You may hard-code this Access Token within your server file, or implement the more secure method of environment variable secrets and <a href="https://docs.gitlab.com/ee/ci/variables/index.html">Gitlab CI/CD variables</a>. The course does not expect you to implement the secure method. 
+
+A simple API request to the Hugging Face Inference API using Google's Gemma 2 model:
+```javascript
+const response = request('POST', 'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
+  headers: {
+    Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+    'Content-Type': 'application/json'
+  },
+  json: {
+    inputs: `YOUR_PROMPT_HERE`
+  }
+}
+```
+
+Hugging Face limits API requests to *1000 per day* per account. We advise keeping tests for this feature to minimum, baseline coverage to ensure you do not exceed the limit.
+
+You can watch a video demonstration of setting up a Hugging Face account, API token, and making a simple request <a href="https://youtu.be/I5GDvknq6rU">here</a>.
+
+### 🐝 4.4. Testing the interface
+
+In this iteration, **the layer of abstraction has changed to the HTTP level**, meaning that you are only required to write integration tests that check the HTTP endpoints, rather than the style of tests you wrote in iteration 1 where the behaviour of the Javascript functions themselves was tested.
+
+You will need to check as appropriate for each success/error condition:
+* The return value of the endpoint;
+* The behaviour (side effects) of the endpoint; and
+* The status code of the response.
+
+An example of how you would now test the echo interface is in `newecho.test.ts`.
+
+### 🐝 4.5. Testing time-based properties
+
+Some routes will have timestamps as properties. The tricky thing about timestamps is that the client makes a request at a known time, but there is a delay between when the client sends the request and when the server processes it. E.G. You might send an HTTP request to create a quiz, but the server takes 0.3 seconds until it actually creates the object, which means that the timestamp is 0.3 seconds out of sync with what you'd expect.
+
+To solve this, when checking if timestamps are what you would expect, just check that they are within a 1 second range.
+
+E.G. If I create a quiz at 12:22:21pm I will then check in my tests if the timestamp is somewhere between 12:22:21pm and 12:22:22pm.
+
+### 🐝 4.6. Continuous Integration
+
+With the introduction of linting to the project with `ESlint`, you will need to manually edit the `gitlab-ci.yml` file to lint code within the pipeline. This will require the following:
+ * Addition of `npm run lint` as a script under a custom `linting` variable, a part of `stage: checks`.
+
+Refer to the lecture slides on continuous integration to find exactly how you should add these.
+
+### 🐝 4.7. Storing data
+
+You are required to store data persistently in this iteration.
+
+Modify your backend such that it is able to persist and reload its data store if the process is stopped and started again. The persistence should happen at regular intervals so that in the event of unexpected program termination (e.g. sudden power outage) a minimal amount of data is lost. You may implement this using whatever method of serialisation you prefer (e.g. JSON).
+
+### 🐝 4.8. Versioning
+
+You might notice that some routes are prefixed with `v1`. Why is this? When you make changes to specifications, it's usually good practice to give the new function/capability/route a different unique name. This way, if people are using older versions of the specification they can't accidentally call the updated function/route with the wrong data input. If we make changes to these routes in iteration 3, we will increment the version to `v2`.
+
+Hint: Yes, your `v1` routes can use the functions you had in iteration 1, regardless of whether you rename the functions or not. The layer of abstraction in iteration 2 has changed from the function interface to the HTTP interface, and therefore your 'functions' from iteration 1 are essentially now just implementation details, and therefore are completely modifiable by you.
+
+### 🐝 4.9. User Sessions
+
+#### The problem with Iteration 1 `userId`
+
+In iteration 1, a problem we have with the `userId` is that there is no way to "log-out" a user - because all the user needs to identify themselves is just their user ID.
+
+In iteration 2, we want to issue something that abstracts their user ID into the idea of a session - this way a single user can log in, log out, or maybe log in from multiple places at the same time.
+
+If you're not following the issue with the `userId`, imagine it like trying to board a plane flight but your boarding pass IS your passport. Your passport is (effectively) a permanent thing - it is just "always you". That wouldn't allow staff to check if you should or shouldn't be on that plane, which is why airlines issue out boarding passes - to essentially grant you a "session" on a plane. And your boarding pass is linked to your passport. In this same way, a session is associated with an `userId`!
+
+#### How we adapt in Iteration 2 - User Sessions
+
+In iteration 2, instead of passing in `userId` into functions, we will instead pass in a session. Then on our server we look up the session information (which we've stored) to:
+* Identify if the session is valid.
+* Identify which user this session belongs to.
+
+Then in this way, we can now allow for things like the ability to meaningfully log someone out, as well as to have multiple sessions at the same time for multiple users (e.g. imagine being logged in on two computers but only wanting to log one out).
+
+How you generate unique identifiers for sessions is up to you.
+
+#### Avoiding sessions being exposed in the URL
+
+In this iteration, you will utilize a `session` HTTP header when dealing with requests/routes only. You shouldn't remove `userId` parameters from backend functions, as they must perform the validity checks.
+
+You can access HTTP headers like so:
+```javascript
+const session = req.header('session');
+```
+
+#### In summary
+
+Implementation details are up to you, though the key things to ensure that you comply with are that:
+* Session values must be passed via HTTP headers.
+* Your system allows multiple sessions to be able to be logged in and logged out at the same time.
+
+#### Other notes
+
+### 🐝 4.10. Error returning
+
+Either a `400 (Bad Request)` or `401 (Unauthorized)` or `403 (Forbidden)` is returned when something goes wrong. A `400` error refers to issues with user input; a `401` error refers to when someone does not attempt to authenticate properly, and a `403` error refers to issues with authorisation. Most of the routes in the API interface provided throw types of these errors under various conditions.
+
+To return one of these errors, simply use the code `res.status(400).send(JSON.stringify({ error: 'specific error message here' }))` or `res.status(400).json({ error: 'specific error message here' })` in your server where 400 is the error.
+
+Errors are returned in the following order: 401, then 403, then 400.
+
+### 🐝 4.11. Using the Provided Frontend to Support Your Backend Development
+
+Your main task in this assignment is to build a backend. To help you test and understand how your backend functions in a real-world scenario, we are providing a frontend that interacts with it.
+
+
+There is a SINGLE repository available for all students at 
+https://nw-syd-gitlab.cseunsw.tech/COMP1531/25T1/project-frontend. 
+You can clone this frontend locally. Please remember to pull regularly as we continue to work on the frontend. If you run the frontend at the same time as your express server is running on the backend, then you can power the frontend via your backend.
+
+However, this frontend is not perfect—it’s a tool to assist you, not a flawless product. It may have limitations and won’t cover every possible edge case. That said, it should still be useful for:
+* Visualizing how your backend responds to real interactions
+* Testing and debugging your backend in a practical way
+
+Please note: The frontend may have very slight inconsistencies with expected behaviour outlined in the specification. Our automarkers will be running against your compliance to the specification. 
+
+
+#### 🐝 4.11.1. Example implementation
+
+A working example of the Toohak application can be used at https://project-frontend-cs1531.vercel.app/. This is not a strict reference implementation that dictates exact behavior in all scenarios. Just as you will need to make reasonable assumptions in your own implementation, we have made ours—some of which may differ from yours, and that’s completely fine. However, if you encounter ambiguities in the specification, you can use this implementation as a guide to help clarify expected behavior, or check with us on the forum. Note that only iteration 2 functionality is available currently via this application.
+
+The data is reset occasionally, but you can use this link to play around and get a feel for how the application should behave.
+
+Please note: This example application is experimental. It will not be perfect and is always under development.
+
+### 🐝 4.12. Recommended approach
+
+Our recommendation with this iteration is that you start out trying to implement the new functions similarly to how you did in iteration 1.
+
+1. Write HTTP tests. These will fail as you have not yet implemented the feature.
+  * ‼️‼️ HINT: To improve the marks you get and speed at which you get work done, consider trying to avoid re-writing your tests for iteration 2 and instead tweak your iteration 1 tests that they can be "used" by the HTTP server.
+2. Implement the feature and write the Express route/endpoint for that feature too.
+  * ‼️‼️ HINT: make sure GET and DELETE requests utilise query parameters, whereas POST and PUT requests utilise JSONified bodies.
+3. Run the tests and continue following 4.3. as necessary.
+
+**Please note, when you have a single route (e.g. `/my/route/name`) alongside a wildcard route (e.g. `/my/route/{variable}`) you need to define the single route before the variable route.**
+
+### 🐝 4.13. Marking Criteria
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Weighting</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Automarking (Testing & Implementation)</td>
+    <td>50%</td>
+    <td>
+      <ul>
+      <li>Correct implementation of specified functions.</li>
+      <li>Correctly written tests based on the specification requirements.</li>
+      <li>Correctly linted code.</li>
+    </ul>
+    Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>Test Quality</td>
+    <td>15%</td>
+    <td>
+      <ul>
+        <li>Good test <b>coverage</b> - covering the use cases extensively (no need to run a coverage checker in this iteration).</li>
+        <li>Good test  <b>clarity</b> in communicating the purpose of tests and code. This includes logical commenting and good variable naming.</li>
+        <li>Good test <b>design</b> - thoughtful, clear, and modular layout that follows course examples (black-box testing), with little repetition.</li>
+      </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>General Code Quality</td>
+    <td>10%</td>
+    <td>
+      <ul>
+        <li>Appropriate use of Javascript data structures (arrays, objects, etc.).</li>
+        <li>Appropriate style and documentation as described in section 7.4. and all lecture material</li>
+        <li>Appropriate layout of files and use of modularity to reduce repetition and improve readability.</li>
+        <li>Through comments/naming it is clear what the code is doing via human reading. Error messages aren't marked for quality.</li>
+        <li>Appropriate application of good software design practices.</li>
+        <li>Implementation of persistent state.</li>
+        <li>Demonstrated successful connection of the supplied frontend to the backend code required for iteration 2 (doesn't have to be perfect).</li>
+      </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>Git Practices, Project Management, Teamwork</td>
+    <td>20%</td>
+    <td>
+      As an individual, in terms of git:
+      <ul>
+        <li>For particular features, committing your tests prior to your implementation.</li>
+        <li>Your git commit messages are meaningful, clear, and informative. Repeat commit names are avoided.</li>
+        <li>You contribute at least 2 meaningful merge requests (approved by another team member) that merge your branch code to master.</li>
+      </ul>
+      As an individual, in terms of project management and teamwork:
+      <ul>
+        <li>Attendance to group check ins every week.</li>
+        <li>Effective and regular use of course-provided MS Teams for communication (or another app approved by your tutor with evidence added to Teams), demonstrating an ability to competently manage teamwork online.</li>
+        <li>Use of issue board on Gitlab OR another equivalent tool that is used to effectively track your tasks.</li>
+        <li>Attendance and contributions at your teams meetings and standups, including at least one scenario where you were the leader of the meeting and took the minutes/notes for that meeting.</li>
+      </ul>
+      As a group, in terms of project management and teamwork:
+      <ul>
+        <li>Group contract is followed or revised to reflect the team's evolving work patterns.</l1>
+      </ul>
+     </td>
+  </tr>
+  <tr>
+    <td>Feature Demonstration</td>
+    <td>5%</td>
+    <td>
+      The following features are be demonstrated to your tutor during the iteration 2 project demo, utilising the provided project frontend.
+      <ul>
+      <li>Correct implementation of LLM quiz suggestion route as per the swagger definition.</li>
+      <li>Persistence of the data store is implemented such that if the application is stopped and started again, data is restored.</li>
+    </ul>
+    </td>
+  </tr>
+</table>
+
+For this and for all future milestones, you should consider the other expectations as outlined in section 7 below.
+
+The formula used for automarking in this iteration is:
+
+`Automark = 95*(t * i) + 5*e`
+(Mark equals 95% of `t` multiplied by `i` plus 5% of `e`). This formula produces a value between 0 and 1.
+
+Where:
+ * `t` is the mark between 0-1 you receive for your tests running against your code (100% = your implementation passes all of your tests).
+ * `i` is the mark between 0-1 you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
+ * `e` is the score between 0-1 achieved by running eslint against your code with the provided configuration. You may find a mark of 0 if you have used eslint disable comments in your code.
+
+
+### 🐝 4.14. Dryrun
+
+The dryrun checks the format of your return types and simple expected behaviour for a few basic routes. Do not rely on these as an indicator for the correctness of your implementation or tests.
+
+To run the dryrun, you should be in the root directory of your project (e.g. `/project-backend`) and use the command:
+
+```bash
+1531 dryrun 2
+```
+
+To view the dryrun tests, you can run the following command on CSE machines:
+```bash
+cat ~cs1531/bin/iter2.test.js
+```
+
+### 🐝 4.15. Submission & teamwork evaluation
+
+Please see section 6 for information on **due date** and on how you will **demonstrate this iteration**.
+
+Please see section 7.5 for information on **teamwork evaluation**.
 
 ### 🐝 4.16. FAQs
 
@@ -987,10 +1021,6 @@ Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425609">
 ## 🦆 5. Iteration 3: Completing the Lifecycle
 
 Coming soon.
-
-### 🦆 5.13. FAQs
-
-Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425611">this EdStem megapost</a> for iteration 3 FAQs.
 
 ## 🌸 6. Due Dates and Weightings
 
@@ -1017,13 +1047,20 @@ We will not mark commits pushed to master after the final submission time for a 
 
 If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. In some rare cases, your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
 
-## 🏃 6.2. Re-runs
+## 🏃 6.2. Rerun Opportunity – Fix & Resubmit
 
-The deadline for reruns and mark reviews is **7 days** from release of each iteration's mark release. Marks are released within 7 days of an iterations' due date.
+We understand that after submitting your assignment, you may realize that small but critical mistakes affected your marks or caused your software to fail. In the real world, such mistakes can have significant consequences, but learning from them is valuable.
 
-Minor isolated fixes after the due date are allowed but may carry a penalty to the automark. If the isolated fixes result in a higher automark result (minus the penalty), then we will update your mark. E.g. imagine that your initial automark is 20%, on re-run you get a raw automark of 86%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 86% to 60%, your final **automark** will be 60%.
+To balance learning and accountability, we offer a rerun opportunity for trivial fixes, allowing you to fix issues and resubmit your project for reassessment. (although you may not have this opportunity for real-work projects)
 
-If the re-run automark after penalty is lower than your initial mark, we will keep your initial mark. E.g. imagine that your initial automark is 50%, on re-run you get a raw automark of 70%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 70% to 49%, your final **automark** will still be 50% (i.e. your initial mark).
+How It Works:
+* After marks are released, eligible groups can identify and make trivial fix in their project.
+* You must resubmit within 7 days after receiving your initial mark.
+* Your resubmitted work will be reassessed with an updated mark. However, since identifying and fixing issues before submission is an important skill in software development, the final mark will take into account the importance of thorough testing and review. The need for a rerun suggests that testing practices should be improved.
+
+If the fixes you make lead to a higher automark after adjustment, we will update your mark accordingly. E.g. your initial automark is 20%; After rerunning, your raw automark improves to 86%; an adjustment factor of 30% is applied, resulting in a final automark of 60%; Your new automark is updated to 60%.
+
+If the adjusted rerun mark turns out to be lower than your original score, your original mark will remain unchanged. E.g. imagine that your initial automark is 50%; After rerunning, your raw automark improves to 70%; Applying the adjustment factor of 30%, the final rerun mark would be 49%; Since this is lower than your original 50%, we will keep your initial mark;
 
 ### How to request a re-run
 
@@ -1033,10 +1070,10 @@ If the re-run automark after penalty is lower than your initial mark, we will ke
   * It is the number at the end of the URL i.e. https://nw-syd-gitlab.cseunsw.tech/COMP1531/25T1/groups/H17B_CRUNCHIE/project-backend/-/merge_requests/67 = 67.
 * Log onto the [Gitruns site](https://cgi.cse.unsw.edu.au/~gitrun/) and submit that merge request ID (e.g. 67) for rerun
 * Once you submit it, it will take up to 24 hours for you to receive the results of the rerun.
-  * The results will appear in status "reviewing", which means an admin still needs to review the penalty.
+  * The results will appear in status "reviewing", which means an admin still needs to review the adjustment factor.
   * **Please note: The results of the rerun is your RAW automark BEFORE ANY penalties have been applied.**
-* Once your MR has been reviewed (this can take up to 72 hours), the status will change to "Complete" and the result will be updated to the mark after penalty
-* If the mark after penalty is higher than your current mark, this will then be updated in the grade system, and take 48 hours to propagate to you.
+* Once your MR has been reviewed (this can take up to 72 hours), the status will change to "Complete" and the result will be updated to the mark after adjustment
+* If the mark after adjustment is higher than your current mark, this will then be updated in the grade system, and take 48 hours to propagate to you.
 
 Please note: The current limit on reruns is one every 24 hours. You can submit multiple re-runs before waiting for manual review or mark propagation, as long as they are 24 hours apart.
 
