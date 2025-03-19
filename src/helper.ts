@@ -17,17 +17,6 @@ export interface errorInterface {
 /**
  * A instance of this object:
  * {
- *    error: error message,
- * }
- *
- * @typedef {object} error - Object containing just the error message
- *
- * @property {string} error - Error message relevant to the problem
- */
-
-/**
- * A instance of this object:
- * {
  *    userId: 1,
  * }
  *
@@ -35,6 +24,7 @@ export interface errorInterface {
  *
  * @property {number} userId - Id of user
  */
+
 
 /**
  * A instance of this object:
@@ -49,6 +39,7 @@ export interface errorInterface {
  * @property {number} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
  */
+
 
 /**
  * A instance of this object:
@@ -69,27 +60,6 @@ export interface errorInterface {
  * @property {string} description - Description of the quiz
  */
 
-/**
- * A instance of this object:
- * {
- *    error: error message,
- * }
- *
- * @typedef {object} error - Object containing just the error message
- *
- * @property {string} error - Error message relevant to the problem
- */
-
-/**
- * A instance of this object:
- * {
- *    userId: 1,
- * }
- *
- * @typedef {object} userId - Object containing just the user Id
- *
- * @property {number} userId - Id of user
- */
 
 /**
  * A instance of this object:
@@ -111,6 +81,7 @@ export interface errorInterface {
  * @property {number} numFailedPasswordsSinceLastLogin - The number of failed
  * login attempts by the user since the last login
  */
+
 
 /**
  * Creates a unique user id from the current registered users
