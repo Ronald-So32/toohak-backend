@@ -13,11 +13,14 @@
         "@babel/cli": "^7.22.5",
         "@babel/core": "^7.22.5",
         "@babel/preset-env": "^7.22.5",
+        "@types/jest": "^27.5.2",
         "@typescript-eslint/eslint-plugin": "^8.26.1",
         "@typescript-eslint/parser": "^8.26.1",
         "eslint": "^8.57.1",
         "eslint-plugin-jest": "^28.11.0",
-        "jest": "^28.1.0"
-    },
-    "type": "module"
+        "jest": "^28.1.0",
+        "ts-jest": "^28.0.8",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.2"
+    }
 }
