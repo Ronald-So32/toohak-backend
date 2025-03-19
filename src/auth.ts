@@ -57,7 +57,7 @@ import validator from 'validator';
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
+export function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   const data = getData();
 
   // Check if email has already been used
@@ -105,8 +105,6 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
   };
 }
 
-export { adminAuthRegister };
-
 /**
  * Given a registered user's email and password, return their userId value.
  *
@@ -115,7 +113,7 @@ export { adminAuthRegister };
  *
  * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
 */
-function adminAuthLogin(email: string, password: string) {
+export function adminAuthLogin(email: string, password: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.email === email);
@@ -138,8 +136,6 @@ function adminAuthLogin(email: string, password: string) {
   };
 }
 
-export { adminAuthLogin };
-
 /**
  * Given an admin user's userId, return details about the user."name" is the
  * first and last name concatenated with a single space between them.
@@ -148,7 +144,7 @@ export { adminAuthLogin };
  *
  * @returns {user | error} - Always return userDetails object otherwise an error object with relevant error message
 */
-function adminUserDetails(userId: number) {
+export function adminUserDetails(userId: number) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -168,8 +164,6 @@ function adminUserDetails(userId: number) {
   };
 }
 
-export { adminUserDetails };
-
 /**
   * Given an admin user's userId and a set of properties, update the properties
   * of this logged in admin user.
@@ -181,7 +175,7 @@ export { adminUserDetails };
   *
   * @returns {object | error} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string) {
+export function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -217,8 +211,6 @@ function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string
   return {};
 }
 
-export { adminUserDetailsUpdate };
-
 /**
   * Given details relating to a password change, update the password of a
   * logged in user.
@@ -229,7 +221,7 @@ export { adminUserDetailsUpdate };
   *
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
-function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string) {
+export function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string) {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -265,5 +257,3 @@ function adminUserPasswordUpdate(userId: number, oldPassword: string, newPasswor
 
   return {};
 }
-
-export { adminUserPasswordUpdate };
