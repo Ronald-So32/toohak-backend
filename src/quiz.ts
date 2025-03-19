@@ -64,7 +64,7 @@ import { createUUID, validQuizName } from './helper.ts';
   *
   * @returns {quizzes: [...]} - Always return quizzes object
 */
-function adminQuizList(userId) {
+function adminQuizList(userId: number) {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -100,7 +100,7 @@ export { adminQuizList };
   *
   * @returns {quizId | error} - Always return quizId object otherwise an error object with relevant error message
 */
-function adminQuizCreate(userId, name, description) {
+function adminQuizCreate(userId: number, name: string, description: string) {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
@@ -153,7 +153,7 @@ export { adminQuizCreate };
   * @returns {object} - Always return an empty object otherwise an error object with relevant error message
 */
 
-function adminQuizRemove(userId, quizId) {
+function adminQuizRemove(userId: number, quizId: number) {
   // Retrieves data from the data store
   const data = getData();
 
@@ -194,7 +194,7 @@ export { adminQuizRemove };
   * @returns {quiz | error} - Always return quiz object otherwise an error object with relevant error message
 */
 
-function adminQuizInfo(userId, quizId) {
+function adminQuizInfo(userId: number, quizId: number) {
   // Retrieve data from the data store
   const data = getData();
 
