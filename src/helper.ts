@@ -1,4 +1,5 @@
-import { getData } from './dataStore.js';
+import { getData } from './dataStore.ts';
+
 /**
  * A instance of this object:
  * {
@@ -9,21 +10,122 @@ import { getData } from './dataStore.js';
  *
  * @property {string} error - Error message relevant to the problem
  */
+export interface errorInterface {
+  error: string;
+}
+
+/**
+ * A instance of this object:
+ * {
+ *    userId: 1,
+ * }
+ *
+ * @typedef {object} userId - Object containing just the user Id
+ *
+ * @property {number} userId - Id of user
+ */
+export interface userIdInterface {
+  userId: number;
+}
+
+/**
+ * A instance of this object:
+ * {
+ *    quizId: 1,
+ * }
+ *
+ * @typedef {object} quizId - Object containing just the user Id
+ *
+ * @property {number} quizId - Id of user
+ */
+export interface quizIdInterface {
+  quizId: number;
+}
+
+/**
+ * A instance of this object:
+ *{
+    quizId: 1,
+    name: 'My Quiz',
+  }
+ *
+ * @typedef {object} quizzes - Data structure containing an array of
+ * quiz summaries
+ *
+ * @property {number} quizId - Id of the quiz
+ * @property {string} name - Full name of the quiz
+ */
+export interface quizSummariesInterface {
+  quizId: number;
+  name: string;
+}
+
+/**
+ * A instance of this object:
+ * {
+ *    quizId: 1,
+ *    name: 'My Quiz',
+ *    timeCreated: 1683125870,
+ *    timeLastEdited: 1683125871,
+ *    description: 'This is my quiz',
+ * }
+ *
+ * @typedef {object} quiz - Data structure containing the details of the quiz
+ *
+ * @property {number} quizId - Id of the quiz
+ * @property {string} name - F6ull name of the quiz
+ * @property {number} timeCreated - Time created of the quiz
+ * @property {number} timeLastEdited - Time of the last edit made to the quiz
+ * @property {string} description - Description of the quiz
+ */
+export interface quizDetailsInterface {
+  quizId: number;
+  name: string;
+  timeCreated: number;
+  timeLastEdited: number;
+  description: string;
+}
+
+/**
+ * A instance of this object:
+ * {
+ *    userId: 1,
+ *    name: 'Hayden Smith',
+ *    email: 'hayden.smith@unsw.edu.au',
+ *    numSuccessfulLogins: 3,
+ *    numFailedPasswordsSinceLastLogin: 1,
+ * }
+ *
+ * @typedef {object} user - Data structure containing the details of the user
+ *
+ * @property {number} userId - Id of the user
+ * @property {string} name - Full name of the user
+ * @property {string} email - Email address of the user
+ * @property {number} numSuccessfulLogins - The number of times that the user
+ * logs in successfully
+ * @property {number} numFailedPasswordsSinceLastLogin - The number of failed
+ * login attempts by the user since the last login
+ */
+export interface userDetailsInterface {
+  userId: number;
+  name: string;
+  email: string;
+  numSuccessfulLogins: number;
+  numFailedPasswordsSinceLastLogin: number;
+}
 
 /**
  * Creates a unique user id from the current registered users
  *
  * @returns {number} - Returns the created uuid
  */
-function createUUID() {
+export function createUUID(): number {
   const data = getData();
 
   data.highestID += 1;
 
   return data.highestID;
 }
-
-export { createUUID };
 
 /**
  * Validates the name the first or last name the user intends to use for their account
@@ -34,7 +136,7 @@ export { createUUID };
  * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
  */
 
-function validName(name, isFirst) {
+export function validName(name: string, isFirst: boolean): boolean | errorInterface {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
@@ -63,15 +165,13 @@ function validName(name, isFirst) {
   return true;
 }
 
-export { validName };
-
 /**
  * Validate the password that the user intends to use for their account
  *
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
  */
-function validPassword(password) {
+export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     return { error: 'Password is shorter than 8 characters' };
@@ -87,15 +187,13 @@ function validPassword(password) {
   return true;
 }
 
-export { validPassword };
-
 /**
  * Validates the name that the user intends to use for their quiz
  *
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
  */
-function validQuizName(name) {
+export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     return { error: 'Quiz name contains special characters' };
@@ -111,5 +209,3 @@ function validQuizName(name) {
 
   return true;
 }
-
-export { validQuizName };

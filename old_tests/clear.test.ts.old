@@ -1,13 +1,13 @@
-import { clear } from '../src/other.js';
+import { clear } from '../src/other.ts';
 import {
   adminAuthRegister,
   adminAuthLogin,
   adminUserDetails
-} from '../src/auth.js';
+} from '../src/auth.ts';
 import {
   adminQuizCreate,
   adminQuizList
-} from '../src/quiz.js';
+} from '../src/quiz.ts';
 
 describe('clear', () => {
   test('clear returns an empty object', () => {
