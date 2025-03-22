@@ -57,6 +57,7 @@ test.each([
     const res = request('PUT', SERVER_URL + '/v1/admin/user/password', { json: { userId, oldPassword, newPassword }, timeout: TIMEOUT_MS }); 
     expect(JSON.parse(res.body.toString())).toStrictEqual({ error: expect.any(String) });
     expect(res.statusCode).toStrictEqual(400);
+  });
 });
 
 describe('new Password already used', () => {
