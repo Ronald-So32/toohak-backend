@@ -2,8 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-/*requestAdminAuthLogin,
-  requestGetUserDetails*/
+/* requestAdminAuthLogin,
+  requestGetUserDetails */
 } from './testsHelper';
 
 import { describe } from 'node:test';
