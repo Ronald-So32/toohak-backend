@@ -1,57 +1,20 @@
+import {
+  requestClear
+} from './helper.test'
+
 import request from 'sync-request-curl';
 import config from '../src/config.json';
-
-const port = config.port;
-const url = config.url;
-const serverURL = `${url}:${port}/v1`;
-const timeoutMS = 7 * 1000;
+import { describe } from 'node:test';
 
 beforeEach(() => {
-  request(
-    'DELETE',
-    `${serverURL}/clear'`,
-    {
-      timeout: timeoutMS
-    }
-  );
+  requestClear();
 });
 
-// Single GET tests
-describe('Test Feature', () => {
-  test('Test successful GET request', () => {
-    const response = request(
-      'GET',
-      `${serverURL}/echo`,
-      {
-        qs: {
-          echo: 'Hello',
-        },
-        timeout: timeoutMS
-      }
-    );
-    const bodyObj = JSON.parse(response.body as string);
-    expect(bodyObj.value).toEqual('Hello');
+describe('Testing /v1/clear', () => {
+  test('Testing the return value', () => {
+    const response = requestClear();
+    expect(response).toStrictEqual({});
+    expect(response.statusCode).toStrictEqual(200);
   });
-
-  test('Test unsuccessful GET request', () => {
-    const response = request(
-      'GET',
-      `${serverURL}/echo`,
-      {
-        qs: {
-          echo: 'echo',
-        },
-        timeout: timeoutMS
-      }
-    );
-    expect(response.statusCode).toStrictEqual(400);
-  });
-
-
-
-
-
-
-
 
 });
