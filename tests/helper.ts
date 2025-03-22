@@ -7,7 +7,12 @@ const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
 // Helper function to handle common request logic
-function makeRequest(method: HttpVerb, endpoint: string, body?: any, headers?: any) {
+function makeRequest(
+  method: HttpVerb,
+  endpoint: string,
+  body?: any,
+  headers?: any
+) {
   const res = request(
     method,
     `${serverURL}${endpoint}`,

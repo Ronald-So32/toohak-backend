@@ -23,17 +23,28 @@ describe('Testing /v1/clear', () => {
   test('Testing /v1/clear works as intended', () => {
     // Register a user
     const responseRegister = requestAdminAuthRegister(
-    'z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
     expect(responseRegister).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(200);
 
     // Create a quiz
-    const responseQuiz = requestAdminQuizCreate(responseRegister.session, 'Name', 'Description');
+    const responseQuiz = requestAdminQuizCreate(
+      responseRegister.session,
+      'Name',
+      'Description'
+    );
     expect(responseQuiz).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuiz.statusCode).toStrictEqual(200);
 
     // Check user can login
-    const responseLogin = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
+    const responseLogin = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1'
+    );
     expect(responseLogin).toStrictEqual({ session: responseRegister.session });
     expect(responseLogin.statusCode).toStrictEqual(200);
 
@@ -66,7 +77,10 @@ describe('Testing /v1/clear', () => {
     expect(responseClear.statusCode).toStrictEqual(200);
 
     // Check user cannot login
-    const responseLogin2 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
+    const responseLogin2 = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1'
+    );
     expect(responseLogin2).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin2.statusCode).toStrictEqual(400);
 
@@ -82,7 +96,11 @@ describe('Testing /v1/clear', () => {
 
     // Register the same user
     const responseRegister2 = requestAdminAuthRegister(
-    'z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
     expect(responseRegister2).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister2.statusCode).toStrictEqual(200);
   });
