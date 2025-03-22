@@ -7,7 +7,7 @@ import { getData } from './dataStore';
   *
   * @returns {Object} - Always return an empty object
 */
-export function clear(): {} {
+export function clear(): Record<string, never> {
   const data = getData();
 
   data.users = [];

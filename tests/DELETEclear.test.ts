@@ -1,10 +1,10 @@
 import {
   requestClear,
-  requestAdminAuthRegister,
+/*  requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestGetQuizList
+  requestGetQuizList*/
 } from './helper'
 
 import { describe } from 'node:test';
