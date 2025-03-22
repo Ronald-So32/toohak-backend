@@ -5,7 +5,7 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestGetQuizList
-} from './helper.test'
+} from './helper'
 
 import { describe } from 'node:test';
 
