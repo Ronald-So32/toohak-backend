@@ -1,6 +1,6 @@
 import {
   clear
-} from '.auth';
+} from './auth';
 
 import express, {
   json,
