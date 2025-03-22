@@ -1,4 +1,12 @@
-import express, { json, Request, Response } from 'express';
+import {
+  clear
+} from '.auth';
+
+import express, {
+  json,
+  Request,
+  Response
+} from 'express';
 import { echo } from './newecho';
 import morgan from 'morgan';
 import config from './config.json';
@@ -40,6 +48,13 @@ app.get('/echo', (req: Request, res: Response) => {
   }
 
   return res.json(result);
+});
+
+// DELETE /v1/clear route
+app.delete('/v1/clear', (req: Request, res: Response) => {
+  clear();
+
+  return res.status(200).json({});
 });
 
 // ====================================================================
