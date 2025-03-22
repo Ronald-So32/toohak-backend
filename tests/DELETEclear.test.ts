@@ -20,7 +20,7 @@ describe('Testing DELETE /v1/clear', () => {
     expect(response.statusCode).toStrictEqual(200);
   });
 /*
-  test('Testing /v1/clear works as intended', () => {
+  test('Testing DELETE /v1/clear works as intended', () => {
     // Register a user
     const responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
