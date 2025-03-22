@@ -193,11 +193,83 @@ describe('Testing POST /v1/admin/auth/register', () => {
 
     describe('Testing last name', () => {
       describe('Valid cases', () => {
-      
+        test.each([
+          {
+            description: 'Standard last name',
+            nameLast: 'Last',
+          },
+          {
+            description: 'last name with hyphen',
+            nameLast: 'La-st',
+          },
+          {
+            nameLast: 'La st',
+            description: 'Containing space'
+          },
+          {
+            nameLast: "La'st",
+            description: 'Containing apostraphe'
+          },
+          {
+            nameLast: "La-'St",
+            description: 'Containing space, apostraphe and hyphen'
+          },
+          {
+            nameLast: "L a-'S t",
+            description: 'Containing multiple spaces with apostraphe and hyphen'
+          },
+          {
+            nameLast: 'La',
+            description: 'Containing exactly 2 characters'
+          },
+          {
+            nameLast: 'Lastlastlastlast',
+            description: 'Containing exactly 20 characters'
+          }
+        ])('$description', ({ nameLast }) => {
+          const responseRegister = requestAdminAuthRegister(
+            'z6969420@ad.unsw.edu.au',
+            'Password1',
+            'First',
+            nameLast
+          );
+          expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(200);
+        });
       });
 
       describe('Invalid cases', () => {
-      
+        test.each([
+          {
+            nameLast: 'La@% $/st',
+            description: 'Contains valid and invalid characters'
+          },
+          {
+            nameLast: '!@#$%%*',
+            description: 'Contains only invalid characters'
+          },
+          {
+            nameLast: 'Last123',
+            description: 'Contains invalid characters (numbers)'
+          },
+          {
+            nameLast: 'L',
+            description: 'Containing less then 2 characters'
+          },
+          {
+            nameLast: 'Lastlastlastlastlastlastlast',
+            description: 'Containing more then 20 characters'
+          }
+        ])('$description', ({ nameLast }) => {
+          const responseRegister = requestAdminAuthRegister(
+            'z7277272@ad.unsw.edu.au',
+            'Password1',
+            'First',
+            nameLast
+          );
+          expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(400);
+        });
       });
     });
 
