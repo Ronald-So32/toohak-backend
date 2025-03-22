@@ -7,8 +7,6 @@ import {
   requestGetQuizList
 } from './helper.test'
 
-import request from 'sync-request-curl';
-import config from '../src/config.json';
 import { describe } from 'node:test';
 
 beforeEach(() => {
@@ -60,5 +58,25 @@ describe('Testing /v1/clear', () => {
       }
     });
     expect(responseQuizList.statusCode).toStrictEqual(200);
+
+    // Clear everything
+    const responseClear = requestClear();
+    expect(responseClear).toStrictEqual({});
+    expect(responseClear.statusCode).toStrictEqual(200);
+
+    // Check user cannot login
+    const responseLogin2 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
+    expect(responseLogin2).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin2.statusCode).toStrictEqual(400);
+    
+    // Check user is gone
+    const responseUserDetails2 = requestGetUserDetails(responseRegister.session);
+    expect(responseUserDetails2).toStrictEqual({ user: {} });
+    expect(responseUserDetails2.statusCode).toStrictEqual(200);
+    
+    // Check the quiz list is empty
+    const responseQuizList2 = requestGetQuizList(responseRegister.session);
+    expect(responseQuizList2).toStrictEqual({ quizzes: {} });
+    expect(responseQuizList2.statusCode).toStrictEqual(200);
   });
 });
