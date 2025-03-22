@@ -2,10 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-/*  requestAdminQuizCreate,
-  requestAdminAuthLogin,
-  requestGetUserDetails,
-  requestGetQuizList */
+/*requestAdminAuthLogin,
+  requestGetUserDetails*/
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -275,11 +273,63 @@ describe('Testing POST /v1/admin/auth/register', () => {
 
     describe('Testing the password', () => {
       describe('Valid cases', () => {
-      
+        test.each([
+          {
+            password: 'Password1',
+            description: 'Standard password meeting all requirements'
+          },
+          {
+            password: 'testing1',
+            description: 'Password meeting requirements at the minimum'
+          },
+          {
+            password: 'qweerty727@#',
+            description: 'Password meeting requirements with special characters'
+          }
+        ])('$description', ({ password }) => {
+          const responseRegister = requestAdminAuthRegister(
+            'z7277272@ad.unsw.edu.au',
+            password,
+            'First',
+            'Last'
+          );
+          expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(200);
+        });
       });
 
       describe('Invalid cases', () => {
-      
+        test.each([
+          {
+            password: 'Passwordpass',
+            description: 'Does not contain a number'
+          },
+          {
+            password: '1234567890',
+            description: 'Does not contain a letter'
+          },
+          {
+            password: ')@*(#$&@#$&*#*%',
+            description: 'Does not contain a number or a letter'
+          },
+          {
+            password: 'P1',
+            description: 'Contains less than 8 characters with valid characters'
+          },
+          {
+            password: '*',
+            description: 'Contains less than 8 characters with invalid characters'
+          }
+        ])('$description', ({ password }) => {
+          const responseRegister = requestAdminAuthRegister(
+            'z7277272@ad.unsw.edu.au',
+            password,
+            'First',
+            'Last'
+          );
+          expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(400);
+        });
       });
     });
   });
