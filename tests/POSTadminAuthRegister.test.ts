@@ -57,30 +57,24 @@ describe('Testing POST /v1/admin/auth/register', () => {
           {
             description: 'Standard first name',
             email: 'email1@email.com',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'Use of spectial characters in username section',
             email: 'user.name+some+thing@example.com',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'Use of subdomains in domain section',
             email: 'user@sub.domain.com',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
-        ])('$description', ({ email, expected, statusCode }) => {
+        ])('$description', ({ email }) => {
           const responseRegister = requestAdminAuthRegister(
             email,
             'Password1',
             'First',
             'Last'
           );
-          expect(responseRegister.body).toStrictEqual(expected);
-          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+          expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(200);
         });
       });
 
@@ -89,36 +83,28 @@ describe('Testing POST /v1/admin/auth/register', () => {
           {
             description: 'Missing username for domain',
             email: 'emailemail.com',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'Missing domain',
             email: 'invalid-email',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'Missing username before domain',
             email: '@missingusername.com',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'Missing domain name',
             email: 'user@.com',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
-        ])('$description', ({ email, expected, statusCode }) => {
+        ])('$description', ({ email }) => {
           const responseRegister = requestAdminAuthRegister(
             email,
             'Password1',
             'First',
             'Last'
           );
-          expect(responseRegister.body).toStrictEqual(expected);
-          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+          expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(400);
         });
       });
     });
@@ -129,60 +115,44 @@ describe('Testing POST /v1/admin/auth/register', () => {
           {
             description: 'Standard first name',
             firstName: 'First',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First name with space',
             firstName: 'Fi rst',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First name with apostrophe',
             firstName: "Fi'rst",
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First name with hyphen',
             firstName: 'Fi-rst',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First containing space, apostraphe and hyphen',
             firstName: "Fi -'St",
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First containing multiple spaces with apostraphe and hyphen',
             firstName: "F i -'S t",
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First name with exactly 2 characters',
             firstName: 'Fi',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
           {
             description: 'First name with exactly 20 characters',
             firstName: 'Firstfirstfirstfirst',
-            expected: { session: expect.any(String) },
-            statusCode: 200,
           },
-        ])('$description', ({ firstName, expected, statusCode }) => {
+        ])('$description', ({ firstName }) => {
           const responseRegister = requestAdminAuthRegister(
             'z6969420@ad.unsw.edu.au',
             'Password1',
             firstName,
             'Last'
           );
-          expect(responseRegister.body).toStrictEqual(expected);
-          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+          expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(200);
         });
       });
 
@@ -191,42 +161,32 @@ describe('Testing POST /v1/admin/auth/register', () => {
           {
             description: 'First name with valid and invalid characters',
             firstName: 'Fi@%$/st*',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'First name with only invalid characters',
             firstName: '!@#$%%*',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'First name with numbers',
             firstName: 'First123',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'First name with less than 2 characters',
             firstName: 'F',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
           {
             description: 'First name with more than 20 characters',
             firstName: 'Firstfirstfirstfirstfirstfirst',
-            expected: { error: expect.any(String) },
-            statusCode: 400,
           },
-        ])('$description', ({ firstName, expected, statusCode }) => {
+        ])('$description', ({ firstName }) => {
           const responseRegister = requestAdminAuthRegister(
             'z7277272@ad.unsw.edu.au',
             'Password1',
             firstName,
             'Last'
           );
-          expect(responseRegister.body).toStrictEqual(expected);
-          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+          expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(400);
         });
       });
     });
