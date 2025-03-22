@@ -13,7 +13,7 @@ beforeEach(() => {
   requestClear();
 });
 
-describe('Testing /v1/clear', () => {
+describe('Testing DELETE /v1/clear', () => {
   test('Testing the return value', () => {
     const response = requestClear();
     expect(response.body).toStrictEqual({});
