@@ -2,8 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-/*requestAdminAuthLogin,
-  requestGetUserDetails*/
+/* requestAdminAuthLogin,
+  requestGetUserDetails */
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -337,7 +337,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
   describe('Testing POST /v1/admin/auth/register works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(200);
-    
+
     // Check user can login
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
