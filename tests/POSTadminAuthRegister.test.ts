@@ -53,11 +53,73 @@ describe('Testing POST /v1/admin/auth/register', () => {
       });
 
       describe('Valid cases', () => {
-      
+        test.each([
+          {
+            description: 'Standard first name',
+            email: 'email1@email.com',
+            expected: { session: expect.any(String) },
+            statusCode: 200,
+          },
+          {
+            description: 'Use of spectial characters in username section',
+            email: 'user.name+some+thing@example.com',
+            expected: { session: expect.any(String) },
+            statusCode: 200,
+          },
+          {
+            description: 'Use of subdomains in domain section',
+            email: 'user@sub.domain.com',
+            expected: { session: expect.any(String) },
+            statusCode: 200,
+          },
+        ])('$description', ({ email, expected, statusCode }) => {
+          const responseRegister = requestAdminAuthRegister(
+            email,
+            'Password1',
+            'First',
+            'Last'
+          );
+          expect(responseRegister.body).toStrictEqual(expected);
+          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+        });
       });
 
       describe('Invalid cases', () => {
-      
+        test.each([
+          {
+            description: 'Missing username for domain',
+            email: 'emailemail.com',
+            expected: { error: expect.any(String) },
+            statusCode: 400,
+          },
+          {
+            description: 'Missing domain',
+            email: 'invalid-email',
+            expected: { error: expect.any(String) },
+            statusCode: 400,
+          },
+          {
+            description: 'Missing username before domain',
+            email: '@missingusername.com',
+            expected: { error: expect.any(String) },
+            statusCode: 400,
+          },
+          {
+            description: 'Missing domain name',
+            email: 'user@.com',
+            expected: { error: expect.any(String) },
+            statusCode: 400,
+          },
+        ])('$description', ({ email, expected, statusCode }) => {
+          const responseRegister = requestAdminAuthRegister(
+            email,
+            'Password1',
+            'First',
+            'Last'
+          );
+          expect(responseRegister.body).toStrictEqual(expected);
+          expect(responseRegister.statusCode).toStrictEqual(statusCode);
+        });
       });
     });
 
