@@ -35,7 +35,7 @@ describe('Testing /v1/clear', () => {
     const responseLogin = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
     expect(responseLogin).toStrictEqual({ session: responseRegister.session });
     expect(responseLogin.statusCode).toStrictEqual(200);
-    
+
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(responseRegister.session);
     expect(responseUserDetails).toStrictEqual({
@@ -48,7 +48,7 @@ describe('Testing /v1/clear', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(200);
-    
+
     // Check the quiz is listed
     const responseQuizList = requestGetQuizList(responseRegister.session);
     expect(responseQuizList).toStrictEqual({
@@ -68,15 +68,20 @@ describe('Testing /v1/clear', () => {
     const responseLogin2 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
     expect(responseLogin2).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin2.statusCode).toStrictEqual(400);
-    
+
     // Check user is gone
     const responseUserDetails2 = requestGetUserDetails(responseRegister.session);
     expect(responseUserDetails2).toStrictEqual({ user: {} });
     expect(responseUserDetails2.statusCode).toStrictEqual(200);
-    
+
     // Check the quiz list is empty
     const responseQuizList2 = requestGetQuizList(responseRegister.session);
     expect(responseQuizList2).toStrictEqual({ quizzes: {} });
     expect(responseQuizList2.statusCode).toStrictEqual(200);
+
+    // Register the same user
+    const responseRegister2 = requestAdminAuthRegister('z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
+    expect(responseRegister2).toStrictEqual({ session: expect.any(String) });
+    expect(responseRegister2.statusCode).toStrictEqual(200);
   });
 });
