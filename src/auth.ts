@@ -167,7 +167,9 @@ export function adminUserDetailsUpdate(
   }
 
   // Check if new email has been used by other user
-  const isEmailUsedByOtherUser = data.users.some(user => user.email === email && user.userId !== userId);
+  const isEmailUsedByOtherUser = data.users.some(
+    user => user.email === email && user.userId !== userId
+  );
   if (isEmailUsedByOtherUser) {
     return { error: 'Email has already been used by another user' };
   }
@@ -178,12 +180,12 @@ export function adminUserDetailsUpdate(
 
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
-    return validFirst;
+    return validFirst as errorInterface;
   }
 
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
-    return validLast;
+    return validLast as errorInterface;
   }
 
   // All new user details have been verified, user details are updated
@@ -237,7 +239,7 @@ export function adminUserPasswordUpdate(
 
   const validPass = validPassword(newPassword);
   if (validPass !== true) {
-    return validPass;
+    return validPass as errorInterface;
   }
 
   // The variable newPassword is meets all requirements, so replace password with newPassword

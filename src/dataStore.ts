@@ -19,14 +19,14 @@ interface quizInterface {
   createdBy: number;
 }
 
-interface data {
+interface Data {
   users: userInterface[];
   quizzes: quizInterface[];
 
   highestID: number;
 }
 
-const data = {
+const data: Data = {
   users: [],
   quizzes: [],
 
