@@ -70,7 +70,12 @@ export function requestAdminAuthLogout(session: string) {
 }
 
 // Wrapper for POST /v1/admin/auth/register
-export function requestAdminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
+export function requestAdminAuthRegister(
+  email: string,
+  password: string,
+  nameFirst: string,
+  nameLast: string
+) {
   return makeRequest('POST', '/admin/auth/register', { email, password, nameFirst, nameLast });
 }
 
@@ -80,7 +85,11 @@ export function requestAdminQuizCreate(session: string, name: string, descriptio
 }
 
 // Wrapper for POST /v1/admin/quiz/{quizid}/question
-export function requestAdminQuizQuestionCreate(quizId: number, session: string, questionBody: any) {
+export function requestAdminQuizQuestionCreate(
+  quizId: number,
+  session: string,
+  questionBody: any
+) {
   return makeRequest('POST', `/admin/quiz/${quizId}/question`, { questionBody }, { session });
 }
 
@@ -90,7 +99,11 @@ export function requestAdminQuizTransfer(quizId: number, session: string, userEm
 }
 
 // Wrapper for PUT /v1/admin/quiz/{quizid}/description
-export function requestAdminQuizUpdateDescription(quizId: number, session: string, description: string) {
+export function requestAdminQuizUpdateDescription(
+  quizId: number,
+  session: string,
+  description: string
+) {
   return makeRequest('PUT', `/admin/quiz/${quizId}/description`, { description }, { session });
 }
 
@@ -100,21 +113,44 @@ export function requestAdminQuizUpdateName(quizId: number, session: string, name
 }
 
 // Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}
-export function requestAdminQuizQuestionUpdate(quizId: number, questionId: number, session: string, questionBody: any) {
-  return makeRequest('PUT', `/admin/quiz/${quizId}/question/${questionId}`, { questionBody }, { session });
+export function requestAdminQuizQuestionUpdate(
+  quizId: number,
+  questionId: number,
+  session: string,
+  questionBody: any
+) {
+  return makeRequest('PUT',
+    `/admin/quiz/${quizId}/question/${questionId}`, { questionBody }, { session });
 }
 
 // Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
-export function requestAdminQuizQuestionMove(quizId: number, questionId: number, session: string, newPosition: number) {
-  return makeRequest('PUT', `/admin/quiz/${quizId}/question/${questionId}/move`, { newPosition }, { session });
+export function requestAdminQuizQuestionMove(
+  quizId: number,
+  questionId: number,
+  session: string,
+  newPosition: number
+) {
+  return makeRequest('PUT',
+    `/admin/quiz/${quizId}/question/${questionId}/move`, { newPosition }, { session });
 }
 
 // Wrapper for PUT /v1/admin/user/details
-export function requestAdminUserDetailsUpdate(session: string, email: string, nameFirst: string, nameLast: string) {
-  return makeRequest('PUT', '/admin/user/details', { email, nameFirst, nameLast }, { session });
+export function requestAdminUserDetailsUpdate(
+  session: string,
+  email: string,
+  nameFirst: string,
+  nameLast: string
+) {
+  return makeRequest('PUT',
+    '/admin/user/details', { email, nameFirst, nameLast }, { session });
 }
 
 // Wrapper for PUT /v1/admin/user/password
-export function requestAdminUserPasswordUpdate(session: string, oldPassword: string, newPassword: string) {
-  return makeRequest('PUT', '/admin/user/password', { oldPassword, newPassword }, { session });
+export function requestAdminUserPasswordUpdate(
+  session: string,
+  oldPassword: string,
+  newPassword: string
+) {
+  return makeRequest('PUT',
+    '/admin/user/password', { oldPassword, newPassword }, { session });
 }

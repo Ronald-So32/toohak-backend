@@ -22,7 +22,8 @@ describe('Testing /v1/clear', () => {
 /*
   test('Testing /v1/clear works as intended', () => {
     // Register a user
-    const responseRegister = requestAdminAuthRegister('z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
+    const responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
     expect(responseRegister).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(200);
 
@@ -80,7 +81,8 @@ describe('Testing /v1/clear', () => {
     expect(responseQuizList2.statusCode).toStrictEqual(200);
 
     // Register the same user
-    const responseRegister2 = requestAdminAuthRegister('z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
+    const responseRegister2 = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au', 'Password1', 'First', 'Last');
     expect(responseRegister2).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister2.statusCode).toStrictEqual(200);
   });

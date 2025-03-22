@@ -158,7 +158,7 @@ export function adminUserDetailsUpdate(
   email: string,
   nameFirst: string,
   nameLast: string
-): {} | errorInterface {
+): Record<string, never> | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -209,7 +209,7 @@ export function adminUserPasswordUpdate(
   userId: number,
   oldPassword: string,
   newPassword: string
-): {} | errorInterface {
+): Record<string, never> | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
