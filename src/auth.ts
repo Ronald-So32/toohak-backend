@@ -1,4 +1,4 @@
-import { getData } from './dataStore.ts';
+import { getData } from './dataStore';
 import {
   createUUID,
   validName,
@@ -6,7 +6,7 @@ import {
   errorInterface,
   userIdInterface,
   userDetailsInterface
-} from './helper.ts';
+} from './helper';
 
 import validator from 'validator';
 

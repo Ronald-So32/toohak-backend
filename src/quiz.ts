@@ -1,4 +1,4 @@
-import { getData } from './dataStore.ts';
+import { getData } from './dataStore';
 import {
   createUUID,
   validQuizName,
@@ -6,7 +6,7 @@ import {
   quizSummariesInterface,
   quizIdInterface,
   quizDetailsInterface
-} from './helper.ts';
+} from './helper';
 
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
