@@ -36,4 +36,3 @@ describe('HTTP tests using Jest', () => {
     expect(res.statusCode).toStrictEqual(400);
   });
 });
-

@@ -4,8 +4,8 @@ import {
   requestAdminQuizCreate,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestGetQuizList*/
-} from './helper'
+  requestGetQuizList */
+} from './helper';
 
 import { describe } from 'node:test';
 

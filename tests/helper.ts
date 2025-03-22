@@ -28,12 +28,11 @@ function makeRequest(
   };
 }
 
-
 // Wrapper for DELETE /v1/clear
 export function requestClear() {
   return makeRequest(
     'DELETE',
-    `/clear`,
+    '/clear',
     null,
     null
   );

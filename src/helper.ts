@@ -157,11 +157,15 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return { error: 'First name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes' };
+      return {
+        error: 'First name contains characters other than lowercase letters, ' +
+        'uppercase letters, spaces, hyphens, or apostrophes'
+      };
     } else {
-      return { error: 'Last name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes' };
+      return {
+        error: 'Last name contains characters other than lowercase letters, ' +
+        'uppercase letters, spaces, hyphens, or apostrophes'
+      };
     }
   }
 
