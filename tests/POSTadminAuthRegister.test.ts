@@ -29,7 +29,75 @@ describe('Testing POST /v1/admin/auth/register', () => {
   });
 
   describe('Testing for error responses', () => {
-    
+    describe('Testing the email', () => {
+      test('Email has already been used', () => {
+        responseRegister = requestAdminAuthRegister(
+          'z7277272@ad.unsw.edu.au',
+          'Password1',
+          'First',
+          'Last'
+        );
+        expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseRegister.statusCode).toStrictEqual(400);
+      });
+
+      test('Email has not been used', () => {
+        responseRegister = requestAdminAuthRegister(
+          'z6969420@ad.unsw.edu.au',
+          'Password1',
+          'First',
+          'Last'
+        );
+        expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+        expect(responseRegister.statusCode).toStrictEqual(200);
+      });
+    });
+
+    describe('Testing first name', () => {
+      describe('Valid cases', () => {
+        test('Email has not been used', () => {
+          responseRegister = requestAdminAuthRegister(
+            'z6969420@ad.unsw.edu.au',
+            'Password1',
+            'First',
+            'Last'
+          );
+          expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+          expect(responseRegister.statusCode).toStrictEqual(200);
+        });
+      });
+
+      describe('Invalid cases', () => {
+        responseRegister = requestAdminAuthRegister(
+          'z7277272@ad.unsw.edu.au',
+          'Password1',
+          'First',
+          'Last'
+        );
+        expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseRegister.statusCode).toStrictEqual(400);
+      });
+    });
+
+    describe('Testing last name', () => {
+      describe('Valid cases', () => {
+      
+      });
+
+      describe('Invalid cases', () => {
+      
+      });
+    });
+
+    describe('Testing the password', () => {
+      describe('Valid cases', () => {
+      
+      });
+
+      describe('Invalid cases', () => {
+      
+      });
+    });
   });
 /*
   describe('Testing POST /v1/admin/auth/register works as intended', () => {
