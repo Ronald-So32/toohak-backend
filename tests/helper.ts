@@ -1,4 +1,4 @@
-import request from 'sync-request-curl';
+import request, { HttpVerb } from 'sync-request-curl';
 import config from '../src/config.json';
 
 const port = config.port;
@@ -7,7 +7,7 @@ const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
 // Helper function to handle common request logic
-function makeRequest(method: string, endpoint: string, body?: any, headers?: any) {
+function makeRequest(method: HttpVerb, endpoint: string, body?: any, headers?: any) {
   const res = request(
     method,
     `${serverURL}${endpoint}`,
@@ -17,7 +17,10 @@ function makeRequest(method: string, endpoint: string, body?: any, headers?: any
       timeout: timeoutMS,
     }
   );
-  return JSON.parse(res.body.toString());
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
 }
 
 

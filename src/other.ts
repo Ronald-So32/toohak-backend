@@ -1,4 +1,4 @@
-import { getData } from './dataStore.ts';
+import { getData } from './dataStore';
 
 /**
   * Reset the state of the application back to the start.
