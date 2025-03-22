@@ -6,7 +6,7 @@ import {
   quizSummariesInterface,
   quizIdInterface,
   quizDetailsInterface
-} from './helper';
+} from './functionsHelper';
 
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.

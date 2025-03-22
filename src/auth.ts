@@ -6,7 +6,7 @@ import {
   errorInterface,
   userIdInterface,
   userDetailsInterface
-} from './helper';
+} from './functionsHelper';
 
 import validator from 'validator';
 
