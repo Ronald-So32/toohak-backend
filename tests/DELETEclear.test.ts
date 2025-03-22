@@ -3,37 +3,55 @@ import config from '../src/config.json';
 
 const port = config.port;
 const url = config.url;
+const serverURL = `${url}:${port}/v1`;
+const timeoutMS = 7 * 1000;
 
+beforeEach(() => {
+  request(
+    'DELETE',
+    `${serverURL}/clear'`,
+    {
+      timeout: timeoutMS
+    }
+  );
+});
 
-
-describe('HTTP tests using Jest', () => {
-  test('Test successful echo', () => {
-    const res = request(
+// Single GET tests
+describe('Test Feature', () => {
+  test('Test successful GET request', () => {
+    const response = request(
       'GET',
-      `${url}:${port}/echo`,
+      `${serverURL}/echo`,
       {
         qs: {
           echo: 'Hello',
         },
-        // adding a timeout will help you spot when your server hangs
-        timeout: 100
+        timeout: timeoutMS
       }
     );
-    const bodyObj = JSON.parse(res.body as string);
+    const bodyObj = JSON.parse(response.body as string);
     expect(bodyObj.value).toEqual('Hello');
   });
 
-  test('Test invalid echo', () => {
-    const res = request(
+  test('Test unsuccessful GET request', () => {
+    const response = request(
       'GET',
-      `${url}:${port}/echo`,
+      `${serverURL}/echo`,
       {
         qs: {
           echo: 'echo',
         },
-        timeout: 100
+        timeout: timeoutMS
       }
     );
-    expect(res.statusCode).toStrictEqual(400);
+    expect(response.statusCode).toStrictEqual(400);
   });
+
+
+
+
+
+
+
+
 });
