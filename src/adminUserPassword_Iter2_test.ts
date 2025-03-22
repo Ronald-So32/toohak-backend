@@ -1,16 +1,19 @@
+// import {} from '../src/auth.ts'
 
 import request from 'sync-request-curl';
-import { port, url } from './config.json';
+import { port, url } from '../src/config.json';
 
 const SERVER_URL = `${url}:${port}`;
 const TIMEOUT_MS = 5 * 1000;
+
+let id: number;
 
 beforeEach(() => {
   request('DELETE', SERVER_URL + '/clear', { timeout: TIMEOUT_MS });
   const register = request('PUT', SERVER_URL + '/v1/admin/auth/register', 
     { json: { email: 'email@email.com', password: 'password1', nameFirst: 'First', nameLast: 'Last' }, 
     timeout: TIMEOUT_MS }); 
-  const id = JSON.parse(register.body.toString());
+  id = parseInt(JSON.parse(register.body.toString()));
 });
   
 
@@ -111,7 +114,7 @@ describe('Password updated unssuccessfully, confirm cannot login with unsuccessf
     // set invalid password 
     const res = request('PUT', SERVER_URL + '/v1/admin/user/password', 
       { json:{ userId: id, oldPassword: 'password1', newPassword: 'passwor'}, timeout: TIMEOUT_MS });
-    expect(JSON.parse(res.body.toString())).toStrictEqual({ error: error: expect.any(String) });
+    expect(JSON.parse(res.body.toString())).toStrictEqual({ error: expect.any(String) });
     expect(res.statusCode).toStrictEqual(400);
 
     // Makes sure that user can't login with password which was updated unsuccessfully and that it counts towards failed login attempts
