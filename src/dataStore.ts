@@ -49,6 +49,6 @@ Example usage
 */
 
 // Use getData() to access the data
-export function getData(): data {
+export function getData(): Data {
   return data;
 }
