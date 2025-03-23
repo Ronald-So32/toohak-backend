@@ -104,7 +104,7 @@ describe('Testing GET /v1/admin/user/details', () => {
         name: 'First Last',
         email: 'z7277272@ad.unsw.edu.au',
         numSuccessfulLogins: 2,
-        numFailedPasswordsSinceLastLogin: 0
+        numFailedPasswordsSinceLastLogin: 1
       }
     });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
