@@ -38,7 +38,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
-    const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+    const responseDetailsNew = requestGetUserDetails(session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 1
     );
@@ -57,7 +57,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
 
-        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
         );
@@ -74,7 +74,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
 
-        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins
         );
@@ -93,7 +93,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
 
-        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
         );
@@ -110,7 +110,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
 
-        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins
         );
@@ -134,7 +134,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     const requestUpdate = requestAdminUserPasswordUpdate(
-      responseRegister.body.session,
+      session,
       'Password1',
       'Password2'
     );
@@ -157,7 +157,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
 
-    const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+    const responseDetailsNew = requestGetUserDetails(session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 2
     );
