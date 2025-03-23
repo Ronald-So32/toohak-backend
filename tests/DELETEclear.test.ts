@@ -10,7 +10,7 @@ import {
 import { describe } from 'node:test';
 
 const OK = 200;
-const BADREQUEST = 400;
+// const BADREQUEST = 400;
 
 beforeEach(() => {
   requestClear();

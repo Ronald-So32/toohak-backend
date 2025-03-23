@@ -1,29 +1,30 @@
 import {
   requestClear,
-  requestAdminAuthRegister,
-  responseInterface,
+  // requestAdminAuthRegister,
+  // responseInterface,
   requestAdminAuthLogin,
-  requestGetUserDetails,
 /*  requestGetUserDetails,
-  requestAdminUserPasswordUpdate*/
+  requestGetUserDetails,
+  requestAdminUserPasswordUpdate */
 } from './testsHelper';
 
 import { describe } from 'node:test';
 
 const OK = 200;
-const BADREQUEST = 400;
+// const BADREQUEST = 400;
 
-let responseRegister: responseInterface;
+// let responseRegister: responseInterface;
 // let responseDetails: responseInterface;
 
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+/*  responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
     'Last'
   );
+*/
   // responseDetails = requestGetUserDetails(responseRegister.body.session);
 });
 
@@ -31,11 +32,11 @@ describe('Testing POST /v1/admin/auth/register', () => {
   test('Testing the code 200 return value', () => {
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
-      'Password1',
-    )
+      'Password1'
+    );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
-/*
+    /*
     const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 1
@@ -55,7 +56,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -64,7 +65,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
           responseDetails.body.user.numFailedPasswordsSinceLastLogin
         );
       });
-  
+
       test('Testing when the email does not exist', () => {
         const responseLogin = requestAdminAuthLogin(
           'z696969@ad.unsw.edu.au',
@@ -72,7 +73,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -91,7 +92,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -108,7 +109,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
