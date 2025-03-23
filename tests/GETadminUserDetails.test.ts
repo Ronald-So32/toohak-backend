@@ -2,11 +2,11 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestAdminAuthLogin,
+  // requestAdminAuthLogin,
   requestGetUserDetails,
   /*
   requestAdminUserPasswordUpdate,
-  requestAdminUserDetailsUpdate*/
+  requestAdminUserDetailsUpdate */
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -46,8 +46,10 @@ describe('Testing GET /v1/admin/user/details', () => {
     test('Testing when the session is invalid', () => {
       expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
       expect(responseRegister.statusCode).toStrictEqual(OK);
-      
-      const responseUserDetails = requestGetUserDetails(responseRegister.body.session + "Wrong session");
+
+      const responseUserDetails = requestGetUserDetails(
+        responseRegister.body.session + 'Wrong session'
+      );
       expect(responseUserDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUserDetails.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -69,7 +71,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
-/*
+    /*
     // Chage Password
     const requestUpdate = requestAdminUserPasswordUpdate(
       responseRegister.body.session,
@@ -94,7 +96,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     )
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
-    
+
     // Check user has correct details after password is updated
     const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
     expect(responseUserDetails2.body).toStrictEqual({
@@ -108,7 +110,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
 */
-/*
+    /*
     // change details
     requestAdminUserDetailsUpdate();
 
@@ -118,7 +120,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     )
     expect(responseLogin4.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin4.statusCode).toStrictEqual(OK);
-    
+
     // Check user has correct details after details are updated
     const responseUserDetails3 = requestGetUserDetails(responseRegister.body.session);
     expect(responseUserDetails3.body).toStrictEqual({

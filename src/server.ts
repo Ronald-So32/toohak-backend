@@ -4,7 +4,7 @@ import {
   adminAuthLogin,
   adminUserDetails
 } from './auth';
-import { errorInterface, findUserIdFromSession } from './functionsHelper'
+import { findUserIdFromSession } from './functionsHelper';
 
 import express, {
   json,

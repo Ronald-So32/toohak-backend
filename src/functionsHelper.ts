@@ -25,7 +25,7 @@ export interface errorInterface {
  * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
- * @property {string} 
+ * @property {string}
  */
 export interface userIdInterface {
   userId: number;
@@ -200,7 +200,7 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
     if (isFirst) {
       return Errors.invalidName(true, 'shorter than 2 characters');
     } else {
-      return Errors.invalidName(false, 'shorter than 2 characters')
+      return Errors.invalidName(false, 'shorter than 2 characters');
     }
   }
   // Checks if there is more than 20 characters in the name
@@ -283,7 +283,7 @@ export function generateSession(): string {
   while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
     sessionNew = uuidv4();
   }
-  
+
   return sessionNew;
 }
 
@@ -301,7 +301,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
 export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
-  
+
   if (!theSession) {
     return Errors.sessionNotFound();
   }
