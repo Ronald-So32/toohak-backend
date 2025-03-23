@@ -33,7 +33,7 @@ beforeEach(() => {
     session,
     'Name',
     'Description'
-  )
+  );
   quizId = responseCreate.body.quizId;
 });
 
