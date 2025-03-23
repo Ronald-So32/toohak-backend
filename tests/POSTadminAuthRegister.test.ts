@@ -16,6 +16,12 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/auth/register', () => {
   test('Testing the return value', () => {
+    responseRegister = requestAdminAuthRegister(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(200);
   });
@@ -31,7 +37,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         );
         expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
         expect(responseRegister.statusCode).toStrictEqual(200);
-        
+
         responseRegister = requestAdminAuthRegister(
           'z7277272@ad.unsw.edu.au',
           'Password1',
