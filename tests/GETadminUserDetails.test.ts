@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestAdminAuthLogin,
+  // requestAdminAuthLogin,
   requestGetUserDetails,
   /*
   requestAdminUserPasswordUpdate,
@@ -47,7 +47,9 @@ describe('Testing GET /v1/admin/user/details', () => {
       expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
       expect(responseRegister.statusCode).toStrictEqual(OK);
 
-      const responseUserDetails = requestGetUserDetails(responseRegister.body.session + 'Wrong session');
+      const responseUserDetails = requestGetUserDetails(
+        responseRegister.body.session + 'Wrong session'
+      );
       expect(responseUserDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUserDetails.statusCode).toStrictEqual(UNAUTHORISED);
     });

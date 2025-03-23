@@ -3,7 +3,7 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
-  requestGetUserDetails,
+  // requestGetUserDetails,
 /*  requestGetUserDetails,
   requestAdminUserPasswordUpdate */
 } from './testsHelper';
@@ -11,7 +11,7 @@ import {
 import { describe } from 'node:test';
 
 const OK = 200;
-const BADREQUEST = 400;
+// const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
 // let responseDetails: responseInterface;
@@ -24,6 +24,7 @@ beforeEach(() => {
     'First',
     'Last'
   );
+  expect(responseRegister.statusCode).toStrictEqual(OK);
   // responseDetails = requestGetUserDetails(responseRegister.body.session);
 });
 
