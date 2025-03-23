@@ -361,12 +361,12 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin).toStrictEqual({ session: responseRegister.body.session });
+    expect(responseLogin.body).toStrictEqual({ session: responseRegister.body.session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
-    expect(responseUserDetails).toStrictEqual({
+    expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
