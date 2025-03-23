@@ -113,7 +113,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
     return res.status(UNAUTHORISED).json({ error: result.error });
   }
 
-  return res.status(OK).json(result);
+  return res.status(OK).json({ user: result.user });
 });
 
 // ====================================================================
