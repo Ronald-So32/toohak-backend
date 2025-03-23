@@ -4,7 +4,6 @@ import {
   responseInterface,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestAdminUserDetailsUpdate,
   requestAdminUserPasswordUpdate
 } from './testsHelper';
 
