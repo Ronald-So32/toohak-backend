@@ -30,7 +30,7 @@ import process from 'process';
 const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
-// const FORBIDDEN = 403;
+const FORBIDDEN = 403;
 // const NOTFOUND = 404;
 
 // const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
