@@ -35,23 +35,23 @@ beforeEach(() => {
     session,
     'Name',
     'Description'
-  )
+  );
   quizId = responseCreate.body.quizId;
   responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
-      question: "Who is the Monarch of England?",
+      question: 'Who is the Monarch of England?',
       timeLimit: 4,
       points: 5,
       answerOptions: [
         {
-          answer: "Prince Charles",
+          answer: 'Prince Charles',
           correct: true
         }
       ]
     }
-  )
+  );
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
@@ -93,7 +93,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizList.statusCode).toStrictEqual(UNAUTHORISED);
     });
-    
+
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuizList = requestDeleteQuiz(quizId + quizIdOffset, session);
       expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });

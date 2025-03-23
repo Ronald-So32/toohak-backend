@@ -4,7 +4,7 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestGetQuizList,
-  //requestGetQuiz
+  // requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -48,7 +48,7 @@ describe('Testing POST /v1/admin/quiz', () => {
 
       expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizCreate.statusCode).toStrictEqual(UNAUTHORISED);
-    })
+    });
 
     describe('Testing the names', () => {
       test('Name already used by the user', () => {
@@ -121,7 +121,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             name,
             'A description of my quiz'
           );
-      
+
           expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
           expect(responseQuizCreate.statusCode).toStrictEqual(OK);
         });
@@ -156,12 +156,12 @@ describe('Testing POST /v1/admin/quiz', () => {
           name,
           'A description of my quiz'
         );
-    
+
         expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
-    
+
     describe('Testing the description', () => {
       describe('Invalid description', () => {
         test.each([
@@ -183,7 +183,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             'Quiz Name',
             description
           );
-      
+
           expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
         });
@@ -205,24 +205,24 @@ describe('Testing POST /v1/admin/quiz', () => {
             'Quiz Name',
             description
           );
-      
+
           expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
           expect(responseQuizCreate.statusCode).toStrictEqual(OK);
         });
       });
     });
   });
-  
+
   test('Testing POST /v1/admin/quiz works as intended', () => {
     const responseQuizCreate = requestAdminQuizCreate(
       session,
       'Quiz Name',
       'Description'
     );
-    const id = responseQuizCreate.body.quizId
+    const id = responseQuizCreate.body.quizId;
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
-/*
+    /*
     const responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": id,
@@ -238,13 +238,13 @@ describe('Testing POST /v1/admin/quiz', () => {
 */
     const responseQuizList = requestGetQuizList(session);
     expect(responseQuizList.body).toStrictEqual({
-      "quizzes": [
+      quizzes: [
         {
-          "quizId": id,
-          "name": "Quiz Name"
+          quizId: id,
+          name: 'Quiz Name'
         }
       ]
     });
     expect(responseQuizList.statusCode).toStrictEqual(OK);
-  })
+  });
 });

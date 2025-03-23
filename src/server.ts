@@ -10,7 +10,7 @@ import {
   adminQuizList,
   adminQuizRemove,
   adminQuizCreate
-} from './quiz'
+} from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 
 import express, {
