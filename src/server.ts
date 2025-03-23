@@ -4,11 +4,12 @@ import {
   adminAuthLogin,
   adminUserDetails,
   adminUserDetailsUpdate,
-  adminUserPasswordUpdate
+  adminUserPasswordUpdate,
 } from './auth';
 import {
   adminQuizList,
-  adminQuizRemove
+  adminQuizRemove,
+  adminQuizCreate
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 
@@ -162,6 +163,27 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({});
+});
+
+// POST /v1/admin/quiz
+app.post('/v1/admin/quiz', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { name, description } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizCreate(userId, name, description);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ quizId: result.quizId });
 });
 
 // GET /v1/admin/quiz/list
