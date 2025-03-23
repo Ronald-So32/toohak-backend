@@ -1,4 +1,7 @@
-import { getData } from './dataStore';
+import {
+  getData,
+  questionsInterface
+} from './dataStore';
 import {
   createUUID,
   validQuizName,
@@ -85,6 +88,8 @@ export function adminQuizCreate(
 
   const timeStamp = Math.floor(Date.now() / 1000);
 
+  const questionsArray: questionsInterface[] = [];
+  
   // All details are correct so append new quiz to data.quizzes
   data.quizzes.push({
     quizId: id,
@@ -93,6 +98,9 @@ export function adminQuizCreate(
     timeLastEdited: timeStamp,
     description: description,
     createdBy: userId,
+    numQuestions: 0,
+    questions: questionsArray,
+    timeLimit: 0,
   });
 
   return {

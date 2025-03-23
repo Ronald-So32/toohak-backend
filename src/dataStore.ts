@@ -17,7 +17,7 @@ interface answerInterface {
   correct: boolean;
 }
 
-interface questionInterface {
+export interface questionInterface {
   questionId: number;
   question: string;
   timeLimit: number;
