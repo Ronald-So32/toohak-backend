@@ -89,7 +89,41 @@ describe('Testing PUT /v1/admin/user/password', () => {
       });
 
       describe('Invalid cases', () => {
-
+        test.each([
+          {
+            description: 'New password is less than 8 characters',
+            oldPassword: 'Password1',
+            newPassword: 'Pass1',
+          },
+          {
+            description: 'New password does not contain at least one number',
+            oldPassword: 'Password1',
+            newPassword: 'NewPassword',
+          },
+          {
+            description: 'New password does not contain at least one letter',
+            oldPassword: 'Password1',
+            newPassword: '12345678',
+          },
+          {
+            description: 'Old Password and New Password match exactly',
+            oldPassword: 'Password1',
+            newPassword: 'Password1',
+          },
+          {
+            description: 'Old Password is not the correct old password',
+            oldPassword: 'WrongPassword',
+            newPassword: 'NewPassword1',
+          },
+        ])('$description', ({ oldPassword, newPassword }) => {
+          const responsePassword = requestAdminUserPasswordUpdate(
+            session,
+            oldPassword,
+            newPassword
+          );
+          expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
+          expect(responsePassword.statusCode).toStrictEqual(BADREQUEST);
+        });
       });
     });
   });
