@@ -8,6 +8,9 @@ import {
 
 import { describe } from 'node:test';
 
+const OK = 200;
+const BADREQUEST = 400;
+
 let responseRegister: responseInterface;
 
 beforeEach(() => {
@@ -15,7 +18,7 @@ beforeEach(() => {
 });
 
 describe('Testing POST /v1/admin/auth/register', () => {
-  test('Testing the return value', () => {
+  test('Testing the code 200 return value', () => {
     responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
       'Password1',
@@ -23,7 +26,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'Last'
     );
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseRegister.statusCode).toStrictEqual(200);
+    expect(responseRegister.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
@@ -36,7 +39,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
           'Last'
         );
         expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-        expect(responseRegister.statusCode).toStrictEqual(200);
+        expect(responseRegister.statusCode).toStrictEqual(OK);
 
         responseRegister = requestAdminAuthRegister(
           'z7277272@ad.unsw.edu.au',
@@ -45,7 +48,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
           'Last'
         );
         expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseRegister.statusCode).toStrictEqual(400);
+        expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
       });
 
       test('Email has not been used', () => {
@@ -56,7 +59,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
           'Last'
         );
         expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-        expect(responseRegister.statusCode).toStrictEqual(200);
+        expect(responseRegister.statusCode).toStrictEqual(OK);
       });
 
       describe('Valid cases', () => {
@@ -81,7 +84,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(200);
+          expect(responseRegister.statusCode).toStrictEqual(OK);
         });
       });
 
@@ -111,7 +114,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(400);
+          expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
         });
       });
     });
@@ -159,7 +162,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(200);
+          expect(responseRegister.statusCode).toStrictEqual(OK);
         });
       });
 
@@ -193,7 +196,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(400);
+          expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
         });
       });
     });
@@ -241,7 +244,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             nameLast
           );
           expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(200);
+          expect(responseRegister.statusCode).toStrictEqual(OK);
         });
       });
 
@@ -275,7 +278,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             nameLast
           );
           expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(400);
+          expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
         });
       });
     });
@@ -303,7 +306,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(200);
+          expect(responseRegister.statusCode).toStrictEqual(OK);
         });
       });
 
@@ -337,7 +340,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
             'Last'
           );
           expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseRegister.statusCode).toStrictEqual(400);
+          expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
         });
       });
     });
@@ -345,7 +348,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
 /*
   describe('Testing POST /v1/admin/auth/register works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseRegister.statusCode).toStrictEqual(200);
+    expect(responseRegister.statusCode).toStrictEqual(OK);
 
     // Check user can login
     const responseLogin = requestAdminAuthLogin(
@@ -353,7 +356,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'Password1'
     );
     expect(responseLogin).toStrictEqual({ session: responseRegister.body.session });
-    expect(responseLogin.statusCode).toStrictEqual(200);
+    expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
@@ -366,7 +369,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         numFailedPasswordsSinceLastLogin: 0
       }
     });
-    expect(responseUserDetails.statusCode).toStrictEqual(200);
+    expect(responseUserDetails.statusCode).toStrictEqual(OK);
   });
 */
 });

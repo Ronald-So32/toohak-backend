@@ -19,6 +19,12 @@ import path from 'path';
 import process from 'process';
 // import request from 'sync-request-curl';
 
+const OK = 200;
+const BADREQUEST = 400;
+// const UNAUTHORISED = 401;
+// const FORBIDDEN = 403;
+// const NOTFOUND = 404;
+
 // const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
 
 // Set up web app
@@ -48,7 +54,7 @@ const HOST: string = process.env.IP || '127.0.0.1';
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
   if ('error' in result) {
-    res.status(400);
+    return res.status(BADREQUEST);
   }
 
   return res.json(result);
@@ -58,7 +64,7 @@ app.get('/echo', (req: Request, res: Response) => {
 app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
 
-  return res.status(200).json({});
+  return res.status(OK).json({});
 });
 
 // POST /v1/admin/auth/register
@@ -68,9 +74,9 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   const result = adminAuthRegister(email, password, nameFirst, nameLast);
 
   if ('error' in result) {
-    return res.status(400).json({ error: result.error });
+    return res.status(BADREQUEST).json({ error: result.error });
   } else {
-    return res.status(200).json({ session: result.session });
+    return res.status(OK).json({ session: result.session });
   }
 });
 
