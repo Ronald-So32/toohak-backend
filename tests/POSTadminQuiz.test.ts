@@ -3,8 +3,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-/* requestAdminQuizList,
-  requestGetUserQuizDetails */
+  requestGetQuizList,
+  //requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -222,10 +222,8 @@ describe('Testing POST /v1/admin/quiz', () => {
     const id = responseQuizCreate.body.quizId
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
-
-    /*
+/*
     const responseQuizDetails = requestGetQuiz(quizId, session);
-
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": id,
       "name": "Quiz Name",
@@ -237,10 +235,9 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeLimit": expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-    
+*/
     const responseQuizList = requestGetQuizList(session);
-
-    expect(responseQuizDetails.body).toStrictEqual({
+    expect(responseQuizList.body).toStrictEqual({
       "quizzes": [
         {
           "quizId": id,
@@ -248,7 +245,6 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       ]
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-    */
+    expect(responseQuizList.statusCode).toStrictEqual(OK);
   })
 });
