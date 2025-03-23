@@ -2,10 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminUserDetailsUpdate,
-  // requestAdminUserPasswordUpdate
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -15,7 +13,6 @@ const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
-// let responseDetails: responseInterface;
 let session: string;
 
 beforeEach(() => {
@@ -43,6 +40,18 @@ describe('Testing PUT /v1/admin/user/details', () => {
 
   describe('Testing for error responses', () => {
     describe('Testing the email', () => {
+      test('Session is invalid', () => {
+        const responseUpdate = requestAdminUserDetailsUpdate(
+          session + "Invalid Session",
+          'another@email.com',
+          'First',
+          'Last'
+        );
+
+        expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+      });
+
       test('Email is already used by another user', () => {
         requestAdminAuthRegister(
           'another@email.com',
@@ -335,5 +344,4 @@ describe('Testing PUT /v1/admin/user/details', () => {
       });
     });
   });
-
 });
