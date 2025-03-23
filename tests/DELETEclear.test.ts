@@ -36,7 +36,7 @@ describe('Testing DELETE /v1/clear', () => {
     );
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
-/*
+    /*
     // Create a quiz
     const responseQuiz = requestAdminQuizCreate(
       session,
@@ -67,7 +67,7 @@ describe('Testing DELETE /v1/clear', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
-/*
+    /*
     // Check the quiz is listed
     const responseQuizList = requestGetQuizList(session);
     expect(responseQuizList.body).toStrictEqual({
@@ -95,7 +95,7 @@ describe('Testing DELETE /v1/clear', () => {
     const responseUserDetails2 = requestGetUserDetails(session);
     expect(responseUserDetails2.body).toStrictEqual({ error: expect.any(String) });
     expect(responseUserDetails2.statusCode).toStrictEqual(UNAUTHORISED);
-/*
+    /*
     // Check the quiz list is empty
     const responseQuizList2 = requestGetQuizList(session);
     expect(responseQuizList2.body).toStrictEqual({ quizzes: {} });

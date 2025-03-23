@@ -85,16 +85,16 @@ describe('Testing GET /v1/admin/user/details', () => {
     // Login with new password
     const responseLogin2 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
-      'Password2',
-    )
+      'Password2'
+    );
     expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin2.statusCode).toStrictEqual(OK);
 
     // Login with old password
     const responseLogin3 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
-      'Password1',
-    )
+      'Password1'
+    );
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
 
@@ -123,8 +123,8 @@ describe('Testing GET /v1/admin/user/details', () => {
 
     const responseLogin4 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
-      'Password2',
-    )
+      'Password2'
+    );
     expect(responseLogin4.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin4.statusCode).toStrictEqual(OK);
 
