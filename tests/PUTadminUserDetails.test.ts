@@ -62,27 +62,46 @@ describe('Testing PUT /v1/admin/user/details', () => {
         expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
 
-      test('Invalid email format', () => {
-        const responseUpdate = requestAdminUserDetailsUpdate(
-          session,
-          'invalid-email',
-          'First',
-          'Last'
-        );
-        expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+      describe('Invalid email formats', () => {
+        test.each([
+          {
+            description: 'Missing username for domain',
+            email: 'emailemail.com',
+          },
+          {
+            description: 'Missing domain',
+            email: 'invalid-email',
+          },
+          {
+            description: 'Missing username before domain',
+            email: '@missingusername.com',
+          },
+          {
+            description: 'Missing domain name',
+            email: 'user@.com',
+          },
+        ])('Invalid email format - $description', ({ email }) => {
+          const responseUpdate = requestAdminUserDetailsUpdate(
+            session,
+            email,
+            'First',
+            'Last'
+          );
+          expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
 
-        const responseUserDetails = requestGetUserDetails(session);
-        expect(responseUserDetails.body).toStrictEqual({
-          user: {
-            userId: expect.any(Number),
-            name: 'First Last',
-            email: 'z7277272@ad.unsw.edu.au',
-            numSuccessfulLogins: 1,
-            numFailedPasswordsSinceLastLogin: 0
-          }
+          const responseUserDetails = requestGetUserDetails(session);
+          expect(responseUserDetails.body).toStrictEqual({
+            user: {
+              userId: expect.any(Number),
+              name: 'First Last',
+              email: 'z7277272@ad.unsw.edu.au',
+              numSuccessfulLogins: 1,
+              numFailedPasswordsSinceLastLogin: 0
+            }
+          });
+          expect(responseUserDetails.statusCode).toStrictEqual(OK);
         });
-        expect(responseUserDetails.statusCode).toStrictEqual(OK);
       });
 
       test('Valid email format', () => {
@@ -108,17 +127,137 @@ describe('Testing PUT /v1/admin/user/details', () => {
         expect(responseUserDetails.statusCode).toStrictEqual(OK);
       });
     });
-      
-    describe('Testing the password', () => {
-    
-    });
     
     describe('Testing the first name', () => {
-    
+      describe('Invalid cases', () => {
+        test.each([
+          {
+            description: 'Contains invalid characters',
+            nameFirst: 'First@123',
+          },
+          {
+            description: 'Too short (1 character)',
+            nameFirst: 'F',
+          },
+          {
+            description: 'Too long (more than 20 characters)',
+            nameFirst: 'ThisFirstNameIsWayTooLongAndShouldFailValidation',
+          },
+        ])('Invalid first name - $description', ({ nameFirst }) => {
+          const responseUpdate = requestAdminUserDetailsUpdate(
+            session,
+            'email@email.com',
+            nameFirst,
+            'Last'
+          );
+          expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+        });
+  
+      });
+      describe('Valid cases', () => {
+        test.each([
+          {
+            description: 'Standard first name',
+            nameFirst: 'First',
+          },
+          {
+            description: 'First name with space',
+            nameFirst: 'Fi rst',
+          },
+          {
+            description: 'First name with apostrophe',
+            nameFirst: "Fi'rst",
+          },
+          {
+            description: 'First name with hyphen',
+            nameFirst: 'Fi-rst',
+          },
+          {
+            description: 'First name with exactly 2 characters',
+            nameFirst: 'Fi',
+          },
+          {
+            description: 'First name with exactly 20 characters',
+            nameFirst: 'Firstfirstfirstfirst',
+          },
+        ])('Valid first name - $description', ({ nameFirst }) => {
+          const responseUpdate = requestAdminUserDetailsUpdate(
+            session,
+            'email@email.com',
+            nameFirst,
+            'Last'
+          );
+          expect(responseUpdate.body).toStrictEqual({});
+          expect(responseUpdate.statusCode).toStrictEqual(OK);
+        });
+      });
     });
-    
+
     describe('Testing the last name', () => {
-    
+      describe('Invalid cases', () => {
+        test.each([
+          {
+            description: 'Contains invalid characters',
+            nameLast: 'Last@123',
+          },
+          {
+            description: 'Too short (1 character)',
+            nameLast: 'L',
+          },
+          {
+            description: 'Too long (more than 20 characters)',
+            nameLast: 'ThisLastNameIsWayTooLongAndShouldFailValidation',
+          },
+        ])('Invalid last name - $description', ({ nameLast }) => {
+          const responseUpdate = requestAdminUserDetailsUpdate(
+            session,
+            'email@email.com',
+            'First',
+            nameLast
+          );
+          expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Valid cases', () => {
+        test.each([
+          {
+            description: 'Standard last name',
+            nameLast: 'Last',
+          },
+          {
+            description: 'Last name with space',
+            nameLast: 'La st',
+          },
+          {
+            description: 'Last name with apostrophe',
+            nameLast: "La'st",
+          },
+          {
+            description: 'Last name with hyphen',
+            nameLast: 'La-st',
+          },
+          {
+            description: 'Last name with exactly 2 characters',
+            nameLast: 'La',
+          },
+          {
+            description: 'Last name with exactly 20 characters',
+            nameLast: 'Lastlastlastlastlast',
+          },
+        ])('Valid last name - $description', ({ nameLast }) => {
+          const responseUpdate = requestAdminUserDetailsUpdate(
+            session,
+            'email@email.com',
+            'First',
+            nameLast
+          );
+          expect(responseUpdate.body).toStrictEqual({});
+          expect(responseUpdate.statusCode).toStrictEqual(OK);
+        });
+      });
     });
   });
 
