@@ -3,6 +3,7 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
+  requestGetUserDetails,
 //  requestGetUserDetails
 } from './testsHelper';
 
@@ -12,6 +13,7 @@ const OK = 200;
 const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+let responseDetails: responseInterface;
 
 beforeEach(() => {
   requestClear();
@@ -21,6 +23,7 @@ beforeEach(() => {
     'First',
     'Last'
   );
+  responseDetails = requestGetUserDetails(responseRegister.body.session);
 });
 
 describe('Testing POST /v1/admin/auth/register', () => {
@@ -31,6 +34,9 @@ describe('Testing POST /v1/admin/auth/register', () => {
     )
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
+    
+    expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(2);
+    expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
   });
 
   describe('Testing for error responses', () => {
@@ -42,6 +48,14 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
+        
+        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+          responseDetails.body.user.numSuccessfulLogins + 1
+        );
+        expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+          responseDetails.body.user.numFailedPasswordsSinceLastLogin
+        );
       });
   
       test('Testing when the email does not exist', () => {
@@ -51,6 +65,14 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
+        
+        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+          responseDetails.body.user.numSuccessfulLogins + 1
+        );
+        expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+          responseDetails.body.user.numFailedPasswordsSinceLastLogin
+        );
       });
     });
 
@@ -62,6 +84,14 @@ describe('Testing POST /v1/admin/auth/register', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
+        
+        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+          responseDetails.body.user.numSuccessfulLogins + 1
+        );
+        expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+          responseDetails.body.user.numFailedPasswordsSinceLastLogin
+        );
       });
 
       test('Testing when the password is wrong', () => {
@@ -69,14 +99,22 @@ describe('Testing POST /v1/admin/auth/register', () => {
           'z7277272@ad.unsw.edu.au',
           'Password22',
         )
-        expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-        expect(responseLogin.statusCode).toStrictEqual(OK);
+        expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
+        
+        const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+        expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+          responseDetails.body.user.numSuccessfulLogins + 1
+        );
+        expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+          responseDetails.body.user.numFailedPasswordsSinceLastLogin + 1
+        );
       });
     });
   });
-/*
-  describe('Testing POST /v1/admin/auth/register works as intended', () => {
 
+  describe('Testing POST /v1/admin/auth/register works as intended', () => {
+    
   });
-*/
+
 });
