@@ -33,12 +33,10 @@ describe('Testing POST /v1/admin/quiz', () => {
       'My Quiz Name',
       'A description of my quiz'
     );
-    expect(responseQuizCreate.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
   });
-});
 
-describe('Testing POST /v1/admin/quiz', () => {
   test('Testing for invalid session', () => {
     const responseQuizCreate = requestAdminQuizCreate(
       session + 'Invalid Session',
@@ -57,7 +55,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         'My Quiz Name',
         'A description of my quiz'
       );
-      expect(responseQuizCreate.body).toStrictEqual({ session: expect.any(String) });
+      expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
       expect(responseQuizCreate.statusCode).toStrictEqual(OK);
 
       responseQuizCreate = requestAdminQuizCreate(
@@ -122,7 +120,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           'A description of my quiz'
         );
     
-        expect(responseQuizCreate.body).toStrictEqual({ session: expect.any(String) });
+        expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
         expect(responseQuizCreate.statusCode).toStrictEqual(OK);
       });
     });
@@ -206,9 +204,47 @@ describe('Testing POST /v1/admin/quiz', () => {
           description
         );
     
-        expect(responseQuizCreate.body).toStrictEqual({ session: expect.any(String) });
+        expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
         expect(responseQuizCreate.statusCode).toStrictEqual(OK);
       });
     });
   });
+
+  test('Testing POST /v1/admin/quiz wors as intended', () => {
+    const responseQuizCreate = requestAdminQuizCreate(
+      session,
+      'Quiz Name',
+      'Description'
+    );
+    const id = responseQuizCreate.body.quizId
+    expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
+    expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+
+    /*
+    const responseQuizDetails = requestGetQuiz(quizId, session);
+
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizId": id,
+      "name": "Quiz Name",
+      "timeCreated": expect.any(Number),
+      "timeLastEdited": expect.any(Number),
+      "description": "Description",
+      "numQuestions": 0,
+      "questions": [],
+      "timeLimit": expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    */
+    const responseQuizList = requestGetQuizList(session);
+
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizzes": [
+        {
+          "quizId": id,
+          "name": "Quiz Name"
+        }
+      ]
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+  })
 });
