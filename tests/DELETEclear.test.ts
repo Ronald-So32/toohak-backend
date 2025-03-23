@@ -1,9 +1,9 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  // requestAdminQuizCreate,
   requestAdminAuthLogin,
   requestGetUserDetails,
+  // requestAdminQuizCreate,
   // requestGetQuizList
 } from './testsHelper';
 
