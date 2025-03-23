@@ -264,49 +264,49 @@ describe('Testing PUT /v1/admin/user/details', () => {
   describe('Testing PUT /v1/admin/user/details works as intended', () => {
     test.each([
       {
-        description: 'No changes made to user\'s details',
+        description: "No changes made to user's details",
         email: 'z7277272@ad.unsw.edu.au',
         nameFirst: 'First',
         nameLast: 'Last',
       },
       {
-        description: 'Changes made to user\'s email',
+        description: "Changes made to user's email",
         email: 'Email2@ad.unsw.edu.au',
         nameFirst: 'First',
         nameLast: 'Last',
       },
       {
-        description: 'Changes made to user\'s first name',
+        description: "Changes made to user's first name",
         email: 'z7277272@ad.unsw.edu.au',
         nameFirst: 'Second',
         nameLast: 'Last',
       },
       {
-        description: 'Changes made to user\'s last name',
+        description: "Changes made to user's last name",
         email: 'z7277272@ad.unsw.edu.au',
         nameFirst: 'First',
         nameLast: 'SecondLast',
       },
       {
-        description: 'Changes made to user\'s email and first name',
+        description: "Changes made to user's email and first name",
         email: 'Email@ad.unsw.edu.au',
         nameFirst: 'Second',
         nameLast: 'Last',
       },
       {
-        description: 'Changes made to user\'s email and last name',
+        description: "Changes made to user's email and last name",
         email: 'Email@ad.unsw.edu.au',
         nameFirst: 'First',
         nameLast: 'SecondLast',
       },
       {
-        description: 'Changes made to user\'s first and last name',
+        description: "Changes made to user's first and last name",
         email: 'z7277272@ad.unsw.edu.au',
         nameFirst: 'Second',
         nameLast: 'SecondLast',
       },
       {
-        description: 'Changes made to all of user\'s details',
+        description: "Changes made to all of user's details",
         email: 'Email@ad.unsw.edu.au',
         nameFirst: 'Second',
         nameLast: 'SecondLast',
