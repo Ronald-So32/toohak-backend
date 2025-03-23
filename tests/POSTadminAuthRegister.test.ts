@@ -2,8 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-/* requestAdminAuthLogin,
-  requestGetUserDetails */
+  requestAdminAuthLogin,
+  requestGetUserDetails
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -345,7 +345,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
       });
     });
   });
-/*
+
   test('Testing POST /v1/admin/auth/register works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
@@ -371,5 +371,4 @@ describe('Testing POST /v1/admin/auth/register', () => {
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
   });
-*/
 });
