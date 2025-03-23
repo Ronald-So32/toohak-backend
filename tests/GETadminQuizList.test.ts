@@ -53,6 +53,15 @@ describe('Testing GET /v1/admin/quiz/list', () => {
       'Name',
       'Description'
     );
+    
+    const responseList2 = requestGetQuizList(session);
+    expect(responseList2.body).toStrictEqual({
+      quizzes: {
+        quizId: expect.any(Number),
+        'Name'
+      }
+    });
+    expect(responseList2.statusCode).toStrictEqual(OK);
 
   });
 });
