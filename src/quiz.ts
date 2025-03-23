@@ -48,10 +48,10 @@ export function adminQuizList(
 /**
   * TODO
   *
-  * @param {number} 
+  * @param {number}
   * ...
   *
-  * @returns 
+  * @returns
 */
 export function adminQuizGet(
   userId: number,
@@ -72,7 +72,8 @@ export function adminQuizGet(
     return { error: `Quiz with Id ${quizId} not found or user is not the owner` };
   }
 
-  return { details: {
+  return {
+    details: {
       quizId: quiz.quizId,
       name: quiz.name,
       timeCreated: quiz.timeCreated,

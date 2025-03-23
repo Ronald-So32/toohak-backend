@@ -124,11 +124,11 @@ export interface userDetailsInterface {
 /**
  * A instance of this object:
  * {
- *    
  *
- * @typedef {object} 
  *
- * @property {number} 
+ * @typedef {object}
+ *
+ * @property {number}
  */
 export interface quizGetDetailsInterface {
   details: {

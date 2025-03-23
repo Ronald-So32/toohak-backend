@@ -52,7 +52,7 @@ beforeEach(() => {
         }
       ]
     }
-  );*/
+  ); */
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
@@ -60,10 +60,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     const responseQuizGet = requestGetQuiz(quizId, session);
     expect(responseQuizGet.body).toStrictEqual({
       quizId: quizId,
-      name: "Name",
+      name: 'Name',
       timeCreated: expect.any(Number),
       timeLastEdited: expect.any(Number),
-      description: "Description",
+      description: 'Description',
       numQuestions: 0,
       questions: [],
       timeLimit: 0
@@ -93,7 +93,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
         }
       ],
       timeLimit: 4
-    });*/
+    }); */
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
   });
 
