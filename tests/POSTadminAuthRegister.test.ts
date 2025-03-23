@@ -2,8 +2,8 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-/* requestAdminAuthLogin,
-  requestGetUserDetails */
+  requestAdminAuthLogin,
+  requestGetUserDetails
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -12,6 +12,7 @@ const OK = 200;
 const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+let session: string;
 
 beforeEach(() => {
   requestClear();
@@ -345,8 +346,15 @@ describe('Testing POST /v1/admin/auth/register', () => {
       });
     });
   });
-/*
+
   test('Testing POST /v1/admin/auth/register works as intended', () => {
+    responseRegister = requestAdminAuthRegister(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
+    session = responseRegister.body.session;
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
@@ -355,12 +363,12 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin).toStrictEqual({ session: responseRegister.body.session });
+    expect(responseLogin.body).toStrictEqual({ session: session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
-    const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
-    expect(responseUserDetails).toStrictEqual({
+    const responseUserDetails = requestGetUserDetails(session);
+    expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
@@ -371,5 +379,4 @@ describe('Testing POST /v1/admin/auth/register', () => {
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
   });
-*/
 });
