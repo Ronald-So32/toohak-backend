@@ -1,8 +1,10 @@
 import { clear } from './other';
 import {
   adminAuthRegister,
-  adminAuthLogin
+  adminAuthLogin,
+  adminUserDetails
 } from './auth';
+import { findUserIdFromSession } from './functionsHelper';
 
 import express, {
   json,
@@ -22,7 +24,7 @@ import process from 'process';
 
 const OK = 200;
 const BADREQUEST = 400;
-// const UNAUTHORISED = 401;
+const UNAUTHORISED = 401;
 // const FORBIDDEN = 403;
 // const NOTFOUND = 404;
 
@@ -92,6 +94,26 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({ session: result.session });
+});
+
+// GET /v1/admin/user/details
+app.get('/v1/admin/user/details', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserDetails(userId);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ user: result.user });
 });
 
 // ====================================================================
