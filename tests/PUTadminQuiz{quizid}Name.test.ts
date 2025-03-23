@@ -36,3 +36,14 @@ beforeEach(() => {
   quizId = responseCreate.body.quizId;
 });
 
+describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
+  test('Testing the code 200 return value', () => {
+    const responseUpdate = requestAdminQuizUpdateName(
+      quizId,
+      session,
+      'New Quiz Name'
+    );
+    expect(responseUpdate.body).toStrictEqual({});
+    expect(responseUpdate.statusCode).toStrictEqual(OK);
+  });
+});
