@@ -1,8 +1,10 @@
 import { clear } from './other';
 import {
   adminAuthRegister,
-  adminAuthLogin
+  adminAuthLogin,
+  adminUserDetails
 } from './auth';
+import { findUserIdFromSession } from './functionsHelper'
 
 import express, {
   json,
@@ -92,6 +94,21 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({ session: result.session });
+});
+
+// GET /v1/admin/user/details
+app.post('/v1/admin/user/details', (req: Request, res: Response) => {
+  const { session } = req.body;
+
+  const userId = findUserIdFromSession(session);
+
+  const result = adminUserDetails(userId as number);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ session: result });
 });
 
 // ====================================================================

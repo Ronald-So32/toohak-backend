@@ -287,7 +287,7 @@ export function generateSession(): string {
   return sessionNew;
 }
 
-export function findSessionFromuserId(userId: number): string | errorInterface {
+export function findSessionFromUserId(userId: number): string | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(session => session.userId === userId);
 
@@ -296,4 +296,15 @@ export function findSessionFromuserId(userId: number): string | errorInterface {
   }
 
   return theSession.session;
+}
+
+export function findUserIdFromSession(session: string): number | errorInterface {
+  const data = getData();
+  const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
+  
+  if (!theSession) {
+    return Errors.sessionNotFound();
+  }
+
+  return theSession.userId;
 }

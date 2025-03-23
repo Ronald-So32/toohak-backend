@@ -7,7 +7,7 @@ import {
   userIdInterface,
   userDetailsInterface,
   generateSession,
-  findSessionFromuserId
+  findSessionFromUserId
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -108,7 +108,7 @@ export function adminAuthLogin(
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
-  const sessionNum = findSessionFromuserId(userData.userId) as string;
+  const sessionNum = findSessionFromUserId(userData.userId) as string;
   
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
