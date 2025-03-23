@@ -5,7 +5,7 @@ import {
   adminUserDetails,
   adminUserDetailsUpdate
 } from './auth';
-import { findUserIdFromSession } from './functionsHelper'
+import { findUserIdFromSession } from './functionsHelper';
 
 import express, {
   json,

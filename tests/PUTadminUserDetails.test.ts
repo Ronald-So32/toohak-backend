@@ -42,7 +42,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
     describe('Testing the email', () => {
       test('Session is invalid', () => {
         const responseUpdate = requestAdminUserDetailsUpdate(
-          session + "Invalid Session",
+          session + 'Invalid Session',
           'another@email.com',
           'First',
           'Last'
@@ -136,7 +136,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
         expect(responseUserDetails.statusCode).toStrictEqual(OK);
       });
     });
-    
+
     describe('Testing the first name', () => {
       describe('Invalid cases', () => {
         test.each([
@@ -162,7 +162,6 @@ describe('Testing PUT /v1/admin/user/details', () => {
           expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
         });
-  
       });
       describe('Valid cases', () => {
         test.each([
@@ -327,12 +326,12 @@ describe('Testing PUT /v1/admin/user/details', () => {
         nameFirst,
         nameLast
       );
-  
+
       expect(responseUpdate.body).toStrictEqual({});
       expect(responseUpdate.statusCode).toStrictEqual(OK);
-  
+
       const responseDetails = requestGetUserDetails(session);
-  
+
       expect(responseDetails.body).toStrictEqual({
         user: {
           userId: expect.any(Number),

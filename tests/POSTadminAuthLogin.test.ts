@@ -5,7 +5,7 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
 /*  requestGetUserDetails,
-  requestAdminUserPasswordUpdate*/
+  requestAdminUserPasswordUpdate */
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -31,8 +31,8 @@ describe('Testing POST /v1/admin/auth/login', () => {
   test('Testing the code 200 return value', () => {
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
-      'Password1',
-    )
+      'Password1'
+    );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
   });
@@ -46,7 +46,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -55,7 +55,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
           responseDetails.body.user.numFailedPasswordsSinceLastLogin
         );
       });
-  
+
       test('Testing when the email does not exist', () => {
         const responseLogin = requestAdminAuthLogin(
           'z696969@ad.unsw.edu.au',
@@ -63,7 +63,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         )
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -82,7 +82,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         )
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(OK);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
@@ -99,7 +99,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         )
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
-        
+
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
           responseDetails.body.user.numSuccessfulLogins + 1
