@@ -1,11 +1,10 @@
-import exp from 'constants';
 import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
   requestGetQuizList,
-  requestAdminQuizCreate,
-  requestDeleteQuiz
+  // requestAdminQuizCreate,
+  // requestDeleteQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
