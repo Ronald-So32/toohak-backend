@@ -122,7 +122,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     });
   });
 
-  describe('Testing POST /v1/admin/auth/login works as intended', () => {
+  test('Testing POST /v1/admin/auth/login works as intended', () => {
     expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
     expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
 

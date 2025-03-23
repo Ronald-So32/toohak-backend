@@ -2,7 +2,8 @@ import { clear } from './other';
 import {
   adminAuthRegister,
   adminAuthLogin,
-  adminUserDetails
+  adminUserDetails,
+  adminUserDetailsUpdate
 } from './auth';
 import { findUserIdFromSession } from './functionsHelper';
 
@@ -114,6 +115,27 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({ user: result.user });
+});
+
+// PUT /v1/admin/user/details
+app.put('/v1/admin/user/details', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { email, nameFirst, nameLast } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
 });
 
 // ====================================================================

@@ -346,7 +346,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
     });
   });
 /*
-  describe('Testing POST /v1/admin/auth/register works as intended', () => {
+  test('Testing POST /v1/admin/auth/register works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
