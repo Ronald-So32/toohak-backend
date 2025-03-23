@@ -227,6 +227,27 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json({});
 });
 
+// GET /v1/admin/quiz/{quizid}
+app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizList(userId);
+
+  if ('error' in result) {
+    return res.status(FORBIDDEN).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================

@@ -4,7 +4,6 @@ describe('Placeholder test suite', () => {
   });
 });
 
-/*
 import {
   requestClear,
   requestAdminAuthRegister,
@@ -64,7 +63,6 @@ beforeEach(() => {
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
     const responseQuizList = requestGetQuizList(session);
-    *
     expect(responseQuizList.body).toStrictEqual({
       quizId: quizId,
       name: "Name",
@@ -90,7 +88,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       ],
       timeLimit: 4
     });
-    *
+
     expect(responseQuizList.statusCode).toStrictEqual(OK);
   });
 
@@ -112,4 +110,3 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
   });
 });
-*/
