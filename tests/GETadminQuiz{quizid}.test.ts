@@ -4,7 +4,8 @@ import {
   responseInterface,
   requestGetQuizList,
   requestAdminQuizCreate,
-  requestDeleteQuiz
+  requestDeleteQuiz,
+  requestAdminQuizQuestionCreate
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -17,6 +18,7 @@ const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
+let responseQuestionCreate: responseInterface;
 let session: string;
 let quizId: number;
 
@@ -35,12 +37,51 @@ beforeEach(() => {
     'Description'
   )
   quizId = responseCreate.body.quizId;
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      question: "Who is the Monarch of England?",
+      timeLimit: 4,
+      points: 5,
+      answerOptions: [
+        {
+          answer: "Prince Charles",
+          correct: true
+        }
+      ]
+    }
+  )
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
     const responseQuizList = requestGetQuizList(session);
-    expect(responseQuizList.body).toStrictEqual({});
+    expect(responseQuizList.body).toStrictEqual({
+      quizId: quizId,
+      name: "Name",
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: "Description",
+      numQuestions: 1,
+      questions: [
+        {
+          questionId: expect.any(Number),
+          question: "Who is the Monarch of England?",
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answerId: expect.any(Number),
+              answer: "Prince Charles",
+              colour: expect.any(String),
+              correct: true
+            }
+          ]
+        }
+      ],
+      timeLimit: 4
+    });
     expect(responseQuizList.statusCode).toStrictEqual(OK);
   });
 
