@@ -60,13 +60,21 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
 
   test('Testing DELETE /v1/admin/quiz/{quizid} works as intended', () => {
     const responseList = requestGetQuizList(session);
-    expect(responseList.body).toStrictEqual({ quizzes: [] });
+    expect(responseList.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: expect.any(Number),
+          name: 'Name'
+        },
+      ]
+    });
     expect(responseList.statusCode).toStrictEqual(OK);
 
+    // Add another quiz
     requestAdminQuizCreate(
       session,
-      'Name',
-      'Description'
+      'Name2',
+      'Description2'
     );
 
     const responseList2 = requestGetQuizList(session);
@@ -76,15 +84,17 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
           quizId: expect.any(Number),
           name: 'Name'
         },
+        {
+          quizId: expect.any(Number),
+          name: 'Name2'
+        },
       ]
     });
     expect(responseList2.statusCode).toStrictEqual(OK);
 
-    // Add another quiz
-    requestAdminQuizCreate(
-      session,
-      'Name2',
-      'Description2'
+    requestDeleteQuiz(
+      responseList2.body.quizzes[0].quizId,
+      session
     );
 
     const responseList3 = requestGetQuizList(session);
@@ -92,30 +102,10 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
       quizzes: [
         {
           quizId: expect.any(Number),
-          name: 'Name'
-        },
-        {
-          quizId: expect.any(Number),
-          name: 'Name2'
-        },
-      ]
-    });
-    expect(responseList3.statusCode).toStrictEqual(OK);
-
-    requestDeleteQuiz(
-      responseList3.body.quizzes[0].quizId,
-      session
-    );
-
-    const responseList4 = requestGetQuizList(session);
-    expect(responseList4.body).toStrictEqual({
-      quizzes: [
-        {
-          quizId: expect.any(Number),
           name: 'Name2'
         }
       ]
     });
-    expect(responseList4.statusCode).toStrictEqual(OK);
+    expect(responseList3.statusCode).toStrictEqual(OK);
   });
 });
