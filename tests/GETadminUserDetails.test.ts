@@ -12,7 +12,7 @@ import {
 import { describe } from 'node:test';
 
 const OK = 200;
-const BADREQUEST = 400;
+// const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
@@ -43,7 +43,14 @@ describe('Testing GET /v1/admin/user/details', () => {
   });
 
   describe('Testing for error responses', () => {
-    
+    test('Testing when the session is invalid', () => {
+      expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
+      expect(responseRegister.statusCode).toStrictEqual(OK);
+      
+      const responseUserDetails = requestGetUserDetails(responseRegister.body.session + "Wrong session");
+      expect(responseUserDetails.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUserDetails.statusCode).toStrictEqual(UNAUTHORISED);
+    });
   });
 
   describe('Testing GET /v1/admin/user/details works as intended', () => {
