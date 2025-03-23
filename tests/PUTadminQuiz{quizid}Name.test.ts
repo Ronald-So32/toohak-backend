@@ -133,5 +133,34 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
     });
+
+    describe('Valid cases', () => {
+      test.each([
+        {
+          description: 'Standard quiz name',
+          name: 'Valid Quiz Name',
+        },
+        {
+          description: 'Quiz name with numbers',
+          name: 'Quiz Name 123',
+        },
+        {
+          description: 'Quiz name with exactly 3 characters',
+          name: 'Qui',
+        },
+        {
+          description: 'Quiz name with exactly 30 characters',
+          name: 'This is exactly thirty character',
+        },
+      ])('Valid quiz name - $description', ({ name }) => {
+        const responseUpdate = requestAdminQuizUpdateName(
+          quizId,
+          session,
+          name
+        );
+        expect(responseUpdate.body).toStrictEqual({});
+        expect(responseUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
   });
 });
