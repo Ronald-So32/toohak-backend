@@ -211,7 +211,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     });
   });
   
-  test('Testing POST /v1/admin/quiz wors as intended', () => {
+  test('Testing POST /v1/admin/quiz works as intended', () => {
     const responseQuizCreate = requestAdminQuizCreate(
       session,
       'Quiz Name',
