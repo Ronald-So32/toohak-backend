@@ -1,9 +1,11 @@
+import exp from 'constants';
 import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
-  requestGetQuizList
+  requestGetQuizList,
+  requestAdminQuizCreate
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -28,21 +30,29 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/list', () => {
   test('Testing the code 200 return value', () => {
-    const responsePassword = requestGetQuizList(session);
-    expect(responsePassword.body).toStrictEqual({});
-    expect(responsePassword.statusCode).toStrictEqual(OK);
+    const responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({ quizzes: {} });
+    expect(responseList.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
-      const responsePassword = requestGetQuizList(session + "Invalid Session");
-      expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePassword.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseList = requestGetQuizList(session + "Invalid Session");
+      expect(responseList.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
     });
-
   });
 
   test('Testing GET /v1/admin/quiz/list works as intended', () => {
-    
+    const responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({ quizzes: {} });
+    expect(responseList.statusCode).toStrictEqual(OK);
+
+    const responseCreate = requestAdminQuizCreate(
+      session,
+      'Name',
+      'Description'
+    );
+
   });
 });
