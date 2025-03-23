@@ -97,7 +97,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 });
 
 // GET /v1/admin/user/details
-app.post('/v1/admin/user/details', (req: Request, res: Response) => {
+app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   const { session } = req.body;
 
   const userId = findUserIdFromSession(session);
@@ -108,7 +108,7 @@ app.post('/v1/admin/user/details', (req: Request, res: Response) => {
     return res.status(UNAUTHORISED).json({ error: result.error });
   }
 
-  return res.status(OK).json({ session: result });
+  return res.status(OK).json({ result });
 });
 
 // ====================================================================

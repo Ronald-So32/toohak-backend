@@ -289,7 +289,7 @@ export function generateSession(): string {
 
 export function findSessionFromUserId(userId: number): string | errorInterface {
   const data = getData();
-  const theSession = data.sessions.find(session => session.userId === userId);
+  const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
 
   if (!theSession) {
     return Errors.sessionNotFound();
