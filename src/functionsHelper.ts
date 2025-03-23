@@ -164,6 +164,11 @@ export class Errors {
   static samePassword(): { error: string } {
     return { error: 'New password cannot be the same as the old password' };
   }
+
+  // Error for invalid session
+  static sessionNotFound(): { error: string } {
+    return { error: 'No session is found' };
+  }
 }
 
 /**
@@ -280,4 +285,15 @@ export function generateSession(): string {
   }
   
   return sessionNew;
+}
+
+export function findSessionFromuserId(userId: number): string | errorInterface {
+  const data = getData();
+  const theSession = data.sessions.find(session => session.userId === userId);
+
+  if (!theSession) {
+    return Errors.sessionNotFound();
+  }
+
+  return theSession.session;
 }

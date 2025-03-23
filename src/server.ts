@@ -1,6 +1,7 @@
 import { clear } from './other';
 import {
-  adminAuthRegister
+  adminAuthRegister,
+  adminAuthLogin
 } from './auth';
 
 import express, {
@@ -75,10 +76,11 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
-  } else {
-    return res.status(OK).json({ session: result.session });
   }
+
+  return res.status(OK).json({ session: result.session });
 });
+
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
