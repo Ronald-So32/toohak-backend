@@ -246,7 +246,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
     return res.status(FORBIDDEN).json({ error: result.error });
   }
 
-  return res.status(OK).json({ result.details });
+  return res.status(OK).json(result.details);
 });
 
 // ====================================================================
