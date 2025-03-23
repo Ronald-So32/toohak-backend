@@ -1,4 +1,7 @@
-import { getData } from './dataStore';
+import {
+  getData,
+  questionsInterface
+} from './dataStore';
 import {
   createUUID,
   validQuizName,

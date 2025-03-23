@@ -2,10 +2,10 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestGetQuizList,
+  // requestGetQuizList,
   requestAdminQuizCreate,
-  requestDeleteQuiz,
-  requestAdminQuizQuestionCreate,
+  // requestDeleteQuiz,
+  // requestAdminQuizQuestionCreate,
   requestGetQuiz
 } from './testsHelper';
 
