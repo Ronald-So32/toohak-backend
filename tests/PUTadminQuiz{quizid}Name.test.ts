@@ -114,5 +114,24 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         });
       });
     });
+
+    test('Quiz name is already used by the same user for another quiz', () => {
+      // Create another quiz with a different name
+      const responseCreate2 = requestAdminQuizCreate(
+        session,
+        'Another Quiz',
+        'Another Description'
+      );
+      const quizId2 = responseCreate2.body.quizId;
+
+      // Try to update the second quiz's name to match the first quiz
+      const responseUpdate = requestAdminQuizUpdateName(
+        quizId2,
+        session,
+        'Quiz Name'
+      );
+      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+    });
   });
 });
