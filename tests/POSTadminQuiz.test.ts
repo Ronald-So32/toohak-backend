@@ -2,6 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
+  requestAdminQuizCreate,
 /* requestAdminQuizList,
   requestGetUserQuizDetails */
 } from './testsHelper';
