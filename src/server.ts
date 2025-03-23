@@ -81,6 +81,18 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   return res.status(OK).json({ session: result.session });
 });
 
+// POST /v1/admin/auth/login
+app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const result = adminAuthLogin(email, password);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ session: result.session });
+});
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
