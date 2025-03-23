@@ -36,7 +36,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
-      const responseList = requestGetQuizList(session + "Invalid Session");
+      const responseList = requestGetQuizList(session + 'Invalid Session');
       expect(responseList.body).toStrictEqual({ error: expect.any(String) });
       expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -52,7 +52,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
       'Name',
       'Description'
     );
-    
+
     const responseList2 = requestGetQuizList(session);
     expect(responseList2.body).toStrictEqual({
       quizzes: [
@@ -70,7 +70,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
       'Name2',
       'Description2'
     );
-    
+
     const responseList3 = requestGetQuizList(session);
     expect(responseList3.body).toStrictEqual({
       quizzes: [
