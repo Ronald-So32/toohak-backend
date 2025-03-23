@@ -5,7 +5,6 @@ import {
   responseInterface,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestAdminUserDetailsUpdate,
   requestAdminUserPasswordUpdate
 } from './testsHelper';
 
@@ -129,6 +128,16 @@ describe('Testing PUT /v1/admin/user/password', () => {
   });
 
   test('Testing PUT /v1/admin/user/password works as intended', () => {
+    // check before details
+    // login success
+    // check details
+    // change password success
+    // login with new pass
+    // check details
+    // change password fail
+    // login with new pass (fail)
+    // check details
+
     
   });
 });
