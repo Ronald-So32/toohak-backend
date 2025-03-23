@@ -3,8 +3,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
-  // requestGetUserDetails,
 /*  requestGetUserDetails,
+  requestGetUserDetails,
   requestAdminUserPasswordUpdate */
 } from './testsHelper';
 
@@ -14,6 +14,7 @@ const OK = 200;
 // const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+
 // let responseDetails: responseInterface;
 
 beforeEach(() => {
@@ -36,6 +37,15 @@ describe('Testing POST /v1/admin/auth/login', () => {
     );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
+    /*
+    const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+    expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+      responseDetails.body.user.numSuccessfulLogins + 1
+    );
+    expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+      responseDetails.body.user.numFailedPasswordsSinceLastLogin
+    );
+*/
   });
 /*
   describe('Testing for error responses', () => {
