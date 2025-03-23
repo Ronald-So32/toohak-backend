@@ -100,15 +100,20 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   const { session } = req.body;
 
-  const userId = findUserIdFromSession(session);
+  const userIdResult = findUserIdFromSession(session);
 
-  const result = adminUserDetails(userId as number);
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult as number;
+  const result = adminUserDetails(userId);
 
   if ('error' in result) {
     return res.status(UNAUTHORISED).json({ error: result.error });
   }
 
-  return res.status(OK).json({ result });
+  return res.status(OK).json(result);
 });
 
 // ====================================================================
