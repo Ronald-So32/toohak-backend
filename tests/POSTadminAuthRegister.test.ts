@@ -12,12 +12,6 @@ let responseRegister: responseInterface;
 
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
-    'z7277272@ad.unsw.edu.au',
-    'Password1',
-    'First',
-    'Last'
-  );
 });
 
 describe('Testing POST /v1/admin/auth/register', () => {
