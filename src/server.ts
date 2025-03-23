@@ -3,7 +3,8 @@ import {
   adminAuthRegister,
   adminAuthLogin,
   adminUserDetails,
-  adminUserDetailsUpdate
+  adminUserDetailsUpdate,
+  adminUserPasswordUpdate
 } from './auth';
 import { findUserIdFromSession } from './functionsHelper';
 
@@ -130,6 +131,27 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
 
   const userId = userIdResult.userId;
   const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// PUT /v1/admin/user/password
+app.put('/v1/admin/user/password', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { oldPassword, newPassword } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
