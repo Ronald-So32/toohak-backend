@@ -1,7 +1,7 @@
 import {
   requestClear,
-  // requestAdminAuthRegister,
-  // responseInterface,
+  requestAdminAuthRegister,
+  responseInterface,
   requestAdminAuthLogin,
 /*  requestGetUserDetails,
   requestGetUserDetails,
@@ -13,18 +13,19 @@ import { describe } from 'node:test';
 const OK = 200;
 // const BADREQUEST = 400;
 
-// let responseRegister: responseInterface;
+let responseRegister: responseInterface;
+
 // let responseDetails: responseInterface;
 
 beforeEach(() => {
   requestClear();
-/*  responseRegister = requestAdminAuthRegister(
+  responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
     'Last'
   );
-*/
+  expect(responseRegister.statusCode).toStrictEqual(OK);
   // responseDetails = requestGetUserDetails(responseRegister.body.session);
 });
 
