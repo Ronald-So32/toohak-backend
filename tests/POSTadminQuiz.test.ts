@@ -26,12 +26,6 @@ beforeEach(() => {
   session = responseRegister.body.session;
 });
 
-describe('Placeholder test suite', () => {
-  test('should pass', () => {
-    expect(true).toBe(true); // This test will always pass
-  });
-});
-
 describe('Testing POST /v1/admin/quiz', () => {
   test('Testing the return value', () => {
     const responseQuizCreate = requestAdminQuizCreate(
@@ -168,5 +162,53 @@ describe('Testing POST /v1/admin/quiz', () => {
     });
   });
   
+  describe('Testing the description', () => {
+    describe('Invalid description', () => {
+      test.each([
+        {
+          description: 'aB 12 '.repeat(12) + ' ! @ # $ % ^ & * ( ) _ + - =',
+          reason: 'Description with more then 100 characters with normal spaces'
+        },
+        {
+          description: ' ab 12'.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
+          reason: 'Description with more then 100 characters with spaces at the front'
+        },
+        {
+          description: ' ab 12'.repeat(20) + '! @ # $ % ^ & * ( ) _ + - =',
+          reason: 'Description with more then 100 characters with spaces at the end'
+        },
+      ])('$reason', ({ description }) => {
+        const responseQuizCreate = requestAdminQuizCreate(
+          session,
+          'Quiz Name',
+          description
+        );
+    
+        expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
 
+    describe('Valid description', () => {
+      test.each([
+        {
+          description: 'aB 12 '.repeat(12) + ' ! @ # $ % ^ & * ( ) _ + - =',
+          reason: 'Containing exactly 100 characters'
+        },
+        {
+          description: '',
+          reason: 'Empty string'
+        },
+      ])('$reason', ({ description }) => {
+        const responseQuizCreate = requestAdminQuizCreate(
+          session,
+          'Quiz Name',
+          description
+        );
+    
+        expect(responseQuizCreate.body).toStrictEqual({ session: expect.any(String) });
+        expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+      });
+    });
+  });
 });
