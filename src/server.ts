@@ -98,7 +98,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 
 // GET /v1/admin/user/details
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
-  const { session } = req.header;
+  const session = req.headers.session as string;
 
   const userIdResult = findUserIdFromSession(session);
 
