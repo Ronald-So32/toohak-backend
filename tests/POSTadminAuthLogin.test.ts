@@ -154,7 +154,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
     )
     expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
-        
+
     const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 2
@@ -163,5 +163,4 @@ describe('Testing POST /v1/admin/auth/register', () => {
       responseDetails.body.user.numFailedPasswordsSinceLastLogin + 1
     );
   });
-
 });
