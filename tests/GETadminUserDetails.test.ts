@@ -2,17 +2,16 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  // requestAdminAuthLogin,
+  requestAdminAuthLogin,
   requestGetUserDetails,
-  /*
   requestAdminUserPasswordUpdate,
-  requestAdminUserDetailsUpdate */
+  requestAdminUserDetailsUpdate
 } from './testsHelper';
 
 import { describe } from 'node:test';
 
 const OK = 200;
-// const BADREQUEST = 400;
+const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
@@ -71,7 +70,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
-    /*
+
     // Chage Password
     const requestUpdate = requestAdminUserPasswordUpdate(
       responseRegister.body.session,
@@ -109,7 +108,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
-*/
+
     /*
     // change details
     requestAdminUserDetailsUpdate();
