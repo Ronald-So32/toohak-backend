@@ -132,7 +132,7 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const result = adminUserDetailsUpdate(userId, email, firstName, lastName);
 
   if ('error' in result) {
-    return res.status(UNAUTHORISED).json({ error: result.error });
+    return res.status(BADREQUEST).json({ error: result.error });
   }
 
   return res.status(OK).json({});
