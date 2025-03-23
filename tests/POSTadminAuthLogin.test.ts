@@ -27,7 +27,7 @@ beforeEach(() => {
   // responseDetails = requestGetUserDetails(responseRegister.body.session);
 });
 
-describe('Testing POST /v1/admin/auth/register', () => {
+describe('Testing POST /v1/admin/auth/login', () => {
   test('Testing the code 200 return value', () => {
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
@@ -120,7 +120,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
     });
   });
 
-  describe('Testing POST /v1/admin/auth/register works as intended', () => {
+  describe('Testing POST /v1/admin/auth/login works as intended', () => {
     expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
     expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
 
