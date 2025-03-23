@@ -131,9 +131,9 @@ describe('Testing GET /v1/admin/user/details', () => {
     expect(responseUserDetails3.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
-        name: 'First Last',
+        name: 'Firsttt Lasttt',
         email: 'z7277272@ad.unsw.edu.au',
-        numSuccessfulLogins: 2,
+        numSuccessfulLogins: 3,
         numFailedPasswordsSinceLastLogin: 0
       }
     });
