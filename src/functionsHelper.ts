@@ -23,9 +23,11 @@ export interface errorInterface {
  * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
+ * @property {string} 
  */
 export interface userIdInterface {
   userId: number;
+  session: string;
 }
 
 /**

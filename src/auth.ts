@@ -69,9 +69,12 @@ export function adminAuthRegister(
     oldPasswords: [],
   });
 
+  data.sessions.push()
+
   // New User registered correctly, return id
   return {
-    userId: id
+    userId: id,
+    session: sessionNum
   };
 }
 

@@ -24,13 +24,15 @@ interface Data {
   quizzes: quizInterface[];
 
   highestID: number;
+  sessions: string[];
 }
 
 const data: Data = {
   users: [],
   quizzes: [],
 
-  highestID: 0
+  highestID: 0,
+  sessions: []
 };
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
