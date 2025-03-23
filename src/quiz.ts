@@ -1,14 +1,12 @@
-import {
-  getData,
-  questionsInterface
-} from './dataStore';
+import { getData } from './dataStore';
 import {
   createUUID,
   validQuizName,
   errorInterface,
   quizSummariesInterface,
   quizIdInterface,
-  quizDetailsInterface
+  quizDetailsInterface,
+  quizGetDetailsInterface
 } from './functionsHelper';
 
 /**
@@ -45,6 +43,45 @@ export function adminQuizList(
   }
 
   return { quizzes };
+}
+
+/**
+  * TODO
+  *
+  * @param {number} 
+  * ...
+  *
+  * @returns 
+*/
+export function adminQuizGet(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface | errorInterface {
+  const data = getData();
+
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
+  }
+
+  const quiz = data.quizzes.find(
+    (q) => q.quizId === quizId && q.createdBy === userId
+  );
+
+  if (!quiz) {
+    return { error: `Quiz with Id ${quizId} not found or user is not the owner` };
+  }
+
+  return { 
+    quizId: quiz.quizId,
+    name: quiz.name,
+    timeCreated: quiz.timeCreated,
+    timeLastEdited: quiz.timeLastEdited,
+    description: quiz.description,
+    numQuestions: quiz.numQuestions,
+    questions: quiz.questions,
+    timeLimit: quiz.timeLimit,
+   };
 }
 
 /**
