@@ -4,7 +4,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestGetQuizList,
-  requestAdminQuizCreate
+  requestAdminQuizCreate,
+  requestDeleteQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -71,7 +72,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     );
     
     const responseList3 = requestGetQuizList(session);
-    expect(responseList2.body).toStrictEqual({
+    expect(responseList3.body).toStrictEqual({
       quizzes: [
         {
           quizId: expect.any(Number),
@@ -85,5 +86,20 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     });
     expect(responseList3.statusCode).toStrictEqual(OK);
 
+    requestDeleteQuiz(
+      responseList3.body.quizzes[0].quizId,
+      session
+    );
+
+    const responseList4 = requestGetQuizList(session);
+    expect(responseList4.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: expect.any(Number),
+          name: 'Name2'
+        }
+      ]
+    });
+    expect(responseList4.statusCode).toStrictEqual(OK);
   });
 });
