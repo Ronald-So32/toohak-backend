@@ -11,7 +11,10 @@ interface userInterface {
 }
 
 interface answerInterface {
-
+  answerId: number;
+  answer: string;
+  colour: string;
+  correct: boolean;
 }
 
 interface questionInterface {
