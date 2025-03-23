@@ -7,6 +7,8 @@ import {
   adminUserPasswordUpdate,
 } from './auth';
 import {
+  adminQuizList,
+  adminQuizRemove
   adminQuizCreate
 } from './quiz'
 import { findUserIdFromSession } from './functionsHelper';
@@ -30,7 +32,7 @@ import process from 'process';
 const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
-// const FORBIDDEN = 403;
+const FORBIDDEN = 403;
 // const NOTFOUND = 404;
 
 // const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
@@ -182,6 +184,47 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({ quizId: result.quizId });
+});
+
+// GET /v1/admin/quiz/list
+app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizList(userId);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ quizzes: result.quizzes });
+});
+
+// DELETE /v1/admin/quiz/{quizid}
+app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizRemove(userId, quizId);
+
+  if ('error' in result) {
+    return res.status(FORBIDDEN).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
 });
 
 // ====================================================================
