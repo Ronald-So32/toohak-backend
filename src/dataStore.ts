@@ -19,14 +19,14 @@ interface quizInterface {
   createdBy: number;
 }
 
-interface data {
+interface Data {
   users: userInterface[];
   quizzes: quizInterface[];
 
   highestID: number;
 }
 
-const data = {
+const data: Data = {
   users: [],
   quizzes: [],
 
@@ -49,6 +49,6 @@ Example usage
 */
 
 // Use getData() to access the data
-export function getData(): data {
+export function getData(): Data {
   return data;
 }

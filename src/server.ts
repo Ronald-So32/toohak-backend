@@ -1,4 +1,12 @@
-import express, { json, Request, Response } from 'express';
+import {
+  clear
+} from './other';
+
+import express, {
+  json,
+  Request,
+  Response
+} from 'express';
 import { echo } from './newecho';
 import morgan from 'morgan';
 import config from './config.json';
@@ -8,9 +16,9 @@ import sui from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import request from 'sync-request-curl';
+// import request from 'sync-request-curl';
 
-const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
+// const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
 
 // Set up web app
 const app = express();
@@ -23,7 +31,10 @@ app.use(morgan('dev'));
 // for producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
-app.use('/docs', sui.serve, sui.setup(YAML.parse(file), { swaggerOptions: { docExpansion: config.expandDocs ? 'full' : 'list' } }));
+app.use('/docs', sui.serve, sui.setup(
+  YAML.parse(file),
+  { swaggerOptions: { docExpansion: config.expandDocs ? 'full' : 'list' } }
+));
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
@@ -40,6 +51,13 @@ app.get('/echo', (req: Request, res: Response) => {
   }
 
   return res.json(result);
+});
+
+// DELETE /v1/clear route
+app.delete('/v1/clear', (req: Request, res: Response) => {
+  clear();
+
+  return res.status(200).json({});
 });
 
 // ====================================================================
@@ -74,4 +92,3 @@ process.on('SIGINT', () => {
     process.exit();
   });
 });
-
