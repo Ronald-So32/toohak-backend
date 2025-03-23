@@ -1,18 +1,12 @@
-describe('Placeholder test suite', () => {
-  test('should pass', () => {
-    expect(true).toBe(true); // This test will always pass
-  });
-});
-
-/*
 import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestGetQuizList,
+  // requestGetQuizList,
   requestAdminQuizCreate,
-  requestDeleteQuiz,
-  requestAdminQuizQuestionCreate
+  // requestDeleteQuiz,
+  // requestAdminQuizQuestionCreate,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -25,7 +19,7 @@ const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
-let responseQuestionCreate: responseInterface;
+// let responseQuestionCreate: responseInterface;
 let session: string;
 let quizId: number;
 
@@ -43,7 +37,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  quizId = responseCreate.body.quizId;
+  quizId = responseCreate.body.quizId;/*
   responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
@@ -58,14 +52,24 @@ beforeEach(() => {
         }
       ]
     }
-  );
+  ); */
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseQuizList = requestGetQuizList(session);
-    *
-    expect(responseQuizList.body).toStrictEqual({
+    const responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    /*
+    expect(responseQuizGet.body).toStrictEqual({
       quizId: quizId,
       name: "Name",
       timeCreated: expect.any(Number),
@@ -89,27 +93,25 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
         }
       ],
       timeLimit: 4
-    });
-    *
-    expect(responseQuizList.statusCode).toStrictEqual(OK);
+    }); */
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
-      const responseQuizList = requestGetQuizList(session + 'Invalid Session');
-      expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizList.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseQuizGet = requestGetQuiz(quizId, session + 'Invalid Session');
+      expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizGet.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
-      const responseQuizList = requestDeleteQuiz(quizId + quizIdOffset, session);
-      expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizList.statusCode).toStrictEqual(FORBIDDEN);
+      const responseQuizGet = requestGetQuiz(quizId + quizIdOffset, session);
+      expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizGet.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 
   test('Testing GET /v1/admin/quiz/{quizid} works as intended', () => {
-
+    // TODO
   });
 });
-*/

@@ -1,4 +1,7 @@
-import { getData } from './dataStore';
+import {
+  getData,
+  questionInterface
+} from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -116,6 +119,28 @@ export interface userDetailsInterface {
   email: string;
   numSuccessfulLogins: number;
   numFailedPasswordsSinceLastLogin: number;
+}
+
+/**
+ * A instance of this object:
+ * {
+ *
+ *
+ * @typedef {object}
+ *
+ * @property {number}
+ */
+export interface quizGetDetailsInterface {
+  details: {
+    quizId: number;
+    name: string;
+    timeCreated: number;
+    timeLastEdited: number;
+    description: string;
+    numQuestions: number;
+    questions: questionInterface[];
+    timeLimit: number;
+  }
 }
 
 export class Errors {
