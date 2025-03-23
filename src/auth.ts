@@ -5,7 +5,8 @@ import {
   validPassword,
   errorInterface,
   userIdInterface,
-  userDetailsInterface
+  userDetailsInterface,
+  generateSession
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -69,12 +70,14 @@ export function adminAuthRegister(
     oldPasswords: [],
   });
 
-  data.sessions.push()
+  const currentSession = generateSession();
+
+  data.sessions.push(currentSession)
 
   // New User registered correctly, return id
   return {
     userId: id,
-    session: sessionNum
+    session: currentSession
   };
 }
 
