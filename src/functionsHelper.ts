@@ -131,14 +131,16 @@ export interface userDetailsInterface {
  * @property {number} 
  */
 export interface quizGetDetailsInterface {
-  quizId: number;
-  name: string;
-  timeCreated: number;
-  timeLastEdited: number;
-  description: string;
-  numQuestions: number;
-  questions: questionInterface[];
-  timeLimit: number;
+  details: {
+    quizId: number;
+    name: string;
+    timeCreated: number;
+    timeLastEdited: number;
+    description: string;
+    numQuestions: number;
+    questions: questionInterface[];
+    timeLimit: number;
+  }
 }
 
 export class Errors {

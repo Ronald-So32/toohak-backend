@@ -9,7 +9,8 @@ import {
 import {
   adminQuizList,
   adminQuizRemove,
-  adminQuizCreate
+  adminQuizCreate,
+  adminQuizGet
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 
@@ -239,13 +240,13 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 
   const userId = userIdResult.userId;
-  const result = adminQuizList(userId);
+  const result = adminQuizGet(userId, quizId);
 
   if ('error' in result) {
     return res.status(FORBIDDEN).json({ error: result.error });
   }
 
-  return res.status(OK).json({});
+  return res.status(OK).json({ result.details });
 });
 
 // ====================================================================

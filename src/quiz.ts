@@ -72,16 +72,17 @@ export function adminQuizGet(
     return { error: `Quiz with Id ${quizId} not found or user is not the owner` };
   }
 
-  return { 
-    quizId: quiz.quizId,
-    name: quiz.name,
-    timeCreated: quiz.timeCreated,
-    timeLastEdited: quiz.timeLastEdited,
-    description: quiz.description,
-    numQuestions: quiz.numQuestions,
-    questions: quiz.questions,
-    timeLimit: quiz.timeLimit,
-   };
+  return { details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+    }
+  };
 }
 
 /**
