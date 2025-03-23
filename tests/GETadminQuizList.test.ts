@@ -30,7 +30,7 @@ beforeEach(() => {
 describe('Testing GET /v1/admin/quiz/list', () => {
   test('Testing the code 200 return value', () => {
     const responseList = requestGetQuizList(session);
-    expect(responseList.body).toStrictEqual({ quizzes: {} });
+    expect(responseList.body).toStrictEqual({ quizzes: [] });
     expect(responseList.statusCode).toStrictEqual(OK);
   });
 
