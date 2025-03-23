@@ -163,4 +163,28 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       });
     });
   });
+
+  test('Testing PUT /v1/admin/quiz/{quizid}/name works as intended', () => {
+    // Update the quiz name
+    const newQuizName = 'Updated Quiz Name';
+    const responseUpdate = requestAdminQuizUpdateName(
+      quizId,
+      session,
+      newQuizName
+    );
+    expect(responseUpdate.body).toStrictEqual({});
+    expect(responseUpdate.statusCode).toStrictEqual(OK);
+
+    // Verify the quiz name has been updated
+    const responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
+    
+    // Verify timeLastEdited has been updated
+    expect(responseQuizGet.body.timeLastEdited).toBeGreaterThanOrEqual(responseQuizGet.body.timeCreated);
+    
+    // Verify other properties remain unchanged
+    expect(responseQuizGet.body.quizId).toStrictEqual(quizId);
+    expect(responseQuizGet.body.description).toStrictEqual('Quiz Description');
+  });
 });
