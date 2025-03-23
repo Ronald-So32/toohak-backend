@@ -76,7 +76,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
 
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
-          responseDetails.body.user.numSuccessfulLogins + 1
+          responseDetails.body.user.numSuccessfulLogins
         );
         expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
           responseDetails.body.user.numFailedPasswordsSinceLastLogin
@@ -112,7 +112,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
 
         const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
-          responseDetails.body.user.numSuccessfulLogins + 1
+          responseDetails.body.user.numSuccessfulLogins
         );
         expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
           responseDetails.body.user.numFailedPasswordsSinceLastLogin + 1
@@ -146,16 +146,16 @@ describe('Testing POST /v1/admin/auth/login', () => {
       'z7277272@ad.unsw.edu.au',
       'Password2',
     )
-    expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin.statusCode).toStrictEqual(OK);
+    expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin2.statusCode).toStrictEqual(OK);
 
     // Make sure the old password doesn't work
     const responseLogin3 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password1',
     )
-    expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
+    expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
 
     const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
