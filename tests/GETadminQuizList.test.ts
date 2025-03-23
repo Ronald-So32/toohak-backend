@@ -3,7 +3,6 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestAdminAuthLogin,
   requestGetQuizList,
   requestAdminQuizCreate
 } from './testsHelper';
@@ -11,7 +10,6 @@ import {
 import { describe } from 'node:test';
 
 const OK = 200;
-const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
@@ -45,10 +43,10 @@ describe('Testing GET /v1/admin/quiz/list', () => {
 
   test('Testing GET /v1/admin/quiz/list works as intended', () => {
     const responseList = requestGetQuizList(session);
-    expect(responseList.body).toStrictEqual({ quizzes: {} });
+    expect(responseList.body).toStrictEqual({ quizzes: [] });
     expect(responseList.statusCode).toStrictEqual(OK);
 
-    const responseCreate = requestAdminQuizCreate(
+    requestAdminQuizCreate(
       session,
       'Name',
       'Description'
@@ -56,12 +54,36 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     
     const responseList2 = requestGetQuizList(session);
     expect(responseList2.body).toStrictEqual({
-      quizzes: {
-        quizId: expect.any(Number),
-        name: 'Name'
-      }
+      quizzes: [
+        {
+          quizId: expect.any(Number),
+          name: 'Name'
+        },
+      ]
     });
     expect(responseList2.statusCode).toStrictEqual(OK);
+
+    // Add another quiz
+    requestAdminQuizCreate(
+      session,
+      'Name2',
+      'Description2'
+    );
+    
+    const responseList3 = requestGetQuizList(session);
+    expect(responseList2.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: expect.any(Number),
+          name: 'Name'
+        },
+        {
+          quizId: expect.any(Number),
+          name: 'Name2'
+        },
+      ]
+    });
+    expect(responseList3.statusCode).toStrictEqual(OK);
 
   });
 });
