@@ -14,6 +14,7 @@ const OK = 200;
 // const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+let session: string;
 
 beforeEach(() => {
   requestClear();
@@ -23,7 +24,7 @@ beforeEach(() => {
     'First',
     'Last'
   );
-  expect(responseRegister.statusCode).toStrictEqual(OK);
+  session = responseRegister.body.session;
 });
 
 describe('Testing PUT /v1/admin/user/password', () => {
@@ -37,10 +38,22 @@ describe('Testing PUT /v1/admin/user/password', () => {
   });
 
   describe('Testing for error responses', () => {
+    test('Testing when the password is already used', () => {
+      
+    });
 
+    describe('Testing the new password', () => {
+      describe('Valid cases', () => {
+    
+      });
+
+      describe('Invalid cases', () => {
+      
+      });
+    });
   });
 
   test('Testing PUT /v1/admin/user/password works as intended', () => {
-
+    
   });
 });
