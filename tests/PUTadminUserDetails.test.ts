@@ -261,8 +261,79 @@ describe('Testing PUT /v1/admin/user/details', () => {
     });
   });
 
-  test('Testing PUT /v1/admin/user/details works as intended', () => {
-    // testing valid cases
+  describe('Testing PUT /v1/admin/user/details works as intended', () => {
+    test.each([
+      {
+        description: 'No changes made to user\'s details',
+        email: 'z7277272@ad.unsw.edu.au',
+        nameFirst: 'First',
+        nameLast: 'Last',
+      },
+      {
+        description: 'Changes made to user\'s email',
+        email: 'Email2@ad.unsw.edu.au',
+        nameFirst: 'First',
+        nameLast: 'Last',
+      },
+      {
+        description: 'Changes made to user\'s first name',
+        email: 'z7277272@ad.unsw.edu.au',
+        nameFirst: 'Second',
+        nameLast: 'Last',
+      },
+      {
+        description: 'Changes made to user\'s last name',
+        email: 'z7277272@ad.unsw.edu.au',
+        nameFirst: 'First',
+        nameLast: 'SecondLast',
+      },
+      {
+        description: 'Changes made to user\'s email and first name',
+        email: 'Email@ad.unsw.edu.au',
+        nameFirst: 'Second',
+        nameLast: 'Last',
+      },
+      {
+        description: 'Changes made to user\'s email and last name',
+        email: 'Email@ad.unsw.edu.au',
+        nameFirst: 'First',
+        nameLast: 'SecondLast',
+      },
+      {
+        description: 'Changes made to user\'s first and last name',
+        email: 'z7277272@ad.unsw.edu.au',
+        nameFirst: 'Second',
+        nameLast: 'SecondLast',
+      },
+      {
+        description: 'Changes made to all of user\'s details',
+        email: 'Email@ad.unsw.edu.au',
+        nameFirst: 'Second',
+        nameLast: 'SecondLast',
+      },
+    ])('$description', ({ email, nameFirst, nameLast }) => {
+      const responseUpdate = requestAdminUserDetailsUpdate(
+        session,
+        email,
+        nameFirst,
+        nameLast
+      );
+  
+      expect(responseUpdate.body).toStrictEqual({});
+      expect(responseUpdate.statusCode).toStrictEqual(OK);
+  
+      const responseDetails = requestGetUserDetails(session);
+  
+      expect(responseDetails.body).toStrictEqual({
+        user: {
+          userId: expect.any(Number),
+          name: `${nameFirst} ${nameLast}`,
+          email: email,
+          numSuccessfulLogins: 1,
+          numFailedPasswordsSinceLastLogin: 0,
+        },
+      });
+    });
   });
 
 });
