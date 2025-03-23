@@ -1,5 +1,7 @@
 import { getData } from './dataStore';
 
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * A instance of this object:
  * {
@@ -219,4 +221,15 @@ export function validQuizName(name: string): boolean | errorInterface {
   }
 
   return true;
+}
+
+export function generateSession(): string {
+  const data = getData();
+  let session = uuidv4();
+
+  while (data.sessions.includes(session)) {
+    session = uuidv4();
+  }
+  
+  return session;
 }
