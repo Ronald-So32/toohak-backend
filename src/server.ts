@@ -1,6 +1,7 @@
+import { clear } from './other';
 import {
-  clear
-} from './other';
+  adminAuthRegister
+} from './auth';
 
 import express, {
   json,
@@ -58,6 +59,19 @@ app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
 
   return res.status(200).json({});
+});
+
+// POST /v1/admin/auth/register
+app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
+  const { email, password, nameFirst, nameLast } = req.body;
+
+  const result = adminAuthRegister(email, password, nameFirst, nameLast);
+
+  if ('error' in result) {
+    return res.status(400).json({ error: result.error });
+  } else {
+    return res.status(200).json({ session: result.session });
+  }
 });
 
 // ====================================================================

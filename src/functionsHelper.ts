@@ -1,5 +1,7 @@
 import { getData } from './dataStore';
 
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * A instance of this object:
  * {
@@ -23,9 +25,11 @@ export interface errorInterface {
  * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
+ * @property {string} 
  */
 export interface userIdInterface {
   userId: number;
+  session: string;
 }
 
 /**
@@ -217,4 +221,15 @@ export function validQuizName(name: string): boolean | errorInterface {
   }
 
   return true;
+}
+
+export function generateSession(): string {
+  const data = getData();
+  let sessionNew = uuidv4();
+
+  while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
+    sessionNew = uuidv4();
+  }
+  
+  return sessionNew;
 }

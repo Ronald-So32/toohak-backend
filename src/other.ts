@@ -13,5 +13,8 @@ export function clear(): Record<string, never> {
   data.users = [];
   data.quizzes = [];
 
+  data.highestID = 0;
+  data.sessions = [];
+
   return {};
 }

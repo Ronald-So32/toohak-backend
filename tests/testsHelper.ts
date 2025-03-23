@@ -6,6 +6,11 @@ const url = config.url;
 const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
+export interface responseInterface {
+  body: any;
+  statusCode: number;
+}
+
 // Helper function to handle common request logic
 function makeRequest(
   method: HttpVerb,

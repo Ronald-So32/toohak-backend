@@ -5,7 +5,7 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestGetQuizList */
-} from './helper';
+} from './testsHelper';
 
 import { describe } from 'node:test';
 
@@ -13,14 +13,14 @@ beforeEach(() => {
   requestClear();
 });
 
-describe('Testing /v1/clear', () => {
+describe('Testing DELETE /v1/clear', () => {
   test('Testing the return value', () => {
     const response = requestClear();
     expect(response.body).toStrictEqual({});
     expect(response.statusCode).toStrictEqual(200);
   });
 /*
-  test('Testing /v1/clear works as intended', () => {
+  test('Testing DELETE /v1/clear works as intended', () => {
     // Register a user
     const responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',

@@ -19,18 +19,25 @@ interface quizInterface {
   createdBy: number;
 }
 
+interface sessionInterface {
+  userId: number;
+  session: string;
+}
+
 interface Data {
   users: userInterface[];
   quizzes: quizInterface[];
 
   highestID: number;
+  sessions: sessionInterface[];
 }
 
 const data: Data = {
   users: [],
   quizzes: [],
 
-  highestID: 0
+  highestID: 0,
+  sessions: []
 };
 
 // YOU MAY MODIFY THIS OBJECT ABOVE
