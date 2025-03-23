@@ -15,7 +15,11 @@ interface answerInterface {
 }
 
 interface questionInterface {
-
+  questionId: number;
+  question: string;
+  timeLimit: number;
+  points: number;
+  answerOptions: answerInterface[];
 }
 
 interface quizInterface {
