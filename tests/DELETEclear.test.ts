@@ -1,16 +1,16 @@
 import {
   requestClear,
-/*  requestAdminAuthRegister,
-  requestAdminQuizCreate,
+  requestAdminAuthRegister,
+  // requestAdminQuizCreate,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestGetQuizList */
+  // requestGetQuizList
 } from './testsHelper';
 
 import { describe } from 'node:test';
 
 const OK = 200;
-// const BADREQUEST = 400;
+const BADREQUEST = 400;
 
 beforeEach(() => {
   requestClear();
@@ -22,7 +22,7 @@ describe('Testing DELETE /v1/clear', () => {
     expect(response.body).toStrictEqual({});
     expect(response.statusCode).toStrictEqual(OK);
   });
-/*
+
   test('Testing DELETE /v1/clear works as intended', () => {
     // Register a user
     const responseRegister = requestAdminAuthRegister(
@@ -31,29 +31,29 @@ describe('Testing DELETE /v1/clear', () => {
       'First',
       'Last'
     );
-    expect(responseRegister).toStrictEqual({ session: expect.any(String) });
+    expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
-
+/*
     // Create a quiz
     const responseQuiz = requestAdminQuizCreate(
-      responseRegister.session,
+      responseRegister.body.session,
       'Name',
       'Description'
     );
-    expect(responseQuiz).toStrictEqual({ quizId: expect.any(Number) });
+    expect(responseQuiz.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuiz.statusCode).toStrictEqual(OK);
-
+*/
     // Check user can login
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin).toStrictEqual({ session: responseRegister.session });
+    expect(responseLogin.body).toStrictEqual({ session: responseRegister.body.session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
-    const responseUserDetails = requestGetUserDetails(responseRegister.session);
-    expect(responseUserDetails).toStrictEqual({
+    const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
+    expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
@@ -63,20 +63,20 @@ describe('Testing DELETE /v1/clear', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
-
+/*
     // Check the quiz is listed
-    const responseQuizList = requestGetQuizList(responseRegister.session);
-    expect(responseQuizList).toStrictEqual({
+    const responseQuizList = requestGetQuizList(responseRegister.body.session);
+    expect(responseQuizList.body).toStrictEqual({
       quizzes: {
-        quizId: responseQuiz.quizId,
+        quizId: responseQuiz.body.quizId,
         name: 'Name'
       }
     });
     expect(responseQuizList.statusCode).toStrictEqual(OK);
-
+*/
     // Clear everything
     const responseClear = requestClear();
-    expect(responseClear).toStrictEqual({});
+    expect(responseClear.body).toStrictEqual({});
     expect(responseClear.statusCode).toStrictEqual(OK);
 
     // Check user cannot login
@@ -84,19 +84,19 @@ describe('Testing DELETE /v1/clear', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin2).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin2.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin2.statusCode).toStrictEqual(BADREQUEST);
 
     // Check user is gone
-    const responseUserDetails2 = requestGetUserDetails(responseRegister.session);
-    expect(responseUserDetails2).toStrictEqual({ user: {} });
+    const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
+    expect(responseUserDetails2.body).toStrictEqual({ user: {} });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
-
+/*
     // Check the quiz list is empty
-    const responseQuizList2 = requestGetQuizList(responseRegister.session);
-    expect(responseQuizList2).toStrictEqual({ quizzes: {} });
+    const responseQuizList2 = requestGetQuizList(responseRegister.body.session);
+    expect(responseQuizList2.body).toStrictEqual({ quizzes: {} });
     expect(responseQuizList2.statusCode).toStrictEqual(OK);
-
+*/
     // Register the same user
     const responseRegister2 = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
@@ -104,8 +104,7 @@ describe('Testing DELETE /v1/clear', () => {
       'First',
       'Last'
     );
-    expect(responseRegister2).toStrictEqual({ session: expect.any(String) });
+    expect(responseRegister2.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister2.statusCode).toStrictEqual(OK);
   });
-*/
 });
