@@ -4,7 +4,7 @@ import {
   adminAuthLogin,
   adminUserDetails
 } from './auth';
-import { findUserIdFromSession } from './functionsHelper'
+import { errorInterface, findUserIdFromSession } from './functionsHelper'
 
 import express, {
   json,
@@ -106,7 +106,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
 
-  const userId = userIdResult as number;
+  const userId = userIdResult.userId;
   const result = adminUserDetails(userId);
 
   if ('error' in result) {
