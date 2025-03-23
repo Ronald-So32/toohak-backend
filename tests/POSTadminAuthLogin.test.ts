@@ -35,15 +35,6 @@ describe('Testing POST /v1/admin/auth/login', () => {
     )
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
-/*
-    const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
-    expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
-      responseDetails.body.user.numSuccessfulLogins + 1
-    );
-    expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
-      responseDetails.body.user.numFailedPasswordsSinceLastLogin
-    );
-*/
   });
 /*
   describe('Testing for error responses', () => {
@@ -120,7 +111,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     });
   });
 
-  describe('Testing POST /v1/admin/auth/login works as intended', () => {
+  test('Testing POST /v1/admin/auth/login works as intended', () => {
     expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
     expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
 
