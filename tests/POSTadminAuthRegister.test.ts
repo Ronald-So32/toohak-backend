@@ -12,6 +12,7 @@ const OK = 200;
 const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+let session: string;
 
 beforeEach(() => {
   requestClear();
@@ -353,6 +354,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'First',
       'Last'
     );
+    session = responseRegister.body.session;
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
@@ -361,11 +363,11 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin.body).toStrictEqual({ session: responseRegister.body.session });
+    expect(responseLogin.body).toStrictEqual({ session: session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
-    const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
+    const responseUserDetails = requestGetUserDetails(session);
     expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
