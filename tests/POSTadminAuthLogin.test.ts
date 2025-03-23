@@ -3,8 +3,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
-  // requestGetUserDetails,
 /*  requestGetUserDetails,
+  requestGetUserDetails,
   requestAdminUserPasswordUpdate */
 } from './testsHelper';
 
@@ -14,6 +14,7 @@ const OK = 200;
 // const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
+
 // let responseDetails: responseInterface;
 
 beforeEach(() => {
