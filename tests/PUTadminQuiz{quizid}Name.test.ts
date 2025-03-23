@@ -46,4 +46,26 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
   });
+
+  describe('Testing for error responses', () => {
+    test('Testing when the session is invalid', () => {
+      const responseUpdate = requestAdminQuizUpdateName(
+        quizId,
+        session + 'Invalid Session',
+        'New Quiz Name'
+      );
+      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+
+    test('Testing when the quizId is invalid', () => {
+      const responseUpdate = requestAdminQuizUpdateName(
+        quizId + quizIdOffset,
+        session,
+        'New Quiz Name'
+      );
+      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
+    });
+  });
 });
