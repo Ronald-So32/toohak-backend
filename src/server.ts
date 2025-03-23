@@ -120,7 +120,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
 // PUT /v1/admin/user/details
 app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
-  const { email, firstName, lastName } = req.body;
+  const { email, nameFirst, nameLast } = req.body;
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -129,7 +129,7 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   }
 
   const userId = userIdResult.userId;
-  const result = adminUserDetailsUpdate(userId, email, firstName, lastName);
+  const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
