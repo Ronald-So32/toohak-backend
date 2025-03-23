@@ -87,5 +87,32 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
+
+    describe('Testing the quiz name validation', () => {
+      describe('Invalid cases', () => {
+        test.each([
+          {
+            description: 'Contains invalid characters',
+            name: 'Quiz@Name123!',
+          },
+          {
+            description: 'Too short (less than 3 characters)',
+            name: 'Qz',
+          },
+          {
+            description: 'Too long (more than 30 characters)',
+            name: 'This Quiz Name Is Wayyyyyyyyyyy Too Long And Should Fail Validation',
+          },
+        ])('Invalid quiz name - $description', ({ name }) => {
+          const responseUpdate = requestAdminQuizUpdateName(
+            quizId,
+            session,
+            name
+          );
+          expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+    });
   });
 });
