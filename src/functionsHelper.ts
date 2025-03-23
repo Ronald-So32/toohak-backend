@@ -25,7 +25,7 @@ export interface errorInterface {
  * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
- * @property {string} 
+ * @property {string}
  */
 export interface userIdInterface {
   userId: number;
@@ -118,6 +118,59 @@ export interface userDetailsInterface {
   numFailedPasswordsSinceLastLogin: number;
 }
 
+export class Errors {
+  // Error for duplicate email
+  static emailAlreadyUsed(): { error: string } {
+    return { error: 'Email has already been used by another user' };
+  }
+
+  // Error for invalid email
+  static invalidEmail(): { error: string } {
+    return { error: 'Email is not valid' };
+  }
+
+  // Error for invalid name
+  static invalidName(isFirstName: boolean, specific: string): { error: string } {
+    const nameType = isFirstName ? 'First name' : 'Last name';
+    return { error: `${nameType} is not valid, ${specific}` };
+  }
+
+  // Error for invalid password
+  static invalidPassword(): { error: string } {
+    return { error: 'Password is not valid' };
+  }
+
+  // Error for non-existent email
+  static emailNotFound(): { error: string } {
+    return { error: 'Email does not exist' };
+  }
+
+  // Error for incorrect password
+  static incorrectPassword(): { error: string } {
+    return { error: 'Password is incorrect' };
+  }
+
+  // Error for non-existent user
+  static userNotFound(userId: number): { error: string } {
+    return { error: `User Id of ${userId} is not found` };
+  }
+
+  // Error for reused password
+  static passwordReused(): { error: string } {
+    return { error: 'New Password has already been used before by this user' };
+  }
+
+  // Error for same old and new password
+  static samePassword(): { error: string } {
+    return { error: 'New password cannot be the same as the old password' };
+  }
+
+  // Error for invalid session
+  static sessionNotFound(): { error: string } {
+    return { error: 'No session is found' };
+  }
+}
+
 /**
  * Creates a unique user id from the current registered users
  *
@@ -145,9 +198,9 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return { error: 'First name is shorter than 2 characters' };
+      return Errors.invalidName(true, 'shorter than 2 characters');
     } else {
-      return { error: 'Last name is shorter than 2 characters' };
+      return Errors.invalidName(false, 'shorter than 2 characters');
     }
   }
   // Checks if there is more than 20 characters in the name
@@ -230,6 +283,17 @@ export function generateSession(): string {
   while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
     sessionNew = uuidv4();
   }
-  
+
   return sessionNew;
+}
+
+export function findSessionFromuserId(userId: number): string | errorInterface {
+  const data = getData();
+  const theSession = data.sessions.find(session => session.userId === userId);
+
+  if (!theSession) {
+    return Errors.sessionNotFound();
+  }
+
+  return theSession.session;
 }

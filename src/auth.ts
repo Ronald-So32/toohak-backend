@@ -6,7 +6,8 @@ import {
   errorInterface,
   userIdInterface,
   userDetailsInterface,
-  generateSession
+  generateSession,
+  findSessionFromuserId
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -72,7 +73,7 @@ export function adminAuthRegister(
 
   const currentSession = generateSession();
 
-  data.sessions.push({ userId: id, session: currentSession })
+  data.sessions.push({ userId: id, session: currentSession });
 
   // New User registered correctly, return id and currentSession
   return {
@@ -107,12 +108,15 @@ export function adminAuthLogin(
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
+  const sessionNum = findSessionFromuserId(userData.userId) as string;
+
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
   userData.numFailedPasswordsSinceLastLogin = 0;
 
   return {
     userId: userData.userId,
+    session: sessionNum
   };
 }
 
