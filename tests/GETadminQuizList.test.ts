@@ -1,24 +1,29 @@
 import request from 'sync-request-curl';
 import { port, url } from '../src/config.json';
+import {
+  requestClear,
+  requestDeleteQuiz,
+  requestGetQuizList,
+  requestAdminQuizCreate,
+  requestAdminAuthRegister,
+} from 'helper.ts'
+// don't know how to import properly
 
 const SERVER_URL = `${url}:${port}`;
 const TIMEOUT_MS = 5 * 1000;
 
-let id: number;
+let session: string;
 let quizId: number
 let quizId2: number
 let quizId3: number
 
 beforeEach(() => {
-  request('DELETE', SERVER_URL + '/clear', { timeout: TIMEOUT_MS });
-  const registerUser = request('PUT', SERVER_URL + '/v1/admin/auth/register', 
-    { json: { email: 'email@email.com', password: 'password1', nameFirst: 'First', nameLast: 'Last' }, 
-    timeout: TIMEOUT_MS }); 
-  id = parseInt(JSON.parse(registerUser.body.toString()));
+  requestClear()
+  const res = requestAdminAuthRegister('email@email.com', 'password1', 'First', 'Last');
+  session = res.body.session;
 
-  const createQuiz = request('POST', SERVER_URL + '/v1/admin/quiz', 
-    { json: { userId: id, quizName: 'Quiz name', description: 'Description' }, timeout: TIMEOUT_MS });
-  quizId = parseInt(JSON.parse(createQuiz.body.toString()));
+  const quizRes = requestAdminQuizCreate(session, 'Quiz name', 'Description');
+  quizId = res.body.quizId;
 });
 
 
@@ -26,10 +31,10 @@ describe('Tests for quiz list', () => {
   // Is the 401 case correct?
   // Session is empty or invalid (does not refer to valid logged in user session)
   test('User Id invalid', () => {
-    const res =  request('POST', SERVER_URL + '/v1/admin/quiz/list', 
-      { json: { userId: id + 999 }, timeout: TIMEOUT_MS });
-    expect(JSON.parse(res.body.toString())).toStrictEqual({ error: expect.any(String) });
-    expect(JSON.parse(res.body.toString())).not.toBeNull();
+    const invalidOffset = JSON.parse(999.toString())
+    const res = requestGetQuizList(session + 999);
+    expect(res.body).toStrictEqual({ error: expect.any(String) });
+    expect(res.body).not.toBeNull();
     expect(res.statusCode).toStrictEqual(401);
   });
 
