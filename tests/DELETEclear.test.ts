@@ -39,7 +39,7 @@ describe('Testing DELETE /v1/clear', () => {
 /*
     // Create a quiz
     const responseQuiz = requestAdminQuizCreate(
-      responseRegister.body.session,
+      session,
       'Name',
       'Description'
     );
@@ -51,11 +51,12 @@ describe('Testing DELETE /v1/clear', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin.body).toStrictEqual({ session: responseRegister.body.session });
+    session = responseRegister.body.session;
+    expect(responseLogin.body).toStrictEqual({ session: session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details
-    const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
+    const responseUserDetails = requestGetUserDetails(session);
     expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
@@ -68,7 +69,7 @@ describe('Testing DELETE /v1/clear', () => {
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
 /*
     // Check the quiz is listed
-    const responseQuizList = requestGetQuizList(responseRegister.body.session);
+    const responseQuizList = requestGetQuizList(session);
     expect(responseQuizList.body).toStrictEqual({
       quizzes: {
         quizId: responseQuiz.body.quizId,
@@ -91,12 +92,12 @@ describe('Testing DELETE /v1/clear', () => {
     expect(responseLogin2.statusCode).toStrictEqual(BADREQUEST);
 
     // Check user is gone
-    const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
+    const responseUserDetails2 = requestGetUserDetails(session);
     expect(responseUserDetails2.body).toStrictEqual({ error: expect.any(String) });
     expect(responseUserDetails2.statusCode).toStrictEqual(UNAUTHORISED);
 /*
     // Check the quiz list is empty
-    const responseQuizList2 = requestGetQuizList(responseRegister.body.session);
+    const responseQuizList2 = requestGetQuizList(session);
     expect(responseQuizList2.body).toStrictEqual({ quizzes: {} });
     expect(responseQuizList2.statusCode).toStrictEqual(OK);
 */
