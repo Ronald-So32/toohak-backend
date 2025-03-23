@@ -10,6 +10,14 @@ interface userInterface {
   oldPasswords: string[];
 }
 
+interface answerInterface {
+
+}
+
+interface questionInterface {
+
+}
+
 interface quizInterface {
   quizId: number;
   name: string;
@@ -17,6 +25,9 @@ interface quizInterface {
   timeLastEdited: number;
   description: string;
   createdBy: number;
+  numQuestions: number;
+  questions: questionInterface[];
+  timeLimit: number;
 }
 
 interface sessionInterface {
