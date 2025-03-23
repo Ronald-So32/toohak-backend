@@ -11,6 +11,7 @@ import { describe } from 'node:test';
 
 const OK = 200;
 const BADREQUEST = 400;
+const UNAUTHORISED = 401;
 
 let session: string;
 
@@ -92,7 +93,7 @@ describe('Testing DELETE /v1/clear', () => {
     // Check user is gone
     const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
     expect(responseUserDetails2.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseUserDetails2.statusCode).toStrictEqual(OK);
+    expect(responseUserDetails2.statusCode).toStrictEqual(UNAUTHORISED);
 /*
     // Check the quiz list is empty
     const responseQuizList2 = requestGetQuizList(responseRegister.body.session);
