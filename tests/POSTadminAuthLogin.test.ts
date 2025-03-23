@@ -46,7 +46,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
       responseDetails.body.user.numFailedPasswordsSinceLastLogin
     );
   });
-/*
+
   describe('Testing for error responses', () => {
     describe('Testing the email', () => {
       test('Testing when the email does exist', () => {
@@ -165,5 +165,4 @@ describe('Testing POST /v1/admin/auth/login', () => {
       responseDetails.body.user.numFailedPasswordsSinceLastLogin + 1
     );
   });
-*/
 });
