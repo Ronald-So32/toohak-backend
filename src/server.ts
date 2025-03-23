@@ -70,7 +70,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   if ('error' in result) {
     return res.status(400).json({ error: result.error });
   } else {
-    return res.status(200).json({ userId: result.userId });
+    return res.status(200).json({ userId: result.session });
   }
 });
 
