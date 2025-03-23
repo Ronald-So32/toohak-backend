@@ -1,4 +1,18 @@
-import express, { json, Request, Response } from 'express';
+import { clear } from './other';
+import {
+  adminAuthRegister,
+  adminAuthLogin,
+  adminUserDetails,
+  adminUserDetailsUpdate,
+  adminUserPasswordUpdate
+} from './auth';
+import { findUserIdFromSession } from './functionsHelper';
+
+import express, {
+  json,
+  Request,
+  Response
+} from 'express';
 import { echo } from './newecho';
 import morgan from 'morgan';
 import config from './config.json';
@@ -8,9 +22,15 @@ import sui from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import request from 'sync-request-curl';
+// import request from 'sync-request-curl';
 
-const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
+const OK = 200;
+const BADREQUEST = 400;
+const UNAUTHORISED = 401;
+// const FORBIDDEN = 403;
+// const NOTFOUND = 404;
+
+// const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
 
 // Set up web app
 const app = express();
@@ -23,7 +43,10 @@ app.use(morgan('dev'));
 // for producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
-app.use('/docs', sui.serve, sui.setup(YAML.parse(file), { swaggerOptions: { docExpansion: config.expandDocs ? 'full' : 'list' } }));
+app.use('/docs', sui.serve, sui.setup(
+  YAML.parse(file),
+  { swaggerOptions: { docExpansion: config.expandDocs ? 'full' : 'list' } }
+));
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
@@ -36,10 +59,105 @@ const HOST: string = process.env.IP || '127.0.0.1';
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
   if ('error' in result) {
-    res.status(400);
+    res.status(BADREQUEST);
   }
 
   return res.json(result);
+});
+
+// DELETE /v1/clear route
+app.delete('/v1/clear', (req: Request, res: Response) => {
+  clear();
+
+  return res.status(OK).json({});
+});
+
+// POST /v1/admin/auth/register
+app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
+  const { email, password, nameFirst, nameLast } = req.body;
+
+  const result = adminAuthRegister(email, password, nameFirst, nameLast);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ session: result.session });
+});
+
+// POST /v1/admin/auth/login
+app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const result = adminAuthLogin(email, password);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ session: result.session });
+});
+
+// GET /v1/admin/user/details
+app.get('/v1/admin/user/details', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserDetails(userId);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ user: result.user });
+});
+
+// PUT /v1/admin/user/details
+app.put('/v1/admin/user/details', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { email, nameFirst, nameLast } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// PUT /v1/admin/user/password
+app.put('/v1/admin/user/password', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { oldPassword, newPassword } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
 });
 
 // ====================================================================
@@ -74,4 +192,3 @@ process.on('SIGINT', () => {
     process.exit();
   });
 });
-
