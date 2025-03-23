@@ -59,7 +59,7 @@ describe('Testing GET /v1/admin/user/details', () => {
 
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(responseRegister.body.session);
-    expect(responseUserDetails).toStrictEqual({
+    expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
@@ -97,7 +97,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     
     // Check user has correct details after password is updated
     const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
-    expect(responseUserDetails2).toStrictEqual({
+    expect(responseUserDetails2.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
@@ -121,7 +121,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     
     // Check user has correct details after details are updated
     const responseUserDetails3 = requestGetUserDetails(responseRegister.body.session);
-    expect(responseUserDetails3).toStrictEqual({
+    expect(responseUserDetails3.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
         name: 'First Last',
