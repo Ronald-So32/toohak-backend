@@ -58,7 +58,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     expect(responseList2.body).toStrictEqual({
       quizzes: {
         quizId: expect.any(Number),
-        'Name'
+        name: 'Name'
       }
     });
     expect(responseList2.statusCode).toStrictEqual(OK);
