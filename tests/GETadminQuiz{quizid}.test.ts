@@ -5,7 +5,8 @@ import {
   requestGetQuizList,
   requestAdminQuizCreate,
   requestDeleteQuiz,
-  requestAdminQuizQuestionCreate
+  requestAdminQuizQuestionCreate,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -56,8 +57,8 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseQuizList = requestGetQuizList(session);
-    expect(responseQuizList.body).toStrictEqual({
+    const responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
       quizId: quizId,
       name: "Name",
       timeCreated: expect.any(Number),
@@ -83,20 +84,20 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       timeLimit: 4
     });
 
-    expect(responseQuizList.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
-      const responseQuizList = requestGetQuizList(session + 'Invalid Session');
-      expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizList.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseQuizGet = requestGetQuiz(quizId, session + 'Invalid Session');
+      expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizGet.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
-      const responseQuizList = requestDeleteQuiz(quizId + quizIdOffset, session);
-      expect(responseQuizList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizList.statusCode).toStrictEqual(FORBIDDEN);
+      const responseQuizGet = requestGetQuiz(quizId + quizIdOffset, session);
+      expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizGet.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 
