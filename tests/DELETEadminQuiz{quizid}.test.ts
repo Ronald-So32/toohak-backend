@@ -12,6 +12,9 @@ import { describe } from 'node:test';
 
 const OK = 200;
 const UNAUTHORISED = 401;
+const FORBIDDEN = 403;
+
+const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
@@ -44,13 +47,19 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
-      const responseList = requestGetQuizList(session + 'Invalid Session');
-      expect(responseList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseDeleteQuiz = requestDeleteQuiz(quizId, session + 'Invalid Session');
+      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+
+    test('Testing when the session is valid but the quizId is not', () => {
+      const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
+      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 
   test('Testing DELETE /v1/admin/quiz/{quizid} works as intended', () => {
-
+    
   });
 });
