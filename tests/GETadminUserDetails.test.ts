@@ -109,9 +109,15 @@ describe('Testing GET /v1/admin/user/details', () => {
     });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
 
-    /*
-    // change details
-    requestAdminUserDetailsUpdate();
+    // Change details
+    const responseUpdate = requestAdminUserDetailsUpdate(
+      responseRegister.body.session,
+      'z7277272@ad.unsw.edu.au',
+      'Firsttt',
+      'Lasttt'
+    );
+    expect(responseUpdate.body).toStrictEqual({});
+    expect(responseUpdate.statusCode).toStrictEqual(OK);
 
     const responseLogin4 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
@@ -132,6 +138,5 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails3.statusCode).toStrictEqual(OK);
-*/
   });
 });
