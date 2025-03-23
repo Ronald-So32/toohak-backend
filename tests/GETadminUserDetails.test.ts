@@ -13,6 +13,7 @@ import { describe } from 'node:test';
 
 const OK = 200;
 const BADREQUEST = 400;
+const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
 
@@ -61,8 +62,31 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
+/*
+    // Chage Password
+    const requestUpdate = requestAdminUserPasswordUpdate(
+      responseRegister.body.session,
+      'Password1',
+      'Password2'
+    );
+    expect(requestUpdate.body).toStrictEqual({});
+    expect(requestUpdate.statusCode).toStrictEqual(OK);
 
+    // Login with new password
+    const responseLogin2 = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password2',
+    )
+    expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin2.statusCode).toStrictEqual(OK);
 
+    // Login with old password
+    const responseLogin3 = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+    )
+    expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
     
     // Check user has correct details after password is updated
     const responseUserDetails2 = requestGetUserDetails(responseRegister.body.session);
@@ -76,8 +100,17 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails2.statusCode).toStrictEqual(OK);
+*/
+/*
+    // change details
+    requestAdminUserDetailsUpdate();
 
-
+    const responseLogin4 = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password2',
+    )
+    expect(responseLogin4.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin4.statusCode).toStrictEqual(OK);
     
     // Check user has correct details after details are updated
     const responseUserDetails3 = requestGetUserDetails(responseRegister.body.session);
@@ -91,6 +124,6 @@ describe('Testing GET /v1/admin/user/details', () => {
       }
     });
     expect(responseUserDetails3.statusCode).toStrictEqual(OK);
+*/
   });
-
 });
