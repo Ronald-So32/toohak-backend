@@ -347,6 +347,12 @@ describe('Testing POST /v1/admin/auth/register', () => {
   });
 
   test('Testing POST /v1/admin/auth/register works as intended', () => {
+    responseRegister = requestAdminAuthRegister(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
