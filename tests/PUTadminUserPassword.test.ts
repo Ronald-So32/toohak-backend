@@ -11,7 +11,8 @@ import {
 import { describe } from 'node:test';
 
 const OK = 200;
-// const BADREQUEST = 400;
+const BADREQUEST = 400;
+const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
 let session: string;
@@ -44,11 +45,11 @@ describe('Testing PUT /v1/admin/user/password', () => {
 
     describe('Testing the new password', () => {
       describe('Valid cases', () => {
-    
+        
       });
 
       describe('Invalid cases', () => {
-      
+        
       });
     });
   });
