@@ -53,7 +53,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     });
   });
 
-  describe('Testing GET /v1/admin/user/details works as intended', () => {
+  test('Testing GET /v1/admin/user/details works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
