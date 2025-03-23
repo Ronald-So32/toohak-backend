@@ -6,6 +6,9 @@ import {
   adminUserDetailsUpdate,
   adminUserPasswordUpdate
 } from './auth';
+import {
+  adminQuizList
+} from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 
 import express, {
@@ -158,6 +161,26 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({});
+});
+
+// GET /v1/admin/quiz/list
+app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizList(userId);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ quizzes: result.quizzes });
 });
 
 // ====================================================================
