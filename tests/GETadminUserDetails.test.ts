@@ -64,7 +64,7 @@ describe('Testing GET /v1/admin/user/details', () => {
         userId: expect.any(Number),
         name: 'First Last',
         email: 'z7277272@ad.unsw.edu.au',
-        numSuccessfulLogins: 2,
+        numSuccessfulLogins: 1,
         numFailedPasswordsSinceLastLogin: 0
       }
     });
