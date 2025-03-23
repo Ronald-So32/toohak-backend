@@ -1,18 +1,10 @@
-describe('Placeholder test suite', () => {
-  test('should pass', () => {
-    expect(true).toBe(true); // This test will always pass
-  });
-});
-
-/*
 import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
   requestGetQuizList,
   requestDeleteQuiz,
-  requestAdminQuizCreate,
-  // requestAdminQuizCreate
+  requestAdminQuizCreate
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -127,4 +119,3 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
     expect(responseList4.statusCode).toStrictEqual(OK);
   });
 });
-*/
