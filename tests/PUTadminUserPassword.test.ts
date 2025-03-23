@@ -128,16 +128,51 @@ describe('Testing PUT /v1/admin/user/password', () => {
   });
 
   test('Testing PUT /v1/admin/user/password works as intended', () => {
-    // check before details
-    // login success
-    // check details
-    // change password success
-    // login with new pass
-    // check details
-    // change password fail
-    // login with new pass (fail)
-    // check details
-
-    
+    // Initial register works
+    const responseDetails = requestGetUserDetails(session);
+    expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
+    expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+  
+    const responseLogin = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
+    expect(responseLogin.body).toStrictEqual({ session: session });
+    expect(responseLogin.statusCode).toStrictEqual(OK);
+  
+    const responseDetails2 = requestGetUserDetails(session);
+    expect(responseDetails2.body.user.numSuccessfulLogins).toStrictEqual(2);
+    expect(responseDetails2.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+  
+    // Change the password
+    const responsePassword = requestAdminUserPasswordUpdate(
+      session,
+      'Password1',
+      'NewPassword1'
+    );
+    expect(responsePassword.body).toStrictEqual({});
+    expect(responsePassword.statusCode).toStrictEqual(OK);
+  
+    const responseLogin2 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'NewPassword1');
+    expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin2.statusCode).toStrictEqual(OK);
+  
+    const responseDetails3 = requestGetUserDetails(session);
+    expect(responseDetails3.body.user.numSuccessfulLogins).toStrictEqual(3);
+    expect(responseDetails3.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+  
+    // Change password fail
+    const responsePassword2 = requestAdminUserPasswordUpdate(
+      session,
+      'Password1',
+      'AnotherNewPassword1'
+    );
+    expect(responsePassword2.body).toStrictEqual({ error: expect.any(String) });
+    expect(responsePassword2.statusCode).toStrictEqual(BADREQUEST);
+  
+    const responseLogin3 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
+    expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
+  
+    const responseDetails4 = requestGetUserDetails(session);
+    expect(responseDetails4.body.user.numSuccessfulLogins).toStrictEqual(3);
+    expect(responseDetails4.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(1);
   });
 });
