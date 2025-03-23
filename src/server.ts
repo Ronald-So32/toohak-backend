@@ -8,7 +8,7 @@ import {
 } from './auth';
 import {
   adminQuizList,
-  adminQuizRemove
+  adminQuizRemove,
   adminQuizCreate
 } from './quiz'
 import { findUserIdFromSession } from './functionsHelper';
