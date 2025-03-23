@@ -72,9 +72,9 @@ export function adminAuthRegister(
 
   const currentSession = generateSession();
 
-  data.sessions.push(currentSession)
+  data.sessions.push({ userId: id, session: currentSession })
 
-  // New User registered correctly, return id
+  // New User registered correctly, return id and currentSession
   return {
     userId: id,
     session: currentSession

@@ -225,11 +225,11 @@ export function validQuizName(name: string): boolean | errorInterface {
 
 export function generateSession(): string {
   const data = getData();
-  let session = uuidv4();
+  let sessionNew = uuidv4();
 
-  while (data.sessions.includes(session)) {
-    session = uuidv4();
+  while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
+    sessionNew = uuidv4();
   }
   
-  return session;
+  return sessionNew;
 }
