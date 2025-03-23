@@ -34,9 +34,14 @@ describe('Testing POST /v1/admin/auth/register', () => {
     )
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
-    
-    expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(2);
-    expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+        
+    const responseDetailsNew = requestGetUserDetails(responseRegister.body.session);
+    expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
+      responseDetails.body.user.numSuccessfulLogins + 1
+    );
+    expect(responseDetailsNew.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(
+      responseDetails.body.user.numFailedPasswordsSinceLastLogin
+    );
   });
 
   describe('Testing for error responses', () => {
@@ -114,7 +119,15 @@ describe('Testing POST /v1/admin/auth/register', () => {
   });
 
   describe('Testing POST /v1/admin/auth/register works as intended', () => {
-    
+    expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
+    expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+
+    const responseLogin = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+    )
+    expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin.statusCode).toStrictEqual(OK);
   });
 
 });
