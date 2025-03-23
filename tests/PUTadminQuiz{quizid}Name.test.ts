@@ -67,5 +67,25 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
+
+    test('Testing when the user is not the owner of the quiz', () => {
+      // Register a second user
+      const responseRegister2 = requestAdminAuthRegister(
+        'another@example.com',
+        'Password1',
+        'Another',
+        'User'
+      );
+      const session2 = responseRegister2.body.session;
+
+      // Try to update the quiz name with the second user's session
+      const responseUpdate = requestAdminQuizUpdateName(
+        quizId,
+        session2,
+        'New Quiz Name'
+      );
+      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
+    });
   });
 });
