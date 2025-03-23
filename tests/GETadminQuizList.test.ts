@@ -3,8 +3,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestGetQuizList,
-  // requestAdminQuizCreate,
-  // requestDeleteQuiz
+  requestAdminQuizCreate,
+  requestDeleteQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -40,7 +40,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
       expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
     });
   });
-/*
+
   test('Testing GET /v1/admin/quiz/list works as intended', () => {
     const responseList = requestGetQuizList(session);
     expect(responseList.body).toStrictEqual({ quizzes: [] });
@@ -101,5 +101,4 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     });
     expect(responseList4.statusCode).toStrictEqual(OK);
   });
-*/
 });
