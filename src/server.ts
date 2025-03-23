@@ -55,7 +55,7 @@ const HOST: string = process.env.IP || '127.0.0.1';
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
   if ('error' in result) {
-    return res.status(BADREQUEST);
+    res.status(BADREQUEST);
   }
 
   return res.json(result);
