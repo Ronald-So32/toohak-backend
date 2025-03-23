@@ -30,7 +30,8 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/user/password', () => {
   test('Testing the code 200 return value', () => {
-    const responsePassword = requestAdminAuthLogin(
+    const responsePassword = requestAdminUserPasswordUpdate(
+      session,
       'Password1',
       'Password2'
     );
