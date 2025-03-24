@@ -740,7 +740,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
-    const responseQuizCreate2 = requestAdminQuizQuestionCreate(
+    const responseQuizCreate2 = requestAdminQuizCreate(
       session,
       'Quiz Name2',
       'Description2'

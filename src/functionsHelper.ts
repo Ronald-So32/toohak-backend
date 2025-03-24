@@ -333,3 +333,17 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 
   return { userId: theSession.userId };
 }
+
+
+export function validQuestionString(question: string): boolean | errorInterface {
+
+  if (question.length < 5) {
+    return { error: 'Quiz name is lesser than 5' };
+  }
+
+  if (question.length > 50) {
+    return { error: 'Quiz name is greater than 50' };
+  }
+
+  return true;
+}
