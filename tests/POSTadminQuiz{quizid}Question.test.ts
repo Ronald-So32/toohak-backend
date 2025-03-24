@@ -55,6 +55,10 @@ describe('Testing POST /v1/admin/quiz', () => {
             {
               "answer": "Right",
               "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
             }
           ]
         }
@@ -78,6 +82,10 @@ describe('Testing POST /v1/admin/quiz', () => {
               {
                 "answer": "Right",
                 "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
               }
             ]
           }
@@ -111,6 +119,10 @@ describe('Testing POST /v1/admin/quiz', () => {
                 {
                   "answer": "Right",
                   "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
                 }
               ]
             }
@@ -133,6 +145,10 @@ describe('Testing POST /v1/admin/quiz', () => {
                 {
                   "answer": "Right",
                   "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
                 }
               ]
             }
@@ -172,6 +188,10 @@ describe('Testing POST /v1/admin/quiz', () => {
                 {
                   "answer": "Right",
                   "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
                 }
               ]
             }
@@ -209,6 +229,10 @@ describe('Testing POST /v1/admin/quiz', () => {
                 {
                   "answer": "Right",
                   "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
                 }
               ]
             }
@@ -220,7 +244,214 @@ describe('Testing POST /v1/admin/quiz', () => {
     });
 
     describe('Testing the answers', () => {
-    
+      describe('Invalid answers', () => {
+        test.each([
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": true
+              }
+            ],
+            description: "Containing less than 2 answers"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": true
+              },
+              {
+                "answer": "Wrong1",
+                "correct": false
+              },
+              {
+                "answer": "Wrong2",
+                "correct": false
+              },
+              {
+                "answer": "Wrong3",
+                "correct": false
+              },
+              {
+                "answer": "Wrong4",
+                "correct": false
+              },
+              {
+                "answer": "Wrong5",
+                "correct": false
+              },
+              {
+                "answer": "Wrong6",
+                "correct": false
+              }
+            ],
+            description: "Containing more than 6 answers"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": true
+              },
+              {
+                "answer": "Right",
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Duplicate answer strings within same questions"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": false
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "No correct answers"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "",
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Answer containing less than 1 character"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right".repeat(7),
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Answer containing more than 30 character"
+          }
+        ])
+      })('$description', ({ answerOptions }) => {
+        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          quizId,
+          session,
+          {
+            "questionBody": {
+              "question": "Question",
+              "timeLimit": 4,
+              "points": 5,
+              answerOptions
+            }
+          }
+        );
+        expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+      });
+
+      describe('Valid answers', () => {
+        test.each([
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Containing exactly 2 answers"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right",
+                "correct": true
+              },
+              {
+                "answer": "Wrong1",
+                "correct": false
+              },
+              {
+                "answer": "Wrong2",
+                "correct": false
+              },
+              {
+                "answer": "Wrong3",
+                "correct": false
+              },
+              {
+                "answer": "Wrong4",
+                "correct": false
+              },
+              {
+                "answer": "Wrong5",
+                "correct": false
+              },
+            ],
+            description: "Containing exactly 6 answers"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "R",
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Answer containing exactly 1 character"
+          },
+          {
+            answerOptions: [
+              {
+                "answer": "Right".repeat(6),
+                "correct": true
+              },
+              {
+                "answer": "Wrong",
+                "correct": false
+              }
+            ],
+            description: "Answer containing exactly 30 character"
+          },
+        ])('$description', ({ answerOptions }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            {
+              "questionBody": {
+                "question": "Question",
+                "timeLimit": 4,
+                "points": 5,
+                answerOptions
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+        });
+
+      })
+
+  
     });
 
     describe('Testing the timelimit', () => {
