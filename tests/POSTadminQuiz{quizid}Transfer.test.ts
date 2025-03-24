@@ -102,26 +102,23 @@ describe('Session is empty or invalid (does not refer to valid logged in user se
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
   });
+
+  test('Session with no quizzes', () => {
+    const validRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
+    expect(validRes.body).toStrictEqual({});
+    expect(validRes.statusCode).toStrictEqual(OK);
+    // transfer after no more quizzes in session
+    const emptyRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
+    expect(emptyRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(emptyRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
   // does session recieving the tranfer need to be logged in?
 });
 
 // error 403
 describe('Valid session is provided, but user is not an owner of this quiz or quiz does not exist', () => {
   test('User is not owner of quiz', () => {
-    responseRegister = requestAdminAuthRegister(
-      'z7277273@ad.unsw.edu.au',
-      'Password2',
-      'First2',
-      'Last2'
-    );
-    session2 = responseRegister.body.session;
-    requestAdminAuthLogin('z7277232@ad.unsw.edu.au','Password2');
-    responseCreate = requestAdminQuizCreate(
-      session2,
-      'Name2',
-      'Description2'
-    );
-    quizId2 = responseCreate.body.quizId2;
     // quizId2 is owned by session2 not session
     const invalidSessionRes = requestAdminQuizTransfer(quizId2, session, 'z7277273@ad.unsw.edu.au');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
@@ -132,5 +129,13 @@ describe('Valid session is provided, but user is not an owner of this quiz or qu
     const invalidSessionRes = requestAdminQuizTransfer(quizId + quizIdOffset, session, 'z7277273@ad.unsw.edu.au');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
+});
+
+describe('Valid case', () => {
+  test('Valid email, session, quizid, etc', () => {
+    const validRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
+    expect(validRes.body).toStrictEqual({});
+    expect(validRes.statusCode).toStrictEqual(OK);
   });
 });
