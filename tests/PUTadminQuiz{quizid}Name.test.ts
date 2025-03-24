@@ -179,10 +179,11 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     const responseQuizGet = requestGetQuiz(quizId, session);
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
     expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
-    
+
     // Verify timeLastEdited has been updated
-    expect(responseQuizGet.body.timeLastEdited).toBeGreaterThanOrEqual(responseQuizGet.body.timeCreated);
-    
+    expect(responseQuizGet.body.timeLastEdited)
+      .toBeGreaterThanOrEqual(responseQuizGet.body.timeCreated);
+
     // Verify other properties remain unchanged
     expect(responseQuizGet.body.quizId).toStrictEqual(quizId);
     expect(responseQuizGet.body.description).toStrictEqual('Quiz Description');
