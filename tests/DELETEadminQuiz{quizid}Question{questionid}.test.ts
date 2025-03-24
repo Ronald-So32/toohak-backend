@@ -55,6 +55,7 @@ beforeEach(() => {
 
 
 describe('Test error cases', () => {
+  // error 400 
   // questionId that is to be deleted not under same quizId
   test('Question Id does not refer to a valid question within this quiz', () => {
     // Make other quiz
@@ -84,6 +85,14 @@ describe('Test error cases', () => {
     expect(invalidIdRes.statusCode).toStrictEqual(BADREQUEST);
   });
 
+  // error 401
+  test('Session is invalid', () => {
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId, questionId, session + 'Invalid Session');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
+  // error 403
   test('Valid session is provided, but user is not an owner of this quiz', () => {
     // Make other session
     responseRegister = requestAdminAuthRegister(
