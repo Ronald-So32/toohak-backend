@@ -171,4 +171,9 @@ describe('Test error cases', () => {
     expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
   })
 
+  describe('Test valid case', () => {
+    const res = requestDeleteQuizQuestion(quizId, questionId, session);
+    expect(res.body).toStrictEqual({});
+    expect(res.statusCode).toStrictEqual(OK);
+  });
 });
