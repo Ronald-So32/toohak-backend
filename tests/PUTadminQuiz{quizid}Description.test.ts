@@ -1,11 +1,11 @@
 import {
   requestClear,
-  requestGetQuizList,
+  responseInterface,
   requestAdminQuizCreate,
   requestAdminAuthRegister,
   requestDeleteQuiz,
   requestAdminQuizUpdateDescription,
-
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -54,33 +54,38 @@ describe('Test error cases', () => {
     const invalidIdres = requestAdminQuizUpdateDescription(quizId, session + 'Invalid Session', 'New Description');
     expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidIdres.statusCode).toStrictEqual(UNAUTHORISED);
-    // // To make sure that it doe not change any existing quiz
-    // expect(request)
-
-    // expect(typeof adminQuizInfo(id, quizId)).toBe('object');
-    // expect(adminQuizInfo(id, quizId)).toStrictEqual({
-    //   quizId: quizId,
-    //   name: 'Quiz Name',
-    //   timeCreated: expect.any(Number),
-    //   timeLastEdited: expect.any(Number),
-    //   description: 'Description'
-    // });
+    // To make sure that it doe not change any existing quiz
+    const checkInfo = requestGetQuiz(quizId, session);
+    expect(checkInfo.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    expect(checkInfo.statusCode).toStrictEqual(OK);
   });
 
   test('Testing when the session is valid but the quizId is not', () => {
     const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
     expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
     expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
-    // // To make sure that it does not change any exist quiz of the user
-    // expect(typeof adminQuizInfo(id, quizId)).toBe('object');
-    // expect(adminQuizInfo(id, quizId)).toStrictEqual({
-    //   quizId: quizId,
-    //   name: 'Quiz Name',
-    //   timeCreated: expect.any(Number),
-    //   timeLastEdited: expect.any(Number),
-    //   description: 'Description'
-    // });
-    // expect(adminQuizInfo(id, quizId)).not.toBeNull();
+    // To make sure that it does not change any exist quiz of the user
+    const checkInfo = requestGetQuiz(quizId, session);
+    expect(checkInfo.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    expect(checkInfo.statusCode).toStrictEqual(OK);
   });
 
   test('Invalid quizId - When quiz is not owned by session', () => {
@@ -101,7 +106,7 @@ describe('Test error cases', () => {
     // Try to update first user's quiz with second user's ID
     const invalidIdres = requestAdminQuizUpdateDescription(quizId2, session2, 'New Description');
     expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidIdres.statusCode).toStrictEqual(UNAUTHORISED);
+    expect(invalidIdres.statusCode).toStrictEqual(FORBIDDEN);
   });
 
   // To test the validity of descriptions
@@ -120,7 +125,7 @@ describe('Test error cases', () => {
         description: 'aB 12 '.repeat(20) + '! @ # $ % ^ & * ( ) _ + - = ',
         reason: 'Description is more than 100 characters with spaces at the end'
       },
-    ])('Invalid description - $reason', ({ description}) => {
+    ])('Invalid description - $reason', ({ description }) => {
       // responseCreate = requestAdminQuizCreate(
       //   session,
       //   'Name',
@@ -135,14 +140,9 @@ describe('Test error cases', () => {
       )
       expect(resposneUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(resposneUpdate.statusCode).toStrictEqual(BADREQUEST);
-      // const quizId = adminQuizCreate(id, 'Quiz Name', 'valid description').quizId;
-      // const listBefore = adminQuizList(id);
-      // const infoBefore = adminQuizInfo(id, quizId);
-      // const result = adminQuizDescriptionUpdate(id, quizId, description);
-
-      // To test that the quiz description didn't change
-      // expect(adminQuizList(id)).toStrictEqual(listBefore);
-      // expect(adminQuizInfo(id, quizId)).toStrictEqual(infoBefore);
+      // check that quiz description has not been changed 
+      const infoBefore = requestGetQuiz(quizId, session);
+      expect(requestGetQuiz(quizId, session)).toStrictEqual(infoBefore);
     });
 
     // To test valid descriptions
@@ -164,14 +164,17 @@ describe('Test error cases', () => {
       expect(resposneCorrectUpdate.body).toStrictEqual({ });
       expect(resposneCorrectUpdate.statusCode).toStrictEqual(OK);
       // // To make sure that description is actually updated
-      // expect(typeof adminQuizInfo(id, quizId)).toBe('object');
-      // expect(adminQuizInfo(id, quizId)).toStrictEqual({
-      //   quizId: quizId,
-      //   name: 'Quiz Name',
-      //   timeCreated: expect.any(Number),
-      //   timeLastEdited: expect.any(Number),
-      //   description: description
-      // });
+      const responseQuizGet = requestGetQuiz(quizId, session);
+      expect(responseQuizGet.body).toStrictEqual({
+        quizId: quizId,
+        name: 'Name',
+        timeCreated: expect.any(Number),
+        timeLastEdited: expect.any(Number),
+        description: description,
+        numQuestions: 0,
+        questions: [],
+        timeLimit: 0
+      });
     });
   });
 });
