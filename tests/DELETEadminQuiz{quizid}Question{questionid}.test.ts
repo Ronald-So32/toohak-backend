@@ -29,10 +29,10 @@ let quizId2: number;
 let questionId: number;
 let questionId2: number;
 
+// make session, login to make quiz and question
 beforeEach(() => {
   requestClear();
 
-  // Make session
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
@@ -41,10 +41,8 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
-  // login registered session to make quiz and question
   requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 
-  // Make quizId
   responseCreate = requestAdminQuizCreate(
     session,
     'Name',
@@ -52,7 +50,6 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
   
-  // Make questionId 
   responseCreateQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session, 
