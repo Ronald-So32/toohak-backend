@@ -4,7 +4,7 @@ import {
   requestAdminAuthLogin,
   requestAdminAuthLogout,
   requestAdminQuizQuestionMove,
-  requestAdminQuizQuestionCreate
+  requestAdminQuizQuestionCreate,
   requestAdminAuthRegister,
   requestAdminQuizCreate
 } from './testsHelper';
@@ -68,12 +68,6 @@ beforeEach(() => {
 });
 
 describe('error 400 test cases', () => {
-  test('Question Id does not refer to a valid question within this quiz', () => {
-    const invalidQuestionIdres = requestAdminQuizQuestionMove(quizId, questionId + questionIdOffset, session, '1');
-    expect(invalidQuestionIdres.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidQuestionIdres.statusCode).toStrictEqual(BADREQUEST);
-  })
-
   test.each([
     {
       description: 'Question Id does not refer to a valid question within this quiz',
@@ -113,6 +107,96 @@ describe('error 400 test cases', () => {
     expect(invalidQuestionIdres.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidQuestionIdres.statusCode).toStrictEqual(BADREQUEST);
   });
+});
 
-})
+describe('error 401 cases', () => {
+
+  test('Invalid session', () => {
+    const invalidSessionRes = requestAdminQuizQuestionMove(
+      quizId, 
+      questionId, 
+      session + 'Invalid Offset', 
+      '1'
+    );
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
+  test('Session logged out', () => {
+    requestAdminAuthLogout(session);
+    const invalidSessionRes = requestAdminQuizQuestionMove(
+      quizId, 
+      questionId, 
+      session, 
+      '1'
+    );
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
+  test('Session has no quizzes', () => {
+    // new session with no quizes
+    responseRegister = requestAdminAuthRegister(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
+    session2 = responseRegister.body.session2;
+    const emptySessionRes = requestAdminQuizQuestionMove(
+      quizId, 
+      questionId, 
+      session2,
+      '1'
+    );
+    expect(emptySessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(emptySessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
+  describe('error code 403 cases', () => {
+    test('Valid session is provided, but user is not an owner of this quiz', () => {
+      responseRegister = requestAdminAuthRegister(
+        'z7277273@ad.unsw.edu.au',
+        'Password2',
+        'First2',
+        'Last2'
+      );
+      session2 = responseRegister.body.session;
+  
+      responseCreate = requestAdminQuizCreate(
+        session2,
+        'Name2',
+        'Description2'
+      );
+      quizId2 = responseCreate.body.quizId2;
+
+      responseCreateQuestion = requestAdminQuizQuestionCreate(
+        quizId2,
+        session2, 
+        'Question3'
+      );
+      questionId3 = responseCreateQuestion.body.questionId3;
+
+      const invalidSessionRes = requestAdminQuizQuestionMove(
+        quizId2, 
+        questionId3, 
+        session, 
+        '1',
+      );
+      expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+      expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+    }); 
+    
+    test('Quiz does not exist', () => {
+      const invalidQuizIdRes = requestAdminQuizQuestionMove(
+        quizId + quizIdOffset, 
+        questionId, 
+        session, 
+        '1',
+      );
+      expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
+      expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
+    });
+  });
+});
 
