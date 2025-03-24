@@ -1,4 +1,9 @@
-import { getData } from './dataStore.ts';
+import {
+  getData,
+  questionInterface
+} from './dataStore';
+
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * A instance of this object:
@@ -23,9 +28,11 @@ export interface errorInterface {
  * @typedef {object} userId - Object containing just the user Id
  *
  * @property {number} userId - Id of user
+ * @property {string}
  */
 export interface userIdInterface {
   userId: number;
+  session: string;
 }
 
 /**
@@ -115,6 +122,81 @@ export interface userDetailsInterface {
 }
 
 /**
+ * A instance of this object:
+ * {
+ *
+ *
+ * @typedef {object}
+ *
+ * @property {number}
+ */
+export interface quizGetDetailsInterface {
+  details: {
+    quizId: number;
+    name: string;
+    timeCreated: number;
+    timeLastEdited: number;
+    description: string;
+    numQuestions: number;
+    questions: questionInterface[];
+    timeLimit: number;
+  }
+}
+
+export class Errors {
+  // Error for duplicate email
+  static emailAlreadyUsed(): { error: string } {
+    return { error: 'Email has already been used by another user' };
+  }
+
+  // Error for invalid email
+  static invalidEmail(): { error: string } {
+    return { error: 'Email is not valid' };
+  }
+
+  // Error for invalid name
+  static invalidName(isFirstName: boolean, specific: string): { error: string } {
+    const nameType = isFirstName ? 'First name' : 'Last name';
+    return { error: `${nameType} is not valid, ${specific}` };
+  }
+
+  // Error for invalid password
+  static invalidPassword(): { error: string } {
+    return { error: 'Password is not valid' };
+  }
+
+  // Error for non-existent email
+  static emailNotFound(): { error: string } {
+    return { error: 'Email does not exist' };
+  }
+
+  // Error for incorrect password
+  static incorrectPassword(): { error: string } {
+    return { error: 'Password is incorrect' };
+  }
+
+  // Error for non-existent user
+  static userNotFound(userId: number): { error: string } {
+    return { error: `User Id of ${userId} is not found` };
+  }
+
+  // Error for reused password
+  static passwordReused(): { error: string } {
+    return { error: 'New Password has already been used before by this user' };
+  }
+
+  // Error for same old and new password
+  static samePassword(): { error: string } {
+    return { error: 'New password cannot be the same as the old password' };
+  }
+
+  // Error for invalid session
+  static sessionNotFound(): { error: string } {
+    return { error: 'No session is found' };
+  }
+}
+
+/**
  * Creates a unique user id from the current registered users
  *
  * @returns {number} - Returns the created uuid
@@ -133,16 +215,17 @@ export function createUUID(): number {
  * @param {string} name - The first or the last name of the user
  * @param {boolean} isFirst - Whether or not it is the user's first name
  *
- * @returns {boolean | error} - Returns true for a valid name else returns an object with relevant error message
+ * @returns {boolean | error} - Returns true for a valid name else returns
+ * an object with relevant error message
  */
 
 export function validName(name: string, isFirst: boolean): boolean | errorInterface {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return { error: 'First name is shorter than 2 characters' };
+      return Errors.invalidName(true, 'shorter than 2 characters');
     } else {
-      return { error: 'Last name is shorter than 2 characters' };
+      return Errors.invalidName(false, 'shorter than 2 characters');
     }
   }
   // Checks if there is more than 20 characters in the name
@@ -156,9 +239,15 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return { error: 'First name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+      return {
+        error: 'First name contains characters other than lowercase letters, ' +
+        'uppercase letters, spaces, hyphens, or apostrophes'
+      };
     } else {
-      return { error: 'Last name contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes' };
+      return {
+        error: 'Last name contains characters other than lowercase letters, ' +
+        'uppercase letters, spaces, hyphens, or apostrophes'
+      };
     }
   }
 
@@ -169,7 +258,8 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
  * Validate the password that the user intends to use for their account
  *
  * @param {string} password - Intended password of user
- * @returns {boolean | error} - Retursn true for valid password else an object with relevant error message
+ * @returns {boolean | error} - Retursn true for valid password else an
+ * object with relevant error message
  */
 export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
@@ -191,7 +281,8 @@ export function validPassword(password: string): boolean | errorInterface {
  * Validates the name that the user intends to use for their quiz
  *
  * @param {string} name - Intended quiz name user wants
- * @returns {boolean | error} - Returns true for valid quiz name else an object with relevant error message
+ * @returns {boolean | error} - Returns true for valid quiz name else an
+ * object with relevant error message
  */
 export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
@@ -208,4 +299,37 @@ export function validQuizName(name: string): boolean | errorInterface {
   }
 
   return true;
+}
+
+export function generateSession(): string {
+  const data = getData();
+  let sessionNew = uuidv4();
+
+  while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
+    sessionNew = uuidv4();
+  }
+
+  return sessionNew;
+}
+
+export function findSessionFromUserId(userId: number): string | errorInterface {
+  const data = getData();
+  const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
+
+  if (!theSession) {
+    return Errors.sessionNotFound();
+  }
+
+  return theSession.session;
+}
+
+export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
+  const data = getData();
+  const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
+
+  if (!theSession) {
+    return Errors.sessionNotFound();
+  }
+
+  return { userId: theSession.userId };
 }

@@ -1,12 +1,14 @@
-import { getData } from './dataStore.ts';
+import { getData } from './dataStore';
 import {
   createUUID,
   validName,
   validPassword,
   errorInterface,
   userIdInterface,
-  userDetailsInterface
-} from './helper.ts';
+  userDetailsInterface,
+  generateSession,
+  findSessionFromUserId
+} from './functionsHelper';
 
 import validator from 'validator';
 
@@ -19,9 +21,15 @@ import validator from 'validator';
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
  *
- * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
+ * @returns {userId | error} - Always return userId object otherwise
+ * an error object with relevant message
 */
-export function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string): userIdInterface | errorInterface {
+export function adminAuthRegister(
+  email: string,
+  password: string,
+  nameFirst: string,
+  nameLast: string
+): userIdInterface | errorInterface {
   const data = getData();
 
   // Check if email has already been used
@@ -63,9 +71,14 @@ export function adminAuthRegister(email: string, password: string, nameFirst: st
     oldPasswords: [],
   });
 
-  // New User registered correctly, return id
+  const currentSession = generateSession();
+
+  data.sessions.push({ userId: id, session: currentSession });
+
+  // New User registered correctly, return id and currentSession
   return {
-    userId: id
+    userId: id,
+    session: currentSession
   };
 }
 
@@ -75,9 +88,13 @@ export function adminAuthRegister(email: string, password: string, nameFirst: st
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  *
- * @returns {userId | error} - Always return userId object otherwise an error object with relevant message
+ * @returns {userId | error} - Always return userId object otherwise
+ * an error object with relevant message
 */
-export function adminAuthLogin(email: string, password: string): userIdInterface | errorInterface {
+export function adminAuthLogin(
+  email: string,
+  password: string
+): userIdInterface | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.email === email);
@@ -91,12 +108,15 @@ export function adminAuthLogin(email: string, password: string): userIdInterface
     return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
   }
 
+  const sessionNum = findSessionFromUserId(userData.userId) as string;
+
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
   userData.numFailedPasswordsSinceLastLogin = 0;
 
   return {
     userId: userData.userId,
+    session: sessionNum
   };
 }
 
@@ -106,9 +126,12 @@ export function adminAuthLogin(email: string, password: string): userIdInterface
  *
  * @param {number} userId - Id of the user
  *
- * @returns {user | error} - Always return userDetails object otherwise an error object with relevant error message
+ * @returns {user | error} - Always return userDetails object otherwise
+ * an error object with relevant error message
 */
-export function adminUserDetails(userId: number): { user: userDetailsInterface} | errorInterface {
+export function adminUserDetails(
+  userId: number
+): { user: userDetailsInterface} | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -137,9 +160,15 @@ export function adminUserDetails(userId: number): { user: userDetailsInterface} 
   * @param {string} - First name of the user
   * @param {string} - Last name of the user
   *
-  * @returns {object | error} - Always return an empty object otherwise an error object with relevant error message
+  * @returns {object | error} - Always return an empty object otherwise
+  * an error object with relevant error message
 */
-export function adminUserDetailsUpdate(userId: number, email: string, nameFirst: string, nameLast: string): {} | errorInterface {
+export function adminUserDetailsUpdate(
+  userId: number,
+  email: string,
+  nameFirst: string,
+  nameLast: string
+): Record<string, never> | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -148,7 +177,9 @@ export function adminUserDetailsUpdate(userId: number, email: string, nameFirst:
   }
 
   // Check if new email has been used by other user
-  const isEmailUsedByOtherUser = data.users.some(user => user.email === email && user.userId !== userId);
+  const isEmailUsedByOtherUser = data.users.some(
+    user => user.email === email && user.userId !== userId
+  );
   if (isEmailUsedByOtherUser) {
     return { error: 'Email has already been used by another user' };
   }
@@ -159,12 +190,12 @@ export function adminUserDetailsUpdate(userId: number, email: string, nameFirst:
 
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
-    return validFirst;
+    return validFirst as errorInterface;
   }
 
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
-    return validLast;
+    return validLast as errorInterface;
   }
 
   // All new user details have been verified, user details are updated
@@ -183,9 +214,14 @@ export function adminUserDetailsUpdate(userId: number, email: string, nameFirst:
   * @param {string} - The old password of the user
   * @param {string} - The new password of the user
   *
-  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
+  * @returns {object} - Always return an empty object otherwise an
+  * error object with relevant error message
 */
-export function adminUserPasswordUpdate(userId: number, oldPassword: string, newPassword: string): {} | errorInterface {
+export function adminUserPasswordUpdate(
+  userId: number,
+  oldPassword: string,
+  newPassword: string
+): Record<string, never> | errorInterface {
   const data = getData();
 
   const userData = data.users.find(user => user.userId === userId);
@@ -213,7 +249,7 @@ export function adminUserPasswordUpdate(userId: number, oldPassword: string, new
 
   const validPass = validPassword(newPassword);
   if (validPass !== true) {
-    return validPass;
+    return validPass as errorInterface;
   }
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
