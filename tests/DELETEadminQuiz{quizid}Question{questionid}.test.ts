@@ -1,0 +1,116 @@
+import {
+  requestClear,
+  responseInterface,
+  requestAdminQuizCreate,
+  requestAdminAuthRegister,
+  requestAdminQuizQuestionCreate,
+  requestDeleteQuizQuestion,
+} from './testsHelper';
+
+import { describe } from 'node:test';
+
+
+const OK = 200;
+const BADREQUEST = 400;
+const UNAUTHORISED = 401;
+const FORBIDDEN = 403;
+const quizIdOffset = 727;
+const questionIdOffset = 999;
+
+let responseRegister: responseInterface;
+let responseCreate: responseInterface;
+let responseCreateQuestion: responseInterface;
+let session: string;
+let session2: string;
+let quizId: number;
+let quizId2: number;
+let questionId: number;
+let questionId2: number;
+
+beforeEach(() => {
+  requestClear();
+  // Make session
+  responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+  // Make quizId
+  responseCreate = requestAdminQuizCreate(
+    session,
+    'Name',
+    'Description'
+  );
+  quizId = responseCreate.body.quizId;
+  // Make questionId 
+  responseCreateQuestion = requestAdminQuizQuestionCreate(
+    quizId,
+    session, 
+    'Question'
+  );
+  questionId = responseCreateQuestion.body.questionId;
+});
+
+
+describe('Test error cases', () => {
+  // questionId that is to be deleted not under same quizId
+  test('Question Id does not refer to a valid question within this quiz', () => {
+    // Make other quiz
+    responseCreate = requestAdminQuizCreate(
+      session,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+    // Make question in other quiz under same session
+    responseCreateQuestion = requestAdminQuizQuestionCreate(
+      quizId2,
+      session, 
+      'Question2'
+    );
+    questionId2 = responseCreateQuestion.body.questionId;
+    // case: delete question that is not under same quizId, should equal 400 error
+    const invalidIdRes = requestDeleteQuizQuestion(quizId, questionId2, session);
+    expect(invalidIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidIdRes.statusCode).toStrictEqual(BADREQUEST);
+  });
+
+  // question with invalid questionId(non-existent question)
+  test('Question Id does not refer to a valid question within this quiz', () => {
+    const invalidIdRes = requestDeleteQuizQuestion(quizId, questionId + questionIdOffset, session);
+    expect(invalidIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidIdRes.statusCode).toStrictEqual(BADREQUEST);
+  });
+
+  test('Valid session is provided, but user is not an owner of this quiz', () => {
+    // Make other session
+    responseRegister = requestAdminAuthRegister(
+      'z7277273@ad.unsw.edu.au',
+      'Password2',
+      'First2',
+      'Last2'
+    );
+    session2 = responseRegister.body.session;
+    // Make other quiz under session2 
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+    // Case: valid quizId, but session provided to delete quiz question is invalid
+    const invalidQuestionIdRes = requestDeleteQuizQuestion(quizId2, questionId, session);
+    expect(invalidQuestionIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidQuestionIdRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
+
+  test('Valid session is provided, but quiz does not exist', () => {
+    // quizId + quizIdOffset = non-existent quiz
+    const invalidQuizIdRes = requestDeleteQuizQuestion(quizId + quizIdOffset, questionId, session);
+    expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
+  })
+
+});
