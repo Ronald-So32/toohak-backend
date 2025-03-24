@@ -60,8 +60,15 @@ beforeEach(() => {
 
 // error 400 (BADREQUEST)
 describe('userEmail is not a real user, userEmail is the current logged in user, Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
-  test('userEmail is the current logged in user', () => {
+  test('userEmail is a real user', () => {
     // is below line necessary? 
+    requestAdminAuthLogout(session2);
+    // not real email = zNOTREAL@ad.unsw.edu.au
+    const invalidEmailRes = requestAdminQuizTransfer(quizId, session, 'zNOTREAL@ad.unsw.edu.au');
+    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
+  });
+  test('userEmail is the current logged in user', () => {
     requestAdminAuthLogout(session2);
     const invalidEmailRes = requestAdminQuizTransfer(quizId, session, 'z7277272@ad.unsw.edu.au');
     expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
@@ -73,12 +80,12 @@ describe('userEmail is not a real user, userEmail is the current logged in user,
     responseCreate = requestAdminQuizCreate(
       session,
       'Name2',
-      'Description2'
+      'Description3'
     );
     quizId3 = responseCreate.body.quizId3;
-    const invalidEmailRes = requestAdminQuizTransfer(quizId3, session, 'z7277273@ad.unsw.edu.au');
-    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
+    const invalidQuizIdlRes = requestAdminQuizTransfer(quizId3, session, 'z7277273@ad.unsw.edu.au');
+    expect(invalidQuizIdlRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidQuizIdlRes.statusCode).toStrictEqual(BADREQUEST);
   });
 })
 
