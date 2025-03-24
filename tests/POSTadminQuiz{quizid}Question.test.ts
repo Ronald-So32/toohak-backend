@@ -604,9 +604,8 @@ describe('Testing POST /v1/admin/quiz', () => {
             expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
             expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
           });
-
-      })
-      
+        });
+      });
       
     });
 
@@ -614,6 +613,6 @@ describe('Testing POST /v1/admin/quiz', () => {
     
     });
 
-  })
+  });
 
 });
