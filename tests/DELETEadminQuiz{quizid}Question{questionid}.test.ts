@@ -5,6 +5,7 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizQuestionCreate,
   requestDeleteQuizQuestion,
+  requestAdminAuthLogin
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -29,6 +30,7 @@ let questionId2: number;
 
 beforeEach(() => {
   requestClear();
+
   // Make session
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -37,6 +39,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
+
   // Make quizId
   responseCreate = requestAdminQuizCreate(
     session,
@@ -44,6 +47,7 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
+  
   // Make questionId 
   responseCreateQuestion = requestAdminQuizQuestionCreate(
     quizId,
@@ -51,6 +55,9 @@ beforeEach(() => {
     'Question'
   );
   questionId = responseCreateQuestion.body.questionId;
+
+  // login registered session
+  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 });
 
 
@@ -58,6 +65,7 @@ describe('Test error cases', () => {
   // error 400 
   // questionId that is to be deleted not under same quizId
   test('Question Id does not refer to a valid question within this quiz', () => {
+    
     // Make other quiz
     responseCreate = requestAdminQuizCreate(
       session,
@@ -65,6 +73,7 @@ describe('Test error cases', () => {
       'Description2'
     );
     quizId2 = responseCreate.body.quizId;
+
     // Make question in other quiz under same session
     responseCreateQuestion = requestAdminQuizQuestionCreate(
       quizId2,
@@ -72,6 +81,7 @@ describe('Test error cases', () => {
       'Question2'
     );
     questionId2 = responseCreateQuestion.body.questionId;
+
     // case: delete question that is not under same quizId, should equal 400 error
     const invalidIdRes = requestDeleteQuizQuestion(quizId, questionId2, session);
     expect(invalidIdRes.body).toStrictEqual({ error: expect.any(String) });
@@ -88,6 +98,38 @@ describe('Test error cases', () => {
   // error 401
   test('Session is invalid', () => {
     const invalidSessionRes = requestDeleteQuizQuestion(quizId, questionId, session + 'Invalid Session');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+  
+  // test not logged in user
+  test('Session is invalid', () => {
+    // Make other session
+    responseRegister = requestAdminAuthRegister(
+      'z7277273@ad.unsw.edu.au',
+      'Password2',
+      'First2',
+      'Last2'
+    );
+    session2 = responseRegister.body.session;
+
+    // make other quiz
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+
+    // make question under quiz 2
+    responseCreateQuestion = requestAdminQuizQuestionCreate(
+      quizId2,
+      session2, 
+      'Question2'
+    );
+    questionId2 = responseCreateQuestion.body.questionId;
+    // this session is not logged in 
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
   });
