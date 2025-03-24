@@ -688,7 +688,143 @@ describe('Testing POST /v1/admin/quiz', () => {
         });
       });
     });
+  });
+  
+  test('Testing POST /v1/admin/quiz/{quizid}/question works as intended', () => {
+    let responseQuestionCreate = requestAdminQuizQuestionCreate(
+      quizId,
+      session,
+      {
+        "questionBody": {
+          "question": "Question1",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            }
+          ]
+        }
+      }
+    );
+    requestAdminQuizQuestionCreate(
+      quizId,
+      session,
+      {
+        "questionBody": {
+          "question": "Question2",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            },
+            {
+              "answer": "Maybe",
+              "correct": false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
+    const responseQuizCreate2 = requestAdminQuizQuestionCreate(
+      session,
+      'Quiz Name2',
+      'Description2'
+    );
+    quizId2 = responseQuizCreate2.body.quizId;
+
+    responseQuestionCreate = requestAdminQuizQuestionCreate(
+      quizId2,
+      session,
+      {
+        "questionBody": {
+          "question": "Question",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            },
+            {
+              "answer": "Maybe",
+              "correct": false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+
+    /*
+    const responseQuizDetails = requestGetQuiz(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizId": quizId,
+      "name": "Quiz Name",
+      "timeCreated": expect.any(Number),
+      "timeLastEdited": expect.any(Number),
+      "description": "Description",
+      "numQuestions": 0,
+      "questions": [
+        {
+          "question": "Question1",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            }
+          ]
+        },
+        {
+        "questionBody": {
+          "question": "Question2",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            },
+            {
+              "answer": "Maybe",
+              "correct": false
+            }
+          ]
+        }
+      ],
+      "timeLimit": expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+  */
   });
 
 });
