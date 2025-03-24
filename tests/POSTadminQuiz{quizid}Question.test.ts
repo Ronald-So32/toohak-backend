@@ -449,13 +449,91 @@ describe('Testing POST /v1/admin/quiz', () => {
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
 
-      })
+      });
 
   
     });
 
     describe('Testing the timelimit', () => {
-    
+      describe('Invalid timelimit', () => {
+        test.each([
+          {
+            timelimit: -1,
+            description: "Not a positive number"
+          },
+          {
+            timelimit: 0,
+            description: "Neither a positive or a negative number"
+          },
+          {
+            timelimit: 181,
+            description: "Timelimit exceeds 3 minutes"
+          },
+        ])('$desription', ({ timelimit }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            {
+              "questionBody": {
+                "question": "Question",
+                timelimit,
+                "points": 5,
+                "answerOptions": [
+                  {
+                    "answer": "Right",
+                    "correct": true
+                  },
+                  {
+                    "answer": "Wrong",
+                    "correct": false
+                  }
+                ]
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        });
+        
+        test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
+          const questionBody = {
+            "questionBody": {
+              "question": "Question",
+              "timeLimit": 61,
+              "points": 5,
+              "answerOptions": [
+                {
+                  "answer": "Right",
+                  "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
+                }
+              ]
+            }
+          };
+          requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        });
+      })
+      
+      
     });
 
     describe('Testing the points awarded', () => {
