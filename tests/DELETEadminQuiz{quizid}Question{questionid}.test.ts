@@ -41,6 +41,9 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
+  // login registered session to make quiz and question
+  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+
   // Make quizId
   responseCreate = requestAdminQuizCreate(
     session,
@@ -56,9 +59,6 @@ beforeEach(() => {
     'Question'
   );
   questionId = responseCreateQuestion.body.questionId;
-
-  // login registered session
-  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 });
 
 
