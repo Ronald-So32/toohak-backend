@@ -1,0 +1,109 @@
+import {
+  requestClear,
+  responseInterface,
+  requestAdminAuthLogin,
+  requestAdminAuthLogout,
+  requestAdminQuizTransfer,
+  requestAdminAuthRegister,
+  requestAdminQuizCreate
+} from './testsHelper';
+
+import { describe } from 'node:test';
+
+const OK = 200;
+const BADREQUEST = 400;
+const UNAUTHORISED = 401;
+const FORBIDDEN = 403;
+const quizIdOffset = 727;
+
+let responseRegister: responseInterface;
+let responseCreate: responseInterface;
+let session: string;
+let session2: string;
+let quizId: number;
+let quizId2: number;
+
+
+beforeEach(() => {
+  requestClear();
+  responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+  responseCreate = requestAdminQuizCreate(
+    session,
+    'Name',
+    'Description'
+  );
+  quizId = responseCreate.body.quizId;
+
+  responseRegister = requestAdminAuthRegister(
+    'z7277273@ad.unsw.edu.au',
+    'Password2',
+    'First2',
+    'Last2'
+  );
+  session2 = responseRegister.body.session;
+  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+  responseCreate = requestAdminQuizCreate(
+    session2,
+    'Name2',
+    'Description2'
+  );
+  quizId2 = responseCreate.body.quizId2;
+});
+
+// error 400 (BADREQUEST)
+describe('userEmail is not a real user, userEmail is the current logged in user, Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
+  
+})
+
+// error 401(UNAUTHORISED)
+describe('Session is empty or invalid (does not refer to valid logged in user session)', () => {
+  test('session invalid', () => {
+    const invalidSessionRes = requestAdminQuizTransfer(quizId, session + 'Invalid Offset', 'z7277273@ad.unsw.edu.au');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+  test('Session is logged out', () => {
+    requestAdminAuthLogout(session);
+    const invalidSessionRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+  // does session recieving the tranfer need to be logged in?
+});
+
+// error 403
+describe('Valid session is provided, but user is not an owner of this quiz or quiz does not exist', () => {
+  test('User is not owner of quiz', () => {
+    // responseRegister = requestAdminAuthRegister(
+    //   'z7277273@ad.unsw.edu.au',
+    //   'Password2',
+    //   'First2',
+    //   'Last2'
+    // );
+    // session2 = responseRegister.body.session;
+    // requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+    // responseCreate = requestAdminQuizCreate(
+    //   session2,
+    //   'Name2',
+    //   'Description2'
+    // );
+    // quizId2 = responseCreate.body.quizId2;
+    // quizId2 is owned by session2 not 1
+    const invalidSessionRes = requestAdminQuizTransfer(quizId2, session, 'z7277273@ad.unsw.edu.au');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
+
+  test('quizId does not exist', () => {
+    const invalidSessionRes = requestAdminQuizTransfer(quizId + quizIdOffset, session, 'z7277273@ad.unsw.edu.au');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
+});
