@@ -126,13 +126,6 @@ describe('Test error cases', () => {
         reason: 'Description is more than 100 characters with spaces at the end'
       },
     ])('Invalid description - $reason', ({ description }) => {
-      // responseCreate = requestAdminQuizCreate(
-      //   session,
-      //   'Name',
-      //   'Valid Description'
-      //   );
-      // quizId = responseCreate.body.quizId;
-
       const resposneUpdate = requestAdminQuizUpdateDescription(
         quizId, 
         session, 
