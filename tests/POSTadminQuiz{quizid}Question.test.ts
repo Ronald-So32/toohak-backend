@@ -494,7 +494,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
         });
-        
+
         test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
           const questionBody = {
             "questionBody": {
@@ -531,6 +531,80 @@ describe('Testing POST /v1/admin/quiz', () => {
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
         });
+
+        test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
+          const questionBody = {
+            "questionBody": {
+              "question": "Question",
+              "timeLimit": 60,
+              "points": 5,
+              "answerOptions": [
+                {
+                  "answer": "Right",
+                  "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
+                }
+              ]
+            }
+          };
+          requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            questionBody
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+        });
+
+        describe('Valid timelimit', () => {
+          test.each([
+            {
+              timelimit: 1,
+              description: "Is a positive number"
+            },
+            {
+              timelimit: 180,
+              description: "Timelimit exceeds 3 minutes"
+            },
+          ])('$desription', ({ timelimit }) => {
+            const responseQuestionCreate = requestAdminQuizQuestionCreate(
+              quizId,
+              session,
+              {
+                "questionBody": {
+                  "question": "Question",
+                  timelimit,
+                  "points": 5,
+                  "answerOptions": [
+                    {
+                      "answer": "Right",
+                      "correct": true
+                    },
+                    {
+                      "answer": "Wrong",
+                      "correct": false
+                    }
+                  ]
+                }
+              }
+            );
+            expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+            expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          });
+
       })
       
       
