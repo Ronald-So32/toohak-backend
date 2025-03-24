@@ -5,7 +5,8 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizQuestionCreate,
   requestDeleteQuizQuestion,
-  requestAdminAuthLogin
+  requestAdminAuthLogin,
+  requestAdminAuthLogout
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -102,7 +103,7 @@ describe('Test error cases', () => {
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
   });
   
-  // test not logged in user
+  // not logged in user
   test('Session is invalid', () => {
     // Make other session
     responseRegister = requestAdminAuthRegister(
@@ -112,6 +113,8 @@ describe('Test error cases', () => {
       'Last2'
     );
     session2 = responseRegister.body.session;
+    // login to make quiz and question
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
 
     // make other quiz
     responseCreate = requestAdminQuizCreate(
@@ -128,7 +131,9 @@ describe('Test error cases', () => {
       'Question2'
     );
     questionId2 = responseCreateQuestion.body.questionId;
-    // this session is not logged in 
+    // logout session2
+    requestAdminAuthLogout(session2);
+    // Test not logged in session will have question deleted
     const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
@@ -144,6 +149,8 @@ describe('Test error cases', () => {
       'Last2'
     );
     session2 = responseRegister.body.session;
+    // login first to make quiz under session2 
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
     // Make other quiz under session2 
     responseCreate = requestAdminQuizCreate(
       session2,
