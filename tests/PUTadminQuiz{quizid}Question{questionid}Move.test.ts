@@ -200,3 +200,15 @@ describe('error 401 cases', () => {
   });
 });
 
+describe('Valid case', () => {
+  test('Session, quizId, questionId, and newPosition is valid', () => {
+    const validRes = requestAdminQuizQuestionMove(
+      quizId, 
+      questionId, 
+      session, 
+      '1',
+    );
+    expect(validRes.body).toStrictEqual({});
+    expect(validRes.statusCode).toStrictEqual(OK);
+  });
+});
