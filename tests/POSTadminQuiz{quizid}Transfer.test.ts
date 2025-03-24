@@ -22,6 +22,7 @@ let session: string;
 let session2: string;
 let quizId: number;
 let quizId2: number;
+let quizId3: number;
 
 
 beforeEach(() => {
@@ -48,7 +49,7 @@ beforeEach(() => {
     'Last2'
   );
   session2 = responseRegister.body.session;
-  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+  requestAdminAuthLogin('z7277232@ad.unsw.edu.au','Password2');
   responseCreate = requestAdminQuizCreate(
     session2,
     'Name2',
@@ -59,7 +60,26 @@ beforeEach(() => {
 
 // error 400 (BADREQUEST)
 describe('userEmail is not a real user, userEmail is the current logged in user, Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
-  
+  test('userEmail is the current logged in user', () => {
+    // is below line necessary? 
+    requestAdminAuthLogout(session2);
+    const invalidEmailRes = requestAdminQuizTransfer(quizId, session, 'z7277272@ad.unsw.edu.au');
+    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
+  });
+  test('Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
+    requestAdminAuthLogout(session2);
+    // same name as quizId2 name 
+    responseCreate = requestAdminQuizCreate(
+      session,
+      'Name2',
+      'Description2'
+    );
+    quizId3 = responseCreate.body.quizId3;
+    const invalidEmailRes = requestAdminQuizTransfer(quizId3, session, 'z7277273@ad.unsw.edu.au');
+    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
+  });
 })
 
 // error 401(UNAUTHORISED)
@@ -81,21 +101,21 @@ describe('Session is empty or invalid (does not refer to valid logged in user se
 // error 403
 describe('Valid session is provided, but user is not an owner of this quiz or quiz does not exist', () => {
   test('User is not owner of quiz', () => {
-    // responseRegister = requestAdminAuthRegister(
-    //   'z7277273@ad.unsw.edu.au',
-    //   'Password2',
-    //   'First2',
-    //   'Last2'
-    // );
-    // session2 = responseRegister.body.session;
-    // requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
-    // responseCreate = requestAdminQuizCreate(
-    //   session2,
-    //   'Name2',
-    //   'Description2'
-    // );
-    // quizId2 = responseCreate.body.quizId2;
-    // quizId2 is owned by session2 not 1
+    responseRegister = requestAdminAuthRegister(
+      'z7277273@ad.unsw.edu.au',
+      'Password2',
+      'First2',
+      'Last2'
+    );
+    session2 = responseRegister.body.session;
+    requestAdminAuthLogin('z7277232@ad.unsw.edu.au','Password2');
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId2;
+    // quizId2 is owned by session2 not session
     const invalidSessionRes = requestAdminQuizTransfer(quizId2, session, 'z7277273@ad.unsw.edu.au');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
