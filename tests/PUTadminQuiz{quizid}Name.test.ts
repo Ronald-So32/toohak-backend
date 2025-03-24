@@ -150,7 +150,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         },
         {
           description: 'Quiz name with exactly 30 characters',
-          name: 'This is exactly thirty character',
+          name: 'This is exactly thirty charsss',
         },
       ])('Valid quiz name - $description', ({ name }) => {
         const responseUpdate = requestAdminQuizUpdateName(
