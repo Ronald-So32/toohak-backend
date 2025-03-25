@@ -51,6 +51,20 @@ export interface quizIdInterface {
 
 /**
  * A instance of this object:
+ * {
+ *    questionId: 1,
+ * }
+ *
+ * @typedef {object} QuestionId - Object containing just the question Id
+ *
+ * @property {number} questionId - Id of the question
+ */
+export interface questionIdInterface {
+  questionId: number;
+}
+
+/**
+ * A instance of this object:
  *{
     quizId: 1,
     name: 'My Quiz',
