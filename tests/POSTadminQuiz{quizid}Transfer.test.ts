@@ -5,7 +5,8 @@ import {
   requestAdminAuthLogout,
   requestAdminQuizTransfer,
   requestAdminAuthRegister,
-  requestAdminQuizCreate
+  requestAdminQuizCreate,
+  requestGetQuizList
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -74,13 +75,19 @@ describe('error code 400 cases', () => {
       email: 'z7277272@ad.unsw.edu.au',
     },
   ])('$description', ({quizId, session, email}) => {
+    // get quiz list before calling admintransfer
+    const listBefore = requestGetQuizList(session);
     const invalidRes = requestAdminQuizTransfer(quizId, session, email);
     expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidRes.statusCode).toStrictEqual(BADREQUEST);
+    // check that tranasfer has not occured
+    expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
   })
 
   test('Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
     requestAdminAuthLogout(session2);
+    // get quiz list before calling admintransfer
+    const listBefore = requestGetQuizList(session);
     // same name as quizId2 name 
     responseCreate = requestAdminQuizCreate(
       session,
@@ -91,6 +98,8 @@ describe('error code 400 cases', () => {
     const invalidQuizIdlRes = requestAdminQuizTransfer(quizId3, session, 'z7277273@ad.unsw.edu.au');
     expect(invalidQuizIdlRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidQuizIdlRes.statusCode).toStrictEqual(BADREQUEST);
+    // check that tranasfer has not occured
+    expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
   });
 });
 
