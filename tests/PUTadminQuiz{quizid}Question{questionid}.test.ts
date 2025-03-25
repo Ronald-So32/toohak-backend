@@ -634,8 +634,45 @@ describe('Test valid cases', () => {
     const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
     expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+
+    describe('Valid timelimit', () => {
+      test.each([
+        {
+          timeLimit: 1,
+          description: "Is a positive number"
+        },
+        {
+          timeLimit: 180,
+          description: "Timelimit exceeds 3 minutes"
+        },
+      ])('$desription', ({ timeLimit }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            "questionBody": {
+              "question": "Question",
+              timeLimit,
+              "points": 5,
+              "answerOptions": [
+                {
+                  "answer": "Right",
+                  "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
+                }
+              ]
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
+
   });
-
-
 });
 
