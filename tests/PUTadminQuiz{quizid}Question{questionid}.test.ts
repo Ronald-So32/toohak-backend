@@ -5,7 +5,8 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminQuizQuestionUpdate
+  requestAdminQuizQuestionUpdate,
+  requestAdminAuthLogout
   // requestGetQuiz
 } from './testsHelper';
 
@@ -20,6 +21,7 @@ const questionIdOffset = 999;
 
 let responseRegister: responseInterface;
 let session: string;
+let session2: string;
 let quizId: number;
 let questionId: number;
 let questionId2: number;
@@ -300,5 +302,51 @@ describe('error case 400 examples', () => {
 });
 
 describe('Test cases for error 401', () => {
+  test('Logged out session', () => {
+    requestAdminAuthLogout(session);
+    const response = requestAdminQuizQuestionUpdate(
+      quizId,
+      session,
+      {
+        "questionBody": {
+          "question": "Question",
+          "timeLimit": 20,
+          "points": 5,
+          "answerOptions": [
+            { "answer": "Right", "correct": true },
+            { "answer": "Wrong", "correct": false }
+          ]
+        }
+      }
+    );
+    expect(response.body).toStrictEqual({ error: expect.any(String) });
+    expect(response.statusCode).toStrictEqual(UNAUTHORISED);
+  });
   
+  test('Invalid user session', () => {
+    requestAdminAuthLogout(session);
+    const response = requestAdminQuizQuestionUpdate(
+      quizId,
+      session + 'Invalid Session',
+      {
+        "questionBody": {
+          "question": "Question",
+          "timeLimit": 20,
+          "points": 5,
+          "answerOptions": [
+            { "answer": "Right", "correct": true },
+            { "answer": "Wrong", "correct": false }
+          ]
+        }
+      }
+    );
+    expect(response.body).toStrictEqual({ error: expect.any(String) });
+    expect(response.statusCode).toStrictEqual(UNAUTHORISED);
+  });
 });
+
+describe('Test cases for error 403', () => {
+  test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
+    
+  })
+})
