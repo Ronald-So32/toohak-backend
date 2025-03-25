@@ -46,71 +46,64 @@ describe('Test correct return type and normal usage case', () => {
     const updateQuizDescription = requestAdminQuizUpdateDescription(quizId, session, 'New Description');
     expect(updateQuizDescription.body).toStrictEqual({});
     expect(updateQuizDescription.statusCode).toStrictEqual(OK);
+    const checkInfo = requestGetQuiz(quizId, session);
+    expect(checkInfo.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'New Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    expect(checkInfo.statusCode).toStrictEqual(OK);
   });
 });
 
 
 describe('Test error cases', () => {
   test('Testing when the session is invalid', () => {
+    const beforeInfo = requestGetQuiz(quizId, session);
     const invalidIdres = requestAdminQuizUpdateDescription(quizId, session + 'Invalid Session', 'New Description');
     expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidIdres.statusCode).toStrictEqual(UNAUTHORISED);
-    // To make sure that it doe not change any existing quiz
-    const checkInfo = requestGetQuiz(quizId, session);
-    expect(checkInfo.body).toStrictEqual({
-      quizId: quizId,
-      name: 'Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
-      description: 'Description',
-      numQuestions: 0,
-      questions: [],
-      timeLimit: 0
-    });
-    expect(checkInfo.statusCode).toStrictEqual(OK);
+    // To make sure that it does not change existing quiz
+    expect(requestGetQuiz(quizId, session).body).toStrictEqual(beforeInfo);
   });
 
   test('Testing when the session is valid but the quizId is not', () => {
-    const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
-    expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
-    // To make sure that it does not change any exist quiz of the user
-    const checkInfo = requestGetQuiz(quizId, session);
-    expect(checkInfo.body).toStrictEqual({
-      quizId: quizId,
-      name: 'Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
-      description: 'Description',
-      numQuestions: 0,
-      questions: [],
-      timeLimit: 0
+    const beforeInfo = requestGetQuiz(quizId, session);
+    const responseInvlaidQuizId = requestAdminQuizUpdateDescription(quizId + quizIdOffset, session, 'New Description');
+    expect(responseInvlaidQuizId.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseInvlaidQuizId.statusCode).toStrictEqual(FORBIDDEN);
+     // To make sure that it does not change existing quiz
+     expect(requestGetQuiz(quizId, session).body).toStrictEqual(beforeInfo);
+     expect(beforeInfo.statusCode).toStrictEqual(OK);
     });
-    expect(checkInfo.statusCode).toStrictEqual(OK);
-  });
 
-  test('Invalid quizId - When quiz is not owned by session', () => {
-    responseRegister = requestAdminAuthRegister(
-      'z7277273@ad.unsw.edu.au',
-      'Password2',
-      'First2',
-      'Last2'
-    );
-    session2 = responseRegister.body.session;
-    // Create a quiz for first user
-    responseCreate = requestAdminQuizCreate(
-    session,
-    'Quiz for Ownership Test',
-    'Description'
-    );
-    quizId2 = responseCreate.body.quizId2;
-    // Try to update first user's quiz with second user's ID
-    const invalidIdres = requestAdminQuizUpdateDescription(quizId2, session2, 'New Description');
-    expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidIdres.statusCode).toStrictEqual(FORBIDDEN);
-  });
+    test('Invalid quizId - When quiz is not owned by session', () => {
+      responseRegister = requestAdminAuthRegister(
+        'z7277273@ad.unsw.edu.au',
+        'Password2',
+        'First2',
+        'Last2'
+      );
+      session2 = responseRegister.body.session;
+      // Create a quiz for first user
+      responseCreate = requestAdminQuizCreate(
+      session,
+      'Quiz for Ownership Test',
+      'Description'
+      );
+      quizId2 = responseCreate.body.quizId2;
+      // Try to update first user's quiz with second user's ID
+      const invalidIdres = requestAdminQuizUpdateDescription(quizId2, session2, 'New Description');
+      expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
+      expect(invalidIdres.statusCode).toStrictEqual(FORBIDDEN);
+    });
 
-  // To test the validity of descriptions
+    // To test the validity of descriptions
   describe('Test validity of Description', () => {
     // To test the Invalid descriptions
     test.each([
@@ -127,6 +120,7 @@ describe('Test error cases', () => {
         reason: 'Description is more than 100 characters with spaces at the end'
       },
     ])('Invalid description - $reason', ({ description }) => {
+      const infoBefore = requestGetQuiz(quizId, session);
       const resposneUpdate = requestAdminQuizUpdateDescription(
         quizId, 
         session, 
@@ -135,8 +129,7 @@ describe('Test error cases', () => {
       expect(resposneUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(resposneUpdate.statusCode).toStrictEqual(BADREQUEST);
       // check that quiz description has not been changed 
-      const infoBefore = requestGetQuiz(quizId, session);
-      expect(requestGetQuiz(quizId, session)).toStrictEqual(infoBefore);
+      expect(requestGetQuiz(quizId, session).body).toStrictEqual(infoBefore.body);
     });
 
     // To test valid descriptions
@@ -172,3 +165,5 @@ describe('Test error cases', () => {
     });
   });
 });
+
+  
