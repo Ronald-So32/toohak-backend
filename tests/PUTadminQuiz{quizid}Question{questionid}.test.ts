@@ -23,6 +23,7 @@ let responseRegister: responseInterface;
 let session: string;
 let session2: string;
 let quizId: number;
+let quizId2: number;
 let questionId: number;
 let questionId2: number;
 let questionId3: number;
@@ -268,7 +269,7 @@ describe('error case 400 examples', () => {
           ]
         }
       };
-      const response = requestAdminQuizQuestionUpdate(quizId, questionId, updateQuestionBody);
+      const response = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
       expect(response.body).toStrictEqual({ error: expect.any(String) });
       expect(response.statusCode).toStrictEqual(BADREQUEST);
     });
@@ -282,6 +283,7 @@ describe('error case 400 examples', () => {
     ])('$description', ({ points }) => {
       const response = requestAdminQuizQuestionUpdate(
         quizId,
+        questionId,
         session,
         {
           "questionBody": {
@@ -306,6 +308,7 @@ describe('Test cases for error 401', () => {
     requestAdminAuthLogout(session);
     const response = requestAdminQuizQuestionUpdate(
       quizId,
+      questionId,
       session,
       {
         "questionBody": {
@@ -327,6 +330,7 @@ describe('Test cases for error 401', () => {
     requestAdminAuthLogout(session);
     const response = requestAdminQuizQuestionUpdate(
       quizId,
+      questionId, 
       session + 'Invalid Session',
       {
         "questionBody": {
@@ -347,6 +351,62 @@ describe('Test cases for error 401', () => {
 
 describe('Test cases for error 403', () => {
   test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
+    responseRegister = requestAdminAuthRegister(
+      'z7277272@ad.unsw.edu.au',
+      'Password1',
+      'First',
+      'Last'
+    );
+    session2 = responseRegister.body.session;
+
+    const responseQuizCreate = requestAdminQuizCreate(
+      session,
+      'Quiz Name',
+      'Description'
+    );
+    quizId2 = responseQuizCreate.body.quizId;
+  
+    responseQuestionCreate = requestAdminQuizQuestionCreate(
+      quizId,
+      questionId,
+      session,
+      {
+        "questionBody": {
+          "question": "Question",
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "correct": true
+            },
+            {
+              "answer": "Wrong",
+              "correct": false
+            }
+          ]
+        }
+      }
+    );
+    questionId2 = responseQuestionCreate.body.questionId;
     
+    const response = requestAdminQuizQuestionUpdate(
+      quizId2,
+      questionId,
+      session,
+      {
+        "questionBody": {
+          "question": "Question",
+          "timeLimit": 20,
+          "points": 5,
+          "answerOptions": [
+            { "answer": "Right", "correct": true },
+            { "answer": "Wrong", "correct": false }
+          ]
+        }
+      }
+    );
+    expect(response.body).toStrictEqual({ error: expect.any(String) });
+    expect(response.statusCode).toStrictEqual(FORBIDDEN);
   })
 })
