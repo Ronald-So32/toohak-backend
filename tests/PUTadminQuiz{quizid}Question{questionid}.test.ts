@@ -192,7 +192,7 @@ describe('Test invalid cases', () => {
           description: "Answer containing more than 30 characters"
         }
       ])('$description', ({ answerOptions }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionCreate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
           questionId,
           session,
@@ -216,7 +216,7 @@ describe('Test invalid cases', () => {
         { timeLimit: 0, description: "Neither a positive or a negative number" },
         { timeLimit: 181, description: "Timelimit exceeds 3 minutes" },
       ])('$description', ({ timeLimit }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionCreate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
           questionId,
           session,
@@ -591,6 +591,51 @@ describe('Test valid cases', () => {
       expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
     });
   });
+
+  test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
+    const questionBody = {
+      "questionBody": {
+        "question": "Question",
+        "timeLimit": 59,
+        "points": 5,
+        "answerOptions": [
+          {
+            "answer": "Right",
+            "correct": true
+          },
+          {
+            "answer": "Wrong",
+            "correct": false
+          }
+        ]
+      }
+    };
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    questionId = responseQuestionCreate.body.questionId;
+
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    questionId2 = responseQuestionCreate.body.questionId;
+    
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    questionId3 = responseQuestionCreate.body.questionId;
+
+    // summed with other two question bodies, time limit equal 3 min exaclty
+    const updateQuestionBody = {
+      "questionBody": {
+        "question": "Question",
+        "timeLimit": 62,
+        "points": 5,
+        "answerOptions": [
+          { "answer": "Right", "correct": true },
+          { "answer": "Wrong", "correct": false }
+        ]
+      }
+    };
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
+    expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+
 
 });
 
