@@ -434,7 +434,7 @@ describe('Test invalid cases', () => {
 
 describe('Test valid cases', () => {
   test('Testing correct return value', () => {
-    const responseQuestionUpdate = requestAdminQuizQuestionCreate(
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
       quizId,
       questionId,
       session,
@@ -476,7 +476,7 @@ describe('Test valid cases', () => {
         description: "Containing different types of chacters"
       }
     ])('$description', ({ question }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionCreate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
       quizId,
       questionId,
       session,
@@ -502,5 +502,95 @@ describe('Test valid cases', () => {
       expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
     });
   });
+
+  describe('Valid answers', () => {
+    test.each([
+      {
+        answerOptions: [
+          {
+            "answer": "Right",
+            "correct": true
+          },
+          {
+            "answer": "Wrong",
+            "correct": false
+          }
+        ],
+        description: "Containing exactly 2 answers"
+      },
+      {
+        answerOptions: [
+          {
+            "answer": "Right",
+            "correct": true
+          },
+          {
+            "answer": "Wrong1",
+            "correct": false
+          },
+          {
+            "answer": "Wrong2",
+            "correct": false
+          },
+          {
+            "answer": "Wrong3",
+            "correct": false
+          },
+          {
+            "answer": "Wrong4",
+            "correct": false
+          },
+          {
+            "answer": "Wrong5",
+            "correct": false
+          },
+        ],
+        description: "Containing exactly 6 answers"
+      },
+      {
+        answerOptions: [
+          {
+            "answer": "R",
+            "correct": true
+          },
+          {
+            "answer": "Wrong",
+            "correct": false
+          }
+        ],
+        description: "Answer containing exactly 1 character"
+      },
+      {
+        answerOptions: [
+          {
+            "answer": "Right".repeat(6),
+            "correct": true
+          },
+          {
+            "answer": "Wrong",
+            "correct": false
+          }
+        ],
+        description: "Answer containing exactly 30 character"
+      },
+    ])('$description', ({ answerOptions }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session,
+        {
+          "questionBody": {
+            "question": "Question",
+            "timeLimit": 4,
+            "points": 5,
+            answerOptions
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
+  });
+
 });
 
