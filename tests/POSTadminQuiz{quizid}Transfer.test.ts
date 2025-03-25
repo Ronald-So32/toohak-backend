@@ -24,6 +24,49 @@ let session2: string;
 let quizId: number;
 let quizId2: number;
 let quizId3: number;
+let listBefore: responseInterface;
+let listBefore2: responseInterface;
+
+
+
+describe('Valid case', () => {
+  requestClear();
+  responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
+  responseCreate = requestAdminQuizCreate(
+    session,
+    'Name',
+    'Description'
+  );
+  quizId = responseCreate.body.quizId;
+
+  responseRegister = requestAdminAuthRegister(
+    'z7277273@ad.unsw.edu.au',
+    'Password2',
+    'First2',
+    'Last2'
+  );
+  session2 = responseRegister.body.session;
+  test('Valid email, session, quizid, etc', () => {
+    const validRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
+    expect(validRes.body).toStrictEqual({});
+    expect(validRes.statusCode).toStrictEqual(OK);
+    expect(requestGetQuizList(session2).body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: expect.any(Number),
+          name: 'Name',
+        },
+      ]
+    });
+  });
+});
 
 
 beforeEach(() => {
@@ -57,7 +100,14 @@ beforeEach(() => {
     'Description2'
   );
   quizId2 = responseCreate.body.quizId2;
+
+  // get quiz list before calling admintransfer
+  listBefore = requestGetQuizList(session);
+  // check session2 did not recieve quiz from session 1
+  listBefore2 = requestGetQuizList(session2);
 });
+
+
 
 // error 400 (BADREQUEST)
 describe('error code 400 cases', () => {
@@ -75,10 +125,6 @@ describe('error code 400 cases', () => {
       email: 'z7277272@ad.unsw.edu.au',
     },
   ])('$description', ({quizId, session, email}) => {
-    // get quiz list before calling admintransfer
-    const listBefore = requestGetQuizList(session);
-    // check session2 did not recieve quiz from session 1
-    const listBefore2 = requestGetQuizList(session2);
     const invalidRes = requestAdminQuizTransfer(quizId, session, email);
     expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidRes.statusCode).toStrictEqual(BADREQUEST);
@@ -89,10 +135,6 @@ describe('error code 400 cases', () => {
 
   test('Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
     requestAdminAuthLogout(session2);
-    // get quiz list before calling admintransfer
-    const listBefore = requestGetQuizList(session);
-    // check session2 did not recieve quiz from session 1
-    const listBefore2 = requestGetQuizList(session2);
     // same name as quizId2 name 
     responseCreate = requestAdminQuizCreate(
       session,
@@ -115,12 +157,18 @@ describe('Session is empty or invalid (does not refer to valid logged in user se
     const invalidSessionRes = requestAdminQuizTransfer(quizId, session + 'Invalid Offset', 'z7277273@ad.unsw.edu.au');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    // check that tranasfer has not occured
+    expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
+    expect(requestGetQuizList(session2).body).toStrictEqual(listBefore2.body);
   });
   test('Session is logged out', () => {
     requestAdminAuthLogout(session);
     const invalidSessionRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    // check that tranasfer has not occured
+    expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
+    expect(requestGetQuizList(session2).body).toStrictEqual(listBefore2.body);
   });
 
   test('Session with no quizzes', () => {
@@ -152,10 +200,7 @@ describe('error 403 cases', () => {
       email: 'z7277273@ad.unsw.edu.au'
     },
   ])('$description', ({quizId, session, email}) => {
-    // get quiz list before calling admintransfer
-    const listBefore = requestGetQuizList(session);
-    // check session2 did not recieve quiz from session 1
-    const listBefore2 = requestGetQuizList(session2);
+    
     const invalidRes = requestAdminQuizTransfer(quizId, session, email);
     expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);
@@ -165,10 +210,3 @@ describe('error 403 cases', () => {
   });
 });
 
-describe('Valid case', () => {
-  test('Valid email, session, quizid, etc', () => {
-    const validRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
-    expect(validRes.body).toStrictEqual({});
-    expect(validRes.statusCode).toStrictEqual(OK);
-  });
-});
