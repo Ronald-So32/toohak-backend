@@ -59,21 +59,26 @@ beforeEach(() => {
 });
 
 // error 400 (BADREQUEST)
-describe('userEmail is not a real user, userEmail is the current logged in user, Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
-  test('userEmail is a real user', () => {
-    // is below line necessary? 
-    requestAdminAuthLogout(session2);
-    // not real email = zNOTREAL@ad.unsw.edu.au
-    const invalidEmailRes = requestAdminQuizTransfer(quizId, session, 'zNOTREAL@ad.unsw.edu.au');
-    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
-  });
-  test('userEmail is the current logged in user', () => {
-    requestAdminAuthLogout(session2);
-    const invalidEmailRes = requestAdminQuizTransfer(quizId, session, 'z7277272@ad.unsw.edu.au');
-    expect(invalidEmailRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidEmailRes.statusCode).toStrictEqual(BADREQUEST);
-  });
+describe('error code 400 cases', () => {
+  test.each([
+    {
+      description: 'userEmail is not a real user',
+      quizId: quizId,
+      session: session,
+      email: 'zNOTREAL@ad.unsw.edu.au',
+    },
+    {
+      description: 'userEmail is the current logged in user',
+      quizId: quizId,
+      session: session,
+      email: 'z7277272@ad.unsw.edu.au',
+    },
+  ])('$description', ({quizId, session, email}) => {
+    const invalidRes = requestAdminQuizTransfer(quizId, session, email);
+    expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidRes.statusCode).toStrictEqual(BADREQUEST);
+  })
+
   test('Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
     requestAdminAuthLogout(session2);
     // same name as quizId2 name 
@@ -87,7 +92,7 @@ describe('userEmail is not a real user, userEmail is the current logged in user,
     expect(invalidQuizIdlRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidQuizIdlRes.statusCode).toStrictEqual(BADREQUEST);
   });
-})
+});
 
 // error 401(UNAUTHORISED)
 describe('Session is empty or invalid (does not refer to valid logged in user session)', () => {
