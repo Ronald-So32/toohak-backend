@@ -1,3 +1,4 @@
+import { adminAuthLogin } from '../src/auth';
 import {
   requestClear,
   responseInterface,
@@ -42,6 +43,13 @@ describe('Invalid test case', () => {
     const res = requestAdminAuthLogout(session + 'Invalid Session');
     expect(res.body).toStrictEqual({ error: expect.any(String) });
     expect(res.statusCode).toStrictEqual(UNAUTHORISED);
+    // Confirm cannot login because already logged in
+    const responseLogin = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1'
+    );
+    expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseLogin.statusCode).toStrictEqual(UNAUTHORISED);
   });
   
   test('Logging out after already logging out once', () => {
@@ -52,6 +60,14 @@ describe('Invalid test case', () => {
     const againRes = requestAdminAuthLogout(session);
     expect(res.body).toStrictEqual({ error: expect.any(String) });
     expect(res.statusCode).toStrictEqual(UNAUTHORISED);
+
+    // confirm can log back in again
+    const responseLogin = requestAdminAuthLogin(
+      'z7277272@ad.unsw.edu.au',
+      'Password1'
+    );
+    expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
+    expect(responseLogin.statusCode).toStrictEqual(OK);
   });
 
   // Need more test cases? 
