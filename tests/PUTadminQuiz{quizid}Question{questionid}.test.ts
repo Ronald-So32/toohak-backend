@@ -710,7 +710,6 @@ describe('Test valid cases', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
-
   });
 });
 
