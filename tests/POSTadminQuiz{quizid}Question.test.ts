@@ -1,6 +1,7 @@
 import {
   requestClear,
   requestAdminAuthRegister,
+  requestAdminAuthLogin,
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate
@@ -18,6 +19,7 @@ const questionIdOffset = 999;
 
 let responseRegister: responseInterface;
 let session: string;
+let quizId: number;
 let responseQuizCreate: responseInterface;
 
 beforeEach(() => {
@@ -32,7 +34,7 @@ beforeEach(() => {
   
   requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 
-  const responseQuizCreate = requestAdminQuizQuestionCreate(
+  const responseQuizCreate = requestAdminQuizCreate(
     session,
     'Quiz Name',
     'Description'
@@ -174,8 +176,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             question: "",
             description: "Empty string"
           }
-        ])
-      })('$description', ({ question }) => {
+        ])('$description', ({ question }) => {
         const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
           session,
@@ -196,9 +197,10 @@ describe('Testing POST /v1/admin/quiz', () => {
               ]
             }
           }
-        );
-        expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        })
       })
 
       describe('Valid question strings', () => {
@@ -215,9 +217,8 @@ describe('Testing POST /v1/admin/quiz', () => {
             question: "Ab1!@#$%^&*()_+-= []{}\\|'\";:?/.,<>`~",
             description: "Containing different types of chacters"
           }
-        ])
-      })('$description', ({ question }) => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        ])('$description', ({ question }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
           session,
           {
@@ -237,10 +238,11 @@ describe('Testing POST /v1/admin/quiz', () => {
               ]
             }
           }
-        );
-        expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-      expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-      })
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+        });
+      });
     });
 
     describe('Testing the answers', () => {
@@ -344,22 +346,22 @@ describe('Testing POST /v1/admin/quiz', () => {
             ],
             description: "Answer containing more than 30 character"
           }
-        ])
-      })('$description', ({ answerOptions }) => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
-          quizId,
-          session,
-          {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
-              "points": 5,
-              answerOptions
+        ])('$description', ({ answerOptions }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            {
+              "questionBody": {
+                "question": "Question",
+                "timeLimit": 4,
+                "points": 5,
+                answerOptions
+              }
             }
-          }
-        );
-        expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        })
       });
 
       describe('Valid answers', () => {
@@ -745,7 +747,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       'Quiz Name2',
       'Description2'
     );
-    quizId2 = responseQuizCreate2.body.quizId;
+    const quizId2 = responseQuizCreate2.body.quizId;
 
     responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId2,
