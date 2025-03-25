@@ -50,4 +50,26 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
     // The suggestion should be a non-empty string
     expect(responseQuestionSuggestion.body.question.length).toBeGreaterThan(0);
   });
+
+  describe('Testing for error responses', () => {
+    test('Testing when the session is invalid', () => {
+      const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
+        quizId,
+        session + 'Invalid Session'
+      );
+      
+      expect(responseQuestionSuggestion.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+    });
+
+    test('Testing when the session is valid but the quizId is not', () => {
+      const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
+        quizId + quizIdOffset,
+        session
+      );
+      
+      expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+    });
+  });
 });
