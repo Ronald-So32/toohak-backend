@@ -27,9 +27,11 @@ beforeEach(() => {
   session = responseRegister.body.session;
   responseCreate = requestAdminQuizCreate(
     session,
-    /* For this specific test case, we use different contents since its testing
+    /* 
+    For this specific test case, we use different contents since its testing
     response from an LLM.
     */
+   
     'Computer Science Quiz',
     'A quiz about computer science concepts'
   );
@@ -71,5 +73,36 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
     });
+  });
+
+  test('Testing GET /v1/admin/quiz/{quizid}/question/suggestion works as intended', () => {
+    /* 
+    Create a second quiz with different name/description to test
+    that suggestions are contextually relevant 
+    */
+    const responseCreate2 = requestAdminQuizCreate(
+      session,
+      'History Quiz',
+      'A quiz about world history events'
+    );
+    const quizId2 = responseCreate2.body.quizId;
+    
+    // Get suggestions for both quizzes
+    const computerQuizSuggestion = requestGetQuizQuestionSuggestion(
+      quizId,
+      session
+    );
+    
+    const historyQuizSuggestion = requestGetQuizQuestionSuggestion(
+      quizId2,
+      session
+    );
+    
+    // Both should return valid suggestions
+    expect(computerQuizSuggestion.statusCode).toStrictEqual(OK);
+    expect(computerQuizSuggestion.body).toHaveProperty('question');
+    
+    expect(historyQuizSuggestion.statusCode).toStrictEqual(OK);
+    expect(historyQuizSuggestion.body).toHaveProperty('question');
   });
 });
