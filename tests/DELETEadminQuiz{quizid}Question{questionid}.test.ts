@@ -110,6 +110,11 @@ describe('error case 401 tests', () => {
     const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+
+    // check question has not been deleted 
+    const afterInfo = requestGetQuiz(quizId2, session2);
+    expect(afterInfo.body).toStrictEqual(beforeInfo.body);
+    expect(afterInfo.statusCode).toStrictEqual(OK);
   });
 
   test('Session is empty - session has no quizzes', () => {
