@@ -9,7 +9,8 @@ import {
   quizSummariesInterface,
   quizIdInterface,
   quizDetailsInterface,
-  quizGetDetailsInterface
+  quizGetDetailsInterface,
+  questionIdInterface
 } from './functionsHelper';
 
 /**
@@ -343,4 +344,41 @@ export function adminQuizDescriptionUpdate(
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
 
   return {};
+}
+
+export function adminQuizQuestionCreate(
+  userId: number,
+  quizId: number,
+  questionBody: any
+): questionIdInterface | errorInterface {
+  const data = getData();
+
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
+  }
+
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return { error: 'Invalid quiz ID' };
+  }
+
+  const validQuestion = validQuestionString(questionBody.question);
+  if (validQuestion !== true) {
+    return validQuestion as errorInterface;
+  }
+
+  // Return error for amount of answers
+  // Return error for non-positive time-limits
+  // Return error for sum of question time limits in the quiz exceeding 3 minutes
+  // Return error for question points awarded less than 1 or more than 10
+  // Return error for answer lesser than 1 character or more than 30 characters long
+  // Return error for duplicate answers within same question
+  // Return error for no correct answers
+
+  const id = createUUID();
+
+  return {
+    questionId: id
+  };
 }
