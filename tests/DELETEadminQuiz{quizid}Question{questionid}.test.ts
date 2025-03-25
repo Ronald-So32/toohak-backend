@@ -162,16 +162,14 @@ describe('Test valid case', () => {
   expect(res.statusCode).toStrictEqual(OK);
 });
 
-describe('Test error code 400 cases', () => {
+afterEach(() => {
+  // check quiz has not been deleted 
+  const afterInfo = requestGetQuiz(quizId, session);
+  expect(afterInfo.body).toStrictEqual(beforeInfo.body);
+  expect(afterInfo.statusCode).toStrictEqual(OK);
+})
 
-  afterEach(() => {
-    // check quiz has not been deleted 
-    const afterInfo = requestGetQuiz(quizId, session);
-    expect(afterInfo.body).toStrictEqual(beforeInfo.body);
-    expect(afterInfo.statusCode).toStrictEqual(OK);
-  })
-  // error 400 
-  // questionId that is to be deleted not under same quizId
+describe('Test error code 400 cases', () => {
   test('Question Id does not refer to a valid question within this quiz - question is under different quizId', () => {
     
     // Make other quiz
@@ -204,37 +202,52 @@ describe('Test error code 400 cases', () => {
   });
 });
 
+describe('error case 403 tests', () => {
+  test('Valid session is provided, but user is not an owner of this quiz', () => {
+    // Make other session
+    responseRegister = requestAdminAuthRegister(
+      'z7277273@ad.unsw.edu.au',
+      'Password2',
+      'First2',
+      'Last2'
+    );
+    session2 = responseRegister.body.session;
+    // login first to make quiz under session2 
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    // Make other quiz under session2 
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+    // Case: valid quizId, but session provided to delete quiz question is invalid
+    const invalidQuestionIdRes = requestDeleteQuizQuestion(quizId2, questionId, session);
+    expect(invalidQuestionIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidQuestionIdRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
+
+  test('Valid session is provided, but quiz does not exist', () => {
+    // quizId + quizIdOffset = non-existent quiz
+    const invalidQuizIdRes = requestDeleteQuizQuestion(quizId + quizIdOffset, questionId, session);
+    expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
+  })
 
 
+  test('Valid session is provided, but quiz does not exist - deleting already deleted question', () => {
+    responseCreateQuestion = requestAdminQuizQuestionCreate(
+      quizId,
+      session, 
+      'Question2'
+    );
+    questionId2 = responseCreateQuestion.body.questionId;
+    const res = requestDeleteQuizQuestion(quizId2, questionId, session);
+    expect(res.body).toStrictEqual({});
+    expect(res.statusCode).toStrictEqual(OK);
 
-// error 403
-test('Valid session is provided, but user is not an owner of this quiz', () => {
-  // Make other session
-  responseRegister = requestAdminAuthRegister(
-    'z7277273@ad.unsw.edu.au',
-    'Password2',
-    'First2',
-    'Last2'
-  );
-  session2 = responseRegister.body.session;
-  // login first to make quiz under session2 
-  requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
-  // Make other quiz under session2 
-  responseCreate = requestAdminQuizCreate(
-    session2,
-    'Name2',
-    'Description2'
-  );
-  quizId2 = responseCreate.body.quizId;
-  // Case: valid quizId, but session provided to delete quiz question is invalid
-  const invalidQuestionIdRes = requestDeleteQuizQuestion(quizId2, questionId, session);
-  expect(invalidQuestionIdRes.body).toStrictEqual({ error: expect.any(String) });
-  expect(invalidQuestionIdRes.statusCode).toStrictEqual(FORBIDDEN);
+    const invalidRes = requestDeleteQuizQuestion(quizId2, questionId, session);
+    expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);
+  });
 });
-
-test('Valid session is provided, but quiz does not exist', () => {
-  // quizId + quizIdOffset = non-existent quiz
-  const invalidQuizIdRes = requestDeleteQuizQuestion(quizId + quizIdOffset, questionId, session);
-  expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
-  expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
-})
