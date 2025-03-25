@@ -673,6 +673,43 @@ describe('Test valid cases', () => {
       });
     });
 
+    describe('Valid points awarded', () => {
+      test.each([
+        {
+          points: 1,
+          description: "Point awarded is exactly 1"
+        },
+        {
+          points: 10,
+          description: "Point awarded is exactly 10"
+        },
+      ])('$desription', ({ points }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          session,
+          {
+            "questionBody": {
+              "question": "Question",
+              "timeLimit": 4,
+              points,
+              "answerOptions": [
+                {
+                  "answer": "Right",
+                  "correct": true
+                },
+                {
+                  "answer": "Wrong",
+                  "correct": false
+                }
+              ]
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
+
   });
 });
 
