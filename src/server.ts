@@ -42,6 +42,64 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(result);
 });
 
+// PUT /v1/admin/quiz/:quizId/question/:questionId
+app.put('/v1/admin/quiz/:quizId/question/:questionId', async (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { quizId, questionId } = req.params;
+  const updatedData = req.body.questionBody;
+
+  try {
+    // Validate session
+    const userIdResult = findUserIdFromSession(session);
+    if ('error' in userIdResult) {
+      return res.status(401).json({ error: userIdResult.error });
+    }
+    const userId = userIdResult.userId;
+
+    // Fetch the quiz
+    const quiz = await getQuizById(quizId);
+    if (!quiz) {
+      return res.status(403).json({ error: 'Quiz does not exist or user is not authorized' });
+    }
+
+    // Check if the user owns the quiz
+    if (quiz.owner !== userId) {
+      return res.status(403).json({ error: 'User does not own this quiz' });
+    }
+
+    // Find the question
+    const question = quiz.questions.find(q => q.id === questionId);
+    if (!question) {
+      return res.status(400).json({ error: 'Invalid Question ID' });
+    }
+
+    // Validate updated data
+    const validationError = validateQuestionData(updatedData, quiz.questions);
+    if (validationError) {
+      return res.status(400).json({ error: validationError });
+    }
+
+    // Update question details
+    Object.assign(question, updatedData);
+
+    // Randomize answer colors
+    question.answerOptions.forEach(answer => {
+      answer.color = randomColorGenerator();
+    });
+
+    // Update last edited time
+    question.lastEdited = new Date().toISOString();
+
+    // Persist changes
+    await saveQuiz(quiz);
+
+    return res.status(200).json({ questionId: question.id });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
