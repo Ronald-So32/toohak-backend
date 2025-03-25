@@ -686,6 +686,7 @@ describe('Test valid cases', () => {
       ])('$desription', ({ points }) => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
+          questionId,
           session,
           {
             "questionBody": {
