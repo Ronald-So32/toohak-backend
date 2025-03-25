@@ -249,35 +249,35 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
-// GET /v1/admin/quiz/{quizId}/question/suggestion 
-app.get('/v1/admin/quiz/:quizid/question/suggestion', 
-        (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
+// GET /v1/admin/quiz/{quizId}/question/suggestion
+app.get('/v1/admin/quiz/:quizid/question/suggestion',
+  (req: Request, res: Response) => {
+    const session = req.headers.session as string;
+    const quizId = parseInt(req.params.quizid);
 
-  // Authenticate the user with the session
-  const userIdResult = findUserIdFromSession(session);
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
 
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
 
-  const userId = userIdResult.userId;
-  
-  // Get the quiz details to use in the prompt
-  const quizDetailsResult = adminQuizGet(userId, quizId);
-  
-  if ('error' in quizDetailsResult) {
-    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-  }
-  
-  // Extract the quiz details for the prompt
-  const quizName = quizDetailsResult.details.name;
-  const quizDescription = quizDetailsResult.details.description;
-  
-  try {
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const quizDetailsResult = adminQuizGet(userId, quizId);
+
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
+
+    // Extract the quiz details for the prompt
+    const quizName = quizDetailsResult.details.name;
+    const quizDescription = quizDetailsResult.details.description;
+
+    try {
     // Create a prompt for the LLM that includes the quiz context
-    const prompt = `You are a helpful assistant that generates quiz questions. 
+      const prompt = `You are a helpful assistant that generates quiz questions. 
     Please suggest a single question for a quiz with the following details:
     
     Quiz name: "${quizName}"
@@ -287,47 +287,47 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     The question should be between 5 and 50 characters.
     
     Respond with just the question text, nothing else.`;
-    
-    // Make the API call to Hugging Face
-    const response = request('POST', 
-      'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
-      headers: {
-        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      json: {
-        inputs: prompt
-      }
-    });
-    
-    // Parse the response
-    const responseBody = JSON.parse(response.getBody('utf8'));
-    
-    /* Extract the generated question 
+
+      // Make the API call to Hugging Face
+      const response = request('POST',
+        'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
+          headers: {
+            Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          json: {
+            inputs: prompt
+          }
+        });
+
+      // Parse the response
+      const responseBody = JSON.parse(response.getBody('utf8'));
+
+      /* Extract the generated question
       (this may need adjustment based on actual API response format)
     */
-    let generatedQuestion = responseBody.generated_text || '';
-    
-    // Clean up the response - remove quotes if present and whitespace
-    generatedQuestion = generatedQuestion.replace(/^["']|["']$/g, '').trim();
-    
-    // Ensure the question meets our requirements
-    if (generatedQuestion.length < 5) {
-      generatedQuestion = `What is ${quizName} about?`;
-    } else if (generatedQuestion.length > 50) {
-      generatedQuestion = generatedQuestion.substring(0, 50);
+      let generatedQuestion = responseBody.generated_text || '';
+
+      // Clean up the response - remove quotes if present and whitespace
+      generatedQuestion = generatedQuestion.replace(/^["']|["']$/g, '').trim();
+
+      // Ensure the question meets our requirements
+      if (generatedQuestion.length < 5) {
+        generatedQuestion = `What is ${quizName} about?`;
+      } else if (generatedQuestion.length > 50) {
+        generatedQuestion = generatedQuestion.substring(0, 50);
+      }
+
+      return res.status(OK).json({ question: generatedQuestion });
+    } catch (error) {
+      console.error('Error calling Hugging Face API:', error);
+
+      // Fallback question if API call fails
+      const fallbackQuestion = `What is the main concept of ${quizName}?`;
+
+      return res.status(OK).json({ question: fallbackQuestion });
     }
-    
-    return res.status(OK).json({ question: generatedQuestion });
-  } catch (error) {
-    console.error('Error calling Hugging Face API:', error);
-    
-    // Fallback question if API call fails
-    const fallbackQuestion = `What is the main concept of ${quizName}?`;
-    
-    return res.status(OK).json({ question: fallbackQuestion });
-  }
-});
+  });
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

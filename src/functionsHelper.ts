@@ -333,31 +333,3 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 
   return { userId: theSession.userId };
 }
-
-/**
- * Makes a GET request to the admin quiz question suggestion endpoint.
- * 
- * @param {number} quizId - The ID of the quiz for which to get question suggestions
- * @param {string} session - The user's session token
- * 
- * @returns {responseInterface} - The response from the server
- */
-export function requestGetQuizQuestionSuggestion(
-  quizId: number,
-  session: string
-): responseInterface {
-  const res = request(
-    'GET',
-    `${url}:${port}/v1/admin/quiz/${quizId}/question/suggestion`,
-    {
-      headers: {
-        session: session
-      }
-    }
-  );
-  
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
-}
