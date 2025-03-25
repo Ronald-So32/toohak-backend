@@ -96,7 +96,7 @@ describe('Test error cases', () => {
       'Quiz for Ownership Test',
       'Description'
       );
-      quizId2 = responseCreate.body.quizId2;
+      quizId2 = responseCreate.body.quizId;
       // Try to update first user's quiz with second user's ID
       const invalidIdres = requestAdminQuizUpdateDescription(quizId2, session2, 'New Description');
       expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
