@@ -250,7 +250,8 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 });
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion 
-app.get('/v1/admin/quiz/:quizid/question/suggestion', (req: Request, res: Response) => {
+app.get('/v1/admin/quiz/:quizid/question/suggestion', 
+        (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
 
@@ -288,7 +289,8 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion', (req: Request, res: Respon
     Respond with just the question text, nothing else.`;
     
     // Make the API call to Hugging Face
-    const response = request('POST', 'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
+    const response = request('POST', 
+      'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
       headers: {
         Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
         'Content-Type': 'application/json'
