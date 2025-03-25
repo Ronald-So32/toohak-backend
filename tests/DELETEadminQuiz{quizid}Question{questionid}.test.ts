@@ -6,7 +6,8 @@ import {
   requestAdminQuizQuestionCreate,
   requestDeleteQuizQuestion,
   requestAdminAuthLogin,
-  requestAdminAuthLogout
+  requestAdminAuthLogout,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -22,12 +23,14 @@ const questionIdOffset = 999;
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
 let responseCreateQuestion: responseInterface;
+let beforeInfo: responseInterface;
 let session: string;
 let session2: string;
 let quizId: number;
 let quizId2: number;
 let questionId: number;
 let questionId2: number;
+
 
 // make session, login to make quiz and question
 beforeEach(() => {
@@ -56,13 +59,19 @@ beforeEach(() => {
     'Question'
   );
   questionId = responseCreateQuestion.body.questionId;
+  beforeInfo = requestGetQuiz(quizId);
 });
 
+describe('Test valid case', () => {
+  const res = requestDeleteQuizQuestion(quizId, questionId, session);
+  expect(res.body).toStrictEqual({});
+  expect(res.statusCode).toStrictEqual(OK);
+});
 
 describe('Test error cases', () => {
   // error 400 
   // questionId that is to be deleted not under same quizId
-  test('Question Id does not refer to a valid question within this quiz', () => {
+  test('Question Id does not refer to a valid question within this quiz - question is under different quizId', () => {
     
     // Make other quiz
     responseCreate = requestAdminQuizCreate(
@@ -84,6 +93,10 @@ describe('Test error cases', () => {
     const invalidIdRes = requestDeleteQuizQuestion(quizId, questionId2, session);
     expect(invalidIdRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidIdRes.statusCode).toStrictEqual(BADREQUEST);
+    // check quiz has not been deleted 
+    const afterInfo = requestGetQuiz(quizId, session);
+    expect(afterInfo.body).toStrictEqual(beforeInfo.body);
+    expect(afterInfo.statusCode).toStrictEqual(OK);
   });
 
   // question with invalid questionId(non-existent question)
@@ -167,10 +180,4 @@ describe('Test error cases', () => {
     expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
   })
-
-  describe('Test valid case', () => {
-    const res = requestDeleteQuizQuestion(quizId, questionId, session);
-    expect(res.body).toStrictEqual({});
-    expect(res.statusCode).toStrictEqual(OK);
-  });
 });
