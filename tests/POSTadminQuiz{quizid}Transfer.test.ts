@@ -77,17 +77,22 @@ describe('error code 400 cases', () => {
   ])('$description', ({quizId, session, email}) => {
     // get quiz list before calling admintransfer
     const listBefore = requestGetQuizList(session);
+    // check session2 did not recieve quiz from session 1
+    const listBefore2 = requestGetQuizList(session2);
     const invalidRes = requestAdminQuizTransfer(quizId, session, email);
     expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidRes.statusCode).toStrictEqual(BADREQUEST);
     // check that tranasfer has not occured
     expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
+    expect(requestGetQuizList(session2).body).toStrictEqual(listBefore2.body);
   })
 
   test('Quiz ID refers to a quiz that has a name that is already used by the target user', () => {
     requestAdminAuthLogout(session2);
     // get quiz list before calling admintransfer
     const listBefore = requestGetQuizList(session);
+    // check session2 did not recieve quiz from session 1
+    const listBefore2 = requestGetQuizList(session2);
     // same name as quizId2 name 
     responseCreate = requestAdminQuizCreate(
       session,
@@ -100,6 +105,7 @@ describe('error code 400 cases', () => {
     expect(invalidQuizIdlRes.statusCode).toStrictEqual(BADREQUEST);
     // check that tranasfer has not occured
     expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
+    expect(requestGetQuizList(session2).body).toStrictEqual(listBefore2.body);
   });
 });
 
@@ -131,18 +137,31 @@ describe('Session is empty or invalid (does not refer to valid logged in user se
 });
 
 // error 403
-describe('Valid session is provided, but user is not an owner of this quiz or quiz does not exist', () => {
-  test('User is not owner of quiz', () => {
-    // quizId2 is owned by session2 not session
-    const invalidSessionRes = requestAdminQuizTransfer(quizId2, session, 'z7277273@ad.unsw.edu.au');
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
-  });
-
-  test('quizId does not exist', () => {
-    const invalidSessionRes = requestAdminQuizTransfer(quizId + quizIdOffset, session, 'z7277273@ad.unsw.edu.au');
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+describe('error 403 cases', () => {
+  test.each([
+    {
+      description: 'User is not owner of quiz',
+      quizId: quizId2,
+      session: session,
+      email: 'z7277273@ad.unsw.edu.au',
+    },
+    {
+      description: 'quizId does not exist',
+      quizId: quizId + quizIdOffset,
+      session: session,
+      email: 'z7277273@ad.unsw.edu.au'
+    },
+  ])('$description', ({quizId, session, email}) => {
+    // get quiz list before calling admintransfer
+    const listBefore = requestGetQuizList(session);
+    // check session2 did not recieve quiz from session 1
+    const listBefore2 = requestGetQuizList(session2);
+    const invalidRes = requestAdminQuizTransfer(quizId, session, email);
+    expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);
+    // check that tranasfer has not occured
+    expect(requestGetQuizList(session).body).toStrictEqual(listBefore.body);
+    expect(requestGetQuizList(session2).body).toStrictEqual(listBefore2.body);
   });
 });
 
