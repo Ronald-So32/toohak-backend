@@ -31,6 +31,94 @@ let quizId2: number;
 let questionId: number;
 let questionId2: number;
 
+describe('error case 401 tests', () => {
+
+  beforeEach(() => {
+    // Make other session
+    responseRegister = requestAdminAuthRegister(
+      'z7277273@ad.unsw.edu.au',
+      'Password2',
+      'First2',
+      'Last2'
+    );
+    session2 = responseRegister.body.session;
+    beforeInfo = requestGetQuiz(quizId2, session);
+  });
+  test('Session is invalid', () => {
+    beforeInfo = requestGetQuiz(quizId, session);
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId, questionId, session + 'Invalid Session');
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    // check quiz has not been deleted 
+    const afterInfo = requestGetQuiz(quizId, session);
+    expect(afterInfo.body).toStrictEqual(beforeInfo.body);
+    expect(afterInfo.statusCode).toStrictEqual(OK);
+  });
+
+  // not logged in user
+  test('Session is invalid', () => {
+    // login to make quiz and question
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    // make other quiz
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+    // make question under quiz 2
+    responseCreateQuestion = requestAdminQuizQuestionCreate(
+      quizId2,
+      session2, 
+      'Question2'
+    );
+    questionId2 = responseCreateQuestion.body.questionId;
+    // logout session2
+    requestAdminAuthLogout(session2);
+    // Test not logged in session will have question deleted
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+
+    //login to check info
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    const checkInfo = requestGetQuiz(quizId2, session2);
+    expect(checkInfo.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name2',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description2',
+      numQuestions: 1,
+      questions: ['Question2'],
+      timeLimit: 0
+    });
+    expect(checkInfo.statusCode).toStrictEqual(OK);
+  });
+
+  test('Session is empty - session has quiz but no questions', () => {
+    // login to make quiz and question
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    // make other quiz
+    responseCreate = requestAdminQuizCreate(
+      session2,
+      'Name2',
+      'Description2'
+    );
+    quizId2 = responseCreate.body.quizId;
+    // no questions made
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+
+  test('Session is empty - session has no quizzes', () => {
+    // no quizzes made
+    const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
+    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
+    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+  });
+});
 
 // make session, login to make quiz and question
 beforeEach(() => {
@@ -108,49 +196,6 @@ describe('Test error cases', () => {
     const invalidIdRes = requestDeleteQuizQuestion(quizId, questionId + questionIdOffset, session);
     expect(invalidIdRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidIdRes.statusCode).toStrictEqual(BADREQUEST);
-  });
-
-  // error 401
-  test('Session is invalid', () => {
-    const invalidSessionRes = requestDeleteQuizQuestion(quizId, questionId, session + 'Invalid Session');
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
-  });
-  
-  // not logged in user
-  test('Session is invalid', () => {
-    // Make other session
-    responseRegister = requestAdminAuthRegister(
-      'z7277273@ad.unsw.edu.au',
-      'Password2',
-      'First2',
-      'Last2'
-    );
-    session2 = responseRegister.body.session;
-    // login to make quiz and question
-    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
-
-    // make other quiz
-    responseCreate = requestAdminQuizCreate(
-      session2,
-      'Name2',
-      'Description2'
-    );
-    quizId2 = responseCreate.body.quizId;
-
-    // make question under quiz 2
-    responseCreateQuestion = requestAdminQuizQuestionCreate(
-      quizId2,
-      session2, 
-      'Question2'
-    );
-    questionId2 = responseCreateQuestion.body.questionId;
-    // logout session2
-    requestAdminAuthLogout(session2);
-    // Test not logged in session will have question deleted
-    const invalidSessionRes = requestDeleteQuizQuestion(quizId2, questionId2, session2);
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
   });
 
   // error 403
