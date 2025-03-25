@@ -179,6 +179,11 @@ describe('Session is empty or invalid (does not refer to valid logged in user se
     const emptyRes = requestAdminQuizTransfer(quizId, session, 'z7277273@ad.unsw.edu.au');
     expect(emptyRes.body).toStrictEqual({ error: expect.any(String) });
     expect(emptyRes.statusCode).toStrictEqual(UNAUTHORISED);
+    expect(requestGetQuizList(session).body).toStrictEqual({
+      quizzes: [
+        {}
+      ]
+    })
   });
 
   // does session recieving the tranfer need to be logged in?
