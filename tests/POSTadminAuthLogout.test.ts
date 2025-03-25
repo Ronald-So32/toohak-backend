@@ -44,7 +44,7 @@ describe('Invalid test case', () => {
     expect(res.statusCode).toStrictEqual(UNAUTHORISED);
   });
   
-  test('Loggin out after already logging out once', () => {
+  test('Logging out after already logging out once', () => {
     const res = requestAdminAuthLogout(session);
     expect(res.body).toStrictEqual({});
     expect(res.statusCode).toStrictEqual(OK);
