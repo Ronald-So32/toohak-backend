@@ -84,7 +84,7 @@ describe('error case 401 tests', () => {
     requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
     const checkInfo = requestGetQuiz(quizId2, session2);
     expect(checkInfo.body).toStrictEqual({
-      quizId: quizId,
+      quizId: quizId2,
       name: 'Name2',
       timeCreated: expect.any(Number),
       timeLastEdited: expect.any(Number),
