@@ -42,6 +42,23 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(result);
 });
 
+// POST /v1/admin/auth/logout
+app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
+  // Retrieve session from headers
+  const session = req.headers.session as string; 
+
+  // Validate session
+  if (!session || !invalidateSession(session)) {
+    return res.status(UNAUTHORISED).json({ error: 'Invalid or empty session' }); 
+  }
+
+  // Invalidate the session
+  invalidateSession(session);
+
+  // Respond with success
+  return res.status(OK).json({});
+});
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
