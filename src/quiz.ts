@@ -267,3 +267,44 @@ export function adminQuizDescriptionUpdate(userId: number, quizId: number, descr
 
   return {};
 }
+
+// should i include userId
+export function adminQuizQuestionMove(userId: number, quizId: number, questionId: number, session: string, newPosition: number): {} | errorInterface {
+  const data = getData();
+
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return { error: 'Invalid quiz ID' };
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return { error: 'User does not own this quiz' };
+  }
+
+  // check if questionId is in given quiz
+  const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
+  if (validQuestionIndex === -1) {
+    return { error: 'Question ID not found in quiz' };
+  }
+
+  if (newPosition < 0) {
+    return { error: 'newPosition is less than 0' };
+  }
+
+  if (newPosition > quiz.questions.length - 1) {
+    return { error: 'newPosition greater than number of questions' };
+  }
+
+  if (validQuestionIndex === newPosition) {
+    return { error: 'newPostion is the same as current positon of question' };
+  }
+
+  const question = questions[validQuestionIndex];
+  // delete question that is to be moved from questions array
+  questions.splice(validQuestionIndex, 1);
+  // place question into new position
+  questions.splice(newPosition, 0, question);
+  return {};
+}
