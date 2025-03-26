@@ -235,7 +235,7 @@ app.put('/v1/admin/quiz/{quizid}/question/{questionid}/move', (req: Request, res
   if (quiz.createdBy !== userId) {
     return res.status(FORBIDDEN).json({ error: 'User does not own this quiz' });
   }
-  const result = adminQuizQuestionMove(quizId, userId, questionId, req.body, newPosition);
+  const result = adminQuizQuestionMove(quizId, userId, questionId, session, newPosition);
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
   }
