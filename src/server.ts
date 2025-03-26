@@ -254,7 +254,15 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { userEmail } = req.body;
+
+  // Check if session is valid
+  const userIdResult = findUserIdFromSession(session);
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+  const userId = userIdResult.userId;
 }
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
