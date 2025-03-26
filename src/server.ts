@@ -288,6 +288,20 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   if (quiz.createdBy !== userId) {
     return res.status(FORBIDDEN).json({ error: 'You do not have permission to transfer this quiz' });
   }
+
+  // Check if target user already has a quiz with the same name
+  const nameConflict = data.quizzes.some(q => 
+    q.createdBy === targetUser.userId && q.name === quiz.name);
+  if (nameConflict) {
+    return res.status(BADREQUEST).json({ 
+      error: 'Target user already has a quiz with the same name' 
+    });
+  }
+
+  // All checks passed, transfer the quiz
+  data.quizzes[quizIndex].createdBy = targetUser.userId;
+  
+  return res.status(OK).json({});
 }
 
 // ====================================================================
