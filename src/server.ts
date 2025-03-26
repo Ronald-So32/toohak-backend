@@ -249,6 +249,12 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
+// POST /v1/admin/quiz/{quizid}/transfer
+app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { userEmail } = req.body;
+}
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
