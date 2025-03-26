@@ -250,35 +250,6 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
-// POST /v1/admin/quiz/{quizid}/question
-app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return res.status(FORBIDDEN).json({ error: 'Invalid quiz ID' });
-  }
-  if (quiz.createdBy !== userId) {
-    return res.status(FORBIDDEN).json({ error: 'User does not own this quiz' });
-  }
-
-  const result = adminQuizQuestionCreate(quizId, userId, req.body);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({ questionId: result.questionId });
-});
-
 // PUT//v1/admin/quiz/{quizid}/question/{questionid}
 app.put('/v1/admin/quiz/{quizid}/question/{questionid}', (req: Request, res: Response) => {
   const session = req.headers.session as string;
