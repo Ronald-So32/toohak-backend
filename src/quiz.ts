@@ -313,10 +313,12 @@ export function adminQuizQuestionMove(
     return { error: 'newPostion is the same as current positon of question' };
   }
 
-  const question = questions[validQuestionIndex];
+  const question = quiz.questions[validQuestionIndex];
   // delete question that is to be moved from questions array
-  questions.splice(validQuestionIndex, 1);
+  quiz.questions.splice(validQuestionIndex, 1);
   // place question into new position
-  questions.splice(newPosition, 0, question);
+  quiz.questions.splice(newPosition, 0, question);
+  // Update timeLastEdited
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   return {};
 }
