@@ -282,6 +282,12 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
     return res.status(FORBIDDEN).json({ error: `Quiz with ID ${quizId} does not exist` });
   }
 
+  const quiz = data.quizzes[quizIndex];
+  
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return res.status(FORBIDDEN).json({ error: 'You do not have permission to transfer this quiz' });
+  }
 }
 
 // ====================================================================
