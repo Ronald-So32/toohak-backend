@@ -221,6 +221,7 @@ app.put('/v1/admin/quiz/{quizid}/question/{questionid}/move', (req: Request, res
   const questionId = parseInt(req.params.questionid);
   const newPosition = parseInt(req.query.newPosition as string);
   const userIdResult = findUserIdFromSession(session);
+  const data = getData();
   // check if userId is valid
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
