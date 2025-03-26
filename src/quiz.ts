@@ -5,6 +5,7 @@ import {
   errorInterface,
   quizSummariesInterface,
   quizIdInterface,
+  questionIdInterface,
   quizDetailsInterface
 } from './helper.ts';
 
@@ -268,7 +269,13 @@ export function adminQuizDescriptionUpdate(userId: number, quizId: number, descr
   return {};
 }
 
-export function adminQuizQuestionMove(quizId: number, userId: number, questionId: number, session: string, newPosition: number): {} | errorInterface {
+export function adminQuizQuestionMove(
+  quizId: number, 
+  userId: number, 
+  questionId: number, 
+  session: string, 
+  newPosition: number
+  ): questionIdInterface | errorInterface {
   const data = getData();
 
   // check if userid is valid
