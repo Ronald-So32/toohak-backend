@@ -261,6 +261,20 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
   const userId = userIdResult.userId;
+
+  // Get all users to check if target email exists
+  const data = getData();
+  
+  // Find the target user by email
+  const targetUser = data.users.find(user => user.email === userEmail);
+  if (!targetUser) {
+    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
+  }
+
+  // Check if target user is the same as current user
+  if (userEmail === data.users.find(user => user.userId === userId)?.email) {
+    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
+  }
 }
 
 // ====================================================================
