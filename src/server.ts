@@ -255,7 +255,7 @@ app.put('/v1/admin/quiz/{quizid}/question/{questionid}', (req: Request, res: Res
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
-
+  const data = getData();
   const userIdResult = findUserIdFromSession(session);
   // check if userId is valid
   if ('error' in userIdResult) {
