@@ -28,6 +28,7 @@ import sui from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
+import { getData } from './dataStore';
 // import request from 'sync-request-curl';
 
 const OK = 200;
@@ -262,10 +263,22 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   }
   const userId = userIdResult.userId;
 
-  // Get all users to check if target email exists
+  // Get data
   const data = getData();
   
-  // Check if quiz exists
+  // Find the target user by email first (BADREQUEST)
+  const targetUser = data.users.find(user => user.email === userEmail);
+  if (!targetUser) {
+    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
+  }
+
+  // Check if target user is the same as current user (BADREQUEST)
+  const currentUser = data.users.find(user => user.userId === userId);
+  if (currentUser && currentUser.email === userEmail) {
+    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
+  }
+
+  // Check if quiz exists (FORBIDDEN if not)
   const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
   if (quizIndex === -1) {
     return res.status(FORBIDDEN).json({ error: `Quiz with ID ${quizId} does not exist` });
@@ -273,23 +286,12 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
   const quiz = data.quizzes[quizIndex];
   
-  // Check if user owns the quiz
+  // Check if user owns the quiz (FORBIDDEN if not)
   if (quiz.createdBy !== userId) {
     return res.status(FORBIDDEN).json({ error: 'You do not have permission to transfer this quiz' });
   }
 
-  // Find the target user by email
-  const targetUser = data.users.find(user => user.email === userEmail);
-  if (!targetUser) {
-    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
-  }
-
-  // Check if target user is the same as current user
-  if (userEmail === data.users.find(user => user.userId === userId)?.email) {
-    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
-  }
-
-  // Check if target user already has a quiz with the same name
+  // Check if target user already has a quiz with the same name (BADREQUEST)
   const nameConflict = data.quizzes.some(q => 
     q.createdBy === targetUser.userId && q.name === quiz.name);
   if (nameConflict) {
