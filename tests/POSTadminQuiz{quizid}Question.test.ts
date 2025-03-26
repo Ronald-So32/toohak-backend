@@ -31,8 +31,6 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
-  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 
   const responseQuizCreate = requestAdminQuizCreate(
     session,
@@ -66,12 +64,12 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
-    test('Testing the return value', () => {
+    test('Testing invalid session', () => {
       const responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId,
         session + 'Invalid Session',
@@ -239,7 +237,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           }
           );
-          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
       });
@@ -447,7 +445,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             }
           );
-          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
 
@@ -515,6 +513,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               ]
             }
           };
+          
           requestAdminQuizQuestionCreate(
             quizId,
             session,
@@ -567,7 +566,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             session,
             questionBody
           );
-          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
 
@@ -603,7 +602,7 @@ describe('Testing POST /v1/admin/quiz', () => {
                 }
               }
             );
-            expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+            expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
             expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
           });
         });
@@ -685,7 +684,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             }
           );
-          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
       });
@@ -739,7 +738,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
     const responseQuizCreate2 = requestAdminQuizCreate(
@@ -774,7 +773,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.body.result).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
     /*
