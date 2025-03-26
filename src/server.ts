@@ -265,18 +265,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   // Get all users to check if target email exists
   const data = getData();
   
-  // Find the target user by email
-  const targetUser = data.users.find(user => user.email === userEmail);
-  if (!targetUser) {
-    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
-  }
-
-  // Check if target user is the same as current user
-  if (userEmail === data.users.find(user => user.userId === userId)?.email) {
-    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
-  }
-
-  // Find the quiz
+  // Check if quiz exists
   const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
   if (quizIndex === -1) {
     return res.status(FORBIDDEN).json({ error: `Quiz with ID ${quizId} does not exist` });
@@ -287,6 +276,17 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
     return res.status(FORBIDDEN).json({ error: 'You do not have permission to transfer this quiz' });
+  }
+
+  // Find the target user by email
+  const targetUser = data.users.find(user => user.email === userEmail);
+  if (!targetUser) {
+    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
+  }
+
+  // Check if target user is the same as current user
+  if (userEmail === data.users.find(user => user.userId === userId)?.email) {
+    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
   }
 
   // Check if target user already has a quiz with the same name
@@ -302,7 +302,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   data.quizzes[quizIndex].createdBy = targetUser.userId;
   
   return res.status(OK).json({});
-}
+});
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
