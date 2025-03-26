@@ -363,10 +363,6 @@ export function adminQuizQuestionCreate(
     return { error: 'Invalid quiz ID' };
   }
 
-  const validQuestion = validQuestionString(questionBody.question);
-  if (validQuestion !== true) {
-    return validQuestion as errorInterface;
-  }
 
   // Return error for amount of answers
   // Return error for non-positive time-limits

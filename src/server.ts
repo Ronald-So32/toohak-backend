@@ -267,8 +267,8 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   if ('error' in quizDetailsResult) {
     return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
   }
-  
-  const result = adminQuizQuestionCreate(quizId, userId, req.body);
+
+  const result = adminQuizQuestionCreate(userId, quizId, req.body);
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
