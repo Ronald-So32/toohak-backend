@@ -181,8 +181,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
 
     // Verify timeLastEdited has been updated
-    expect(responseQuizGet.body.timeLastEdited)
-      .toBeGreaterThanOrEqual(responseQuizGet.body.timeCreated);
+    expect(responseQuizGet.body.timeLastEdited).toBeGreaterThanOrEqual(
+      responseQuizGet.body.timeCreated
+    );
 
     // Verify other properties remain unchanged
     expect(responseQuizGet.body.quizId).toStrictEqual(quizId);
