@@ -13,7 +13,10 @@ import {
   adminQuizGet,
   adminQuizNameUpdate
 } from './quiz';
-import { findUserIdFromSession } from './functionsHelper';
+import {
+  findUserIdFromSession,
+  Errors
+} from './functionsHelper';
 
 import express, {
   json,
@@ -267,7 +270,7 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
 
   if ('error' in result) {
     // Check for specific error messages to determine status code
-    if (result.error === 'User does not own this quiz' || 
+    if (result.error === 'User does not own this quiz' || // add the error codes to the class and use them instead
         result.error === 'Invalid quiz ID') {
       return res.status(FORBIDDEN).json({ error: result.error });
     }
