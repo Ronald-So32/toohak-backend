@@ -3,4 +3,3 @@ describe('Placeholder test suite', () => {
     expect(true).toBe(true); // This test will always pass
   });
 });
-
