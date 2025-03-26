@@ -268,8 +268,14 @@ export function adminQuizDescriptionUpdate(userId: number, quizId: number, descr
   return {};
 }
 
-export function adminQuizQuestionMove(userId: number, quizId: number, questionId: number, session: string, newPosition: number): {} | errorInterface {
+export function adminQuizQuestionMove(quizId: number, userId: number, questionId: number, session: string, newPosition: number): {} | errorInterface {
   const data = getData();
+
+  // check if userid is valid
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return { error: `User Id of ${userId} is not valid` };
+  }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
