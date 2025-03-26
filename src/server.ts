@@ -262,14 +262,12 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   }
 
   const userId = userIdResult.userId;
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return res.status(FORBIDDEN).json({ error: 'Invalid quiz ID' });
-  }
-  if (quiz.createdBy !== userId) {
-    return res.status(FORBIDDEN).json({ error: 'User does not own this quiz' });
-  }
+  const quizDetailsResult = adminQuizGet(userId, quizId);
 
+  if ('error' in quizDetailsResult) {
+    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+  }
+  
   const result = adminQuizQuestionCreate(quizId, userId, req.body);
 
   if ('error' in result) {
