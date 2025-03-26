@@ -268,7 +268,6 @@ export function adminQuizDescriptionUpdate(userId: number, quizId: number, descr
   return {};
 }
 
-// should i include userId
 export function adminQuizQuestionMove(userId: number, quizId: number, questionId: number, session: string, newPosition: number): {} | errorInterface {
   const data = getData();
 
