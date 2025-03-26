@@ -275,6 +275,13 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   if (userEmail === data.users.find(user => user.userId === userId)?.email) {
     return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
   }
+
+  // Find the quiz
+  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  if (quizIndex === -1) {
+    return res.status(FORBIDDEN).json({ error: `Quiz with ID ${quizId} does not exist` });
+  }
+
 }
 
 // ====================================================================
