@@ -365,7 +365,7 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   // Check userEmail
   const targetUser = data.users.find(user => user.email === userEmail);
   if (!targetUser) {
-    return Errors.invalidEmail;
+    return Errors.invalidEmail();
   }
 
   // Target email is the same as self

@@ -72,7 +72,14 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   describe('Testing for error responses', () => {
     describe('Error 400: Bad Request', () => {
       test('userEmail is not a real user', () => {
-
+        // Try to transfer to non-existent user
+        const transferResult = requestAdminQuizTransfer(
+          quizId,
+          session,
+          'nonexistent@example.com'
+        );
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
       });
 
       test('userEmail is the current logged in user', () => {
