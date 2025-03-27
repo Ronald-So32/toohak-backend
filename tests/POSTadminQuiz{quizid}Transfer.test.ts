@@ -2,7 +2,6 @@ import {
   requestClear,
   responseInterface,
   requestAdminAuthRegister,
-  requestAdminAuthLogin,
   requestAdminAuthLogout,
   requestAdminQuizTransfer,
   requestAdminQuizCreate,
@@ -172,10 +171,25 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     });
 
     test('Quiz can no longer be transferred after first transfer', () => {
+      // First transfer (user1 -> user2)
+      const transfer1Result = requestAdminQuizTransfer(
+        quizId,
+        session,
+        'z6969@ad.unsw.edu.au'
+      );
+      expect(transfer1Result.statusCode).toStrictEqual(OK);
 
+      // Second transfer attempt (user1 -> user3)
+      const transfer2Result = requestAdminQuizTransfer(
+        quizId,
+        session,
+        'z69420@ad.unsw.edu.au'
+      );
+      expect(transfer2Result.statusCode).toStrictEqual(FORBIDDEN);
+      expect(transfer2Result.body).toStrictEqual({ error: expect.any(String) });
     });
   });
-  
+
   test('Testing POST /v1/admin/quiz/{quizid}/transfer works as intended', () => {
     // Check user1 has the quiz
     const responseQuizGet = requestGetQuizList(session);
