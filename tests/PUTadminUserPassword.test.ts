@@ -133,7 +133,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
     expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
 
     const responseLogin = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
-    expect(responseLogin.body).toStrictEqual({ session: session });
+    expect(responseLogin.body).toStrictEqual({ session: responseLogin.body.session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     const responseDetails2 = requestGetUserDetails(session);

@@ -110,7 +110,9 @@ export function adminAuthLogin(
     return Errors.invalidPassword();
   }
 
-  const sessionNum = findSessionFromUserId(userData.userId) as string;
+  const currentSession = generateSession();
+
+  data.sessions.push({ userId: userData.userId, session: currentSession });
 
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
@@ -118,7 +120,7 @@ export function adminAuthLogin(
 
   return {
     userId: userData.userId,
-    session: sessionNum
+    session: currentSession
   };
 }
 
@@ -265,11 +267,11 @@ export function adminAuthLogout(session: string): Record<string, never> | errorI
 
   const sessionIndex = data.sessions.findIndex(s => s.session === session);
   
-  if (sessionIndex !== -1) {
-    data.sessions.splice(sessionIndex, 1);
-  } else {
+  if (sessionIndex === -1) {
     return Errors.invalidSession();
   }
+  
+  data.sessions.splice(sessionIndex, 1);
 
   return {};
 }
