@@ -7,8 +7,8 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizQuestionUpdate,
-  requestAdminAuthLogout
-  // requestGetQuiz
+  requestAdminAuthLogout,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -52,18 +52,18 @@ beforeEach(() => {
     quizId,
     session,
     {
-      "questionBody": {
-        "question": "Question",
-        "timeLimit": 4,
-        "points": 5,
-        "answerOptions": [
+      questionBody: {
+        question: 'Question',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
           {
-            "answer": "Right",
-            "correct": true
+            answer: 'Right',
+            correct: true
           },
           {
-            "answer": "Wrong",
-            "correct": false
+            answer: 'Wrong',
+            correct: false
           }
         ]
       }
@@ -77,45 +77,45 @@ beforeEach(() => {
 describe('Test invalid cases', () => {
   describe('error case 400 examples', () => {
     test('Invalid questionId', () => {
-      const invalidQuestionIdRes = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId,
         questionId + questionIdOffset,
         session,
         {
-          "questionBody": {
-            "question": 'Question',
-            "timeLimit": 4,
-            "points": 5,
-            "answerOptions": [
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ]
           }
         }
       );
-      expect(invalidQuestionIdRes.body).toStrictEqual({ error: expect.any(String) });
-      expect(invalidQuestionIdRes.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
     });
   
     describe('Invalid question strings', () => {
       test.each([
         {
-          question: "Ques",
-          description: "Containing less than 5 characters"
+          question: 'Ques',
+          description: 'Containing less than 5 characters'
         },
         {
-          question: "Quest".repeat(11),
-          description: "Containing more than 50 characters"
+          question: 'Quest'.repeat(11),
+          description: 'Containing more than 50 characters'
         },
         {
-          question: "",
-          description: "Empty string"
+          question: '',
+          description: 'Empty string'
         }
       ])('$description', ({ question }) => {
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -123,22 +123,23 @@ describe('Test invalid cases', () => {
         questionId,
         session,
         {
-          "questionBody": {
-            "question": question,
-            "timeLimit": 4,
-            "points": 5,
-            "answerOptions": [
+          questionBody: {
+            question: question,
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ]
           }
         }
+        
       );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
@@ -148,49 +149,102 @@ describe('Test invalid cases', () => {
     describe('Invalid answers', () => {
       test.each([
         {
-          answerOptions: [{ "answer": "Right", "correct": true }],
-          description: "Containing less than 2 answers"
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            }
+          ],
+          description: 'Containing less than 2 answers'
         },
         {
           answerOptions: [
-            { "answer": "Right", "correct": true },
-            { "answer": "Wrong1", "correct": false },
-            { "answer": "Wrong2", "correct": false },
-            { "answer": "Wrong3", "correct": false },
-            { "answer": "Wrong4", "correct": false },
-            { "answer": "Wrong5", "correct": false },
-            { "answer": "Wrong6", "correct": false }
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong1',
+              correct: false
+            },
+            {
+              answer: 'Wrong2',
+              correct: false
+            },
+            {
+              answer: 'Wrong3',
+              correct: false
+            },
+            {
+              answer: 'Wrong4',
+              correct: false
+            },
+            {
+              answer: 'Wrong5',
+              correct: false
+            },
+            {
+              answer: 'Wrong6',
+              correct: false
+            }
           ],
-          description: "Containing more than 6 answers"
+          description: 'Containing more than 6 answers'
         },
         {
           answerOptions: [
-            { "answer": "Right", "correct": true },
-            { "answer": "Right", "correct": true },
-            { "answer": "Wrong", "correct": false }
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
           ],
-          description: "Duplicate answer strings within same question"
+          description: 'Duplicate answer strings within same questions'
         },
         {
           answerOptions: [
-            { "answer": "Right", "correct": false },
-            { "answer": "Wrong", "correct": false }
+            {
+              answer: 'Right',
+              correct: false
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
           ],
-          description: "No correct answers"
+          description: 'No correct answers'
         },
         {
           answerOptions: [
-            { "answer": "", "correct": true },
-            { "answer": "Wrong", "correct": false }
+            {
+              answer: '',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
           ],
-          description: "Answer containing less than 1 character"
+          description: 'Answer containing less than 1 character'
         },
         {
           answerOptions: [
-            { "answer": "Right".repeat(7), "correct": true },
-            { "answer": "Wrong", "correct": false }
+            {
+              answer: 'Right'.repeat(7),
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
           ],
-          description: "Answer containing more than 30 characters"
+          description: 'Answer containing more than 30 character'
         }
       ])('$description', ({ answerOptions }) => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -198,10 +252,10 @@ describe('Test invalid cases', () => {
           questionId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
-              "points": 5,
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
               answerOptions
             }
           }
@@ -210,25 +264,129 @@ describe('Test invalid cases', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
+
+    describe('Valid answers', () => {
+      test.each([
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Containing exactly 2 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong1',
+              correct: false
+            },
+            {
+              answer: 'Wrong2',
+              correct: false
+            },
+            {
+              answer: 'Wrong3',
+              correct: false
+            },
+            {
+              answer: 'Wrong4',
+              correct: false
+            },
+            {
+              answer: 'Wrong5',
+              correct: false
+            },
+          ],
+          description: 'Containing exactly 6 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'R',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing exactly 1 character'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right'.repeat(6),
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing exactly 30 character'
+        },
+      ])('$description', ({ answerOptions }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
   
     describe('Invalid timelimit', () => {
       test.each([
-        { timeLimit: -1, description: "Not a positive number" },
-        { timeLimit: 0, description: "Neither a positive or a negative number" },
-        { timeLimit: 181, description: "Timelimit exceeds 3 minutes" },
+        {
+          timeLimit: -1,
+          description: 'Not a positive number'
+        },
+        {
+          timeLimit: 0,
+          description: 'Neither a positive or a negative number'
+        },
+        {
+          timeLimit: 181,
+          description: 'Timelimit exceeds 3 minutes'
+        },
       ])('$description', ({ timeLimit }) => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
           questionId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
+            questionBody: {
+              question: 'Question',
               timeLimit,
-              "points": 5,
-              "answerOptions": [
-                { "answer": "Right", "correct": true },
-                { "answer": "Wrong", "correct": false }
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
               ]
             }
           }
@@ -239,13 +397,19 @@ describe('Test invalid cases', () => {
   
       test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
         const questionBody = {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 60,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 60,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         };
@@ -259,13 +423,19 @@ describe('Test invalid cases', () => {
         questionId3 = responseQuestionCreate.body.questionId;
         // summed with other two question bodies, time limit will exceed 3 min
         const updateQuestionBody = {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 61,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 61,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         };
@@ -277,22 +447,37 @@ describe('Test invalid cases', () => {
   
     describe('Invalid points awarded', () => {
       test.each([
-        { points: -1, description: "Not a positive number" },
-        { points: 0, description: "Neither a positive or a negative number" },
-        { points: 11, description: "Points awarded is greater than 10" },
+        {
+          points: -1,
+          description: 'Not a positive number'
+        },
+        {
+          points: 0,
+          description: 'Neither a positive or a negative number'
+        },
+        {
+          points: 11,
+          description: 'Points awarded is greater then 10'
+        },
       ])('$description', ({ points }) => {
         const response = requestAdminQuizQuestionUpdate(
           quizId,
           questionId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
               points,
-              "answerOptions": [
-                { "answer": "Right", "correct": true },
-                { "answer": "Wrong", "correct": false }
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
               ]
             }
           }
@@ -311,13 +496,19 @@ describe('Test invalid cases', () => {
         questionId,
         session,
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 20,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         }
@@ -333,13 +524,19 @@ describe('Test invalid cases', () => {
         questionId, 
         session + 'Invalid Session',
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 20,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         }
@@ -368,21 +565,20 @@ describe('Test invalid cases', () => {
     
       responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId,
-        questionId,
         session,
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 4,
-            "points": 5,
-            "answerOptions": [
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ]
           }
@@ -395,13 +591,19 @@ describe('Test invalid cases', () => {
         questionId,
         session,
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 20,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         }
@@ -416,13 +618,19 @@ describe('Test invalid cases', () => {
         questionId,
         session,
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 20,
-            "points": 5,
-            "answerOptions": [
-              { "answer": "Right", "correct": true },
-              { "answer": "Wrong", "correct": false }
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
             ]
           }
         }
@@ -440,19 +648,19 @@ describe('Test valid cases', () => {
       questionId,
       session,
       {
-        "questionBody": {
-          "question": "Question",
+        questionBody: {
+          question: 'Question',
           // change timeLimit to 9
-          "timeLimit": 9,
-          "points": 5,
-          "answerOptions": [
+          timeLimit: 9,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: 'Right',
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: 'Wrong',
+              correct: false
             }
           ]
         }
@@ -482,18 +690,18 @@ describe('Test valid cases', () => {
       questionId,
       session,
       {
-        "questionBody": {
-          "question": question,
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+        questionBody: {
+          question: question,
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: 'Right',
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: 'Wrong',
+              correct: false
             }
           ]
         }
@@ -504,113 +712,24 @@ describe('Test valid cases', () => {
     });
   });
 
-  describe('Valid answers', () => {
-    test.each([
-      {
-        answerOptions: [
-          {
-            "answer": "Right",
-            "correct": true
-          },
-          {
-            "answer": "Wrong",
-            "correct": false
-          }
-        ],
-        description: "Containing exactly 2 answers"
-      },
-      {
-        answerOptions: [
-          {
-            "answer": "Right",
-            "correct": true
-          },
-          {
-            "answer": "Wrong1",
-            "correct": false
-          },
-          {
-            "answer": "Wrong2",
-            "correct": false
-          },
-          {
-            "answer": "Wrong3",
-            "correct": false
-          },
-          {
-            "answer": "Wrong4",
-            "correct": false
-          },
-          {
-            "answer": "Wrong5",
-            "correct": false
-          },
-        ],
-        description: "Containing exactly 6 answers"
-      },
-      {
-        answerOptions: [
-          {
-            "answer": "R",
-            "correct": true
-          },
-          {
-            "answer": "Wrong",
-            "correct": false
-          }
-        ],
-        description: "Answer containing exactly 1 character"
-      },
-      {
-        answerOptions: [
-          {
-            "answer": "Right".repeat(6),
-            "correct": true
-          },
-          {
-            "answer": "Wrong",
-            "correct": false
-          }
-        ],
-        description: "Answer containing exactly 30 character"
-      },
-    ])('$description', ({ answerOptions }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-        quizId,
-        questionId,
-        session,
-        {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 4,
-            "points": 5,
-            answerOptions
-          }
-        }
-      );
-      expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-    });
-  });
-
   test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
-    const questionBody = {
-      "questionBody": {
-        "question": "Question",
-        "timeLimit": 59,
-        "points": 5,
-        "answerOptions": [
+    const questionBody =  {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 59,
+        points: 5,
+        answerOptions: [
           {
-            "answer": "Right",
-            "correct": true
+            answer: 'Right',
+            correct: true
           },
           {
-            "answer": "Wrong",
-            "correct": false
+            answer: 'Wrong',
+            correct: false
           }
         ]
       }
-    };
+    }
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
 
@@ -621,14 +740,20 @@ describe('Test valid cases', () => {
     questionId3 = responseQuestionCreate.body.questionId;
 
     // summed with other two question bodies, time limit equal 3 min exaclty
-    const updateQuestionBody = {
-      "questionBody": {
-        "question": "Question",
-        "timeLimit": 62,
-        "points": 5,
-        "answerOptions": [
-          { "answer": "Right", "correct": true },
-          { "answer": "Wrong", "correct": false }
+    const updateQuestionBody =  {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 62,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
         ]
       }
     };
@@ -640,11 +765,11 @@ describe('Test valid cases', () => {
       test.each([
         {
           timeLimit: 1,
-          description: "Is a positive number"
+          description: 'Is a positive number'
         },
         {
           timeLimit: 180,
-          description: "Timelimit exceeds 3 minutes"
+          description: 'Timelimit exceeds 3 minutes'
         },
       ])('$desription', ({ timeLimit }) => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -652,18 +777,18 @@ describe('Test valid cases', () => {
           questionId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
+            questionBody: {
+              question: 'Question',
               timeLimit,
-              "points": 5,
-              "answerOptions": [
+              points: 5,
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
@@ -678,11 +803,11 @@ describe('Test valid cases', () => {
       test.each([
         {
           points: 1,
-          description: "Point awarded is exactly 1"
+          description: 'Point awarded is exactly 1'
         },
         {
           points: 10,
-          description: "Point awarded is exactly 10"
+          description: 'Point awarded is exactly 10'
         },
       ])('$desription', ({ points }) => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -690,18 +815,18 @@ describe('Test valid cases', () => {
           questionId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
               points,
-              "answerOptions": [
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
