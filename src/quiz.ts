@@ -216,7 +216,7 @@ export function adminQuizInfo(
   // Check if user exists
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz that matches both quizId and userId
@@ -224,7 +224,7 @@ export function adminQuizInfo(
 
   if (!quiz) {
     // Returns error if quiz is not found or not owned by user
-    return { error: 'Quiz not found or not owned by user' };
+    return Errors.invalidQuiz();
   }
 
   // Return quiz details if found
@@ -258,7 +258,7 @@ export function adminQuizNameUpdate(
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
@@ -285,7 +285,7 @@ export function adminQuizNameUpdate(
   );
 
   if (nameExists) {
-    return { error: 'Name already used by this user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   // Update the quiz name
@@ -318,23 +318,23 @@ export function adminQuizDescriptionUpdate(
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
-    return { error: 'Description is too long' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   // Update the quiz description
