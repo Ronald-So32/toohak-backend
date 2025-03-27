@@ -389,6 +389,10 @@ export function adminQuizQuestionCreate(
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
+  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) + timeLimit;
+  if (totalTime > 180) {
+    return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
+  }
 
   // Another helper
   if (points < 1) {
