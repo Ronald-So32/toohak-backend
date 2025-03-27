@@ -264,7 +264,7 @@ export function adminQuizNameUpdate(
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
