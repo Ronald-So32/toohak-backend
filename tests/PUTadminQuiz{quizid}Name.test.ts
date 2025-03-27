@@ -98,7 +98,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
           'Another Description'
         );
         const quizId2 = responseCreate2.body.quizId;
-  
+
         // Try to update the second quiz's name to match the first quiz
         const responseUpdate = requestAdminQuizUpdateName(
           quizId2,

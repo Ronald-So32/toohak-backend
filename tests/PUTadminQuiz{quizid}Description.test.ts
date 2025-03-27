@@ -92,7 +92,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         'Firstt',
         'Lastt'
       );
-      
+
       // Try to update first user's quiz with second user's ID
       const responseUpdateDescription = requestAdminQuizUpdateDescription(
         quizId,
@@ -121,14 +121,14 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           },
         ])('Invalid description - $reason', ({ description }) => {
           const responseUpdateDescription = requestAdminQuizUpdateDescription(
-            quizId, 
-            session, 
+            quizId,
+            session,
             description
-          )
+          );
           expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
           expect(responseUpdateDescription.statusCode).toStrictEqual(BADREQUEST);
 
-          // check that quiz description has not been changed 
+          // check that quiz description has not been changed
           const responseQuizGet2 = requestGetQuiz(quizId, session);
           expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
           expect(responseQuizGet.statusCode).toStrictEqual(OK);
@@ -145,12 +145,12 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
             description: 'aB 12 '.repeat(12) + ' ! @ # $ % ^ & * ( ) _ + - =',
             reason: 'Description with 100 characters'
           },
-        ])('Valid description - $reason', ({ description}) => {
+        ])('Valid description - $reason', ({ description }) => {
           const responseUpdateDescription = requestAdminQuizUpdateDescription(
-            quizId, 
-            session, 
+            quizId,
+            session,
             description
-          )
+          );
           expect(responseUpdateDescription.body).toStrictEqual({ });
           expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
 
@@ -175,4 +175,3 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     // TODO: Create a scenario where you update a description of a quiz
   });
 });
-  
