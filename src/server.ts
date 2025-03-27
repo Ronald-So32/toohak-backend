@@ -324,7 +324,7 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
 });
 
 // PUT//v1/admin/quiz/{quizid}/question/{questionid}/move
-app.put('/v1/admin/quiz/{quizid}/question/{questionid}/move', (req: Request, res: Response) => {
+app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
