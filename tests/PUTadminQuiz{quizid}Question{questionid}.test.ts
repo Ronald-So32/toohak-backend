@@ -349,7 +349,7 @@ describe('Test invalid cases', () => {
             }
           }
         );
-        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.body).toStrictEqual({});
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
@@ -666,7 +666,7 @@ describe('Test valid cases', () => {
         }
       }
     );
-    expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
   });
 
@@ -707,7 +707,7 @@ describe('Test valid cases', () => {
         }
       }
       );
-      expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+      expect(responseQuestionUpdate.body).toStrictEqual({});
       expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
     });
   });
@@ -758,7 +758,7 @@ describe('Test valid cases', () => {
       }
     };
     const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
-    expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
 
     describe('Valid timelimit', () => {
@@ -794,7 +794,7 @@ describe('Test valid cases', () => {
             }
           }
         );
-        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.body).toStrictEqual({});
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
@@ -832,7 +832,7 @@ describe('Test valid cases', () => {
             }
           }
         );
-        expect(responseQuestionUpdate.body).toStrictEqual({ questionId: expect.any(Number) });
+        expect(responseQuestionUpdate.body).toStrictEqual({});
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
