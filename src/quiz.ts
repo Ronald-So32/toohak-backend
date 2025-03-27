@@ -389,6 +389,15 @@ export function adminQuizQuestionCreate(
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
+
+  // Another helper
+  if (points < 1) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+  }
+  if (points > 10) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  }
+
   // Return error for amount of answers
   // Return error for non-positive time-limits
   // Return error for sum of question time limits in the quiz exceeding 3 minutes

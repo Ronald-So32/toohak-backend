@@ -197,6 +197,10 @@ export class Errors {
     Time: {
       POSITIVE: 'must be a positive number',
       TOO_LONG: 'must have at most 3 minutes',
+    },
+    Points: {
+      TOO_SHORT: 'must be at least 1',
+      TOO_LONG: 'must be at most 10',
     }
   } as const;
 
