@@ -8,9 +8,11 @@ import {
   errorInterface,
   quizSummariesInterface,
   quizIdInterface,
-  questionIdInterface,
-  quizDetailsInterface
-} from './helper.ts';
+  quizDetailsInterface,
+  quizGetDetailsInterface,
+  Errors
+} from './functionsHelper';
+
 
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
@@ -374,7 +376,7 @@ export function adminQuizQuestionMove(
   // check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
   if (validQuestionIndex === -1) {
-    return { error: 'Question ID not found in quiz' };
+    return Errors.invalidQuestionId();
   }
 
   if (newPosition < 0) {
