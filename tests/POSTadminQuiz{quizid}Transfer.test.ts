@@ -89,14 +89,27 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session,
           'z7277272@ad.unsw.edu.au'
         );
-
-        // Check error response
         expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
         expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Quiz name conflict with target user', () => {
+        const responseCreate3 = requestAdminQuizCreate(
+          session,
+          'Quiz Namee',
+          'Quiz Descriptionn'
+        );
+        expect(responseCreate3.body).toStrictEqual({ quizId: expect.any(Number) });
+        expect(responseCreate3.statusCode).toStrictEqual(OK);
 
+        // Try to transfer quiz with duplicate name
+        const transferResult = requestAdminQuizTransfer(
+          responseCreate3.body.quizId,
+          session,
+          'z6969@ad.unsw.edu.au'
+        );
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
       });
     });
 
