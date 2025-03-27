@@ -338,6 +338,14 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const userId = userIdResult.userId;
   const result = adminQuizTransfer(quizId, userId, userEmail);
 
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
   
   return res.status(OK).json({});
 });
