@@ -155,8 +155,7 @@ export class Errors {
       TOO_SHORT: 'must be at least 8 characters',
       NO_UPPERCASE: 'must contain at least one uppercase letter',
       NO_LOWERCASE: 'must contain at least one lowercase letter',
-      NO_NUMBER: 'must contain at least one number',
-      NO_SPECIAL: 'must contain at least one special character'
+      NO_NUMBER: 'must contain at least one number'
     },
     Description: {
       TOO_LONG: 'must be less than 100 characters'
@@ -250,15 +249,9 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return {
-        error: 'First name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes'
-      };
+      return Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS);
     } else {
-      return {
-        error: 'Last name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes'
-      };
+      return Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS);
     }
   }
 
@@ -275,14 +268,21 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
 export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
-    return { error: 'Password is shorter than 8 characters' };
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.TOO_SHORT);
   }
 
   // Check if newPassword contains at least one letter and one number
-  const passwordLetter = password.search(/[a-zA-Z]/);
+  const passwordLetterLower = password.search(/[a-z]/);
+  const passwordLetterUpper = password.search(/[A-Z]/);
   const passwordNumber = password.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
+  if (passwordLetterLower === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LOWERCASE);
+  }
+  if (passwordLetterUpper === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_UPPERCASE);
+  }
+  if (passwordNumber === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_NUMBER);
   }
 
   return true;
