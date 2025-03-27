@@ -44,7 +44,11 @@ beforeEach(() => {
 describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
-      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId, session, 'New Description');
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(
+        quizId,
+        session,
+        'New Description'
+      );
       expect(responseUpdateDescription.body).toStrictEqual({});
       expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
     });
@@ -52,7 +56,10 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
 
   describe('Test error cases', () => {
     test('Testing when the session is invalid', () => {
-      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId, session + 'Invalid Session', 'New Description');
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(
+        quizId, session + 'Invalid Session',
+        'New Description'
+      );
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -64,7 +71,11 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuizGet = requestGetQuiz(quizId, session);
-      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId + quizIdOffset, session, 'New Description');
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(
+        quizId + quizIdOffset,
+        session,
+        'New Description'
+      );
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
 
