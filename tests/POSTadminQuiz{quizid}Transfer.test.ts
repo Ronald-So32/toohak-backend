@@ -73,24 +73,24 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     describe('Error 400: Bad Request', () => {
       test('userEmail is not a real user', () => {
         // Try to transfer to non-existent user
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session,
           'nonexistent@example.com'
         );
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
-        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
       });
 
       test('userEmail is the current logged in user', () => {
         // Try to transfer to self
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session,
           'z7277272@ad.unsw.edu.au'
         );
-        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Quiz name conflict with target user', () => {
@@ -103,38 +103,38 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         expect(responseCreate3.statusCode).toStrictEqual(OK);
 
         // Try to transfer quiz with duplicate name
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           responseCreate3.body.quizId,
           session,
           'z6969@ad.unsw.edu.au'
         );
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
-        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
       });
     });
 
     describe('Error 401: Unauthorized', () => {
       test('Invalid session', () => {
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session + 'Invalid Session',
           'z6969@ad.unsw.edu.au'
         );
-        expect(transferResult.statusCode).toStrictEqual(UNAUTHORISED);
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Logged out user', () => {
         requestAdminAuthLogout(session);
 
         // Try to transfer with logged out session
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session,
           'z6969@ad.unsw.edu.au'
         );
-        expect(transferResult.statusCode).toStrictEqual(UNAUTHORISED);
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
     });
 
@@ -150,17 +150,24 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         const session3 = responseRegister3.body.session;
 
         // User3 tries to transfer User1's quiz to User2
-        const transferResult = requestAdminQuizTransfer(
+        const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session3,
           'z6969@ad.unsw.edu.au'
         );
-        expect(transferResult.statusCode).toStrictEqual(FORBIDDEN);
-        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Quiz does not exist', () => {
-
+        // Try to transfer non-existent quiz
+        const responseTransfer = requestAdminQuizTransfer(
+          quizId + quizIdOffset,
+          session,
+          'z6969@ad.unsw.edu.au'
+        );
+        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
     });
 
