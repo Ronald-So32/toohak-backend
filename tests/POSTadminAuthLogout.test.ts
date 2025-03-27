@@ -188,7 +188,7 @@ describe('Testing POST /v1/admin/auth/logout', () => {
       session,
       'New New Description'
     );
-    expect(responseUpdateDescription2.body).toStrictEqual({ error: expect.any(string) });
+    expect(responseUpdateDescription2.body).toStrictEqual({ error: expect.any(String) });
     expect(responseUpdateDescription2.statusCode).toStrictEqual(UNAUTHORISED);
 
     // Quiz description shouldn't change
