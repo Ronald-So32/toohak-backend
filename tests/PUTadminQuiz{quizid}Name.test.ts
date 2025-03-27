@@ -13,6 +13,7 @@ const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
+
 const quizIdOffset = 727;
 
 let responseRegister: responseInterface;

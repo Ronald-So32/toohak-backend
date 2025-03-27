@@ -20,9 +20,7 @@ const quizIdOffset = 727;
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
 let session: string;
-let session2: string;
 let quizId: number;
-let quizId2: number;
 
 beforeEach(() => {
   requestClear();
@@ -77,16 +75,18 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           'First2',
           'Last2'
         );
-        session2 = responseRegister.body.session;
         // Create a quiz for first user
         responseCreate = requestAdminQuizCreate(
         session,
         'Quiz for Ownership Test',
         'Description'
         );
-        quizId2 = responseCreate.body.quizId;
         // Try to update first user's quiz with second user's ID
-        const invalidIdres = requestAdminQuizUpdateDescription(quizId2, session2, 'New Description');
+        const invalidIdres = requestAdminQuizUpdateDescription(
+          responseCreate.body.quizId,
+          responseRegister.body.session,
+          'New Description'
+        );
         expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
         expect(invalidIdres.statusCode).toStrictEqual(FORBIDDEN);
       });
