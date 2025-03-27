@@ -383,3 +383,8 @@ export function validQuestionString(question: string): boolean | errorInterface 
 
   return true;
 }
+
+export function randomColour(): string {
+
+  return 'red';
+}

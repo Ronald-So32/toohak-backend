@@ -11,7 +11,8 @@ import {
   quizDetailsInterface,
   quizGetDetailsInterface,
   questionIdInterface,
-  Errors
+  Errors,
+  validQuestionString
 } from './functionsHelper';
 
 /**
@@ -356,14 +357,25 @@ export function adminQuizQuestionCreate(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  const { question, timeLimit, points, answerOptions } = questionBody.questionBody;
+
+  // Validate question string
+  const questionValidation = validQuestionString(question);
+  if (questionValidation !== true) {
+    return questionValidation as errorInterface;
+  }
 
   // Return error for amount of answers
   // Return error for non-positive time-limits
