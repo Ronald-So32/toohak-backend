@@ -145,54 +145,64 @@ export interface quizGetDetailsInterface {
 
 export class Errors {
   // Error for duplicate email
-  static emailAlreadyUsed(): { error: string } {
+  static emailAlreadyUsed(): errorInterface {
     return { error: 'Email has already been used by another user' };
   }
 
   // Error for invalid email
-  static invalidEmail(): { error: string } {
+  static invalidEmail(): errorInterface {
     return { error: 'Email is not valid' };
   }
 
   // Error for invalid name
-  static invalidName(isFirstName: boolean, specific: string): { error: string } {
+  static invalidName(isFirstName: boolean, specific: string): errorInterface {
     const nameType = isFirstName ? 'First name' : 'Last name';
     return { error: `${nameType} is not valid, ${specific}` };
   }
 
   // Error for invalid password
-  static invalidPassword(): { error: string } {
+  static invalidPassword(): errorInterface {
     return { error: 'Password is not valid' };
   }
 
   // Error for non-existent email
-  static emailNotFound(): { error: string } {
+  static emailNotFound(): errorInterface {
     return { error: 'Email does not exist' };
   }
 
   // Error for incorrect password
-  static incorrectPassword(): { error: string } {
+  static incorrectPassword(): errorInterface {
     return { error: 'Password is incorrect' };
   }
 
   // Error for non-existent user
-  static userNotFound(userId: number): { error: string } {
+  static userNotFound(userId: number): errorInterface {
     return { error: `User Id of ${userId} is not found` };
   }
 
   // Error for reused password
-  static passwordReused(): { error: string } {
+  static passwordReused(): errorInterface {
     return { error: 'New Password has already been used before by this user' };
   }
 
   // Error for same old and new password
-  static samePassword(): { error: string } {
+  static samePassword(): errorInterface {
     return { error: 'New password cannot be the same as the old password' };
   }
 
   // Error for invalid session
-  static sessionNotFound(): { error: string } {
+  static sessionNotFound(): errorInterface {
     return { error: 'No session is found' };
+  }
+
+  // Error for invalid session
+  static notOwner(): errorInterface {
+    return { error: 'User does not own this quiz' };
+  }
+
+  // Error for invalid session
+  static invalidQuiz(): errorInterface {
+    return { error: 'Invalid quiz ID' };
   }
 }
 
