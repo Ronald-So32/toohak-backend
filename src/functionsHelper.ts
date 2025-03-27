@@ -189,6 +189,14 @@ export class Errors {
     Question: {
       TOO_SHORT: 'must be at least 5 characters',
       TOO_LONG: 'must be at most 50 characters',
+    },
+    Answer: {
+      TOO_SHORT: 'must have at least 2 answers',
+      TOO_LONG: 'must have at most 6 answer',
+    },
+    Time: {
+      POSITIVE: 'must be a positive number',
+      TOO_LONG: 'must have at most 3 minutes',
     }
   } as const;
 

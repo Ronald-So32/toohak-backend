@@ -377,6 +377,18 @@ export function adminQuizQuestionCreate(
     return questionValidation as errorInterface;
   }
 
+  // DO this in a helper instead
+  if (answerOptions.length < 2) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+  }
+  if (answerOptions.length > 6) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  }
+
+  if (timeLimit <= 0) {
+    return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
+  }
+
   // Return error for amount of answers
   // Return error for non-positive time-limits
   // Return error for sum of question time limits in the quiz exceeding 3 minutes
