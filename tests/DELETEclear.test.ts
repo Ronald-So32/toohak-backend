@@ -51,7 +51,7 @@ describe('Testing DELETE /v1/clear', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    session = responseRegister.body.session;
+    session = responseLogin.body.session;
     expect(responseLogin.body).toStrictEqual({ session: session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 

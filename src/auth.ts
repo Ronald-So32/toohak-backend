@@ -7,7 +7,7 @@ import {
   userIdInterface,
   userDetailsInterface,
   generateSession,
-  findSessionFromUserId
+  Errors
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -35,11 +35,11 @@ export function adminAuthRegister(
   // Check if email has already been used
   const emailUsed = data.users.some(user => user.email === email);
   if (emailUsed) {
-    return { error: 'Email has already been used by another user' };
+    return Errors.invalidEmail();
   }
 
   if (!(validator.isEmail(email))) {
-    return { error: 'Email is not valid' };
+    return Errors.invalidEmail();
   }
 
   const validFirst = validName(nameFirst, true);
@@ -99,16 +99,18 @@ export function adminAuthLogin(
 
   const userData = data.users.find(user => user.email === email);
   if (!userData) {
-    return { error: 'Email does not exist' };
+    return Errors.invalidEmail();
   }
 
   // User password is not correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
-    return { error: `Password is wrong stored:${userData.password}, asked:${password}` };
+    return Errors.invalidPassword();
   }
 
-  const sessionNum = findSessionFromUserId(userData.userId) as string;
+  const currentSession = generateSession();
+
+  data.sessions.push({ userId: userData.userId, session: currentSession });
 
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
@@ -116,7 +118,7 @@ export function adminAuthLogin(
 
   return {
     userId: userData.userId,
-    session: sessionNum
+    session: currentSession
   };
 }
 
@@ -136,7 +138,7 @@ export function adminUserDetails(
 
   const userData = data.users.find(user => user.userId === userId);
   if (!userData) {
-    return { error: `User Id of ${userId} is not found` };
+    return Errors.invalidUser();
   }
 
   // If the variable userId exists, return user details
@@ -173,7 +175,7 @@ export function adminUserDetailsUpdate(
 
   const userData = data.users.find(user => user.userId === userId);
   if (!userData) {
-    return { error: `User Id of ${userId} is not found` };
+    return Errors.invalidUser();
   }
 
   // Check if new email has been used by other user
@@ -181,11 +183,11 @@ export function adminUserDetailsUpdate(
     user => user.email === email && user.userId !== userId
   );
   if (isEmailUsedByOtherUser) {
-    return { error: 'Email has already been used by another user' };
+    return Errors.invalidEmail();
   }
 
   if (!(validator.isEmail(email))) {
-    return { error: 'Email is not valid' };
+    return Errors.invalidEmail();
   }
 
   const validFirst = validName(nameFirst, true);
@@ -226,17 +228,17 @@ export function adminUserPasswordUpdate(
 
   const userData = data.users.find(user => user.userId === userId);
   if (!userData) {
-    return { error: `User Id of ${userId} is not found` };
+    return Errors.invalidUser();
   }
 
   // Check if password of passed in userId is correct oldPassword
   const user = data.users.find(user => user.userId === userId);
   if (!user || user.password !== oldPassword) {
-    return { error: 'Old Password is not the correct old password' };
+    return Errors.invalidUser();
   }
 
   if (oldPassword === newPassword) {
-    return { error: 'oldPassword is the same as new one' };
+    return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
   }
 
   // Check if newPassword has been used before
@@ -244,7 +246,7 @@ export function adminUserPasswordUpdate(
 
   const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
   if (isPasswordReused) {
-    return { error: 'New Password has already been used before by this user' };
+    return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
   }
 
   const validPass = validPassword(newPassword);
@@ -254,6 +256,20 @@ export function adminUserPasswordUpdate(
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
   userData.password = newPassword;
+
+  return {};
+}
+
+export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
+  const data = getData();
+
+  const sessionIndex = data.sessions.findIndex(sessions => sessions.session === session);
+
+  if (sessionIndex === -1) {
+    return Errors.invalidSession();
+  }
+
+  data.sessions.splice(sessionIndex, 1);
 
   return {};
 }

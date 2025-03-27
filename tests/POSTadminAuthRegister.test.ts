@@ -363,7 +363,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    expect(responseLogin.body).toStrictEqual({ session: session });
+    expect(responseLogin.body).toStrictEqual({ session: responseLogin.body.session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Check user has correct details

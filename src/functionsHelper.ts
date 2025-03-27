@@ -1,6 +1,6 @@
 import {
   getData,
-  questionInterface
+  questionsInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -152,61 +152,83 @@ export interface quizGetDetailsInterface {
     timeLastEdited: number;
     description: string;
     numQuestions: number;
-    questions: questionInterface[];
+    questions: questionsInterface[];
     timeLimit: number;
   }
 }
 
 export class Errors {
-  // Error for duplicate email
-  static emailAlreadyUsed(): { error: string } {
-    return { error: 'Email has already been used by another user' };
+  // Specific validation reasons
+  static readonly Specific = {
+    Name: {
+      TOO_SHORT: 'must be at least 2 characters',
+      TOO_LONG: 'must be at most 20 characters',
+      INVALID_CHARS: 'contains invalid characters ' +
+      '(Valid characters are letters, spaces, hyphens or apostrophes)'
+    },
+    Password: {
+      TOO_SHORT: 'must be at least 8 characters',
+      NO_LETTER: 'must contain at least one letter',
+      NO_NUMBER: 'must contain at least one number',
+      OLD_SAME: 'must be different than the previous passwords'
+    },
+    Description: {
+      TOO_LONG: 'must be at most 100 characters'
+    },
+    QuizName: {
+      TOO_SHORT: 'must be at least 3 characters',
+      TOO_LONG: 'must be at most 30 characters',
+      INVALID_CHARS: 'contains invalid characters ' +
+      '(Valid characters are alphanumerics and spaces)',
+      IN_USE: 'already in use by another quiz'
+    },
+    Email: {
+      SELF: 'targer user must not be yourself',
+      NAME: 'target user already has a quiz with the same name'
+    }
+  } as const;
+
+  // Error messages
+  static readonly noPermissionError = 'User has no permissions to do this';
+  static readonly invalidSessionError = 'Invalid Session';
+  static readonly invalidPasswordError = 'Invalid Password';
+  static readonly invalidEmailError = 'Invalid Email';
+  static readonly invalidQuizError = 'Invalid quiz ID';
+  static readonly invalidUserError = 'Invalid user ID';
+
+  // Error for invalid name
+  static invalidString(type: string, specific: string): errorInterface {
+    return { error: `${type} is invalid, ${specific}` };
+  }
+
+  // Error for invalid user ID
+  static invalidUser(): errorInterface {
+    return { error: this.invalidUserError };
+  }
+
+  // Error for invalid quiz ID
+  static invalidQuiz(): errorInterface {
+    return { error: this.invalidQuizError };
   }
 
   // Error for invalid email
-  static invalidEmail(): { error: string } {
-    return { error: 'Email is not valid' };
-  }
-
-  // Error for invalid name
-  static invalidName(isFirstName: boolean, specific: string): { error: string } {
-    const nameType = isFirstName ? 'First name' : 'Last name';
-    return { error: `${nameType} is not valid, ${specific}` };
+  static invalidEmail(): errorInterface {
+    return { error: this.invalidEmailError };
   }
 
   // Error for invalid password
-  static invalidPassword(): { error: string } {
-    return { error: 'Password is not valid' };
-  }
-
-  // Error for non-existent email
-  static emailNotFound(): { error: string } {
-    return { error: 'Email does not exist' };
-  }
-
-  // Error for incorrect password
-  static incorrectPassword(): { error: string } {
-    return { error: 'Password is incorrect' };
-  }
-
-  // Error for non-existent user
-  static userNotFound(userId: number): { error: string } {
-    return { error: `User Id of ${userId} is not found` };
-  }
-
-  // Error for reused password
-  static passwordReused(): { error: string } {
-    return { error: 'New Password has already been used before by this user' };
-  }
-
-  // Error for same old and new password
-  static samePassword(): { error: string } {
-    return { error: 'New password cannot be the same as the old password' };
+  static invalidPassword(): errorInterface {
+    return { error: this.invalidPasswordError };
   }
 
   // Error for invalid session
-  static sessionNotFound(): { error: string } {
-    return { error: 'No session is found' };
+  static invalidSession(): errorInterface {
+    return { error: this.invalidSessionError };
+  }
+
+  // Error for user with no permissions
+  static noPermission(): errorInterface {
+    return { error: this.noPermissionError };
   }
 }
 
@@ -237,31 +259,25 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return Errors.invalidName(true, 'shorter than 2 characters');
+      return Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT);
     } else {
-      return Errors.invalidName(false, 'shorter than 2 characters');
+      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT);
     }
   }
   // Checks if there is more than 20 characters in the name
   if (name.length > 20) {
     if (isFirst) {
-      return { error: 'First name is longer than 20 characters' };
+      return Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG);
     } else {
-      return { error: 'Last name is longer than 20 characters' };
+      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG);
     }
   }
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return {
-        error: 'First name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes'
-      };
+      return Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS);
     } else {
-      return {
-        error: 'Last name contains characters other than lowercase letters, ' +
-        'uppercase letters, spaces, hyphens, or apostrophes'
-      };
+      return Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS);
     }
   }
 
@@ -278,14 +294,17 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
 export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
-    return { error: 'Password is shorter than 8 characters' };
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.TOO_SHORT);
   }
 
   // Check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
-  if (passwordLetter === -1 || passwordNumber === -1) {
-    return { error: 'Password does not contain at least one number and at least one letter' };
+  if (passwordLetter === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LETTER);
+  }
+  if (passwordNumber === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_NUMBER);
   }
 
   return true;
@@ -301,15 +320,15 @@ export function validPassword(password: string): boolean | errorInterface {
 export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
-    return { error: 'Quiz name contains special characters' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS);
   }
   // Checks if the quiz name has less than 3
   if (name.length < 3) {
-    return { error: 'Quiz name is lesser than 3' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT);
   }
   // Checks if the quiz name has more than 30
   if (name.length > 30) {
-    return { error: 'Quiz name is greater than 30' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG);
   }
 
   return true;
@@ -331,7 +350,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
 
   if (!theSession) {
-    return Errors.sessionNotFound();
+    return Errors.invalidSession();
   }
 
   return theSession.session;
@@ -342,7 +361,7 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
 
   if (!theSession) {
-    return Errors.sessionNotFound();
+    return Errors.invalidSession();
   }
 
   return { userId: theSession.userId };
