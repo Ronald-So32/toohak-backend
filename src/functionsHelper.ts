@@ -144,14 +144,26 @@ export interface quizGetDetailsInterface {
 }
 
 export class Errors {
+  // Static error message constants
+  static readonly emailAlreadyUsedError = 'Email has already been used by another user';
+  static readonly invalidEmailError = 'Email is not valid';
+  static readonly invalidPasswordError = 'Password is not valid';
+  static readonly emailNotFoundError = 'Email does not exist';
+  static readonly incorrectPasswordError = 'Password is incorrect';
+  static readonly passwordReusedError = 'New Password has already been used before by this user';
+  static readonly samePasswordError = 'New password cannot be the same as the old password';
+  static readonly sessionNotFoundError = 'No session is found';
+  static readonly notOwnerError = 'User does not own this quiz';
+  static readonly invalidQuizError = 'Invalid quiz ID';
+
   // Error for duplicate email
   static emailAlreadyUsed(): errorInterface {
-    return { error: 'Email has already been used by another user' };
+    return { error: this.emailAlreadyUsedError };
   }
 
   // Error for invalid email
   static invalidEmail(): errorInterface {
-    return { error: 'Email is not valid' };
+    return { error: this.invalidEmailError };
   }
 
   // Error for invalid name
@@ -162,17 +174,17 @@ export class Errors {
 
   // Error for invalid password
   static invalidPassword(): errorInterface {
-    return { error: 'Password is not valid' };
+    return { error: this.invalidPasswordError };
   }
 
   // Error for non-existent email
   static emailNotFound(): errorInterface {
-    return { error: 'Email does not exist' };
+    return { error: this.emailNotFoundError };
   }
 
   // Error for incorrect password
   static incorrectPassword(): errorInterface {
-    return { error: 'Password is incorrect' };
+    return { error: this.incorrectPasswordError };
   }
 
   // Error for non-existent user
@@ -182,27 +194,27 @@ export class Errors {
 
   // Error for reused password
   static passwordReused(): errorInterface {
-    return { error: 'New Password has already been used before by this user' };
+    return { error: this.passwordReusedError };
   }
 
   // Error for same old and new password
   static samePassword(): errorInterface {
-    return { error: 'New password cannot be the same as the old password' };
+    return { error: this.samePasswordError };
   }
 
   // Error for invalid session
   static sessionNotFound(): errorInterface {
-    return { error: 'No session is found' };
+    return { error: this.sessionNotFoundError };
   }
 
   // Error for invalid session
   static notOwner(): errorInterface {
-    return { error: 'User does not own this quiz' };
+    return { error: this.notOwnerError };
   }
 
   // Error for invalid session
   static invalidQuiz(): errorInterface {
-    return { error: 'Invalid quiz ID' };
+    return { error: this.invalidQuizError };
   }
 }
 
