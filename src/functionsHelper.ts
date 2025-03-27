@@ -201,7 +201,7 @@ export class Errors {
   }
 
   // Error for invalid session
-  static sessionNotFound(): errorInterface {
+  static invalidSession(): errorInterface {
     return { error: this.invalidSessionError };
   }
 
@@ -307,7 +307,7 @@ export function validQuizName(name: string): boolean | errorInterface {
   }
   // Checks if the quiz name has more than 30
   if (name.length > 30) {
-    return { error: 'Quiz name is greater than 30' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG);
   }
 
   return true;
@@ -329,7 +329,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
 
   if (!theSession) {
-    return Errors.sessionNotFound();
+    return Errors.invalidSession();
   }
 
   return theSession.session;
@@ -340,7 +340,7 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
 
   if (!theSession) {
-    return Errors.sessionNotFound();
+    return Errors.invalidSession();
   }
 
   return { userId: theSession.userId };
