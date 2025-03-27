@@ -10,11 +10,11 @@ import {
 
 import { describe } from 'node:test';
 
-
 const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
+
 const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
@@ -155,7 +155,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
-
+    // TODO
   });
 });
   
