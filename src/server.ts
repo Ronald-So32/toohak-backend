@@ -261,7 +261,7 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
-
+  // ADD THE BADREQUEST
   const userId = userIdResult.userId;
   const result = adminQuizDescriptionUpdate(userId, quizId, description);
 
