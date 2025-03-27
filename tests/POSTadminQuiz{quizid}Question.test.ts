@@ -5,7 +5,7 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  // requestGetQuiz
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -709,7 +709,11 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    requestAdminQuizQuestionCreate(
+    const question1Id = responseQuestionCreate.body.questionId
+    expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+
+    responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId,
       session,
       {
@@ -734,6 +738,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
+    const question2Id = responseQuestionCreate.body.questionId
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
@@ -749,7 +754,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       session,
       {
         questionBody: {
-          question: 'Question',
+          question: 'Question3',
           timeLimit: 4,
           points: 5,
           answerOptions: [
@@ -769,10 +774,11 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
+    const question3Id = responseQuestionCreate.body.questionId
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-    /*
-    const responseQuizDetails = requestGetQuiz(quizId, session);
+    
+    let responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": quizId,
       "name": "Quiz Name",
@@ -783,36 +789,47 @@ describe('Testing POST /v1/admin/quiz', () => {
       "questions": [
         {
           "question": "Question1",
+          "questionId": question1Id,
           "timeLimit": 4,
           "points": 5,
           "answerOptions": [
             {
               "answer": "Right",
-              "correct": true
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
             },
             {
               "answer": "Wrong",
-              "correct": false
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
             }
           ]
         },
         {
-        "questionBody": {
           "question": "Question2",
+          "questionId": question2Id,
           "timeLimit": 4,
           "points": 5,
           "answerOptions": [
             {
               "answer": "Right",
-              "correct": true
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
             },
             {
               "answer": "Wrong",
-              "correct": false
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
             },
             {
               "answer": "Maybe",
-              "correct": false
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
             }
           ]
         }
@@ -820,6 +837,46 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeLimit": expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-*/
+    
+    responseQuizDetails = requestGetQuiz(quizId2, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizId": quizId2,
+      "name": "Quiz Name2",
+      "timeCreated": expect.any(Number),
+      "timeLastEdited": expect.any(Number),
+      "description": "Description2",
+      "numQuestions": 0,
+      "questions": [
+        {
+          "question": "Question3",
+          "questionId": question3Id,
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": "Wrong",
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": 'Maybe',
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            }
+          ]
+        }
+      ],
+      "timeLimit": expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+
   });
 });
