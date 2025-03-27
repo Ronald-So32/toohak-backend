@@ -405,6 +405,53 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   });
   
   test('Testing POST /v1/admin/quiz/{quizid}/transfer works as intended', () => {
-  
+    // Register first user and create a quiz
+    const user1Register = requestAdminAuthRegister(
+      'user1@example.com',
+      'Password1',
+      'First',
+      'User'
+    );
+    const session1 = user1Register.body.session;
+
+    const quizCreate = requestAdminQuizCreate(
+      session1,
+      'Quiz Name',
+      'Quiz Description'
+    );
+    const quizId = quizCreate.body.quizId;
+
+    // Register second user
+    const user2Register = requestAdminAuthRegister(
+      'user2@example.com',
+      'Password2',
+      'Second',
+      'User'
+    );
+    const session2 = user2Register.body.session;
+
+    // Transfer quiz from user1 to user2
+    const transferResult = requestAdminQuizTransfer(
+      quizId,
+      session1,
+      'user2@example.com'
+    );
+
+    // Check transfer was successful
+    expect(transferResult.statusCode).toStrictEqual(OK);
+    expect(transferResult.body).toStrictEqual({});
+
+    // Check user2 now has the quiz
+    const user2Quizzes = requestGetQuizList(session2);
+    expect(user2Quizzes.body.quizzes).toContainEqual(expect.objectContaining({
+      quizId: quizId,
+      name: 'Quiz Name'
+    }));
+
+    // Check user1 no longer has the quiz
+    const user1Quizzes = requestGetQuizList(session1);
+    expect(user1Quizzes.body.quizzes).not.toContainEqual(expect.objectContaining({
+      quizId: quizId
+    }));
   });
 });
