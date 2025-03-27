@@ -155,7 +155,8 @@ export class Errors {
     Password: {
       TOO_SHORT: 'must be at least 8 characters',
       NO_LETTER: 'must contain at least one letter',
-      NO_NUMBER: 'must contain at least one number'
+      NO_NUMBER: 'must contain at least one number',
+      OLD_SAME: 'must be different than the previous passwords'
     },
     Description: {
       TOO_LONG: 'must be at most 100 characters'
