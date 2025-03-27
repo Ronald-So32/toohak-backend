@@ -351,24 +351,24 @@ export function adminQuizQuestionMove(
   questionId: number, 
   session: string, 
   newPosition: number
-  ): questionIdInterface | errorInterface {
+  ): questionsInterface | errorInterface {
   const data = getData();
 
   // check if userid is valid
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   // check if questionId is in given quiz

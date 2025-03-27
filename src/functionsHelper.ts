@@ -177,6 +177,12 @@ export class Errors {
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
+  static readonly invalidQuestionIdError = 'Question Id not found in quiz';
+
+  // Error for invalid questionId
+  static invalidQuestionId(): errorInterface {
+    return { error: this.invalidQuestionIdError };
+  }
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
