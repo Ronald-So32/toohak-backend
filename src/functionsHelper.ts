@@ -148,17 +148,22 @@ export class Errors {
   static readonly Specific = {
     Name: {
       TOO_SHORT: 'must be at least 2 characters',
-      TOO_LONG: 'must be less than 50 characters',
-      INVALID_CHARS: 'contains invalid characters'
+      TOO_LONG: 'must be at most 20 characters',
+      INVALID_CHARS: 'contains invalid characters \
+      (Valid characters are letters, spaces, hyphens or apostrophes)'
     },
     Password: {
       TOO_SHORT: 'must be at least 8 characters',
-      NO_UPPERCASE: 'must contain at least one uppercase letter',
-      NO_LOWERCASE: 'must contain at least one lowercase letter',
+      NO_LETTER: 'must contain at least one letter',
       NO_NUMBER: 'must contain at least one number'
     },
     Description: {
-      TOO_LONG: 'must be less than 100 characters'
+      TOO_LONG: 'must be at most 100 characters'
+    },
+    QuizName: {
+      TOO_SHORT: 'must be at least 3 characters',
+      TOO_LONG: 'must be at most 30 characters',
+      INVALID_CHARS: 'contains invalid characters (Valid characters are alphanumerics and spaces)'
     }
   } as const;
 
@@ -272,14 +277,10 @@ export function validPassword(password: string): boolean | errorInterface {
   }
 
   // Check if newPassword contains at least one letter and one number
-  const passwordLetterLower = password.search(/[a-z]/);
-  const passwordLetterUpper = password.search(/[A-Z]/);
+  const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
-  if (passwordLetterLower === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LOWERCASE);
-  }
-  if (passwordLetterUpper === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_UPPERCASE);
+  if (passwordLetter === -1) {
+    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LETTER);
   }
   if (passwordNumber === -1) {
     return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_NUMBER);
@@ -298,11 +299,11 @@ export function validPassword(password: string): boolean | errorInterface {
 export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
-    return { error: 'Quiz name contains special characters' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS);
   }
   // Checks if the quiz name has less than 3
   if (name.length < 3) {
-    return { error: 'Quiz name is lesser than 3' };
+    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT);
   }
   // Checks if the quiz name has more than 30
   if (name.length > 30) {
