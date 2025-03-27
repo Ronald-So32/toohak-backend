@@ -353,7 +353,7 @@ export function adminQuizQuestionMove(
   questionId: number, 
   session: string, 
   newPosition: number
-  ): questionsInterface | errorInterface {
+  ): Record<string, never> | errorInterface {
   const data = getData();
 
   // check if userid is valid
