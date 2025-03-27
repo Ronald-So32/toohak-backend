@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { getData } from './dataStore';
 import {
   createUUID,
@@ -255,6 +256,20 @@ export function adminUserPasswordUpdate(
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
   userData.password = newPassword;
+
+  return {};
+}
+
+export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
+  const data = getData();
+
+  const sessionIndex = data.sessions.findIndex(s => s.session === session);
+  
+  if (sessionIndex !== -1) {
+    data.sessions.splice(sessionIndex, 1);
+  } else {
+    return Errors.invalidSession();
+  }
 
   return {};
 }

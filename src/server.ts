@@ -5,6 +5,7 @@ import {
   adminUserDetails,
   adminUserDetailsUpdate,
   adminUserPasswordUpdate,
+  adminAuthLogout,
 } from './auth';
 import {
   adminQuizList,
@@ -310,18 +311,14 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
 
 // POST /v1/admin/auth/logout
 app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
-  // Retrieve session from headers
-  const session = req.headers.session as string; 
+  const session = req.headers.session as string;
 
-  // Validate session
-  if (!session || !invalidateSession(session)) {
-    return res.status(UNAUTHORISED).json({ error: 'Invalid or empty session' }); 
+  const result = adminAuthLogout(session);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
   }
 
-  // Invalidate the session
-  invalidateSession(session);
-
-  // Respond with success
   return res.status(OK).json({});
 });
 
