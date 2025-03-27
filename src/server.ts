@@ -35,7 +35,6 @@ import sui from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import { getData } from './dataStore';
 // import request from 'sync-request-curl';
 
 const OK = 200;
