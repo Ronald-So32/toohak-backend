@@ -30,7 +30,7 @@ export function adminQuizList(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quizzes: quizSummariesInterface[] = [];

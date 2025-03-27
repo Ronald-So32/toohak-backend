@@ -146,15 +146,25 @@ export interface quizGetDetailsInterface {
 export class Errors {
   // Static error message constants
   static readonly emailAlreadyUsedError = 'Email has already been used by another user';
-  static readonly invalidEmailError = 'Email is not valid';
-  static readonly invalidPasswordError = 'Password is not valid';
   static readonly emailNotFoundError = 'Email does not exist';
-  static readonly incorrectPasswordError = 'Password is incorrect';
   static readonly passwordReusedError = 'New Password has already been used before by this user';
   static readonly samePasswordError = 'New password cannot be the same as the old password';
-  static readonly sessionNotFoundError = 'No session is found';
   static readonly notOwnerError = 'User does not own this quiz';
+  static readonly invalidSessionError = 'Invalid Session';
+  static readonly invalidPasswordError = 'Invalid Password';
+  static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
+  static readonly invalidUserError = 'Invalid user ID';
+
+  // Error for invalid user ID
+  static invalidUser(): errorInterface {
+    return { error: this.invalidUserError };
+  }
+
+  // Error for invalid quiz ID
+  static invalidQuiz(): errorInterface {
+    return { error: this.invalidQuizError };
+  }
 
   // Error for duplicate email
   static emailAlreadyUsed(): errorInterface {
@@ -184,14 +194,8 @@ export class Errors {
 
   // Error for incorrect password
   static incorrectPassword(): errorInterface {
-    return { error: this.incorrectPasswordError };
+    return { error: this.invalidPasswordError };
   }
-
-  // Error for non-existent user
-  static userNotFound(userId: number): errorInterface {
-    return { error: `User Id of ${userId} is not found` };
-  }
-
   // Error for reused password
   static passwordReused(): errorInterface {
     return { error: this.passwordReusedError };
@@ -204,17 +208,12 @@ export class Errors {
 
   // Error for invalid session
   static sessionNotFound(): errorInterface {
-    return { error: this.sessionNotFoundError };
+    return { error: this.invalidSessionError };
   }
 
-  // Error for invalid session
+  // Error for user not the owner for the quiz
   static notOwner(): errorInterface {
     return { error: this.notOwnerError };
-  }
-
-  // Error for invalid session
-  static invalidQuiz(): errorInterface {
-    return { error: this.invalidQuizError };
   }
 }
 
