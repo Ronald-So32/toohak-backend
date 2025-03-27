@@ -1,4 +1,3 @@
-import { adminAuthLogin } from '../src/auth';
 import {
   requestClear,
   responseInterface,

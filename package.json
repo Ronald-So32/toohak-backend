@@ -10,11 +10,12 @@
         "ts-node-dev": "ts-node-dev -T src/server.ts"
     },
     "dependencies": {
-        "validator": "^13.7.0",
         "cors": "^2.8.5",
         "express": "^4.19.2",
         "morgan": "^1.10.0",
-        "ts-node": "^10.9.2"
+        "ts-node": "^10.9.2",
+        "uuid": "^11.1.0",
+        "validator": "^13.7.0"
     },
     "devDependencies": {
         "@types/cors": "^2.8.17",
