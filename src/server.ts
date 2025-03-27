@@ -262,7 +262,7 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { questionBody } = req.body;
-  
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {

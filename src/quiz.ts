@@ -439,9 +439,9 @@ export function adminQuizQuestionCreate(
       colour: randomColour(),
     };
   });
-  
+
   const id = createUUID();
-  
+
   const newQuestion: questionsInterface = {
     questionId: id,
     question,
@@ -452,7 +452,6 @@ export function adminQuizQuestionCreate(
 
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
-
 
   return {
     questionId: id

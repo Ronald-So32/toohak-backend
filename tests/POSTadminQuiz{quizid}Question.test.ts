@@ -5,7 +5,7 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestGetQuiz
+  // requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -16,10 +16,10 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
 const quizIdOffset = 727;
-const questionIdOffset = 727;
+// const questionIdOffset = 727;
 
 let responseRegister: responseInterface;
-let responseQuizCreate: responseInterface;
+// let responseQuizCreate: responseInterface;
 let session: string;
 let quizId: number;
 
@@ -48,16 +48,16 @@ describe('Testing POST /v1/admin/quiz', () => {
       session,
       {
         questionBody: {
-          question: "Question",
+          question: 'Question',
           timeLimit: 4,
           points: 5,
           answerOptions: [
             {
-              answer: "Right",
+              answer: 'Right',
               correct: true
             },
             {
-              answer: "Wrong",
+              answer: 'Wrong',
               correct: false
             }
           ]
@@ -74,18 +74,18 @@ describe('Testing POST /v1/admin/quiz', () => {
         quizId,
         session + 'Invalid Session',
         {
-          "questionBody": {
-            "question": "Question",
-            "timeLimit": 4,
-            "points": 5,
-            "answerOptions": [
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ]
           }
@@ -104,25 +104,25 @@ describe('Testing POST /v1/admin/quiz', () => {
           'Last'
         );
         session = responseRegister.body.session;
-        
-        requestAdminAuthLogin('z5277272@ad.unsw.edu.au','Password1');
+
+        requestAdminAuthLogin('z5277272@ad.unsw.edu.au', 'Password1');
 
         const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
           session,
           {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
-              "points": 5,
-              "answerOptions": [
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
@@ -137,18 +137,18 @@ describe('Testing POST /v1/admin/quiz', () => {
           quizId + quizIdOffset,
           session,
           {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 4,
-              "points": 5,
-              "answerOptions": [
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
@@ -157,85 +157,85 @@ describe('Testing POST /v1/admin/quiz', () => {
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionCreate.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
 
     describe('Testing the question string', () => {
       describe('Invalid question strings', () => {
         test.each([
           {
-            question: "Ques",
-            description: "Containing less than 5 characters"
+            question: 'Ques',
+            description: 'Containing less than 5 characters'
           },
           {
-            question: "Quest".repeat(11),
-            description: "Containing more than 50 characters"
+            question: 'Quest'.repeat(11),
+            description: 'Containing more than 50 characters'
           },
           {
-            question: "",
-            description: "Empty string"
+            question: '',
+            description: 'Empty string'
           }
         ])('$description', ({ question }) => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
-          quizId,
-          session,
-          {
-            "questionBody": {
-              "question": question,
-              "timeLimit": 4,
-              "points": 5,
-              "answerOptions": [
-                {
-                  "answer": "Right",
-                  "correct": true
-                },
-                {
-                  "answer": "Wrong",
-                  "correct": false
-                }
-              ]
+          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: question,
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ]
+              }
             }
-          }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
-        })
-      })
+        });
+      });
 
       describe('Valid question strings', () => {
         test.each([
           {
-            question: "Quest",
-            description: "Containing exactly 5 characters"
+            question: 'Quest',
+            description: 'Containing exactly 5 characters'
           },
           {
-            question: "Quest".repeat(10),
-            description: "Containing exactly 50 characters"
+            question: 'Quest'.repeat(10),
+            description: 'Containing exactly 50 characters'
           },
           {
             question: "Ab1!@#$%^&*()_+-= []{}\\|'\";:?/.,<>`~",
-            description: "Containing different types of chacters"
+            description: 'Containing different types of chacters'
           }
         ])('$description', ({ question }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
-          quizId,
-          session,
-          {
-            "questionBody": {
-              "question": question,
-              "timeLimit": 4,
-              "points": 5,
-              "answerOptions": [
-                {
-                  "answer": "Right",
-                  "correct": true
-                },
-                {
-                  "answer": "Wrong",
-                  "correct": false
-                }
-              ]
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: question,
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ]
+              }
             }
-          }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
@@ -249,117 +249,117 @@ describe('Testing POST /v1/admin/quiz', () => {
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               }
             ],
-            description: "Containing less than 2 answers"
+            description: 'Containing less than 2 answers'
           },
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong1",
-                "correct": false
+                answer: 'Wrong1',
+                correct: false
               },
               {
-                "answer": "Wrong2",
-                "correct": false
+                answer: 'Wrong2',
+                correct: false
               },
               {
-                "answer": "Wrong3",
-                "correct": false
+                answer: 'Wrong3',
+                correct: false
               },
               {
-                "answer": "Wrong4",
-                "correct": false
+                answer: 'Wrong4',
+                correct: false
               },
               {
-                "answer": "Wrong5",
-                "correct": false
+                answer: 'Wrong5',
+                correct: false
               },
               {
-                "answer": "Wrong6",
-                "correct": false
+                answer: 'Wrong6',
+                correct: false
               }
             ],
-            description: "Containing more than 6 answers"
+            description: 'Containing more than 6 answers'
           },
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Duplicate answer strings within same questions"
+            description: 'Duplicate answer strings within same questions'
           },
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": false
+                answer: 'Right',
+                correct: false
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "No correct answers"
+            description: 'No correct answers'
           },
           {
             answerOptions: [
               {
-                "answer": "",
-                "correct": true
+                answer: '',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Answer containing less than 1 character"
+            description: 'Answer containing less than 1 character'
           },
           {
             answerOptions: [
               {
-                "answer": "Right".repeat(7),
-                "correct": true
+                answer: 'Right'.repeat(7),
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Answer containing more than 30 character"
+            description: 'Answer containing more than 30 character'
           }
         ])('$description', ({ answerOptions }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
             quizId,
             session,
             {
-              "questionBody": {
-                "question": "Question",
-                "timeLimit": 4,
-                "points": 5,
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
                 answerOptions
               }
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
-        })
+        });
       });
 
       describe('Valid answers', () => {
@@ -367,80 +367,80 @@ describe('Testing POST /v1/admin/quiz', () => {
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Containing exactly 2 answers"
+            description: 'Containing exactly 2 answers'
           },
           {
             answerOptions: [
               {
-                "answer": "Right",
-                "correct": true
+                answer: 'Right',
+                correct: true
               },
               {
-                "answer": "Wrong1",
-                "correct": false
+                answer: 'Wrong1',
+                correct: false
               },
               {
-                "answer": "Wrong2",
-                "correct": false
+                answer: 'Wrong2',
+                correct: false
               },
               {
-                "answer": "Wrong3",
-                "correct": false
+                answer: 'Wrong3',
+                correct: false
               },
               {
-                "answer": "Wrong4",
-                "correct": false
+                answer: 'Wrong4',
+                correct: false
               },
               {
-                "answer": "Wrong5",
-                "correct": false
+                answer: 'Wrong5',
+                correct: false
               },
             ],
-            description: "Containing exactly 6 answers"
+            description: 'Containing exactly 6 answers'
           },
           {
             answerOptions: [
               {
-                "answer": "R",
-                "correct": true
+                answer: 'R',
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Answer containing exactly 1 character"
+            description: 'Answer containing exactly 1 character'
           },
           {
             answerOptions: [
               {
-                "answer": "Right".repeat(6),
-                "correct": true
+                answer: 'Right'.repeat(6),
+                correct: true
               },
               {
-                "answer": "Wrong",
-                "correct": false
+                answer: 'Wrong',
+                correct: false
               }
             ],
-            description: "Answer containing exactly 30 character"
+            description: 'Answer containing exactly 30 character'
           },
         ])('$description', ({ answerOptions }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
             quizId,
             session,
             {
-              "questionBody": {
-                "question": "Question",
-                "timeLimit": 4,
-                "points": 5,
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
                 answerOptions
               }
             }
@@ -448,10 +448,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
         });
-
       });
-
-  
     });
 
     describe('Testing the timelimit', () => {
@@ -459,33 +456,33 @@ describe('Testing POST /v1/admin/quiz', () => {
         test.each([
           {
             timeLimit: -1,
-            description: "Not a positive number"
+            description: 'Not a positive number'
           },
           {
             timeLimit: 0,
-            description: "Neither a positive or a negative number"
+            description: 'Neither a positive or a negative number'
           },
           {
             timeLimit: 181,
-            description: "Timelimit exceeds 3 minutes"
+            description: 'Timelimit exceeds 3 minutes'
           },
         ])('$desription', ({ timeLimit }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
             quizId,
             session,
             {
-              "questionBody": {
-                "question": "Question",
+              questionBody: {
+                question: 'Question',
                 timeLimit,
-                "points": 5,
-                "answerOptions": [
+                points: 5,
+                answerOptions: [
                   {
-                    "answer": "Right",
-                    "correct": true
+                    answer: 'Right',
+                    correct: true
                   },
                   {
-                    "answer": "Wrong",
-                    "correct": false
+                    answer: 'Wrong',
+                    correct: false
                   }
                 ]
               }
@@ -497,23 +494,23 @@ describe('Testing POST /v1/admin/quiz', () => {
 
         test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
           const questionBody = {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 61,
-              "points": 5,
-              "answerOptions": [
+            questionBody: {
+              question: 'Question',
+              timeLimit: 61,
+              points: 5,
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
           };
-          
+
           requestAdminQuizQuestionCreate(
             quizId,
             session,
@@ -535,18 +532,18 @@ describe('Testing POST /v1/admin/quiz', () => {
 
         test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
           const questionBody = {
-            "questionBody": {
-              "question": "Question",
-              "timeLimit": 60,
-              "points": 5,
-              "answerOptions": [
+            questionBody: {
+              question: 'Question',
+              timeLimit: 60,
+              points: 5,
+              answerOptions: [
                 {
-                  "answer": "Right",
-                  "correct": true
+                  answer: 'Right',
+                  correct: true
                 },
                 {
-                  "answer": "Wrong",
-                  "correct": false
+                  answer: 'Wrong',
+                  correct: false
                 }
               ]
             }
@@ -574,29 +571,29 @@ describe('Testing POST /v1/admin/quiz', () => {
           test.each([
             {
               timeLimit: 1,
-              description: "Is a positive number"
+              description: 'Is a positive number'
             },
             {
               timeLimit: 180,
-              description: "Timelimit exceeds 3 minutes"
+              description: 'Timelimit exceeds 3 minutes'
             },
           ])('$desription', ({ timeLimit }) => {
             const responseQuestionCreate = requestAdminQuizQuestionCreate(
               quizId,
               session,
               {
-                "questionBody": {
-                  "question": "Question",
+                questionBody: {
+                  question: 'Question',
                   timeLimit,
-                  "points": 5,
-                  "answerOptions": [
+                  points: 5,
+                  answerOptions: [
                     {
-                      "answer": "Right",
-                      "correct": true
+                      answer: 'Right',
+                      correct: true
                     },
                     {
-                      "answer": "Wrong",
-                      "correct": false
+                      answer: 'Wrong',
+                      correct: false
                     }
                   ]
                 }
@@ -607,7 +604,6 @@ describe('Testing POST /v1/admin/quiz', () => {
           });
         });
       });
-      
     });
 
     describe('Testing the points awarded', () => {
@@ -615,33 +611,33 @@ describe('Testing POST /v1/admin/quiz', () => {
         test.each([
           {
             points: -1,
-            description: "Not a positive number"
+            description: 'Not a positive number'
           },
           {
             points: 0,
-            description: "Neither a positive or a negative number"
+            description: 'Neither a positive or a negative number'
           },
           {
             points: 11,
-            description: "Points awarded is greater then 10"
+            description: 'Points awarded is greater then 10'
           },
         ])('$desription', ({ points }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
             quizId,
             session,
             {
-              "questionBody": {
-                "question": "Question",
-                "timeLimit": 4,
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
                 points,
-                "answerOptions": [
+                answerOptions: [
                   {
-                    "answer": "Right",
-                    "correct": true
+                    answer: 'Right',
+                    correct: true
                   },
                   {
-                    "answer": "Wrong",
-                    "correct": false
+                    answer: 'Wrong',
+                    correct: false
                   }
                 ]
               }
@@ -656,29 +652,29 @@ describe('Testing POST /v1/admin/quiz', () => {
         test.each([
           {
             points: 1,
-            description: "Point awarded is exactly 1"
+            description: 'Point awarded is exactly 1'
           },
           {
             points: 10,
-            description: "Point awarded is exactly 10"
+            description: 'Point awarded is exactly 10'
           },
         ])('$desription', ({ points }) => {
           const responseQuestionCreate = requestAdminQuizQuestionCreate(
             quizId,
             session,
             {
-              "questionBody": {
-                "question": "Question",
-                "timeLimit": 4,
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
                 points,
-                "answerOptions": [
+                answerOptions: [
                   {
-                    "answer": "Right",
-                    "correct": true
+                    answer: 'Right',
+                    correct: true
                   },
                   {
-                    "answer": "Wrong",
-                    "correct": false
+                    answer: 'Wrong',
+                    correct: false
                   }
                 ]
               }
@@ -696,18 +692,18 @@ describe('Testing POST /v1/admin/quiz', () => {
       quizId,
       session,
       {
-        "questionBody": {
-          "question": "Question1",
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+        questionBody: {
+          question: 'Question1',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: 'Right',
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: 'Wrong',
+              correct: false
             }
           ]
         }
@@ -717,22 +713,22 @@ describe('Testing POST /v1/admin/quiz', () => {
       quizId,
       session,
       {
-        "questionBody": {
-          "question": "Question2",
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+        questionBody: {
+          question: 'Question2',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: 'Right',
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: 'Wrong',
+              correct: false
             },
             {
-              "answer": "Maybe",
-              "correct": false
+              answer: 'Maybe',
+              correct: false
             }
           ]
         }
@@ -752,22 +748,22 @@ describe('Testing POST /v1/admin/quiz', () => {
       quizId2,
       session,
       {
-        "questionBody": {
-          "question": "Question",
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+        questionBody: {
+          question: 'Question',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: 'Right',
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: 'Wrong',
+              correct: false
             },
             {
-              "answer": "Maybe",
-              "correct": false
+              answer: 'Maybe',
+              correct: false
             }
           ]
         }
@@ -775,7 +771,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     );
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-/*
+    /*
     const responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": quizId,

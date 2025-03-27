@@ -210,7 +210,7 @@ export class Errors {
   } as const;
 
   // Error messages
-  static readonly noCorrectAnswersError = 'This Question has no correct answers'
+  static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
@@ -395,7 +395,6 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 }
 
 export function validQuestionString(question: string): boolean | errorInterface {
-
   if (question.length < 5) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
   }
@@ -409,10 +408,10 @@ export function validQuestionString(question: string): boolean | errorInterface 
 
 export function randomColour(): string {
   const colors = [
-    'red',      // #FF0000
-    'blue',     // #0000FF
-    'green',    // #00FF00
-    'yellow',   // #FFFF00
+    'red', // #FF0000
+    'blue', // #0000FF
+    'green', // #00FF00
+    'yellow', // #FFFF00
   ];
 
   const randomIndex = Math.floor(Math.random() * colors.length);
