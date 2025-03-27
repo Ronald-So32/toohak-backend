@@ -382,7 +382,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 });
 
 // PUT /v1/admin/quiz/{quizid}/question/{questionid}
-app.put('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
