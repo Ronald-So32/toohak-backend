@@ -379,14 +379,17 @@ export function adminQuizQuestionMove(
     return Errors.invalidQuestionId();
   }
 
+  // newPosition is less than 0
   if (newPosition < 0) {
     return { error: 'newPosition is less than 0' };
   }
 
+  // newPosition greater than number of questions
   if (newPosition > quiz.questions.length - 1) {
     return { error: 'newPosition greater than number of questions' };
   }
 
+  // newPostion is the same as current positon of question
   if (validQuestionIndex === newPosition) {
     return { error: 'newPostion is the same as current positon of question' };
   }
@@ -398,5 +401,6 @@ export function adminQuizQuestionMove(
   quiz.questions.splice(newPosition, 0, question);
   // Update timeLastEdited
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+
   return {};
 }

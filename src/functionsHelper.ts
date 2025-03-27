@@ -167,6 +167,11 @@ export class Errors {
       INVALID_CHARS: 'contains invalid characters ' +
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
+    },
+    newPosition: {
+      TOO_SHORT: 'newPosition cannot be less than 0',
+      TOO_LONG: 'newPosition cannot be more than number of questions in quiz',
+      OLD_SAME: 'newPostion is the same as current positon of question'
     }
   } as const;
 
@@ -182,6 +187,10 @@ export class Errors {
   // Error for invalid questionId
   static invalidQuestionId(): errorInterface {
     return { error: this.invalidQuestionIdError };
+  }
+
+  static invalidNewPosition(type: number, specific: number): errorInterface {
+    return {error: `${type} is invalid, ${specific}` }
   }
 
   // Error for invalid name
