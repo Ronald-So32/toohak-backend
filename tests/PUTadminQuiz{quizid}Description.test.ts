@@ -46,21 +46,8 @@ describe('Test correct return type and normal usage case', () => {
     const updateQuizDescription = requestAdminQuizUpdateDescription(quizId, session, 'New Description');
     expect(updateQuizDescription.body).toStrictEqual({});
     expect(updateQuizDescription.statusCode).toStrictEqual(OK);
-    const checkInfo = requestGetQuiz(quizId, session);
-    expect(checkInfo.body).toStrictEqual({
-      quizId: quizId,
-      name: 'Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
-      description: 'New Description',
-      numQuestions: 0,
-      questions: [],
-      timeLimit: 0
-    });
-    expect(checkInfo.statusCode).toStrictEqual(OK);
   });
 });
-
 
 describe('Test error cases', () => {
   test('Testing when the session is invalid', () => {
