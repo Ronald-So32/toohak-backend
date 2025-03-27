@@ -120,11 +120,11 @@ export function adminQuizCreate(
 
   const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
   if (duplicate) {
-    return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   if (description.length > 100) {
-    return { error: 'Quiz description is more than 100 characters' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   const id = createUUID();
@@ -172,7 +172,7 @@ export function adminQuizRemove(
   // Validates if the user exists
   const userExists = data.users.some(user => user.userId === userId);
   if (!userExists) {
-    return { error: `User Id ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz index of the quiz in the quizzes array
@@ -180,13 +180,13 @@ export function adminQuizRemove(
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
-    return { error: `Quiz with Id ${quizId} does not exist` };
+    return Errors.invalidQuiz();
   }
 
   // Checks if the user owns the quiz
   const quiz = data.quizzes[quizIndex];
   if (quiz.createdBy !== userId) {
-    return { error: 'You do not have permission to remove this quiz' };
+    return Errors.noPermission();
   }
 
   // Removes the quiz from the quizzes array
@@ -269,7 +269,7 @@ export function adminQuizNameUpdate(
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return Errors.notOwner();
+    return Errors.noPermission();
   }
 
   const validName = validQuizName(name);

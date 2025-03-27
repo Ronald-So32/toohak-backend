@@ -163,12 +163,13 @@ export class Errors {
     QuizName: {
       TOO_SHORT: 'must be at least 3 characters',
       TOO_LONG: 'must be at most 30 characters',
-      INVALID_CHARS: 'contains invalid characters (Valid characters are alphanumerics and spaces)'
+      INVALID_CHARS: 'contains invalid characters (Valid characters are alphanumerics and spaces)',
+      IN_USE: 'already in use by another quiz'
     }
   } as const;
 
   // Error messages
-  static readonly notOwnerError = 'User does not own this quiz';
+  static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
   static readonly invalidEmailError = 'Invalid Email';
@@ -205,9 +206,9 @@ export class Errors {
     return { error: this.invalidSessionError };
   }
 
-  // Error for user not the owner for the quiz
-  static notOwner(): errorInterface {
-    return { error: this.notOwnerError };
+  // Error for user with no permissions
+  static noPermission(): errorInterface {
+    return { error: this.noPermissionError };
   }
 }
 
