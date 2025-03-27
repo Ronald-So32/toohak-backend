@@ -90,6 +90,25 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     });
 
     describe('Testing the quiz name validation', () => {
+      test('Quiz name is already used by the same user for another quiz', () => {
+        // Create another quiz with a different name
+        const responseCreate2 = requestAdminQuizCreate(
+          session,
+          'Another Quiz',
+          'Another Description'
+        );
+        const quizId2 = responseCreate2.body.quizId;
+  
+        // Try to update the second quiz's name to match the first quiz
+        const responseUpdate = requestAdminQuizUpdateName(
+          quizId2,
+          session,
+          'Quiz Name'
+        );
+        expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+
       describe('Invalid cases', () => {
         test.each([
           {
@@ -97,8 +116,32 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
             name: 'Quiz@Name123!',
           },
           {
-            description: 'Too short (less than 3 characters)',
-            name: 'Qz',
+            name: 'Hi',
+            description: 'Name is too short without spaces'
+          },
+          {
+            name: ' I',
+            description: 'Name is too short with spaces'
+          },
+          {
+            name: '',
+            description: 'Name is too short empty string'
+          },
+          {
+            name: 'HiIamQuiz1234567890abcdefghijkl',
+            description: 'Name is too long with no spaces'
+          },
+          {
+            name: ' Hi I am Quiz 1234567890 abcdef',
+            description: 'Name is too long with spaces at front'
+          },
+          {
+            name: 'Hi I am Quiz 1234567890 abcdef ',
+            description: 'Name is too long with spaces at end'
+          },
+          {
+            name: 'Hi I am Quiz 123 456 7890 abc def',
+            description: 'Name is too long with normal spaces'
           },
           {
             description: 'Too long (more than 30 characters)',
@@ -114,25 +157,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
           expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
         });
       });
-    });
-
-    test('Quiz name is already used by the same user for another quiz', () => {
-      // Create another quiz with a different name
-      const responseCreate2 = requestAdminQuizCreate(
-        session,
-        'Another Quiz',
-        'Another Description'
-      );
-      const quizId2 = responseCreate2.body.quizId;
-
-      // Try to update the second quiz's name to match the first quiz
-      const responseUpdate = requestAdminQuizUpdateName(
-        quizId2,
-        session,
-        'Quiz Name'
-      );
-      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
     });
 
     describe('Valid cases', () => {
@@ -152,6 +176,42 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         {
           description: 'Quiz name with exactly 30 characters',
           name: 'This is exactly thirty charsss',
+        },
+        {
+          name: 'And',
+          reason: 'Name has 3 more valid characters with no spaces'
+        },
+        {
+          name: 'H i',
+          reason: 'Name 1 with 3 more valid characters with spaces'
+        },
+        {
+          name: ' Hi',
+          reason: 'Name 2 with 3 more valid characters with spaces'
+        },
+        {
+          name: 'Hi ',
+          reason: 'Name 3 with 3 more valid characters with spaces'
+        },
+        {
+          name: ' I ',
+          reason: 'Name 4 with 3 more valid characters with spaces'
+        },
+        {
+          name: 'HiIamQuiz1234567890abcdefghijk',
+          reason: 'Name with 30 or less valid characters with no spaces'
+        },
+        {
+          name: ' Hi I am Quiz 1234567890 abcde',
+          reason: 'Name with 30 or less valid characters with spaces at front'
+        },
+        {
+          name: 'Hi I am Quiz 1234567890 abcde ',
+          reason: 'Name with 30 or less valid characters with spaces at end'
+        },
+        {
+          name: 'Hi I am Quiz 12345 67890 abcde',
+          reason: 'Name with 30 or less valid characters with normal spaces'
         },
       ])('Valid quiz name - $description', ({ name }) => {
         const responseUpdate = requestAdminQuizUpdateName(
