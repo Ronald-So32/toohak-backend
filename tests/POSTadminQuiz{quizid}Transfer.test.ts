@@ -13,16 +13,62 @@ const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
+
 const quizIdOffset = 727;
 
-// Don't define variables at the top level that are reset in beforeEach
-// as tests might access outdated values
+let responseRegister: responseInterface;
+let responseRegister2: responseInterface;
+let responseCreate: responseInterface;
+let responseCreate2: responseInterface;
+let session: string;
+let session2: string;
+let quizId: number;
+let quizId2: number;
 
 beforeEach(() => {
   requestClear();
+  responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+
+  responseCreate = requestAdminQuizCreate(
+    session,
+    'Quiz Name',
+    'Quiz Description'
+  );
+  quizId = responseCreate.body.quizId;
+
+  responseRegister2 = requestAdminAuthRegister(
+    'z6969@ad.unsw.edu.au',
+    'Password2',
+    'Firstt',
+    'Lastt'
+  );
+  session2 = responseRegister2.body.session;
+
+  responseCreate2 = requestAdminQuizCreate(
+    session,
+    'Quiz Namee',
+    'Quiz Descriptionn'
+  );
+  quizId = responseCreate2.body.quizId;
 });
 
 describe('POST /v1/admin/quiz/{quizid}/transfer', () => {
+  test('Testing the code 200 return value', () => {
+    const responseTransfer = requestAdminQuizTransfer(
+      quizId,
+      session,
+      'z6969@ad.unsw.edu.au'
+    );
+    expect(responseTransfer.body).toStrictEqual({});
+    expect(responseTransfer.statusCode).toStrictEqual(OK);
+  });
+
   describe('Success case', () => {
     test('Valid transfer', () => {
       // Register first user and create a quiz
