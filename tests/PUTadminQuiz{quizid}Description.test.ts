@@ -172,6 +172,33 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
-    // TODO: Create a scenario where you update a description of a quiz
+    const responseUpdateDescription = requestAdminQuizUpdateDescription(
+      quizId,
+      session,
+      'New Description'
+    );
+    expect(responseUpdateDescription.body).toStrictEqual({});
+    expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
+    
+    // Check details after update
+    const responseQuizGet2 = requestGetQuiz(quizId, session);
+    expect(responseQuizGet2.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'New Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+
+    requestDeleteQuiz(quizId, session);
+
+    // Should be unavailable after deletion
+    const responseQuizGet3 = requestGetQuiz(quizId, session);
+    expect(responseQuizGet3.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseQuizGet3.statusCode).toStrictEqual(FORBIDDEN);
   });
 });
