@@ -330,23 +330,21 @@ app.put('/v1/admin/quiz/{quizid}/question/{questionid}/move', (req: Request, res
   const questionId = parseInt(req.params.questionid);
   const newPosition = parseInt(req.query.newPosition as string);
   const userIdResult = findUserIdFromSession(session);
-  const data = getData();
+
   // check if userId is valid
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
+ 
   const userId = userIdResult.userId;
-  // check if quiz exists
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return res.status(FORBIDDEN).json({ error: 'Invalid quiz ID' });
-  }
-  // check if user owns quiz
-  if (quiz.createdBy !== userId) {
-    return res.status(FORBIDDEN).json({ error: 'User does not own this quiz' });
-  }
   const result = adminQuizQuestionMove(quizId, userId, questionId, session, newPosition);
+
   if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
     return res.status(BADREQUEST).json({ error: result.error });
   }
   return res.status(OK).json({});
