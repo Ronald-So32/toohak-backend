@@ -189,7 +189,7 @@ export class Errors {
     return { error: this.invalidQuestionIdError };
   }
 
-  static invalidNewPosition(type: number, specific: number): errorInterface {
+  static invalidNewPosition(type: string, specific: string): errorInterface {
     return {error: `${type} is invalid, ${specific}` }
   }
 

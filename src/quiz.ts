@@ -386,7 +386,7 @@ export function adminQuizQuestionMove(
 
   // newPosition greater than number of questions
   if (newPosition > quiz.questions.length - 1) {
-    return { error: 'newPosition greater than number of questions' };
+    return Errors.invalidNewPosition('newPostion', Errors.Specific.newPosition.TOO_SHORT);
   }
 
   // newPostion is the same as current positon of question
