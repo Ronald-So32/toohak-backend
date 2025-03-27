@@ -140,7 +140,23 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
 
     describe('Error 403: Forbidden', () => {
       test('User does not own the quiz', () => {
+        // Create third user who will be the target
+        const responseRegister3 = requestAdminAuthRegister(
+          'z69420@ad.unsw.edu.au',
+          'Password3',
+          'Firsttt',
+          'Lasttt'
+        );
+        const session3 = responseRegister3.body.session;
 
+        // User3 tries to transfer User1's quiz to User2
+        const transferResult = requestAdminQuizTransfer(
+          quizId,
+          session3,
+          'z6969@ad.unsw.edu.au'
+        );
+        expect(transferResult.statusCode).toStrictEqual(FORBIDDEN);
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Quiz does not exist', () => {
