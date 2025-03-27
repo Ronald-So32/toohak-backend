@@ -270,9 +270,8 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
 
   if ('error' in result) {
     // Check for specific error messages to determine status code
-    if (result.error === Errors.notOwner.error ||
-        // add the error codes to the class and use them instead
-        result.error === Errors.invalidQuiz.error) {
+    if (result.error === Errors.notOwnerError ||
+        result.error === Errors.invalidQuizError) {
       return res.status(FORBIDDEN).json({ error: result.error });
     }
     return res.status(BADREQUEST).json({ error: result.error });
