@@ -17,7 +17,7 @@ function makeRequest(
   endpoint: string,
   body?: any,
   headers?: any
-) {
+): responseInterface {
   const res = request(
     method,
     `${serverURL}${endpoint}`,
@@ -34,7 +34,7 @@ function makeRequest(
 }
 
 // Wrapper for DELETE /v1/clear
-export function requestClear() {
+export function requestClear(): responseInterface {
   return makeRequest(
     'DELETE',
     '/clear',
@@ -47,7 +47,7 @@ export function requestClear() {
 export function requestDeleteQuiz(
   quizId: number,
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'DELETE',
     `/admin/quiz/${quizId}`,
@@ -61,7 +61,7 @@ export function requestDeleteQuizQuestion(
   quizId: number,
   questionId: number,
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'DELETE',
     `/admin/quiz/${quizId}/question/${questionId}`,
@@ -74,7 +74,7 @@ export function requestDeleteQuizQuestion(
 export function requestGetQuiz(
   quizId: number,
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'GET',
     `/admin/quiz/${quizId}`,
@@ -87,7 +87,7 @@ export function requestGetQuiz(
 export function requestGetQuizQuestionSuggestion(
   quizId: number,
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'GET',
     `/admin/quiz/${quizId}/question/suggestion`,
@@ -99,7 +99,7 @@ export function requestGetQuizQuestionSuggestion(
 // Wrapper for GET /v1/admin/quiz/list
 export function requestGetQuizList(
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'GET',
     '/admin/quiz/list',
@@ -111,7 +111,7 @@ export function requestGetQuizList(
 // Wrapper for GET /v1/admin/user/details
 export function requestGetUserDetails(
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'GET',
     '/admin/user/details',
@@ -124,7 +124,7 @@ export function requestGetUserDetails(
 export function requestAdminAuthLogin(
   email: string,
   password: string
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     '/admin/auth/login',
@@ -135,7 +135,7 @@ export function requestAdminAuthLogin(
 // Wrapper for POST /v1/admin/auth/logout
 export function requestAdminAuthLogout(
   session: string
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     '/admin/auth/logout',
@@ -150,7 +150,7 @@ export function requestAdminAuthRegister(
   password: string,
   nameFirst: string,
   nameLast: string
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     '/admin/auth/register',
@@ -163,7 +163,7 @@ export function requestAdminQuizCreate(
   session: string,
   name: string,
   description: string
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     '/admin/quiz',
@@ -177,7 +177,7 @@ export function requestAdminQuizQuestionCreate(
   quizId: number,
   session: string,
   questionBody: any
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     `/admin/quiz/${quizId}/question`,
@@ -191,7 +191,7 @@ export function requestAdminQuizTransfer(
   quizId: number,
   session: string,
   userEmail: string
-) {
+): responseInterface {
   return makeRequest(
     'POST',
     `/admin/quiz/${quizId}/transfer`,
@@ -205,7 +205,7 @@ export function requestAdminQuizUpdateDescription(
   quizId: number,
   session: string,
   description: string
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     `/admin/quiz/${quizId}/description`,
@@ -219,7 +219,7 @@ export function requestAdminQuizUpdateName(
   quizId: number,
   session: string,
   name: string
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     `/admin/quiz/${quizId}/name`,
@@ -234,7 +234,7 @@ export function requestAdminQuizQuestionUpdate(
   questionId: number,
   session: string,
   questionBody: any
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     `/admin/quiz/${quizId}/question/${questionId}`,
@@ -249,7 +249,7 @@ export function requestAdminQuizQuestionMove(
   questionId: number,
   session: string,
   newPosition: number
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     `/admin/quiz/${quizId}/question/${questionId}/move`,
@@ -264,7 +264,7 @@ export function requestAdminUserDetailsUpdate(
   email: string,
   nameFirst: string,
   nameLast: string
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     '/admin/user/details',
@@ -278,7 +278,7 @@ export function requestAdminUserPasswordUpdate(
   session: string,
   oldPassword: string,
   newPassword: string
-) {
+): responseInterface {
   return makeRequest(
     'PUT',
     '/admin/user/password',
