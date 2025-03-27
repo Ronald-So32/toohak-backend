@@ -9,7 +9,8 @@ import {
   quizSummariesInterface,
   quizIdInterface,
   quizDetailsInterface,
-  quizGetDetailsInterface
+  quizGetDetailsInterface,
+  Errors
 } from './functionsHelper';
 
 /**
@@ -268,7 +269,7 @@ export function adminQuizNameUpdate(
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.notOwner();
   }
 
   const validName = validQuizName(name);

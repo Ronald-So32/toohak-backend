@@ -1,6 +1,6 @@
 import {
   getData,
-  questionInterface
+  questionsInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -138,7 +138,7 @@ export interface quizGetDetailsInterface {
     timeLastEdited: number;
     description: string;
     numQuestions: number;
-    questions: questionInterface[];
+    questions: questionsInterface[];
     timeLimit: number;
   }
 }
