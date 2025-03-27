@@ -42,30 +42,33 @@ beforeEach(() => {
 describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
-      const updateQuizDescription = requestAdminQuizUpdateDescription(quizId, session, 'New Description');
-      expect(updateQuizDescription.body).toStrictEqual({});
-      expect(updateQuizDescription.statusCode).toStrictEqual(OK);
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId, session, 'New Description');
+      expect(responseUpdateDescription.body).toStrictEqual({});
+      expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
     });
   });
 
   describe('Test error cases', () => {
     test('Testing when the session is invalid', () => {
-      const beforeInfo = requestGetQuiz(quizId, session);
-      const invalidIdres = requestAdminQuizUpdateDescription(quizId, session + 'Invalid Session', 'New Description');
-      expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
-      expect(invalidIdres.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseQuizGet = requestGetQuiz(quizId, session);
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId, session + 'Invalid Session', 'New Description');
+      expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdateDescription.statusCode).toStrictEqual(UNAUTHORISED);
       // To make sure that it does not change existing quiz
-      expect(requestGetQuiz(quizId, session).body).toStrictEqual(beforeInfo);
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet.statusCode).toStrictEqual(OK);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
-      const beforeInfo = requestGetQuiz(quizId, session);
-      const responseInvlaidQuizId = requestAdminQuizUpdateDescription(quizId + quizIdOffset, session, 'New Description');
-      expect(responseInvlaidQuizId.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseInvlaidQuizId.statusCode).toStrictEqual(FORBIDDEN);
+      const responseQuizGet = requestGetQuiz(quizId, session);
+      const responseUpdateDescription = requestAdminQuizUpdateDescription(quizId + quizIdOffset, session, 'New Description');
+      expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
       // To make sure that it does not change existing quiz
-      expect(requestGetQuiz(quizId, session).body).toStrictEqual(beforeInfo);
-      expect(beforeInfo.statusCode).toStrictEqual(OK);
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet.statusCode).toStrictEqual(OK);
       });
 
       test('Invalid quizId - When quiz is not owned by session', () => {
@@ -82,13 +85,13 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         'Description'
         );
         // Try to update first user's quiz with second user's ID
-        const invalidIdres = requestAdminQuizUpdateDescription(
+        const responseUpdateDescription = requestAdminQuizUpdateDescription(
           responseCreate.body.quizId,
           responseRegister.body.session,
           'New Description'
         );
-        expect(invalidIdres.body).toStrictEqual({ error: expect.any(String) });
-        expect(invalidIdres.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
       });
 
       // To test the validity of descriptions
@@ -108,16 +111,18 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           reason: 'Description is more than 100 characters with spaces at the end'
         },
       ])('Invalid description - $reason', ({ description }) => {
-        const infoBefore = requestGetQuiz(quizId, session);
-        const resposneUpdate = requestAdminQuizUpdateDescription(
+        const responseQuizGet = requestGetQuiz(quizId, session);
+        const responseUpdateDescription = requestAdminQuizUpdateDescription(
           quizId, 
           session, 
           description
         )
-        expect(resposneUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(resposneUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdateDescription.statusCode).toStrictEqual(BADREQUEST);
         // check that quiz description has not been changed 
-        expect(requestGetQuiz(quizId, session).body).toStrictEqual(infoBefore.body);
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet.statusCode).toStrictEqual(OK);
       });
 
       // To test valid descriptions
@@ -131,13 +136,13 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           reason: 'Description with 100 characters'
         },
       ])('Valid description - $reason', ({ description}) => {
-        const resposneCorrectUpdate = requestAdminQuizUpdateDescription(
+        const responseUpdateDescription = requestAdminQuizUpdateDescription(
           quizId, 
           session, 
           description
         )
-        expect(resposneCorrectUpdate.body).toStrictEqual({ });
-        expect(resposneCorrectUpdate.statusCode).toStrictEqual(OK);
+        expect(responseUpdateDescription.body).toStrictEqual({ });
+        expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
         // // To make sure that description is actually updated
         const responseQuizGet = requestGetQuiz(quizId, session);
         expect(responseQuizGet.body).toStrictEqual({
