@@ -167,6 +167,10 @@ export class Errors {
       INVALID_CHARS: 'contains invalid characters ' +
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
+    },
+    Email: {
+      SELF: 'targer user must not be yourself',
+      NAME: 'target user already has a quiz with the same name'
     }
   } as const;
 

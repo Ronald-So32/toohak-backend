@@ -1,6 +1,6 @@
 import {
   getData,
-  questionInterface
+  questionsInterface
 } from './dataStore';
 import {
   createUUID,
@@ -131,7 +131,7 @@ export function adminQuizCreate(
 
   const timeStamp = Math.floor(Date.now() / 1000);
 
-  const questionsArray: questionInterface[] = [];
+  const questionsArray: questionsInterface[] = [];
 
   // All details are correct so append new quiz to data.quizzes
   data.quizzes.push({
@@ -342,6 +342,46 @@ export function adminQuizDescriptionUpdate(
 
   // Update timeLastEdited
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+
+  return {};
+}
+
+export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
+  const data = getData();
+
+  // Check for the quiz
+  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  if (quizIndex === -1) {
+    return Errors.invalidQuiz();
+  }
+
+  const quiz = data.quizzes[quizIndex];
+  
+  // Check for the user
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  // Check userEmail
+  const targetUser = data.users.find(user => user.email === userEmail);
+  if (!targetUser) {
+    return Errors.invalidEmail;
+  }
+
+  // Target email is the same as self
+  const currentUser = data.users.find(user => user.userId === userId);
+  if (userEmail === currentUser.email) {
+    return Errors.invalidString('User email', Errors.Specific.Email.SELF);
+  }
+
+  // Target user already has a quiz with the same name
+  const nameConflict = data.quizzes.some(quiz => 
+    quiz.createdBy === targetUser.userId && quiz.name === quiz.name);
+  if (nameConflict) {
+    return Errors.invalidString('User email', Errors.Specific.Email.NAME);
+  }
+
+  data.quizzes[quizIndex].createdBy = targetUser.userId;
 
   return {};
 }

@@ -13,7 +13,8 @@ import {
   adminQuizCreate,
   adminQuizGet,
   adminQuizDescriptionUpdate,
-  adminQuizNameUpdate
+  adminQuizNameUpdate,
+  adminQuizTransfer
 } from './quiz';
 import {
   findUserIdFromSession,
@@ -329,50 +330,14 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const quizId = parseInt(req.params.quizid);
   const { userEmail } = req.body;
 
-  // 1. Check session validity (401 if invalid)
   const userIdResult = findUserIdFromSession(session);
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
+
   const userId = userIdResult.userId;
+  const result = adminQuizTransfer(quizId, userId, userEmail);
 
-  // 2. Get data
-  const data = getData();
-  
-  // 3. Find the quiz (403 if not found)
-  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
-  if (quizIndex === -1) {
-    return res.status(FORBIDDEN).json({ error: `Quiz with ID ${quizId} does not exist` });
-  }
-
-  const quiz = data.quizzes[quizIndex];
-  
-  // 4. Check ownership (403 if not owner)
-  if (quiz.createdBy !== userId) {
-    return res.status(FORBIDDEN).json({ error: 'You do not have permission to transfer this quiz' });
-  }
-
-  // 5. Find target user (400 if not found)
-  const targetUser = data.users.find(user => user.email === userEmail);
-  if (!targetUser) {
-    return res.status(BADREQUEST).json({ error: 'Target user email does not exist' });
-  }
-
-  // 6. Check if transferring to self (400 if true)
-  const currentUser = data.users.find(user => user.userId === userId);
-  if (userEmail === currentUser?.email) {
-    return res.status(BADREQUEST).json({ error: 'Cannot transfer quiz to yourself' });
-  }
-
-  // 7. Check name conflicts (400 if exists)
-  const nameConflict = data.quizzes.some(q => 
-    q.createdBy === targetUser.userId && q.name === quiz.name);
-  if (nameConflict) {
-    return res.status(BADREQUEST).json({ error: 'Target user already has a quiz with the same name' });
-  }
-
-  // 8. Transfer the quiz
-  data.quizzes[quizIndex].createdBy = targetUser.userId;
   
   return res.status(OK).json({});
 });
