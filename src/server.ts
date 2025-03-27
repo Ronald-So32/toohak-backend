@@ -11,9 +11,13 @@ import {
   adminQuizRemove,
   adminQuizCreate,
   adminQuizGet,
-  adminQuizDescriptionUpdate
+  adminQuizDescriptionUpdate,
+  adminQuizNameUpdate
 } from './quiz';
-import { findUserIdFromSession } from './functionsHelper';
+import {
+  findUserIdFromSession,
+  Errors
+} from './functionsHelper';
 
 import express, {
   json,
@@ -248,28 +252,6 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json(result.details);
-});
-
-// PUT /v1/admin/quiz/{quizid}/description
-app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
-  const { description } = req.body;
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-  // ADD THE BADREQUEST
-  const userId = userIdResult.userId;
-  const result = adminQuizDescriptionUpdate(userId, quizId, description);
-
-  if ('error' in result) {
-    return res.status(FORBIDDEN).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // ====================================================================
