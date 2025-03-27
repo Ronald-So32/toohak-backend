@@ -185,6 +185,10 @@ export class Errors {
     Email: {
       SELF: 'targer user must not be yourself',
       NAME: 'target user already has a quiz with the same name'
+    },
+    Question: {
+      TOO_SHORT: 'must be at least 5 characters',
+      TOO_LONG: 'must be at most 50 characters',
     }
   } as const;
 
@@ -367,15 +371,14 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   return { userId: theSession.userId };
 }
 
-
 export function validQuestionString(question: string): boolean | errorInterface {
 
   if (question.length < 5) {
-    return { error: 'Question name is lesser than 5' };
+    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
   }
 
   if (question.length > 50) {
-    return { error: 'Question name is greater than 50' };
+    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG);
   }
 
   return true;
