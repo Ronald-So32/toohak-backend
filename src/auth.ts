@@ -7,7 +7,6 @@ import {
   userIdInterface,
   userDetailsInterface,
   generateSession,
-  findSessionFromUserId,
   Errors
 } from './functionsHelper';
 
@@ -109,7 +108,9 @@ export function adminAuthLogin(
     return Errors.invalidPassword();
   }
 
-  const sessionNum = findSessionFromUserId(userData.userId) as string;
+  const currentSession = generateSession();
+
+  data.sessions.push({ userId: userData.userId, session: currentSession });
 
   // Update number of successful logins
   userData.numSuccessfulLogins += 1;
@@ -117,7 +118,7 @@ export function adminAuthLogin(
 
   return {
     userId: userData.userId,
-    session: sessionNum
+    session: currentSession
   };
 }
 
@@ -255,6 +256,20 @@ export function adminUserPasswordUpdate(
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
   userData.password = newPassword;
+
+  return {};
+}
+
+export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
+  const data = getData();
+
+  const sessionIndex = data.sessions.findIndex(s => s.session === session);
+
+  if (sessionIndex === -1) {
+    return Errors.invalidSession();
+  }
+
+  data.sessions.splice(sessionIndex, 1);
 
   return {};
 }

@@ -5,6 +5,7 @@ import {
   adminUserDetails,
   adminUserDetailsUpdate,
   adminUserPasswordUpdate,
+  adminAuthLogout,
 } from './auth';
 import {
   adminQuizList,
@@ -303,6 +304,19 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
       return res.status(FORBIDDEN).json({ error: result.error });
     }
     return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// POST /v1/admin/auth/logout
+app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const result = adminAuthLogout(session);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
   }
 
   return res.status(OK).json({});
