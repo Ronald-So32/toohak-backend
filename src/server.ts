@@ -292,12 +292,17 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
-  // ADD THE BADREQUEST
+
   const userId = userIdResult.userId;
   const result = adminQuizDescriptionUpdate(userId, quizId, description);
 
   if ('error' in result) {
-    return res.status(FORBIDDEN).json({ error: result.error });
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
   }
 
   return res.status(OK).json({});
