@@ -65,7 +65,7 @@ export function adminQuizGet(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quiz = data.quizzes.find(
@@ -73,7 +73,7 @@ export function adminQuizGet(
   );
 
   if (!quiz) {
-    return { error: `Quiz with Id ${quizId} not found or user is not the owner` };
+    return Errors.invalidQuiz();
   }
 
   return {
@@ -110,7 +110,7 @@ export function adminQuizCreate(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const validName = validQuizName(name);

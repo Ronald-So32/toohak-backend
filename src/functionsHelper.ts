@@ -144,17 +144,37 @@ export interface quizGetDetailsInterface {
 }
 
 export class Errors {
-  // Static error message constants
-  static readonly emailAlreadyUsedError = 'Email has already been used by another user';
-  static readonly emailNotFoundError = 'Email does not exist';
-  static readonly passwordReusedError = 'New Password has already been used before by this user';
-  static readonly samePasswordError = 'New password cannot be the same as the old password';
+  // Specific validation reasons
+  static readonly Specific = {
+    Name: {
+      TOO_SHORT: 'must be at least 2 characters',
+      TOO_LONG: 'must be less than 50 characters',
+      INVALID_CHARS: 'contains invalid characters'
+    },
+    Password: {
+      TOO_SHORT: 'must be at least 8 characters',
+      NO_UPPERCASE: 'must contain at least one uppercase letter',
+      NO_LOWERCASE: 'must contain at least one lowercase letter',
+      NO_NUMBER: 'must contain at least one number',
+      NO_SPECIAL: 'must contain at least one special character'
+    },
+    Description: {
+      TOO_LONG: 'must be less than 100 characters'
+    }
+  } as const;
+
+  // Error messages
   static readonly notOwnerError = 'User does not own this quiz';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
+
+  // Error for invalid name
+  static invalidString(type: string, specific: string): errorInterface {
+    return { error: `${type} is invalid, ${specific}` };
+  }
 
   // Error for invalid user ID
   static invalidUser(): errorInterface {
@@ -166,44 +186,14 @@ export class Errors {
     return { error: this.invalidQuizError };
   }
 
-  // Error for duplicate email
-  static emailAlreadyUsed(): errorInterface {
-    return { error: this.emailAlreadyUsedError };
-  }
-
   // Error for invalid email
   static invalidEmail(): errorInterface {
     return { error: this.invalidEmailError };
   }
 
-  // Error for invalid name
-  static invalidName(isFirstName: boolean, specific: string): errorInterface {
-    const nameType = isFirstName ? 'First name' : 'Last name';
-    return { error: `${nameType} is not valid, ${specific}` };
-  }
-
   // Error for invalid password
   static invalidPassword(): errorInterface {
     return { error: this.invalidPasswordError };
-  }
-
-  // Error for non-existent email
-  static emailNotFound(): errorInterface {
-    return { error: this.emailNotFoundError };
-  }
-
-  // Error for incorrect password
-  static incorrectPassword(): errorInterface {
-    return { error: this.invalidPasswordError };
-  }
-  // Error for reused password
-  static passwordReused(): errorInterface {
-    return { error: this.passwordReusedError };
-  }
-
-  // Error for same old and new password
-  static samePassword(): errorInterface {
-    return { error: this.samePasswordError };
   }
 
   // Error for invalid session
@@ -244,17 +234,17 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return Errors.invalidName(true, 'shorter than 2 characters');
+      return Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT);
     } else {
-      return Errors.invalidName(false, 'shorter than 2 characters');
+      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT);
     }
   }
   // Checks if there is more than 20 characters in the name
   if (name.length > 20) {
     if (isFirst) {
-      return { error: 'First name is longer than 20 characters' };
+      return Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG);
     } else {
-      return { error: 'Last name is longer than 20 characters' };
+      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG);
     }
   }
   // Checks if the name has invalid characters
