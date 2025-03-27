@@ -261,6 +261,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
+  const { questionBody } = req.body;
   
   const userIdResult = findUserIdFromSession(session);
 
@@ -269,14 +270,13 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   }
 
   const userId = userIdResult.userId;
-
   const quizDetailsResult = adminQuizGet(userId, quizId);
 
   if ('error' in quizDetailsResult) {
     return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
   }
 
-  const result = adminQuizQuestionCreate(userId, quizId, req.body);
+  const result = adminQuizQuestionCreate(userId, quizId, questionBody);
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
