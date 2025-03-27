@@ -149,8 +149,8 @@ export class Errors {
     Name: {
       TOO_SHORT: 'must be at least 2 characters',
       TOO_LONG: 'must be at most 20 characters',
-      INVALID_CHARS: 'contains invalid characters \
-      (Valid characters are letters, spaces, hyphens or apostrophes)'
+      INVALID_CHARS: 'contains invalid characters ' +
+      '(Valid characters are letters, spaces, hyphens or apostrophes)'
     },
     Password: {
       TOO_SHORT: 'must be at least 8 characters',
@@ -164,8 +164,8 @@ export class Errors {
     QuizName: {
       TOO_SHORT: 'must be at least 3 characters',
       TOO_LONG: 'must be at most 30 characters',
-      INVALID_CHARS: 'contains invalid characters \
-      (Valid characters are alphanumerics and spaces)',
+      INVALID_CHARS: 'contains invalid characters ' +
+      '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
     }
   } as const;
