@@ -179,7 +179,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     );
     expect(responseUpdateDescription.body).toStrictEqual({});
     expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
-    
+
     // Check details after update
     const responseQuizGet2 = requestGetQuiz(quizId, session);
     expect(responseQuizGet2.body).toStrictEqual({
