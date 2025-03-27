@@ -45,7 +45,7 @@ export interface userIdInterface {
  *
  * @property {number} quizId - Id of user
  */
-export interface quizIdInterface {s
+export interface quizIdInterface {
   quizId: number;
 }
 
