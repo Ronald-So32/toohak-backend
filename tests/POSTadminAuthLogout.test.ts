@@ -13,7 +13,6 @@ const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
 let session: string;
-let session2: string;
 
 beforeEach(() => {
   requestClear();
@@ -28,16 +27,16 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/auth/logout', () => {
   test('Testing the code 200 return value', () => {
-    const res = requestAdminAuthLogout(session);
-    expect(res.body).toStrictEqual({});
-    expect(res.statusCode).toStrictEqual(OK);
+    const responseLogout = requestAdminAuthLogout(session);
+    expect(responseLogout.body).toStrictEqual({});
+    expect(responseLogout.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
     test('Invalid session', () => {
-      const res = requestAdminAuthLogout(session + 'Invalid Session');
-      expect(res.body).toStrictEqual({ error: expect.any(String) });
-      expect(res.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseLogout = requestAdminAuthLogout(session + 'Invalid Session');
+      expect(responseLogout.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseLogout.statusCode).toStrictEqual(UNAUTHORISED);
       // Confirm cannot login because already logged in
       const responseLogin = requestAdminAuthLogin(
         'z7277272@ad.unsw.edu.au',
@@ -48,13 +47,13 @@ describe('Testing POST /v1/admin/auth/logout', () => {
     });
     
     test('Logging out after already logging out once', () => {
-      const res = requestAdminAuthLogout(session);
-      expect(res.body).toStrictEqual({});
-      expect(res.statusCode).toStrictEqual(OK);
+      const responseLogout = requestAdminAuthLogout(session);
+      expect(responseLogout.body).toStrictEqual({});
+      expect(responseLogout.statusCode).toStrictEqual(OK);
 
-      const againRes = requestAdminAuthLogout(session);
-      expect(res.body).toStrictEqual({ error: expect.any(String) });
-      expect(res.statusCode).toStrictEqual(UNAUTHORISED);
+      const responseLogout2 = requestAdminAuthLogout(session);
+      expect(responseLogout2.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseLogout2.statusCode).toStrictEqual(UNAUTHORISED);
 
       // confirm can log back in again
       const responseLogin = requestAdminAuthLogin(
