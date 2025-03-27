@@ -4,8 +4,8 @@ import {
   requestAdminAuthLogin,
   responseInterface,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate
-  // requestGetQuiz
+  requestAdminQuizQuestionCreate,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -14,13 +14,14 @@ const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
+
 const quizIdOffset = 727;
-const questionIdOffset = 999;
+const questionIdOffset = 727;
 
 let responseRegister: responseInterface;
+let responseQuizCreate: responseInterface;
 let session: string;
 let quizId: number;
-let responseQuizCreate: responseInterface;
 
 beforeEach(() => {
   requestClear();
@@ -38,7 +39,6 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseQuizCreate.body.quizId;
-
 });
 
 describe('Testing POST /v1/admin/quiz', () => {
@@ -47,18 +47,18 @@ describe('Testing POST /v1/admin/quiz', () => {
       quizId,
       session,
       {
-        "questionBody": {
-          "question": "Question",
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+        questionBody: {
+          question: "Question",
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "correct": true
+              answer: "Right",
+              correct: true
             },
             {
-              "answer": "Wrong",
-              "correct": false
+              answer: "Wrong",
+              correct: false
             }
           ]
         }
@@ -776,7 +776,6 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
-    /*
     const responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": quizId,
@@ -825,7 +824,5 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeLimit": expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-  */
   });
-
 });
