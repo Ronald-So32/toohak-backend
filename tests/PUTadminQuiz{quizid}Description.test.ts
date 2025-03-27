@@ -86,24 +86,17 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     });
 
     test('Invalid quizId - When quiz is not owned by session', () => {
-      responseRegister = requestAdminAuthRegister(
-        'z7277273@ad.unsw.edu.au',
+      const responseRegister2 = requestAdminAuthRegister(
+        'z72772769@ad.unsw.edu.au',
         'Password2',
-        'First2',
-        'Last2'
-      );
-
-      // Create a quiz for first user
-      responseCreate = requestAdminQuizCreate(
-        session,
-        'Quiz for Ownership Test',
-        'Description'
+        'Firstt',
+        'Lastt'
       );
       
       // Try to update first user's quiz with second user's ID
       const responseUpdateDescription = requestAdminQuizUpdateDescription(
-        responseCreate.body.quizId,
-        responseRegister.body.session,
+        quizId,
+        responseRegister2.body.session,
         'New Description'
       );
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
@@ -127,7 +120,6 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
             reason: 'Description is more than 100 characters with spaces at the end'
           },
         ])('Invalid description - $reason', ({ description }) => {
-          const responseQuizGet = requestGetQuiz(quizId, session);
           const responseUpdateDescription = requestAdminQuizUpdateDescription(
             quizId, 
             session, 
@@ -163,8 +155,8 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
 
           // // To make sure that description is actually updated
-          const responseQuizGet = requestGetQuiz(quizId, session);
-          expect(responseQuizGet.body).toStrictEqual({
+          const responseQuizGet2 = requestGetQuiz(quizId, session);
+          expect(responseQuizGet2.body).toStrictEqual({
             quizId: quizId,
             name: 'Name',
             timeCreated: expect.any(Number),
@@ -180,7 +172,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
-    // TODO
+    // TODO: Create a scenario where you update a description of a quiz
   });
 });
   
