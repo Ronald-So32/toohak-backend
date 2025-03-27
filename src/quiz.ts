@@ -1,4 +1,7 @@
-import { getData } from './dataStore.ts';
+import {
+  getData,
+  questionsInterface
+} from './dataStore';
 import {
   createUUID,
   validQuizName,
@@ -15,14 +18,18 @@ import {
   * @param {number} userId - Id of the user
   * ...
   *
-  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns an object, quizzes with an array of quizSummariesInterface inside of it unless there is an error which returns errorInterface
+  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
+  * an object, quizzes with an array of quizSummariesInterface inside of it unless
+  * there is an error which returns errorInterface
 */
-export function adminQuizList(userId: number): { quizzes: quizSummariesInterface[] } | errorInterface {
+export function adminQuizList(
+  userId: number
+): { quizzes: quizSummariesInterface[] } | errorInterface {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quizzes: quizSummariesInterface[] = [];
@@ -42,6 +49,47 @@ export function adminQuizList(userId: number): { quizzes: quizSummariesInterface
 }
 
 /**
+  * TODO
+  *
+  * @param {number}
+  * ...
+  *
+  * @returns
+*/
+export function adminQuizGet(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface | errorInterface {
+  const data = getData();
+
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return Errors.invalidUser();
+  }
+
+  const quiz = data.quizzes.find(
+    (q) => q.quizId === quizId && q.createdBy === userId
+  );
+
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  return {
+    details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+    }
+  };
+}
+
+/**
   * Given basic details about a new quiz, create one for the logged in user.
   *
   * @param {number} userId - Id of the user
@@ -49,14 +97,19 @@ export function adminQuizList(userId: number): { quizzes: quizSummariesInterface
   * @param {string} description - Description of quiz
   * ...
   *
-  * @returns {quizId | error} - Always return quizId object otherwise an error object with relevant error message
+  * @returns {quizId | error} - Always return quizId object otherwise an
+  * error object with relevant error message
 */
-export function adminQuizCreate(userId: number, name: string, description: string): quizIdInterface | errorInterface {
+export function adminQuizCreate(
+  userId: number,
+  name: string,
+  description: string
+): quizIdInterface | errorInterface {
   const data = getData();
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const validName = validQuizName(name);
@@ -66,16 +119,18 @@ export function adminQuizCreate(userId: number, name: string, description: strin
 
   const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
   if (duplicate) {
-    return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   if (description.length > 100) {
-    return { error: 'Quiz description is more than 100 characters' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   const id = createUUID();
 
   const timeStamp = Math.floor(Date.now() / 1000);
+
+  const questionsArray: questionsInterface[] = [];
 
   // All details are correct so append new quiz to data.quizzes
   data.quizzes.push({
@@ -85,6 +140,9 @@ export function adminQuizCreate(userId: number, name: string, description: strin
     timeLastEdited: timeStamp,
     description: description,
     createdBy: userId,
+    numQuestions: 0,
+    questions: questionsArray,
+    timeLimit: 0,
   });
 
   return {
@@ -99,17 +157,21 @@ export function adminQuizCreate(userId: number, name: string, description: strin
   * @param {number} quizId - Id of the quiz
   * ...
   *
-  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
+  * @returns {object} - Always return an empty object otherwise an
+  * error object with relevant error message
 */
 
-export function adminQuizRemove(userId: number, quizId: number): {} | errorInterface {
+export function adminQuizRemove(
+  userId: number,
+  quizId: number
+): Record<string, never> | errorInterface {
   // Retrieves data from the data store
   const data = getData();
 
   // Validates if the user exists
   const userExists = data.users.some(user => user.userId === userId);
   if (!userExists) {
-    return { error: `User Id ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz index of the quiz in the quizzes array
@@ -117,13 +179,13 @@ export function adminQuizRemove(userId: number, quizId: number): {} | errorInter
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
-    return { error: `Quiz with Id ${quizId} does not exist` };
+    return Errors.invalidQuiz();
   }
 
   // Checks if the user owns the quiz
   const quiz = data.quizzes[quizIndex];
   if (quiz.createdBy !== userId) {
-    return { error: 'You do not have permission to remove this quiz' };
+    return Errors.noPermission();
   }
 
   // Removes the quiz from the quizzes array
@@ -139,17 +201,21 @@ export function adminQuizRemove(userId: number, quizId: number): {} | errorInter
   * @param {number} quizId - Id of the quiz
   * ...
   *
-  * @returns {quiz | error} - Always return quiz object otherwise an error object with relevant error message
+  * @returns {quiz | error} - Always return quiz object otherwise an
+  * error object with relevant error message
 */
 
-export function adminQuizInfo(userId: number, quizId: number): quizDetailsInterface | errorInterface {
+export function adminQuizInfo(
+  userId: number,
+  quizId: number
+): quizDetailsInterface | errorInterface {
   // Retrieve data from the data store
   const data = getData();
 
   // Check if user exists
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz that matches both quizId and userId
@@ -157,7 +223,7 @@ export function adminQuizInfo(userId: number, quizId: number): quizDetailsInterf
 
   if (!quiz) {
     // Returns error if quiz is not found or not owned by user
-    return { error: 'Quiz not found or not owned by user' };
+    return Errors.invalidQuiz();
   }
 
   // Return quiz details if found
@@ -178,26 +244,31 @@ export function adminQuizInfo(userId: number, quizId: number): quizDetailsInterf
   * @param {string} name - Name of the quiz
   * ...
   *
-  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
+  * @returns {object} - Always return an empty object otherwise an
+  * error object with relevant error message
 */
-export function adminQuizNameUpdate(userId: number, quizId: number, name: string): {} | errorInterface {
+export function adminQuizNameUpdate(
+  userId: number,
+  quizId: number,
+  name: string
+): Record<string, never> | errorInterface {
   const data = getData();
 
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   const validName = validQuizName(name);
@@ -213,7 +284,7 @@ export function adminQuizNameUpdate(userId: number, quizId: number, name: string
   );
 
   if (nameExists) {
-    return { error: 'Name already used by this user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   // Update the quiz name
@@ -233,31 +304,36 @@ export function adminQuizNameUpdate(userId: number, quizId: number, name: string
   * @param {string} description - Description of the quiz
   * ...
   *
-  * @returns {object} - Always return an empty object otherwise an error object with relevant error message
+  * @returns {object} - Always return an empty object otherwise an
+  * error object with relevant error message
 */
-export function adminQuizDescriptionUpdate(userId: number, quizId: number, description: string): {} | errorInterface {
+export function adminQuizDescriptionUpdate(
+  userId: number,
+  quizId: number,
+  description: string
+): Record<string, never> | errorInterface {
   const data = getData();
 
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
-    return { error: 'Description is too long' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   // Update the quiz description

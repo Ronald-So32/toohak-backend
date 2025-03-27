@@ -74,28 +74,28 @@ describe('error 400 test cases', () => {
       quizId: quizId,
       questionId: questionId + questionIdOffset,
       session: session,
-      newPosition: '1'
+      newPosition: 1
     },
     {
       description: 'NewPosition is less than 0',
       quizId: quizId,
       questionId: questionId,
       session: session,
-      newPosition: '-1'
+      newPosition: -1
     },
     {
       description: 'NewPosition is greater than n-1 where n is the number of questions',
       quizId: quizId,
       questionId: questionId,
       session: session,
-      newPosition: '5'
+      newPosition: 5
     },
     {
       description: ' newPosition is the same as current one',
       quizId: quizId,
       questionId: questionId,
       session: session,
-      newPosition: '0'
+      newPosition: 0
     }
   ])('$description', ({ quizId, questionId, session, newPosition }) => {
     const invalidQuestionIdres = requestAdminQuizQuestionMove(
@@ -116,7 +116,7 @@ describe('error 401 cases', () => {
       quizId, 
       questionId, 
       session + 'Invalid Offset', 
-      '1'
+      1
     );
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
@@ -128,7 +128,7 @@ describe('error 401 cases', () => {
       quizId, 
       questionId, 
       session, 
-      '1'
+      1
     );
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
@@ -147,7 +147,7 @@ describe('error 401 cases', () => {
       quizId, 
       questionId, 
       session2,
-      '1'
+      1
     );
     expect(emptySessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(emptySessionRes.statusCode).toStrictEqual(UNAUTHORISED);
@@ -180,8 +180,8 @@ describe('error 401 cases', () => {
       const invalidSessionRes = requestAdminQuizQuestionMove(
         quizId2, 
         questionId3, 
-        session, 
-        '1',
+        session,
+        1,
       );
       expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
       expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
@@ -192,7 +192,7 @@ describe('error 401 cases', () => {
         quizId + quizIdOffset, 
         questionId, 
         session, 
-        '1',
+        1,
       );
       expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
       expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
@@ -206,7 +206,7 @@ describe('Valid case', () => {
       quizId, 
       questionId, 
       session, 
-      '1',
+      1,
     );
     expect(validRes.body).toStrictEqual({});
     expect(validRes.statusCode).toStrictEqual(OK);
