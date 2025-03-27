@@ -83,7 +83,16 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       });
 
       test('userEmail is the current logged in user', () => {
+        // Try to transfer to self
+        const transferResult = requestAdminQuizTransfer(
+          quizId,
+          session,
+          'z7277272@ad.unsw.edu.au'
+        );
 
+        // Check error response
+        expect(transferResult.statusCode).toStrictEqual(BADREQUEST);
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Quiz name conflict with target user', () => {
