@@ -1,4 +1,3 @@
-import { error } from 'console';
 import {
   requestClear,
   responseInterface,
@@ -11,7 +10,6 @@ import {
 } from './testsHelper';
 
 import { describe } from 'node:test';
-import { string } from 'yaml/dist/schema/common/string';
 
 const OK = 200;
 const UNAUTHORISED = 401;
