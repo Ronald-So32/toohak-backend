@@ -217,6 +217,7 @@ export class Errors {
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
+  static readonly invalidQuestion = 'Invalid question ID';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -256,6 +257,10 @@ export class Errors {
   // Error for no correct answers
   static noCorrectAnswers(): errorInterface {
     return { error: this.noCorrectAnswersError };
+  }
+
+  static invalidQuestion(): errorInterface {
+    return { error: this.invalidQuestion };
   }
 }
 
