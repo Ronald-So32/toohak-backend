@@ -254,6 +254,55 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
+// PUT /v1/admin/quiz/{quizid}/name
+app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { name } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizNameUpdate(userId, quizId, name);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// PUT /v1/admin/quiz/{quizid}/description
+app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { description } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+  // ADD THE BADREQUEST
+  const userId = userIdResult.userId;
+  const result = adminQuizDescriptionUpdate(userId, quizId, description);
+
+  if ('error' in result) {
+    return res.status(FORBIDDEN).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
