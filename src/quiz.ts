@@ -1,6 +1,7 @@
 import {
   getData,
-  questionsInterface
+  questionsInterface,
+  answersInterface
 } from './dataStore';
 import {
   createUUID,
@@ -12,7 +13,8 @@ import {
   quizGetDetailsInterface,
   questionIdInterface,
   Errors,
-  validQuestionString
+  validQuestionString,
+  randomColour
 } from './functionsHelper';
 
 /**
@@ -428,10 +430,29 @@ export function adminQuizQuestionCreate(
     return Errors.noCorrectAnswers();
   }
 
-  // generate random colour
-  // push that shit into data
-
+  let answerId = 0;
+  const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
+    answerId++;
+    return {
+      ...option,
+      id: answerId,
+      colour: randomColour(),
+    };
+  });
+  
   const id = createUUID();
+  
+  const newQuestion: questionsInterface = {
+    questionId: id,
+    question,
+    timeLimit,
+    points,
+    answerOptions: updatedAnswerOptions
+  };
+
+  quiz.questions.push(newQuestion);
+  quiz.timeLastEdited = Date.now();
+
 
   return {
     questionId: id

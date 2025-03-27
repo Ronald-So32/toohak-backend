@@ -408,6 +408,13 @@ export function validQuestionString(question: string): boolean | errorInterface 
 }
 
 export function randomColour(): string {
+  const colors = [
+    'red',      // #FF0000
+    'blue',     // #0000FF
+    'green',    // #00FF00
+    'yellow',   // #FFFF00
+  ];
 
-  return 'red';
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
 }

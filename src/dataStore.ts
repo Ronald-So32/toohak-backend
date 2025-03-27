@@ -10,7 +10,7 @@ interface userInterface {
   oldPasswords: string[];
 }
 
-interface answerInterface {
+export interface answersInterface {
   answerId: number;
   answer: string;
   colour: string;
@@ -22,7 +22,7 @@ export interface questionsInterface {
   question: string;
   timeLimit: number;
   points: number;
-  answerOptions: answerInterface[];
+  answerOptions: answersInterface[];
 }
 
 interface quizInterface {
