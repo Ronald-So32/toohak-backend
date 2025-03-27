@@ -346,10 +346,9 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
     }
     return res.status(BADREQUEST).json({ error: result.error });
   }
-  
+
   return res.status(OK).json({});
 });
-
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
