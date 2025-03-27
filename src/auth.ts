@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { getData } from './dataStore';
 import {
   createUUID,
@@ -8,7 +7,6 @@ import {
   userIdInterface,
   userDetailsInterface,
   generateSession,
-  findSessionFromUserId,
   Errors
 } from './functionsHelper';
 
@@ -266,11 +264,11 @@ export function adminAuthLogout(session: string): Record<string, never> | errorI
   const data = getData();
 
   const sessionIndex = data.sessions.findIndex(s => s.session === session);
-  
+
   if (sessionIndex === -1) {
     return Errors.invalidSession();
   }
-  
+
   data.sessions.splice(sessionIndex, 1);
 
   return {};

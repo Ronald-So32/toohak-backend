@@ -49,7 +49,7 @@ describe('Testing POST /v1/admin/auth/logout', () => {
       expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
       expect(responseLogin.statusCode).toStrictEqual(OK);
     });
-    
+
     test('Logging out after already logging out once', () => {
       const responseLogout = requestAdminAuthLogout(session);
       expect(responseLogout.body).toStrictEqual({});
@@ -67,7 +67,7 @@ describe('Testing POST /v1/admin/auth/logout', () => {
       expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
       expect(responseLogin.statusCode).toStrictEqual(OK);
     });
-    
+
     test('Multiple login sessions', () => {
       // Two other logins (3 in total)
       const responseLogin = requestAdminAuthLogin(
@@ -76,7 +76,7 @@ describe('Testing POST /v1/admin/auth/logout', () => {
       );
       expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
       expect(responseLogin.statusCode).toStrictEqual(OK);
-      
+
       const responseLogin2 = requestAdminAuthLogin(
         'z7277272@ad.unsw.edu.au',
         'Password1'
