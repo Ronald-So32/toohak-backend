@@ -15,7 +15,8 @@ import {
   adminQuizQuestionCreate,
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
-  adminQuizTransfer
+  adminQuizTransfer,
+  adminQuizQuestionUpdate
 } from './quiz';
 import {
   findUserIdFromSession,
@@ -378,6 +379,40 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
   return res.status(OK).json({});
 
+});
+
+// PUT /v1/admin/quiz/{quizid}/question/{questionid}
+app.put('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { questionBody } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const quizDetailsResult = adminQuizGet(userId, quizId);
+
+  if ('error' in quizDetailsResult) {
+    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+  }
+
+  const question = quizDetailsResult.questions.find(question => question.quizId === questionId);
+  if (!question) {
+    return Errors.invalidQuestion();
+  }
+
+  const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ questionId: result.questionId });
 });
 
 // ====================================================================

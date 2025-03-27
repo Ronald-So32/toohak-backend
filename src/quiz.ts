@@ -497,3 +497,104 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
 
   return {};
 }
+
+export function adminQuizQuestionUpdate(
+  userId: number,
+  quizId: number,
+  questionId: number,
+  questionBody: any
+): Record<string, never> | errorInterface {
+  const data = getData();
+
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return Errors.invalidUser();
+  }
+
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  const questionExist = quiz.questions.find(question => question.quizId === questionId);
+  if (!questionExist) {
+    return Errors.invalidQuestion();
+  }
+
+  const { question, timeLimit, points, answerOptions } = questionBody.questionBody;
+
+  // Validate question string
+  const questionValidation = validQuestionString(question);
+  if (questionValidation !== true) {
+    return questionValidation as errorInterface;
+  }
+
+  // DO this in a helper instead
+  if (answerOptions.length < 2) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+  }
+  if (answerOptions.length > 6) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  }
+
+  if (timeLimit <= 0) {
+    return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
+  }
+
+  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) + timeLimit;
+  if (totalTime > 180) {
+    return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
+  }
+
+  // Another helper
+  if (points < 1) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+  }
+  if (points > 10) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  }
+
+  const answerStrings: string[] = [];
+  let hasCorrectAnswer = false;
+
+  for (const answer of answerOptions) {
+    if (answer.answer.length < 1) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+    }
+    if (answer.answer.length > 30) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+    }
+
+    // Check for duplicate answers
+    if (answerStrings.includes(answer.answer)) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+    }
+    answerStrings.push(answer.answer);
+
+    if (answer.correct) {
+      hasCorrectAnswer = true;
+    }
+  }
+
+  if (!hasCorrectAnswer) {
+    return Errors.noCorrectAnswers();
+  }
+
+  let answerId = 0;
+  const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
+    answerId++;
+    return {
+      ...option,
+      id: answerId,
+      colour: randomColour(),
+    };
+  });
+
+  // Need to update the data of question
+
+  return {};
+}
