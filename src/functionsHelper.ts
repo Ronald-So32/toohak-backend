@@ -198,6 +198,11 @@ export class Errors {
       POSITIVE: 'must be a positive number',
       TOO_LONG: 'must have at most 3 minutes',
     },
+    AnswerString: {
+      TOO_SHORT: 'must be at least 1 characters',
+      TOO_LONG: 'must be at most 30 characters',
+      DUPLICATE: 'must not have any duplicates'
+    },
     Points: {
       TOO_SHORT: 'must be at least 1',
       TOO_LONG: 'must be at most 10',
@@ -205,6 +210,7 @@ export class Errors {
   } as const;
 
   // Error messages
+  static readonly noCorrectAnswersError = 'This Question has no correct answers'
   static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
@@ -245,6 +251,11 @@ export class Errors {
   // Error for user with no permissions
   static noPermission(): errorInterface {
     return { error: this.noPermissionError };
+  }
+
+  // Error for no correct answers
+  static noCorrectAnswers(): errorInterface {
+    return { error: this.noCorrectAnswersError };
   }
 }
 

@@ -402,13 +402,34 @@ export function adminQuizQuestionCreate(
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
   }
 
-  // Return error for amount of answers
-  // Return error for non-positive time-limits
-  // Return error for sum of question time limits in the quiz exceeding 3 minutes
-  // Return error for question points awarded less than 1 or more than 10
-  // Return error for answer lesser than 1 character or more than 30 characters long
-  // Return error for duplicate answers within same question
-  // Return error for no correct answers
+  const answerStrings: string[] = [];
+  let hasCorrectAnswer = false;
+
+  for (const answer of answerOptions) {
+    if (answer.answer.length < 1) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+    }
+    if (answer.answer.length > 30) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+    }
+
+    // Check for duplicate answers
+    if (answerStrings.includes(answer.answer)) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+    }
+    answerStrings.push(answer.answer);
+
+    if (answer.correct) {
+      hasCorrectAnswer = true;
+    }
+  }
+
+  if (!hasCorrectAnswer) {
+    return Errors.noCorrectAnswers();
+  }
+
+  // generate random colour
+  // push that shit into data
 
   const id = createUUID();
 
