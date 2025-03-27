@@ -375,8 +375,8 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   }
 
   // Target user already has a quiz with the same name
-  const nameConflict = data.quizzes.some(quiz =>
-    quiz.createdBy === targetUser.userId && quiz.name === quiz.name);
+  const nameConflict = data.quizzes.some(quizzes =>
+    quizzes.createdBy === targetUser.userId && quiz.name === quizzes.name);
   if (nameConflict) {
     return Errors.invalidString('User email', Errors.Specific.Email.NAME);
   }
