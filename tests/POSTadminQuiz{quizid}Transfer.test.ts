@@ -115,11 +115,26 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
 
     describe('Error 401: Unauthorized', () => {
       test('Invalid session', () => {
-
+        const transferResult = requestAdminQuizTransfer(
+          quizId,
+          session + 'Invalid Session',
+          'z6969@ad.unsw.edu.au'
+        );
+        expect(transferResult.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
       });
 
       test('Logged out user', () => {
+        requestAdminAuthLogout(session);
 
+        // Try to transfer with logged out session
+        const transferResult = requestAdminQuizTransfer(
+          quizId,
+          session,
+          'z6969@ad.unsw.edu.au'
+        );
+        expect(transferResult.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(transferResult.body).toStrictEqual({ error: expect.any(String) });
       });
     });
 
