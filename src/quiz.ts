@@ -381,17 +381,17 @@ export function adminQuizQuestionMove(
 
   // newPosition is less than 0
   if (newPosition < 0) {
-    return { error: 'newPosition is less than 0' };
+    return Errors.invalidNewPosition('newPostion', Errors.Specific.newPosition.TOO_SHORT);
   }
 
   // newPosition greater than number of questions
   if (newPosition > quiz.questions.length - 1) {
-    return Errors.invalidNewPosition('newPostion', Errors.Specific.newPosition.TOO_SHORT);
+    return Errors.invalidNewPosition('newPostion', Errors.Specific.newPosition.TOO_LONG);
   }
 
   // newPostion is the same as current positon of question
   if (validQuestionIndex === newPosition) {
-    return { error: 'newPostion is the same as current positon of question' };
+    return Errors.invalidNewPosition('newPostion', Errors.Specific.newPosition.OLD_SAME);
   }
 
   const question = quiz.questions[validQuestionIndex];
