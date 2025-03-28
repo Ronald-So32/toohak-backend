@@ -439,9 +439,9 @@ describe('Test invalid cases', () => {
             ]
           }
         };
-        const response = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
-        expect(response.body).toStrictEqual({ error: expect.any(String) });
-        expect(response.statusCode).toStrictEqual(BADREQUEST);
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
   
@@ -460,7 +460,7 @@ describe('Test invalid cases', () => {
           description: 'Points awarded is greater then 10'
         },
       ])('$description', ({ points }) => {
-        const response = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
           questionId,
           session,
@@ -482,8 +482,8 @@ describe('Test invalid cases', () => {
             }
           }
         );
-        expect(response.body).toStrictEqual({ error: expect.any(String) });
-        expect(response.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
   });
@@ -491,7 +491,7 @@ describe('Test invalid cases', () => {
   describe('Test cases for error 401', () => {
     test('Logged out session', () => {
       requestAdminAuthLogout(session);
-      const response = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId,
         questionId,
         session,
@@ -513,13 +513,13 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      expect(response.body).toStrictEqual({ error: expect.any(String) });
-      expect(response.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
     });
     
     test('Invalid user session', () => {
       requestAdminAuthLogout(session);
-      const response = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId,
         questionId, 
         session + 'Invalid Session',
@@ -541,8 +541,8 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      expect(response.body).toStrictEqual({ error: expect.any(String) });
-      expect(response.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
     });
   });
   
@@ -586,7 +586,7 @@ describe('Test invalid cases', () => {
       );
       questionId2 = responseQuestionCreate.body.questionId;
       
-      const response = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId2,
         questionId,
         session,
@@ -608,12 +608,12 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      expect(response.body).toStrictEqual({ error: expect.any(String) });
-      expect(response.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
   
     test('Quiz does not exist', () => {
-      const response = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId + quizIdOffset,
         questionId,
         session,
@@ -635,8 +635,8 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      expect(response.body).toStrictEqual({ error: expect.any(String) });
-      expect(response.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 });
