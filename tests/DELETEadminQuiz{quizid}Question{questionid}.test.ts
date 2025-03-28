@@ -83,7 +83,20 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   });
 
   describe('Test error cases', () => {
-    
+    test('Session is invalid', () => {
+      const responseQuestionDelete = requestDeleteQuizQuestion(
+        quizId,
+        questionId,
+        session + 'Invalid Session'
+      );
+      expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionDelete.statusCode).toStrictEqual(UNAUTHORISED);
+
+      // Check quiz has not been deleted
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+    });
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
