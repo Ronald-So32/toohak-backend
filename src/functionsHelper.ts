@@ -182,6 +182,11 @@ export class Errors {
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
     },
+    Position: {
+      TOO_SHORT: 'cannot be less than 0',
+      TOO_LONG: 'cannot be more than number of questions in the quiz',
+      OLD_SAME: 'it cannot be the same'
+    },
     Email: {
       SELF: 'targer user must not be yourself',
       NAME: 'target user already has a quiz with the same name'
@@ -217,11 +222,16 @@ export class Errors {
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
-  static readonly invalidQuestion = 'Invalid question ID';
+  static readonly invalidQuestionError = 'Invalid question ID';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
     return { error: `${type} is invalid, ${specific}` };
+  }
+
+  // Error for invalid question ID
+  static invalidQuestion(): errorInterface {
+    return { error: this.invalidQuestionError };
   }
 
   // Error for invalid user ID
@@ -257,10 +267,6 @@ export class Errors {
   // Error for no correct answers
   static noCorrectAnswers(): errorInterface {
     return { error: this.noCorrectAnswersError };
-  }
-
-  static invalidQuestion(): errorInterface {
-    return { error: this.invalidQuestion };
   }
 }
 

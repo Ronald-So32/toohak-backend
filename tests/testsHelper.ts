@@ -1,5 +1,6 @@
 import request, { HttpVerb } from 'sync-request-curl';
 import config from '../src/config.json';
+import { questionsInterface } from '../src/dataStore';
 
 const port = config.port;
 const url = config.url;
@@ -9,6 +10,10 @@ const timeoutMS = 7 * 1000;
 export interface responseInterface {
   body: any;
   statusCode: number;
+}
+
+export interface questionBodyInterface {
+  questionBody: questionsInterface;
 }
 
 // Helper function to handle common request logic
@@ -176,7 +181,7 @@ export function requestAdminQuizCreate(
 export function requestAdminQuizQuestionCreate(
   quizId: number,
   session: string,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): responseInterface {
   return makeRequest(
     'POST',
@@ -233,7 +238,7 @@ export function requestAdminQuizQuestionUpdate(
   quizId: number,
   questionId: number,
   session: string,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): responseInterface {
   return makeRequest(
     'PUT',

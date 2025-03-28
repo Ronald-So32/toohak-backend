@@ -11,14 +11,14 @@ interface userInterface {
 }
 
 export interface answersInterface {
-  answerId: number;
+  answerId?: number;
   answer: string;
-  colour: string;
+  colour?: string;
   correct: boolean;
 }
 
 export interface questionsInterface {
-  questionId: number;
+  questionId?: number;
   question: string;
   timeLimit: number;
   points: number;

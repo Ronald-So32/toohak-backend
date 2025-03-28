@@ -16,7 +16,9 @@ import {
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
   adminQuizTransfer,
-  adminQuizQuestionUpdate
+  adminQuizQuestionUpdate,
+  adminQuizQuestionMove,
+  adminDeleteQuizQuestion,
 } from './quiz';
 import {
   findUserIdFromSession,
@@ -413,6 +415,58 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     return res.status(BADREQUEST).json({ error: result.error });
   }
 
+  return res.status(OK).json({});
+});
+
+// DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+
+  const userIdResult = findUserIdFromSession(session);
+  // check if userId is valid
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminDeleteQuizQuestion(quizId, userId, questionId);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+  return res.status(OK).json({});
+});
+
+// PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { newPosition } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
   return res.status(OK).json({});
 });
 
