@@ -411,22 +411,15 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
-
-  // const newPosition = req.body.newPosition;
-
   const { newPosition } = req.body;
 
-  // const newPosition = parseInt(req.query.newPosition as string);
-
   const userIdResult = findUserIdFromSession(session);
-
-  // check if userId is valid
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
  
   const userId = userIdResult.userId;
-  const result = adminQuizQuestionMove(quizId, userId, questionId, session, newPosition);
+  const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
 
   if ('error' in result) {
     // Check for specific error messages to determine status code
