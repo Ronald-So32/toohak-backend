@@ -155,7 +155,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
       name: 'Name',
-      numQuestions: 0,
+      numQuestions: 1,
       questions: [
         {
           answerOptions: [

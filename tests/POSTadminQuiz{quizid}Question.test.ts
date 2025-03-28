@@ -785,7 +785,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeCreated": expect.any(Number),
       "timeLastEdited": expect.any(Number),
       "description": "Description",
-      "numQuestions": 0,
+      "numQuestions": 2,
       "questions": [
         {
           "question": "Question1",
@@ -845,7 +845,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeCreated": expect.any(Number),
       "timeLastEdited": expect.any(Number),
       "description": "Description2",
-      "numQuestions": 0,
+      "numQuestions": 1,
       "questions": [
         {
           "question": "Question3",

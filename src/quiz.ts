@@ -455,6 +455,7 @@ export function adminQuizQuestionCreate(
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
   quiz.timeLimit += timeLimit;
+  quiz.numQuestions += 1;
 
   return {
     questionId: id
@@ -536,6 +537,7 @@ export function adminDeleteQuizQuestion(
   const deletedQuestion = quiz.questions[validQuestionIndex];
 
   quiz.timeLimit -= deletedQuestion.timeLimit;
+  quiz.numQuestions -= 1;
 
   // Delete question from its questionId
   quiz.questions.splice(validQuestionIndex, 1);
