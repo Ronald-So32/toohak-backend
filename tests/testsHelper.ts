@@ -1,5 +1,6 @@
 import request, { HttpVerb } from 'sync-request-curl';
 import config from '../src/config.json';
+import { questionsInterface } from '../src/dataStore';
 
 const port = config.port;
 const url = config.url;
@@ -9,6 +10,10 @@ const timeoutMS = 7 * 1000;
 export interface responseInterface {
   body: any;
   statusCode: number;
+}
+
+export interface questionBodyInterface {
+  questionBody: questionsInterface;
 }
 
 // Helper function to handle common request logic
@@ -83,32 +88,17 @@ export function requestGetQuiz(
   );
 }
 
-/**
- * Makes a GET request to the admin quiz question suggestion endpoint.
- *
- * @param {number} quizId - The ID of the quiz for which to get question suggestions
- * @param {string} session - The user's session token
- *
- * @returns {responseInterface} - The response from the server
- */
+// Wrapper for GET /v1/admin/quiz/{quizId}/question/suggestion
 export function requestGetQuizQuestionSuggestion(
   quizId: number,
   session: string
 ): responseInterface {
-  const res = request(
+  return makeRequest(
     'GET',
-    `${url}:${port}/v1/admin/quiz/${quizId}/question/suggestion`,
-    {
-      headers: {
-        session: session
-      }
-    }
+    `/admin/quiz/${quizId}/question/suggestion`,
+    null,
+    { session }
   );
-
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
 }
 
 // Wrapper for GET /v1/admin/quiz/list
@@ -191,7 +181,7 @@ export function requestAdminQuizCreate(
 export function requestAdminQuizQuestionCreate(
   quizId: number,
   session: string,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): responseInterface {
   return makeRequest(
     'POST',
@@ -248,7 +238,7 @@ export function requestAdminQuizQuestionUpdate(
   quizId: number,
   questionId: number,
   session: string,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): responseInterface {
   return makeRequest(
     'PUT',
