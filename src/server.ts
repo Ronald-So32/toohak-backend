@@ -417,7 +417,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
- 
+
   const userId = userIdResult.userId;
   const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
 
@@ -431,7 +431,6 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   }
   return res.status(OK).json({});
 });
-
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

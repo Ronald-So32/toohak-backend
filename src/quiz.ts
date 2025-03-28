@@ -17,7 +17,6 @@ import {
   randomColour
 } from './functionsHelper';
 
-
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   *
@@ -546,7 +545,7 @@ export function adminDeleteQuizQuestion(
 }
 
 export function adminQuizQuestionMove(
-  quizId: number, 
+  quizId: number,
   userId: number,
   questionId: number,
   newPosition: number
@@ -592,7 +591,7 @@ export function adminQuizQuestionMove(
   }
 
   const question = quiz.questions[validQuestionIndex];
-  
+
   quiz.questions.splice(validQuestionIndex, 1);
   quiz.questions.splice(newPosition, 0, question);
 

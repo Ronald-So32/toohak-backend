@@ -118,10 +118,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
       const responseMove = requestAdminQuizQuestionMove(
-        quizId, 
-        questionId, 
-        session, 
-        1,
+        quizId,
+        questionId,
+        session,
+        1
       );
       expect(responseMove.body).toStrictEqual({});
       expect(responseMove.statusCode).toStrictEqual(OK);
@@ -129,9 +129,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
   });
 
   describe('Test error cases', () => {
-    
+
   });
-  
+
   describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
 
   });
