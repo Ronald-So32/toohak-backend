@@ -63,6 +63,7 @@ const HOST: string = process.env.IP || '127.0.0.1';
 // ====================================================================
 //  ================= WORK IS DONE BELOW THIS LINE ===================
 // ====================================================================
+
 // Example get request
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
@@ -71,11 +72,13 @@ app.get('/echo', (req: Request, res: Response) => {
   }
   return res.json(result);
 });
+
 // DELETE /v1/clear route
 app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
   return res.status(OK).json({});
 });
+
 // POST /v1/admin/auth/register
 app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
@@ -85,6 +88,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   }
   return res.status(OK).json({ session: result.session });
 });
+
 // POST /v1/admin/auth/login
 app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -94,6 +98,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   }
   return res.status(OK).json({ session: result.session });
 });
+
 // GET /v1/admin/user/details
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -108,6 +113,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   }
   return res.status(OK).json({ user: result.user });
 });
+
 // PUT /v1/admin/user/details
 app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -123,6 +129,7 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // PUT /v1/admin/user/password
 app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -138,6 +145,7 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // POST /v1/admin/quiz
 app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -153,6 +161,7 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   }
   return res.status(OK).json({ quizId: result.quizId });
 });
+
 // GET /v1/admin/quiz/list
 app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -167,6 +176,7 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   }
   return res.status(OK).json({ quizzes: result.quizzes });
 });
+
 // DELETE /v1/admin/quiz/{quizid}
 app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -182,6 +192,7 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // GET /v1/admin/quiz/{quizid}
 app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -247,6 +258,7 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // PUT /v1/admin/quiz/{quizid}/description
 app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -268,6 +280,7 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // POST /v1/admin/auth/logout
 app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -277,6 +290,7 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   }
   return res.status(OK).json({});
 });
+
 // DELETE//v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
