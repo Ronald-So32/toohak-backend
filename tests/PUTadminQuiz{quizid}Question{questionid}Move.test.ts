@@ -9,7 +9,6 @@ import {
   requestAdminQuizCreate
 } from './testsHelper';
 
-
 import { describe } from 'node:test';
 
 const OK = 200;
@@ -29,7 +28,6 @@ let quizId2: number;
 let questionId: number;
 let questionId2: number;
 let questionId3: number;
-let newPosition: number;
 
 // make session, login to make quiz and question
 beforeEach(() => {
@@ -98,40 +96,40 @@ describe('error 400 test cases', () => {
       newPosition: 0
     }
   ])('$description', ({ quizId, questionId, session, newPosition }) => {
-    const invalidQuestionIdres = requestAdminQuizQuestionMove(
+    const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
       session, 
       newPosition
     );
-    expect(invalidQuestionIdres.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidQuestionIdres.statusCode).toStrictEqual(BADREQUEST);
+    expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseMoveQuizQuestion.statusCode).toStrictEqual(BADREQUEST);
   });
 });
 
 describe('error 401 cases', () => {
 
   test('Invalid session', () => {
-    const invalidSessionRes = requestAdminQuizQuestionMove(
+    const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
       session + 'Invalid Offset', 
       1
     );
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
   });
 
   test('Session logged out', () => {
     requestAdminAuthLogout(session);
-    const invalidSessionRes = requestAdminQuizQuestionMove(
+    const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
       session, 
       1
     );
-    expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
   });
 
   test('Session has no quizzes', () => {
@@ -143,14 +141,14 @@ describe('error 401 cases', () => {
       'Last'
     );
     session2 = responseRegister.body.session2;
-    const emptySessionRes = requestAdminQuizQuestionMove(
+    const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
       session2,
       1
     );
-    expect(emptySessionRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(emptySessionRes.statusCode).toStrictEqual(UNAUTHORISED);
+    expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
   });
 
   describe('error code 403 cases', () => {
@@ -177,38 +175,38 @@ describe('error 401 cases', () => {
       );
       questionId3 = responseCreateQuestion.body.questionId3;
 
-      const invalidSessionRes = requestAdminQuizQuestionMove(
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
         quizId2, 
         questionId3, 
         session,
         1,
       );
-      expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
-      expect(invalidSessionRes.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
     }); 
     
     test('Quiz does not exist', () => {
-      const invalidQuizIdRes = requestAdminQuizQuestionMove(
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
         quizId + quizIdOffset, 
         questionId, 
         session, 
         1,
       );
-      expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
-      expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 });
 
 describe('Valid case', () => {
   test('Session, quizId, questionId, and newPosition is valid', () => {
-    const validRes = requestAdminQuizQuestionMove(
+    const res = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
       session, 
       1,
     );
-    expect(validRes.body).toStrictEqual({});
-    expect(validRes.statusCode).toStrictEqual(OK);
+    expect(res.body).toStrictEqual({});
+    expect(res.statusCode).toStrictEqual(OK);
   });
 });
