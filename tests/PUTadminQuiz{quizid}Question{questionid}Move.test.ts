@@ -182,6 +182,39 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
     });
 
+    describe('Error response 400 test cases', () => {
+      test.each([
+        {
+          description: 'Question Id does not refer to a valid question within this quiz',
+          questionId: questionId + questionIdOffset,
+          newPosition: 1
+        },
+        {
+          description: 'NewPosition is less than 0',
+          questionId: questionId,
+          newPosition: -1
+        },
+        {
+          description: 'NewPosition is greater than n-1 where n is the number of questions',
+          questionId: questionId,
+          newPosition: 5
+        },
+        {
+          description: ' newPosition is the same as current one',
+          questionId: questionId,
+          newPosition: 0
+        }
+      ])('$description', ({ questionId, newPosition }) => {
+        const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+          quizId, 
+          questionId, 
+          session, 
+          newPosition
+        );
+        expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseMoveQuizQuestion.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
   });
 
   describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
