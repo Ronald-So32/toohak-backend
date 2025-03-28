@@ -20,7 +20,7 @@ const questionIdOffset = 999;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
-let responseCreateQuestion: responseInterface;
+let responseQuestionCreate: responseInterface;
 let session: string;
 let session2: string;
 let quizId: number;
@@ -50,19 +50,51 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
   
-  responseCreateQuestion = requestAdminQuizQuestionCreate(
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
-    session, 
-    'Question'
+    session,
+    {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    }
   );
-  questionId = responseCreateQuestion.body.questionId;
 
-  responseCreateQuestion = requestAdminQuizQuestionCreate(
+
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
-    session, 
-    'Question2'
+    session,
+    {
+      questionBody: {
+        question: 'Question2',
+        timeLimit: 5,
+        points: 6,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    }
   );
-  questionId2 = responseCreateQuestion.body.questionId2;
+  questionId2 = responseQuestionCreate.body.questionId;
 });
 
 describe('error 400 test cases', () => {
@@ -140,7 +172,7 @@ describe('error 401 cases', () => {
       'First',
       'Last'
     );
-    session2 = responseRegister.body.session2;
+    session2 = responseRegister.body.session;
     const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
       quizId, 
       questionId, 
@@ -168,12 +200,12 @@ describe('error 401 cases', () => {
       );
       quizId2 = responseCreate.body.quizId2;
 
-      responseCreateQuestion = requestAdminQuizQuestionCreate(
+      responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId2,
         session2, 
         'Question3'
       );
-      questionId3 = responseCreateQuestion.body.questionId3;
+      questionId3 = responseQuestionCreate.body.questionId3;
 
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
         quizId2, 
