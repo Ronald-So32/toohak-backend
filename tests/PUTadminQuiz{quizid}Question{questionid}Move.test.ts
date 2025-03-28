@@ -1,7 +1,6 @@
 import {
   requestClear,
   responseInterface,
-  requestAdminAuthLogin,
   requestAdminAuthLogout,
   requestAdminQuizQuestionMove,
   requestAdminQuizQuestionCreate,
@@ -217,7 +216,249 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     });
   });
 
-  describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
+  test('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
+    const responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
+      description: 'Description',
+      name: 'Name',
+      numQuestions: 3,
+      questions: [
+        {
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              colour: expect.any(String),
+              correct: true,
+              id: 1,
+            },
+            {
+              answer: 'ur mom',
+              colour: expect.any(String),
+              correct: false,
+              id: 2,
+            },
+          ],
+          points: 5,
+          question: 'Who is the Monarch of England?',
+          questionId: expect.any(Number),
+          timeLimit: 4,
+        },
+        {
+          question: 'Yeasdfs?',
+          questionId: expect.any(Number),
+          timeLimit: 7,
+          points: 10,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'Right',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        },
+        {
+          question: 'Nasdfo?',
+          questionId: expect.any(Number),
+          timeLimit: 6,
+          points: 7,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'True',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'False',
+              correct: false
+            }
+          ]
+        }
+      ],
+      quizId: 2,
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      timeLimit: 17,
+    });
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
 
+    // Move 1 to 2 (0 2 1)
+    const responseMove = requestAdminQuizQuestionMove(
+      quizId,
+      questionId2,
+      session,
+      2
+    );
+    expect(responseMove.body).toStrictEqual({});
+    expect(responseMove.statusCode).toStrictEqual(OK);
+
+    // Check again
+    const responseQuizGet2 = requestGetQuiz(quizId, session);
+    expect(responseQuizGet2.body).toStrictEqual({
+      description: 'Description',
+      name: 'Name',
+      numQuestions: 3,
+      questions: [
+        {
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              colour: expect.any(String),
+              correct: true,
+              id: 1,
+            },
+            {
+              answer: 'ur mom',
+              colour: expect.any(String),
+              correct: false,
+              id: 2,
+            },
+          ],
+          points: 5,
+          question: 'Who is the Monarch of England?',
+          questionId: expect.any(Number),
+          timeLimit: 4,
+        },
+        {
+          question: 'Nasdfo?',
+          questionId: expect.any(Number),
+          timeLimit: 6,
+          points: 7,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'True',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'False',
+              correct: false
+            }
+          ]
+        },
+        {
+          question: 'Yeasdfs?',
+          questionId: expect.any(Number),
+          timeLimit: 7,
+          points: 10,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'Right',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        },
+      ],
+      quizId: 2,
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      timeLimit: 17,
+    });
+    expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+
+    // Move 2 to 0 (2 0 1)
+    const responseMove2 = requestAdminQuizQuestionMove(
+      quizId,
+      questionId3,
+      session,
+      0
+    );
+    expect(responseMove2.body).toStrictEqual({});
+    expect(responseMove2.statusCode).toStrictEqual(OK);
+
+    // Check again
+    const responseQuizGet3 = requestGetQuiz(quizId, session);
+    expect(responseQuizGet3.body).toStrictEqual({
+      description: 'Description',
+      name: 'Name',
+      numQuestions: 3,
+      questions: [
+        {
+          question: 'Nasdfo?',
+          questionId: expect.any(Number),
+          timeLimit: 6,
+          points: 7,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'True',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'False',
+              correct: false
+            }
+          ]
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              colour: expect.any(String),
+              correct: true,
+              id: 1,
+            },
+            {
+              answer: 'ur mom',
+              colour: expect.any(String),
+              correct: false,
+              id: 2,
+            },
+          ],
+          points: 5,
+          question: 'Who is the Monarch of England?',
+          questionId: expect.any(Number),
+          timeLimit: 4,
+        },
+        {
+          question: 'Yeasdfs?',
+          questionId: expect.any(Number),
+          timeLimit: 7,
+          points: 10,
+          answerOptions: [
+            {
+              colour: expect.any(String),
+              id: 1,
+              answer: 'Right',
+              correct: true
+            },
+            {
+              colour: expect.any(String),
+              id: 2,
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        },
+      ],
+      quizId: 2,
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      timeLimit: 17,
+    });
+    expect(responseQuizGet3.statusCode).toStrictEqual(OK);
   });
 });
