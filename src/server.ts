@@ -45,7 +45,7 @@ const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
-const HUGGINGFACE_API_TOKEN = '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';
+const HUGGINGFACE_API_TOKEN = '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';
 
 // Set up web app
 const app = express();
