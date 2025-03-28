@@ -27,11 +27,6 @@ beforeEach(() => {
   session = responseRegister.body.session;
   responseCreate = requestAdminQuizCreate(
     session,
-    /*
-    For this specific test case, we use different contents since its testing
-    response from an LLM.
-    */
-
     'Computer Science Quiz',
     'A quiz about computer science concepts'
   );
@@ -44,6 +39,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       quizId,
       session
     );
+    expect(responseQuestionSuggestion.body.question).toStrictEqual('asdfjklasfd;jlk');
 
     expect(responseQuestionSuggestion.statusCode).toStrictEqual(OK);
     expect(responseQuestionSuggestion.body).toStrictEqual({

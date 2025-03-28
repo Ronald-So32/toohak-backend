@@ -17,6 +17,8 @@ import {
   randomColour
 } from './functionsHelper';
 
+import request from 'sync-request-curl';
+
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   *
@@ -602,15 +604,13 @@ export function adminQuizQuestionMove(
   return {};
 }
 
-export function adminQuizQuestionSuggestion(questionName: string, questionDescription: string) {
-
-  // Extract the quiz details for the prompt
-  const quizName = quizDetailsResult.details.name;
-  const quizDescription = quizDetailsResult.details.description;
-
-  try {
+export function adminQuizQuestionSuggestion(
+  quizName: string,
+  quizDescription: string,
+  HUGGINGFACE_API_TOKEN: string
+): { question: string } | errorInterface {
   // Create a prompt for the LLM that includes the quiz context
-    const prompt = `You are a helpful assistant that generates quiz questions. 
+  const prompt = `You are a helpful assistant that generates quiz questions. 
   Please suggest a single question for a quiz with the following details:
   
   Quiz name: "${quizName}"
@@ -621,43 +621,39 @@ export function adminQuizQuestionSuggestion(questionName: string, questionDescri
   
   Respond with just the question text, nothing else.`;
 
-    // Make the API call to Hugging Face
-    const response = request('POST',
-      'https://api-inference.huggingface.co/models/google/gemma-2-2b-it', {
-        headers: {
-          Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        json: {
-          inputs: prompt
-        }
-      });
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/google/gemma-2-2b-it',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+  });
 
-    // Parse the response
-    const responseBody = JSON.parse(response.getBody('utf8'));
+  const responseBody = JSON.parse(response.body.toString());
 
-    /* Extract the generated question
-    (this may need adjustment based on actual API response format)
-  */
-    let generatedQuestion = responseBody.generated_text || '';
-
-    // Clean up the response - remove quotes if present and whitespace
-    generatedQuestion = generatedQuestion.replace(/^["']|["']$/g, '').trim();
-
-    // Ensure the question meets our requirements
-    if (generatedQuestion.length < 5) {
-      generatedQuestion = `What is ${quizName} about?`;
-    } else if (generatedQuestion.length > 50) {
-      generatedQuestion = generatedQuestion.substring(0, 50);
-    }
-
-    return res.status(OK).json({ question: generatedQuestion });
-  } catch (error) {
-    console.error('Error calling Hugging Face API:', error);
-
-    // Fallback question if API call fails
-    const fallbackQuestion = `What is the main concept of ${quizName}?`;
-
-    return res.status(OK).json({ question: fallbackQuestion });
+  if ('error' in responseBody) {
+    return { error: responseBody.error };
   }
+
+  let generatedQuestion = responseBody[0].generated_text;
+  const questionMatch = generatedQuestion.match(/^\w.*\?$/m);
+  if (!questionMatch) {
+    generatedQuestion = `What is ${quizName} about?`;
+  } else {
+    generatedQuestion = questionMatch[0];
+  }
+
+  // Ensure the question meets our requirements
+  if (generatedQuestion.length < 5) {
+    generatedQuestion = `What is ${quizName} about?`;
+  } else if (generatedQuestion.length > 50) {
+    generatedQuestion = generatedQuestion.substring(0, 47) + '...';
+  }
+
+  return { question: generatedQuestion};
 }
