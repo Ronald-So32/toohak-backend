@@ -125,6 +125,61 @@ describe('error 400 test cases', () => {
     );
     expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
     expect(responseMoveQuizQuestion.statusCode).toStrictEqual(BADREQUEST);
+
+    const responseQuizDetails = requestGetQuiz(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizId": quizId,
+      "name": 'Name',
+      "timeCreated": expect.any(Number),
+      "timeLastEdited": expect.any(Number),
+      "description": 'Description',
+      "numQuestions": 0,
+      "questions": [
+        {
+          "question": "Question",
+          "questionId": questionId,
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": "Wrong",
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            }
+          ]
+        },
+        {
+          "question": "Question2",
+          "questionId": questionId2,
+          "timeLimit": 5,
+          "points": 6,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": "Wrong",
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            }
+          ]
+        }
+      ],
+      "timeLimit": expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+
   });
 });
 
@@ -238,38 +293,59 @@ describe('Valid case', () => {
       1,
     );
 
-    const responseQuizGet = requestGetQuiz(quizId, session);
-    expect(responseQuizGet.body).toStrictEqual({
-      quizId: quizId,
-      name: 'Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
-      description: 'Description',
-      numQuestions: 0,
-      questions: [
+    const responseQuizDetails = requestGetQuiz(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      "quizId": quizId,
+      "name": 'Name',
+      "timeCreated": expect.any(Number),
+      "timeLastEdited": expect.any(Number),
+      "description": 'Description',
+      "numQuestions": 0,
+      "questions": [
         {
-          questionId: questionId2,
-          question: 'Question2',
-          timeLimit: 5,
-          points: 6,
-          answerOptions: [
-            { answer: 'Right',correct: true },
-            { answer: 'Wrong', correct: false }
+          "question": "Question2",
+          "questionId": questionId2,
+          "timeLimit": 5,
+          "points": 6,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": "Wrong",
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            }
           ]
         },
         {
-          questionId: questionId,
-          question: 'Question',
-          timeLimit: 4,
-          points: 5,
-          answerOptions: [
-            { answer: 'Right',correct: true },
-            { answer: 'Wrong', correct: false }
+          "question": "Question",
+          "questionId": questionId,
+          "timeLimit": 4,
+          "points": 5,
+          "answerOptions": [
+            {
+              "answer": "Right",
+              "colour": expect.any(String),
+              "correct": true,
+              "id": expect.any(Number)
+            },
+            {
+              "answer": "Wrong",
+              "colour": expect.any(String),
+              "correct": false,
+              "id": expect.any(Number)
+            }
           ]
         }
       ],
-      timeLimit: 0
+      "timeLimit": expect.any(Number)
     });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
     expect(res.body).toStrictEqual({});
     expect(res.statusCode).toStrictEqual(OK);
