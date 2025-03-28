@@ -224,7 +224,6 @@ export class Errors {
     return { error: this.invalidQuestionIdError };
   }
 
-
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
     return { error: `${type} is invalid, ${specific}` };

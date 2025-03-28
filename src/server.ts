@@ -282,7 +282,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
- 
+
   const userIdResult = findUserIdFromSession(session);
   // check if userId is valid
   if ('error' in userIdResult) {
@@ -290,9 +290,9 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   }
 
   const userId = userIdResult.userId;
- 
+
   const result = adminDeleteQuizQuestion(quizId, userId, questionId);
-  
+
   if ('error' in result) {
     // Check for specific error messages to determine status code
     if (result.error === Errors.noPermissionError ||
@@ -303,7 +303,6 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   }
   return res.status(OK).json({});
 });
-
 
 // POST /v1/admin/quiz/{quizid}/transfer
 app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {

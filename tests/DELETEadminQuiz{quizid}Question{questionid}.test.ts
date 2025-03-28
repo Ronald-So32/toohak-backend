@@ -31,7 +31,6 @@ let questionId: number;
 let questionId2: number;
 
 describe('error case 401 tests', () => {
-
   beforeEach(() => {
     // Make other session
     responseRegister = requestAdminAuthRegister(
@@ -48,7 +47,7 @@ describe('error case 401 tests', () => {
     const invalidSessionRes = requestDeleteQuizQuestion(quizId, questionId, session + 'Invalid Session');
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
-    // check quiz has not been deleted 
+    // check quiz has not been deleted
     const afterInfo = requestGetQuiz(quizId, session);
     expect(afterInfo.body).toStrictEqual(beforeInfo.body);
     expect(afterInfo.statusCode).toStrictEqual(OK);
@@ -57,7 +56,7 @@ describe('error case 401 tests', () => {
   // not logged in user
   test('Session is invalid', () => {
     // login to make quiz and question
-    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au', 'Password2');
     // make other quiz
     responseCreate = requestAdminQuizCreate(
       session2,
@@ -68,7 +67,7 @@ describe('error case 401 tests', () => {
     // make question under quiz 2
     responseCreateQuestion = requestAdminQuizQuestionCreate(
       quizId2,
-      session2, 
+      session2,
       'Question2'
     );
     questionId2 = responseCreateQuestion.body.questionId;
@@ -79,8 +78,8 @@ describe('error case 401 tests', () => {
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
 
-    //login to check info
-    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    // login to check info
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au', 'Password2');
     const checkInfo = requestGetQuiz(quizId2, session2);
     expect(checkInfo.body).toStrictEqual({
       quizId: quizId2,
@@ -97,7 +96,7 @@ describe('error case 401 tests', () => {
 
   test('Session is empty - session has quiz but no questions', () => {
     // login to make quiz and question
-    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
+    requestAdminAuthLogin('z7277273@ad.unsw.edu.au', 'Password2');
     // make other quiz
     responseCreate = requestAdminQuizCreate(
       session2,
@@ -110,7 +109,7 @@ describe('error case 401 tests', () => {
     expect(invalidSessionRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidSessionRes.statusCode).toStrictEqual(UNAUTHORISED);
 
-    // check question has not been deleted 
+    // check question has not been deleted
     const afterInfo = requestGetQuiz(quizId2, session2);
     expect(afterInfo.body).toStrictEqual(beforeInfo.body);
     expect(afterInfo.statusCode).toStrictEqual(OK);
@@ -142,10 +141,10 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  
+
   responseCreateQuestion = requestAdminQuizQuestionCreate(
     quizId,
-    session, 
+    session,
     'Question'
   );
   questionId = responseCreateQuestion.body.questionId;
@@ -158,7 +157,6 @@ describe('Test valid case', () => {
   expect(res.body).toStrictEqual({});
   expect(res.statusCode).toStrictEqual(OK);
 });
-
 
 describe('Valid session, status code 200 tests', () => {
   test('Valid session, quizId, questionId', () => {
@@ -182,15 +180,14 @@ describe('Valid session, status code 200 tests', () => {
 });
 
 afterEach(() => {
-  // check quiz has not been deleted 
+  // check quiz has not been deleted
   const afterInfo = requestGetQuiz(quizId, session);
   expect(afterInfo.body).toStrictEqual(beforeInfo.body);
   expect(afterInfo.statusCode).toStrictEqual(OK);
-})
+});
 
 describe('Test error code 400 cases', () => {
   test('Question Id does not refer to a valid question within this quiz - question is under different quizId', () => {
-    
     // Make other quiz
     responseCreate = requestAdminQuizCreate(
       session,
@@ -202,7 +199,7 @@ describe('Test error code 400 cases', () => {
     // Make question in other quiz under same session
     responseCreateQuestion = requestAdminQuizQuestionCreate(
       quizId2,
-      session, 
+      session,
       'Question2'
     );
     questionId2 = responseCreateQuestion.body.questionId;
@@ -231,7 +228,7 @@ describe('error case 403 tests', () => {
       'Last2'
     );
     session2 = responseRegister.body.session;
-    // Make other quiz under session2 
+    // Make other quiz under session2
     responseCreate = requestAdminQuizCreate(
       session2,
       'Name2',
@@ -241,7 +238,7 @@ describe('error case 403 tests', () => {
     // make question under quiz 2
     responseCreateQuestion = requestAdminQuizQuestionCreate(
       quizId2,
-      session2, 
+      session2,
       'Question2'
     );
     questionId2 = responseCreateQuestion.body.questionId;
@@ -257,13 +254,13 @@ describe('error case 403 tests', () => {
     const invalidQuizIdRes = requestDeleteQuizQuestion(quizId + quizIdOffset, questionId, session);
     expect(invalidQuizIdRes.body).toStrictEqual({ error: expect.any(String) });
     expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
-  })
+  });
 
   // test('Valid session is provided, but quiz does not exist - deleting already deleted question', () => {
   //   const res = requestDeleteQuizQuestion(quizId, questionId, session);
   //   expect(res.body).toStrictEqual({});
   //   expect(res.statusCode).toStrictEqual(OK);
-  
+
   //   const invalidRes = requestDeleteQuizQuestion(quizId, questionId, session);
   //   expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
   //   expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);

@@ -500,11 +500,11 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
 }
 
 export function adminDeleteQuizQuestion(
-  quizId: number, 
-  userId: number, 
+  quizId: number,
+  userId: number,
   questionId: number
-  ): Record<string, never> | errorInterface {
-    const data = getData();
+): Record<string, never> | errorInterface {
+  const data = getData();
 
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
@@ -528,7 +528,7 @@ export function adminDeleteQuizQuestion(
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestionId();
   }
-  
+
   // delete question with passed in questionId that is to be moved from questions array
   quiz.questions.splice(validQuestionIndex, 1);
 
