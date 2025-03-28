@@ -102,7 +102,7 @@ describe('Test invalid cases', () => {
       expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
     });
-  
+
     describe('Invalid question strings', () => {
       test.each([
         {
@@ -118,34 +118,34 @@ describe('Test invalid cases', () => {
           description: 'Empty string'
         }
       ])('$description', ({ question }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-        quizId,
-        questionId,
-        session,
-        {
-          questionBody: {
-            question: question,
-            timeLimit: 4,
-            points: 5,
-            answerOptions: [
-              {
-                answer: 'Right',
-                correct: true
-              },
-              {
-                answer: 'Wrong',
-                correct: false
-              }
-            ]
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: question,
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ]
+            }
           }
-        }
-        
-      );
+
+        );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
-  
+
     describe('Invalid answers', () => {
       test.each([
         {
@@ -353,7 +353,7 @@ describe('Test invalid cases', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
-  
+
     describe('Invalid timelimit', () => {
       test.each([
         {
@@ -391,10 +391,10 @@ describe('Test invalid cases', () => {
             }
           }
         );
-      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
-  
+
       test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
         const questionBody = {
           questionBody: {
@@ -415,10 +415,10 @@ describe('Test invalid cases', () => {
         };
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
         questionId = responseQuestionCreate.body.questionId;
-  
+
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
         questionId2 = responseQuestionCreate.body.questionId;
-        
+
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
         questionId3 = responseQuestionCreate.body.questionId;
         // summed with other two question bodies, time limit will exceed 3 min
@@ -444,7 +444,7 @@ describe('Test invalid cases', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
     });
-  
+
     describe('Invalid points awarded', () => {
       test.each([
         {
@@ -487,7 +487,7 @@ describe('Test invalid cases', () => {
       });
     });
   });
-  
+
   describe('Test cases for error 401', () => {
     test('Logged out session', () => {
       requestAdminAuthLogout(session);
@@ -516,12 +516,12 @@ describe('Test invalid cases', () => {
       expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
     });
-    
+
     test('Invalid user session', () => {
       requestAdminAuthLogout(session);
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId,
-        questionId, 
+        questionId,
         session + 'Invalid Session',
         {
           questionBody: {
@@ -545,7 +545,7 @@ describe('Test invalid cases', () => {
       expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
     });
   });
-  
+
   describe('Test cases for error 403', () => {
     test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
       responseRegister = requestAdminAuthRegister(
@@ -555,14 +555,14 @@ describe('Test invalid cases', () => {
         'Last'
       );
       session2 = responseRegister.body.session;
-  
+
       const responseQuizCreate = requestAdminQuizCreate(
         session,
         'Quiz Name',
         'Description'
       );
       quizId2 = responseQuizCreate.body.quizId;
-    
+
       responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId,
         session,
@@ -585,7 +585,7 @@ describe('Test invalid cases', () => {
         }
       );
       questionId2 = responseQuestionCreate.body.questionId;
-      
+
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId2,
         questionId,
@@ -611,7 +611,7 @@ describe('Test invalid cases', () => {
       expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
-  
+
     test('Quiz does not exist', () => {
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId + quizIdOffset,
@@ -673,39 +673,39 @@ describe('Test valid cases', () => {
   describe('Valid question strings', () => {
     test.each([
       {
-        question: "Quest",
-        description: "Containing exactly 5 characters"
+        question: 'Quest',
+        description: 'Containing exactly 5 characters'
       },
       {
-        question: "Quest".repeat(10),
-        description: "Containing exactly 50 characters"
+        question: 'Quest'.repeat(10),
+        description: 'Containing exactly 50 characters'
       },
       {
         question: "Ab1!@#$%^&*()_+-= []{}\\|'\";:?/.,<>`~",
-        description: "Containing different types of chacters"
+        description: 'Containing different types of chacters'
       }
     ])('$description', ({ question }) => {
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-      quizId,
-      questionId,
-      session,
-      {
-        questionBody: {
-          question: question,
-          timeLimit: 4,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Right',
-              correct: true
-            },
-            {
-              answer: 'Wrong',
-              correct: false
-            }
-          ]
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: question,
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
         }
-      }
       );
       expect(responseQuestionUpdate.body).toStrictEqual({});
       expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
@@ -713,7 +713,7 @@ describe('Test valid cases', () => {
   });
 
   test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
-    const questionBody =  {
+    const questionBody = {
       questionBody: {
         question: 'Question',
         timeLimit: 59,
@@ -729,18 +729,18 @@ describe('Test valid cases', () => {
           }
         ]
       }
-    }
+    };
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
 
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId2 = responseQuestionCreate.body.questionId;
-    
+
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId3 = responseQuestionCreate.body.questionId;
 
     // summed with other two question bodies, time limit equal 3 min exaclty
-    const updateQuestionBody =  {
+    const updateQuestionBody = {
       questionBody: {
         question: 'Question',
         timeLimit: 62,
@@ -838,4 +838,3 @@ describe('Test valid cases', () => {
     });
   });
 });
-

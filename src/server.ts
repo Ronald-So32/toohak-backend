@@ -83,7 +83,6 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(result);
 });
 
-
 // DELETE /v1/clear route
 app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
@@ -381,7 +380,6 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({});
-
 });
 
 // PUT /v1/admin/quiz/{quizid}/question/{questionid}

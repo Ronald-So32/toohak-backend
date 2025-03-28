@@ -649,9 +649,9 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) 
-    - quiz.questions[questionIndex].timeLimit 
-    + timeLimit;
+  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) -
+    quiz.questions[questionIndex].timeLimit +
+    timeLimit;
   if (totalTime > 180) {
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
