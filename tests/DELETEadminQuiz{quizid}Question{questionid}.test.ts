@@ -56,6 +56,10 @@ beforeEach(() => {
           {
             answer: "Prince Charles",
             correct: true
+          },
+          {
+            answer: "ur mom",
+            correct: false
           }
         ]
       }
@@ -79,7 +83,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   });
 
   describe('Test error cases', () => {
-
+    
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
