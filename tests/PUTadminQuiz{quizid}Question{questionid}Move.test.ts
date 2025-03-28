@@ -129,6 +129,58 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
   });
 
   describe('Test error cases', () => {
+    test('Invalid session', () => {
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+        quizId, 
+        questionId, 
+        session + 'Invalid Session', 
+        1
+      );
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+  
+    test('Session logged out', () => {
+      requestAdminAuthLogout(session);
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+        quizId, 
+        questionId, 
+        session, 
+        1
+      );
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+  
+    test('Session has no quizzes', () => {
+      // New session with no quizes
+      const responseRegister2 = requestAdminAuthRegister(
+        'z72696969@ad.unsw.edu.au',
+        'Password1',
+        'First',
+        'Last'
+      );
+      const session2 = responseRegister2.body.session;
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+        quizId, 
+        questionId, 
+        session2,
+        1
+      );
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
+    });
+
+    test('Quiz does not exist', () => {
+      const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+        quizId + quizIdOffset, 
+        questionId, 
+        session, 
+        1,
+      );
+      expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
+    });
 
   });
 
