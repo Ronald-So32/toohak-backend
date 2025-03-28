@@ -367,6 +367,7 @@ export function adminQuizQuestionCreate(
     return Errors.invalidQuiz();
   }
 
+  // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
     return Errors.noPermission();
   }
@@ -452,6 +453,8 @@ export function adminQuizQuestionCreate(
 
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
+  quiz.timeLimit += timeLimit;
+  quiz.numQuestions += 1;
 
   return {
     questionId: id
@@ -494,6 +497,107 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   }
 
   data.quizzes[quizIndex].createdBy = targetUser.userId;
+
+  return {};
+}
+
+export function adminDeleteQuizQuestion(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> | errorInterface {
+  const data = getData();
+
+  // Check if userId is valid
+  const user = data.users.find(user => user.userId === userId);
+  if (!user) {
+    return Errors.invalidUser();
+  }
+
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  // Check if questionId is in given quiz
+  const validQuestionIndex = quiz.questions.findIndex(
+    question => question.questionId === questionId
+  );
+  if (validQuestionIndex === -1) {
+    return Errors.invalidQuestion();
+  }
+
+  const deletedQuestion = quiz.questions[validQuestionIndex];
+
+  quiz.timeLimit -= deletedQuestion.timeLimit;
+  quiz.numQuestions -= 1;
+
+  // Delete question from its questionId
+  quiz.questions.splice(validQuestionIndex, 1);
+
+  return {};
+}
+
+export function adminQuizQuestionMove(
+  quizId: number,
+  userId: number,
+  questionId: number,
+  newPosition: number
+): Record<string, never> | errorInterface {
+  const data = getData();
+
+  // Check if userid is valid
+  const userFound = data.users.some(user => user.userId === userId);
+  if (!userFound) {
+    return Errors.invalidUser();
+  }
+
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  // Check if questionId is in given quiz
+  const validQuestionIndex = quiz.questions.findIndex(
+    question => question.questionId === questionId
+  );
+  if (validQuestionIndex === -1) {
+    return Errors.invalidQuestion();
+  }
+
+  // Position is less than 0
+  if (newPosition < 0) {
+    return Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT);
+  }
+
+  // Position greater than number of questions
+  if (newPosition > quiz.numQuestions - 1) {
+    return Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG);
+  }
+
+  // Postion is the same as current positon of question
+  if (validQuestionIndex === newPosition) {
+    return Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME);
+  }
+
+  const question = quiz.questions[validQuestionIndex];
+
+  quiz.questions.splice(validQuestionIndex, 1);
+  quiz.questions.splice(newPosition, 0, question);
+
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
 
   return {};
 }
