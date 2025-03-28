@@ -367,6 +367,7 @@ export function adminQuizQuestionCreate(
     return Errors.invalidQuiz();
   }
 
+  // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
     return Errors.noPermission();
   }
@@ -452,6 +453,7 @@ export function adminQuizQuestionCreate(
 
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
+  quiz.timeLimit += timeLimit;
 
   return {
     questionId: id
@@ -494,6 +496,48 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   }
 
   data.quizzes[quizIndex].createdBy = targetUser.userId;
+
+  return {};
+}
+
+export function adminDeleteQuizQuestion(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> | errorInterface {
+  const data = getData();
+
+  // Check if userId is valid
+  const user = data.users.find(user => user.userId === userId);
+  if (!user) {
+    return Errors.invalidUser();
+  }
+
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  // Check if questionId is in given quiz
+  const validQuestionIndex = quiz.questions.findIndex(
+    question => question.questionId === questionId
+  );
+  if (validQuestionIndex === -1) {
+    return Errors.invalidQuestion();
+  }
+
+  const deletedQuestion = quiz.questions[validQuestionIndex];
+
+  quiz.timeLimit -= deletedQuestion.timeLimit;
+
+  // Delete question from its questionId
+  quiz.questions.splice(validQuestionIndex, 1);
 
   return {};
 }
