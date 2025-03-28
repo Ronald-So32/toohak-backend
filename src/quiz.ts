@@ -453,6 +453,7 @@ export function adminQuizQuestionCreate(
 
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
+  quiz.timeLimit += timeLimit;
 
   return {
     questionId: id
@@ -530,6 +531,8 @@ export function adminDeleteQuizQuestion(
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
   }
+
+  
 
   // delete question with passed in questionId that is to be moved from questions array
   quiz.questions.splice(validQuestionIndex, 1);
