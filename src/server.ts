@@ -17,7 +17,8 @@ import {
   adminQuizNameUpdate,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
-  adminQuizTransfer
+  adminQuizTransfer,
+  adminQuizQuestionSuggestion
 } from './quiz';
 import {
   findUserIdFromSession,
@@ -38,15 +39,13 @@ import sui from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-// import request from 'sync-request-curl';
 
 const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
-// const NOTFOUND = 404;
 
-// const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
+const HUGGINGFACE_API_TOKEN = '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';
 
 // Set up web app
 const app = express();
@@ -431,6 +430,42 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   }
   return res.status(OK).json({});
 });
+
+// GET /v1/admin/quiz/{quizId}/question/suggestion
+app.get('/v1/admin/quiz/:quizid/question/suggestion',
+  (req: Request, res: Response) => {
+    const session = req.headers.session as string;
+    const quizId = parseInt(req.params.quizid);
+
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const quizDetailsResult = adminQuizGet(userId, quizId);
+
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
+
+    const result = adminQuizQuestionSuggestion(
+      quizDetailsResult.details.name,
+      quizDetailsResult.details.description,
+      HUGGINGFACE_API_TOKEN
+    );
+
+    // Not needed in specs but good for debugging (when llm api not working)
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+
+    return res.status(OK).json({ question: result.question });
+  });
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

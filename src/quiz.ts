@@ -17,6 +17,8 @@ import {
   randomColour
 } from './functionsHelper';
 
+import request from 'sync-request-curl';
+
 /**
   * Provide a list of all quizzes that are owned by the currently logged in user.
   *
@@ -600,4 +602,58 @@ export function adminQuizQuestionMove(
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
 
   return {};
+}
+
+export function adminQuizQuestionSuggestion(
+  quizName: string,
+  quizDescription: string,
+  HUGGINGFACE_API_TOKEN: string
+): { question: string } | errorInterface {
+  // Create a prompt for the LLM that includes the quiz context
+  const prompt = `You are a helpful assistant that generates quiz questions. 
+  Please suggest a single question for a quiz with the following details:
+  
+  Quiz name: "${quizName}"
+  Quiz description: "${quizDescription}"
+  
+  The question should be relevant to the quiz topic, clear, and concise. 
+  The question should be between 5 and 50 characters.
+  
+  Respond with just the question text, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/google/gemma-2-2b-it',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    return { error: responseBody.error };
+  }
+
+  let generatedQuestion = responseBody[0].generated_text;
+  const questionMatch = generatedQuestion.match(/^\w.*\?$/m);
+  if (!questionMatch) {
+    generatedQuestion = `What is ${quizName} about?`;
+  } else {
+    generatedQuestion = questionMatch[0];
+  }
+
+  // Ensure the question meets our requirements
+  if (generatedQuestion.length < 5) {
+    generatedQuestion = `What is ${quizName} about?`;
+  } else if (generatedQuestion.length > 50) {
+    generatedQuestion = generatedQuestion.substring(0, 47) + '...';
+  }
+
+  return { question: generatedQuestion };
 }
