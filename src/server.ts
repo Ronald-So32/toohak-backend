@@ -291,7 +291,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
 
   const userId = userIdResult.userId;
  
-  const result = adminDeleteQuizQuestion(quizId, userId, questionId, session);
+  const result = adminDeleteQuizQuestion(quizId, userId, questionId);
   
   if ('error' in result) {
     // Check for specific error messages to determine status code
