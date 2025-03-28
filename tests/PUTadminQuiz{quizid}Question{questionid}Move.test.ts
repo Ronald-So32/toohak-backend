@@ -6,7 +6,8 @@ import {
   requestAdminQuizQuestionMove,
   requestAdminQuizQuestionCreate,
   requestAdminAuthRegister,
-  requestAdminQuizCreate
+  requestAdminQuizCreate,
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -65,7 +66,7 @@ beforeEach(() => {
       }
     }
   );
-
+  questionId = responseQuestionCreate.body.questionId;
 
   responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
@@ -203,7 +204,7 @@ describe('error 401 cases', () => {
           }
         }
       );
-      questionId3 = responseQuestionCreate.body.questionId3;
+      questionId3 = responseQuestionCreate.body.questionId;
 
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
         quizId2, 
@@ -236,6 +237,40 @@ describe('Valid case', () => {
       session, 
       1,
     );
+
+    const responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [
+        {
+          questionId: questionId2,
+          question: 'Question2',
+          timeLimit: 5,
+          points: 6,
+          answerOptions: [
+            { answer: 'Right',correct: true },
+            { answer: 'Wrong', correct: false }
+          ]
+        },
+        {
+          questionId: questionId,
+          question: 'Question',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            { answer: 'Right',correct: true },
+            { answer: 'Wrong', correct: false }
+          ]
+        }
+      ],
+      timeLimit: 0
+    });
+
     expect(res.body).toStrictEqual({});
     expect(res.statusCode).toStrictEqual(OK);
   });
