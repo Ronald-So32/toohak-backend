@@ -130,27 +130,27 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
   describe('Test error cases', () => {
     test('Invalid session', () => {
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-        quizId, 
-        questionId, 
-        session + 'Invalid Session', 
+        quizId,
+        questionId,
+        session + 'Invalid Session',
         1
       );
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
     });
-  
+
     test('Session logged out', () => {
       requestAdminAuthLogout(session);
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-        quizId, 
-        questionId, 
-        session, 
+        quizId,
+        questionId,
+        session,
         1
       );
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
     });
-  
+
     test('Session has no quizzes', () => {
       // New session with no quizes
       const responseRegister2 = requestAdminAuthRegister(
@@ -161,8 +161,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       );
       const session2 = responseRegister2.body.session;
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-        quizId, 
-        questionId, 
+        quizId,
+        questionId,
         session2,
         1
       );
@@ -172,10 +172,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
 
     test('Quiz does not exist', () => {
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-        quizId + quizIdOffset, 
-        questionId, 
-        session, 
-        1,
+        quizId + quizIdOffset,
+        questionId,
+        session,
+        1
       );
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
@@ -205,9 +205,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         }
       ])('$description', ({ questionId, newPosition }) => {
         const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-          quizId, 
-          questionId, 
-          session, 
+          quizId,
+          questionId,
+          session,
           newPosition
         );
         expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
