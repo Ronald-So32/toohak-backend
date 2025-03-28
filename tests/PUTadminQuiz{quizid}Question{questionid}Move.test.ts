@@ -59,14 +59,8 @@ beforeEach(() => {
         timeLimit: 4,
         points: 5,
         answerOptions: [
-          {
-            answer: 'Right',
-            correct: true
-          },
-          {
-            answer: 'Wrong',
-            correct: false
-          }
+          { answer: 'Right',correct: true },
+          { answer: 'Wrong', correct: false }
         ]
       }
     }
@@ -82,14 +76,8 @@ beforeEach(() => {
         timeLimit: 5,
         points: 6,
         answerOptions: [
-          {
-            answer: 'Right',
-            correct: true
-          },
-          {
-            answer: 'Wrong',
-            correct: false
-          }
+          { answer: 'Right',correct: true },
+          { answer: 'Wrong', correct: false }
         ]
       }
     }
@@ -203,7 +191,17 @@ describe('error 401 cases', () => {
       responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId2,
         session2, 
-        'Question3'
+        {
+          questionBody: {
+            question: 'Question3',
+            timeLimit: 5,
+            points: 5,
+            answerOptions: [
+              { answer: 'Right',correct: true },
+              { answer: 'Wrong', correct: false }
+            ]
+          }
+        }
       );
       questionId3 = responseQuestionCreate.body.questionId3;
 
