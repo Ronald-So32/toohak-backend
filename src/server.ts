@@ -377,7 +377,6 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
   return res.status(OK).json({});
 });
-});
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
