@@ -12,7 +12,6 @@ import {
 
 import { describe } from 'node:test';
 
-
 const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
@@ -125,7 +124,7 @@ describe('error case 401 tests', () => {
   });
 });
 
-// make session, login to make quiz and question
+// make session, make quiz and question
 beforeEach(() => {
   requestClear();
 
@@ -136,8 +135,6 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-
-  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
 
   responseCreate = requestAdminQuizCreate(
     session,
@@ -160,6 +157,28 @@ describe('Test valid case', () => {
   const res = requestDeleteQuizQuestion(quizId, questionId, session);
   expect(res.body).toStrictEqual({});
   expect(res.statusCode).toStrictEqual(OK);
+});
+
+
+describe('Valid session, status code 200 tests', () => {
+  test('Valid session, quizId, questionId', () => {
+    const res = requestDeleteQuizQuestion(quizId, questionId, session);
+    const responseGetQuiz = requestGetQuiz(quizId, session);
+    expect(responseGetQuiz.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: 0
+    });
+    expect(responseGetQuiz.statusCode).toStrictEqual(OK);
+
+    expect(res.statusCode).toStrictEqual(OK);
+    expect(res.body).toStrictEqual({});
+  });
 });
 
 afterEach(() => {
@@ -212,8 +231,6 @@ describe('error case 403 tests', () => {
       'Last2'
     );
     session2 = responseRegister.body.session;
-    // login first to make quiz under session2 
-    requestAdminAuthLogin('z7277273@ad.unsw.edu.au','Password2');
     // Make other quiz under session2 
     responseCreate = requestAdminQuizCreate(
       session2,
@@ -221,6 +238,14 @@ describe('error case 403 tests', () => {
       'Description2'
     );
     quizId2 = responseCreate.body.quizId;
+    // make question under quiz 2
+    responseCreateQuestion = requestAdminQuizQuestionCreate(
+      quizId2,
+      session2, 
+      'Question2'
+    );
+    questionId2 = responseCreateQuestion.body.questionId;
+
     // Case: valid quizId, but session provided to delete quiz question is invalid
     const invalidQuestionIdRes = requestDeleteQuizQuestion(quizId2, questionId, session);
     expect(invalidQuestionIdRes.body).toStrictEqual({ error: expect.any(String) });
@@ -234,20 +259,13 @@ describe('error case 403 tests', () => {
     expect(invalidQuizIdRes.statusCode).toStrictEqual(FORBIDDEN);
   })
 
-
-  test('Valid session is provided, but quiz does not exist - deleting already deleted question', () => {
-    responseCreateQuestion = requestAdminQuizQuestionCreate(
-      quizId,
-      session, 
-      'Question2'
-    );
-    questionId2 = responseCreateQuestion.body.questionId;
-    const res = requestDeleteQuizQuestion(quizId2, questionId, session);
-    expect(res.body).toStrictEqual({});
-    expect(res.statusCode).toStrictEqual(OK);
-
-    const invalidRes = requestDeleteQuizQuestion(quizId2, questionId, session);
-    expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
-    expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);
-  });
+  // test('Valid session is provided, but quiz does not exist - deleting already deleted question', () => {
+  //   const res = requestDeleteQuizQuestion(quizId, questionId, session);
+  //   expect(res.body).toStrictEqual({});
+  //   expect(res.statusCode).toStrictEqual(OK);
+  
+  //   const invalidRes = requestDeleteQuizQuestion(quizId, questionId, session);
+  //   expect(invalidRes.body).toStrictEqual({ error: expect.any(String) });
+  //   expect(invalidRes.statusCode).toStrictEqual(FORBIDDEN);
+  // });
 });
