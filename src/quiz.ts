@@ -601,3 +601,8 @@ export function adminQuizQuestionMove(
 
   return {};
 }
+
+export function adminQuizQuestionSuggestion() {
+
+  
+}
