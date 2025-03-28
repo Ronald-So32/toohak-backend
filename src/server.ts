@@ -380,7 +380,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   return res.status(OK).json({});
 });
 
-// DELETE//v1/admin/quiz/{quizid}/question/{questionid}
+// DELETE /v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -406,7 +406,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   return res.status(OK).json({});
 });
 
-// PUT//v1/admin/quiz/{quizid}/question/{questionid}/move
+// PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
 app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
