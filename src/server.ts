@@ -247,7 +247,7 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   return res.status(OK).json({});
 });
 // DELETE//v1/admin/quiz/{quizid}/question/{questionid}
-app.delete('/v1/admin/quiz/{quizid}/question/{questionid}', (req: Request, res: Response) => {
+app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
