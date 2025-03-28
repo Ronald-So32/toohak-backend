@@ -73,7 +73,7 @@ beforeEach(() => {
     session,
     {
       questionBody: {
-        question: 'Yes?',
+        question: 'Yeasdfs?',
         timeLimit: 7,
         points: 10,
         answerOptions: [
@@ -95,7 +95,7 @@ beforeEach(() => {
     session,
     {
       questionBody: {
-        question: 'No?',
+        question: 'Nasdfo?',
         timeLimit: 6,
         points: 7,
         answerOptions: [
