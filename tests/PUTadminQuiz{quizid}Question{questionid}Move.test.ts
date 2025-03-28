@@ -21,19 +21,15 @@ const questionIdOffset = 999;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
-let responseQuestionCreate: responseInterface;
+let responseQuestion: responseInterface;
+let responseQuestion2: responseInterface;
 let session: string;
-let session2: string;
 let quizId: number;
-let quizId2: number;
 let questionId: number;
 let questionId2: number;
-let questionId3: number;
 
-// make session, login to make quiz and question
 beforeEach(() => {
   requestClear();
-
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
@@ -41,49 +37,56 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-
-  requestAdminAuthLogin('z7277272@ad.unsw.edu.au','Password1');
-
   responseCreate = requestAdminQuizCreate(
     session,
     'Name',
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  
-  responseQuestionCreate = requestAdminQuizQuestionCreate(
+  responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
       questionBody: {
-        question: 'Question',
+        question: 'Who is the Monarch of England?',
         timeLimit: 4,
         points: 5,
         answerOptions: [
-          { answer: 'Right',correct: true },
-          { answer: 'Wrong', correct: false }
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'ur mom',
+            correct: false
+          }
         ]
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId;
-
-  responseQuestionCreate = requestAdminQuizQuestionCreate(
+  questionId = responseQuestion.body.questionId;
+  responseQuestion2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
       questionBody: {
-        question: 'Question2',
-        timeLimit: 5,
-        points: 6,
+        question: 'Yes?',
+        timeLimit: 7,
+        points: 10,
         answerOptions: [
-          { answer: 'Right',correct: true },
-          { answer: 'Wrong', correct: false }
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'False',
+            correct: false
+          }
         ]
       }
     }
   );
-  questionId2 = responseQuestionCreate.body.questionId;
+  questionId2 = responseQuestion2.body.questionId;
 });
 
 describe('error 400 test cases', () => {
