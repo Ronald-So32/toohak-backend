@@ -182,6 +182,11 @@ export class Errors {
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
     },
+    Position: {
+      TOO_SHORT: 'cannot be less than 0',
+      TOO_LONG: 'cannot be more than number of questions in the quiz',
+      OLD_SAME: 'it cannot be the same'
+    },
     Email: {
       SELF: 'targer user must not be yourself',
       NAME: 'target user already has a quiz with the same name'

@@ -709,7 +709,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    const question1Id = responseQuestionCreate.body.questionId
+    const question1Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
@@ -738,7 +738,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    const question2Id = responseQuestionCreate.body.questionId
+    const question2Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
@@ -774,109 +774,108 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
-    const question3Id = responseQuestionCreate.body.questionId
+    const question3Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-    
+
     let responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
-      "quizId": quizId,
-      "name": "Quiz Name",
-      "timeCreated": expect.any(Number),
-      "timeLastEdited": expect.any(Number),
-      "description": "Description",
-      "numQuestions": 0,
-      "questions": [
+      quizId: quizId,
+      name: 'Quiz Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 2,
+      questions: [
         {
-          "question": "Question1",
-          "questionId": question1Id,
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+          question: 'Question1',
+          questionId: question1Id,
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "colour": expect.any(String),
-              "correct": true,
-              "id": expect.any(Number)
+              answer: 'Right',
+              colour: expect.any(String),
+              correct: true,
+              id: expect.any(Number)
             },
             {
-              "answer": "Wrong",
-              "colour": expect.any(String),
-              "correct": false,
-              "id": expect.any(Number)
+              answer: 'Wrong',
+              colour: expect.any(String),
+              correct: false,
+              id: expect.any(Number)
             }
           ]
         },
         {
-          "question": "Question2",
-          "questionId": question2Id,
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
+          question: 'Question2',
+          questionId: question2Id,
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
             {
-              "answer": "Right",
-              "colour": expect.any(String),
-              "correct": true,
-              "id": expect.any(Number)
+              answer: 'Right',
+              colour: expect.any(String),
+              correct: true,
+              id: expect.any(Number)
             },
             {
-              "answer": "Wrong",
-              "colour": expect.any(String),
-              "correct": false,
-              "id": expect.any(Number)
+              answer: 'Wrong',
+              colour: expect.any(String),
+              correct: false,
+              id: expect.any(Number)
             },
             {
-              "answer": "Maybe",
-              "colour": expect.any(String),
-              "correct": false,
-              "id": expect.any(Number)
+              answer: 'Maybe',
+              colour: expect.any(String),
+              correct: false,
+              id: expect.any(Number)
             }
           ]
         }
       ],
-      "timeLimit": expect.any(Number)
-    });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-    
-    responseQuizDetails = requestGetQuiz(quizId2, session);
-    expect(responseQuizDetails.body).toStrictEqual({
-      "quizId": quizId2,
-      "name": "Quiz Name2",
-      "timeCreated": expect.any(Number),
-      "timeLastEdited": expect.any(Number),
-      "description": "Description2",
-      "numQuestions": 0,
-      "questions": [
-        {
-          "question": "Question3",
-          "questionId": question3Id,
-          "timeLimit": 4,
-          "points": 5,
-          "answerOptions": [
-            {
-              "answer": "Right",
-              "colour": expect.any(String),
-              "correct": true,
-              "id": expect.any(Number)
-            },
-            {
-              "answer": "Wrong",
-              "colour": expect.any(String),
-              "correct": false,
-              "id": expect.any(Number)
-            },
-            {
-              "answer": 'Maybe',
-              "colour": expect.any(String),
-              "correct": false,
-              "id": expect.any(Number)
-            }
-          ]
-        }
-      ],
-      "timeLimit": expect.any(Number)
+      timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
+    responseQuizDetails = requestGetQuiz(quizId2, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId2,
+      name: 'Quiz Name2',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description2',
+      numQuestions: 1,
+      questions: [
+        {
+          question: 'Question3',
+          questionId: question3Id,
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Right',
+              colour: expect.any(String),
+              correct: true,
+              id: expect.any(Number)
+            },
+            {
+              answer: 'Wrong',
+              colour: expect.any(String),
+              correct: false,
+              id: expect.any(Number)
+            },
+            {
+              answer: 'Maybe',
+              colour: expect.any(String),
+              correct: false,
+              id: expect.any(Number)
+            }
+          ]
+        }
+      ],
+      timeLimit: expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
   });
 });
