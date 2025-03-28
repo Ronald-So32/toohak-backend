@@ -524,7 +524,7 @@ export function adminDeleteQuizQuestion(
     return Errors.noPermission();
   }
 
-  // check if questionId is in given quiz
+  // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(
     question => question.questionId === questionId
   );
@@ -534,7 +534,7 @@ export function adminDeleteQuizQuestion(
 
   
 
-  // delete question with passed in questionId that is to be moved from questions array
+  // Delete question from its questionId
   quiz.questions.splice(validQuestionIndex, 1);
 
   return {};
