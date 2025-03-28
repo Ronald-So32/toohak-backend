@@ -528,12 +528,11 @@ export function adminDeleteQuizQuestion(
     question => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
-    return Errors.invalidQuestionId();
+    return Errors.invalidQuestion();
   }
 
   // delete question with passed in questionId that is to be moved from questions array
   quiz.questions.splice(validQuestionIndex, 1);
 
-  // question has been successfully deleted
   return {};
 }
