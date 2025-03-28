@@ -97,6 +97,36 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
       expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
       expect(responseQuizGet2.statusCode).toStrictEqual(OK);
     });
+
+    test('Quiz id is invalid', () => {
+      const responseQuestionDelete = requestDeleteQuizQuestion(
+        quizId + quizIdOffset,
+        questionId,
+        session
+      );
+      expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
+
+      // Check quiz has not been deleted
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+    });
+
+    test('Question id is invalid', () => {
+      const responseQuestionDelete = requestDeleteQuizQuestion(
+        quizId,
+        questionId + questionIdOffset,
+        session
+      );
+      expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+
+      // Check quiz has not been deleted
+      const responseQuizGet2 = requestGetQuiz(quizId, session);
+      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
+      expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+    });
   });
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
