@@ -580,7 +580,7 @@ export function adminQuizQuestionMove(
   }
 
   // newPosition greater than number of questions
-  if (newPosition > quiz.questions.length - 1) {
+  if (newPosition > quiz.numQuestions - 1) {
     return Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG);
   }
 

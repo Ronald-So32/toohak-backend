@@ -16,17 +16,20 @@ const OK = 200;
 const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
+
 const quizIdOffset = 727;
-const questionIdOffset = 999;
+const questionIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
 let responseQuestion: responseInterface;
 let responseQuestion2: responseInterface;
+let responseQuestion3: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
 let questionId2: number;
+let questionId3: number;
 
 beforeEach(() => {
   requestClear();
@@ -79,7 +82,7 @@ beforeEach(() => {
             correct: true
           },
           {
-            answer: 'False',
+            answer: 'Wrong',
             correct: false
           }
         ]
@@ -87,4 +90,49 @@ beforeEach(() => {
     }
   );
   questionId2 = responseQuestion2.body.questionId;
+  responseQuestion3 = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'No?',
+        timeLimit: 6,
+        points: 7,
+        answerOptions: [
+          {
+            answer: 'True',
+            correct: true
+          },
+          {
+            answer: 'False',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  questionId3 = responseQuestion3.body.questionId;
+});
+
+describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () => {
+  describe('Test correct return type and normal usage case', () => {
+    test('Testing the code 200 return value', () => {
+      const responseMove = requestAdminQuizQuestionMove(
+        quizId, 
+        questionId, 
+        session, 
+        1,
+      );
+      expect(responseMove.body).toStrictEqual({});
+      expect(responseMove.statusCode).toStrictEqual(OK);
+    });
+  });
+
+  describe('Test error cases', () => {
+    
+  });
+  
+  describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
+
+  });
 });

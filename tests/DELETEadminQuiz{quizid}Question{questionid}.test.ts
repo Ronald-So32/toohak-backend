@@ -67,7 +67,7 @@ beforeEach(() => {
   responseQuizGet = requestGetQuiz(quizId, session);
 });
 
-describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
+describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
       const responseQuestionDelete = requestDeleteQuizQuestion(
@@ -127,7 +127,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     });
   });
 
-  test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
+  test('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
     const responseRegister2 = requestAdminAuthRegister(
       'z6969@ad.unsw.edu.au',
       'Password2',
