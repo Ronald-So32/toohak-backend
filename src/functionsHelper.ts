@@ -182,10 +182,10 @@ export class Errors {
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
     },
-    newPosition: {
-      TOO_SHORT: 'newPosition cannot be less than 0',
-      TOO_LONG: 'newPosition cannot be more than number of questions in quiz',
-      OLD_SAME: 'newPostion is the same as current positon of question'
+    Position: {
+      TOO_SHORT: 'cannot be less than 0',
+      TOO_LONG: 'cannot be more than number of questions in the quiz',
+      OLD_SAME: 'it cannot be the same'
     },
     Email: {
       SELF: 'targer user must not be yourself',
