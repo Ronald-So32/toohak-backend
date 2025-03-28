@@ -51,6 +51,20 @@ export interface quizIdInterface {
 
 /**
  * A instance of this object:
+ * {
+ *    questionId: 1,
+ * }
+ *
+ * @typedef {object} QuestionId - Object containing just the question Id
+ *
+ * @property {number} questionId - Id of the question
+ */
+export interface questionIdInterface {
+  questionId: number;
+}
+
+/**
+ * A instance of this object:
  *{
     quizId: 1,
     name: 'My Quiz',
@@ -167,10 +181,36 @@ export class Errors {
       INVALID_CHARS: 'contains invalid characters ' +
       '(Valid characters are alphanumerics and spaces)',
       IN_USE: 'already in use by another quiz'
+    },
+    Email: {
+      SELF: 'targer user must not be yourself',
+      NAME: 'target user already has a quiz with the same name'
+    },
+    Question: {
+      TOO_SHORT: 'must be at least 5 characters',
+      TOO_LONG: 'must be at most 50 characters',
+    },
+    Answer: {
+      TOO_SHORT: 'must have at least 2 answers',
+      TOO_LONG: 'must have at most 6 answer',
+    },
+    Time: {
+      POSITIVE: 'must be a positive number',
+      TOO_LONG: 'must have at most 3 minutes',
+    },
+    AnswerString: {
+      TOO_SHORT: 'must be at least 1 characters',
+      TOO_LONG: 'must be at most 30 characters',
+      DUPLICATE: 'must not have any duplicates'
+    },
+    Points: {
+      TOO_SHORT: 'must be at least 1',
+      TOO_LONG: 'must be at most 10',
     }
   } as const;
 
   // Error messages
+  static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
@@ -218,6 +258,11 @@ export class Errors {
   // Error for user with no permissions
   static noPermission(): errorInterface {
     return { error: this.noPermissionError };
+  }
+
+  // Error for no correct answers
+  static noCorrectAnswers(): errorInterface {
+    return { error: this.noCorrectAnswersError };
   }
 }
 
@@ -354,4 +399,28 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   }
 
   return { userId: theSession.userId };
+}
+
+export function validQuestionString(question: string): boolean | errorInterface {
+  if (question.length < 5) {
+    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
+  }
+
+  if (question.length > 50) {
+    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG);
+  }
+
+  return true;
+}
+
+export function randomColour(): string {
+  const colors = [
+    'red', // #FF0000
+    'blue', // #0000FF
+    'green', // #00FF00
+    'yellow', // #FFFF00
+  ];
+
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
 }
