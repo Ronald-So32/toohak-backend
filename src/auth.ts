@@ -263,7 +263,7 @@ export function adminUserPasswordUpdate(
 export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
   const data = getData();
 
-  const sessionIndex = data.sessions.findIndex(s => s.session === session);
+  const sessionIndex = data.sessions.findIndex(sessions => sessions.session === session);
 
   if (sessionIndex === -1) {
     return Errors.invalidSession();

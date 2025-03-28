@@ -12,8 +12,10 @@ import {
   adminQuizRemove,
   adminQuizCreate,
   adminQuizGet,
+  adminQuizQuestionCreate,
   adminQuizDescriptionUpdate,
-  adminQuizNameUpdate
+  adminQuizNameUpdate,
+  adminQuizTransfer
 } from './quiz';
 import {
   findUserIdFromSession,
@@ -255,6 +257,34 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
+// POST /v1/admin/quiz/{quizid}/question
+app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { questionBody } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const quizDetailsResult = adminQuizGet(userId, quizId);
+
+  if ('error' in quizDetailsResult) {
+    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+  }
+
+  const result = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  if ('error' in result) {
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({ questionId: result.questionId });
+});
+
 // PUT /v1/admin/quiz/{quizid}/name
 app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -320,6 +350,33 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({});
+});
+
+// POST /v1/admin/quiz/{quizid}/transfer
+app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { userEmail } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizTransfer(quizId, userId, userEmail);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
 });
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
