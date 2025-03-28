@@ -405,7 +405,6 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   return res.status(OK).json({});
 });
 
-
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================

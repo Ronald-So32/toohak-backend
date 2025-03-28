@@ -27,7 +27,6 @@ let session: string;
 let quizId: number;
 let questionId: number;
 
-
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -48,16 +47,16 @@ beforeEach(() => {
     session,
     {
       questionBody: {
-        question: "Who is the Monarch of England?",
+        question: 'Who is the Monarch of England?',
         timeLimit: 4,
         points: 5,
         answerOptions: [
           {
-            answer: "Prince Charles",
+            answer: 'Prince Charles',
             correct: true
           },
           {
-            answer: "ur mom",
+            answer: 'ur mom',
             correct: false
           }
         ]
@@ -154,27 +153,27 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     // Check it is user 2's quiz
     responseQuizGet = requestGetQuiz(quizId, session2);
     expect(responseQuizGet.body).toStrictEqual({
-      description: "Description",
-      name: "Name",
+      description: 'Description',
+      name: 'Name',
       numQuestions: 0,
       questions: [
         {
           answerOptions: [
             {
-              answer: "Prince Charles",
+              answer: 'Prince Charles',
               colour: expect.any(String),
               correct: true,
               id: 1,
             },
             {
-              answer: "ur mom",
+              answer: 'ur mom',
               colour: expect.any(String),
               correct: false,
               id: 2,
             },
           ],
           points: 5,
-          question: "Who is the Monarch of England?",
+          question: 'Who is the Monarch of England?',
           questionId: 3,
           timeLimit: 4,
         },
@@ -198,8 +197,8 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     // Check its gone in user 2
     responseQuizGet = requestGetQuiz(quizId, session2);
     expect(responseQuizGet.body).toStrictEqual({
-      description: "Description",
-      name: "Name",
+      description: 'Description',
+      name: 'Name',
       numQuestions: 0,
       questions: [],
       quizId: 2,
