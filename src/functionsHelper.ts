@@ -399,6 +399,18 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   return { userId: theSession.userId };
 }
 
+export function findQuestionIdInQuiz(quizId: number, questionId: number): {} | errorInterface {
+  const data = getData();
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+
+  const questionExist = quiz.questions.find(question => question.questionId === questionId);
+  if (!questionExist) {
+    return Errors.invalidQuestion();
+  }
+
+  return {};
+}
+
 export function validQuestionString(question: string): boolean | errorInterface {
   if (question.length < 5) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
