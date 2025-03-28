@@ -532,7 +532,9 @@ export function adminDeleteQuizQuestion(
     return Errors.invalidQuestion();
   }
 
-  
+  const deletedQuestion = quiz.questions[validQuestionIndex];
+
+  quiz.timeLimit -= deletedQuestion.timeLimit;
 
   // Delete question from its questionId
   quiz.questions.splice(validQuestionIndex, 1);
