@@ -11,6 +11,7 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
 const quizIdOffset = 727;
+
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
 let session: string;
@@ -39,14 +40,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       quizId,
       session
     );
-    expect(responseQuestionSuggestion.body.question).toStrictEqual('asdfjklasfd;jlk');
-
     expect(responseQuestionSuggestion.statusCode).toStrictEqual(OK);
     expect(responseQuestionSuggestion.body).toStrictEqual({
       question: expect.any(String)
     });
-    // The suggestion should be a non-empty string
-    expect(responseQuestionSuggestion.body.question.length).toBeGreaterThan(0);
   });
 
   describe('Testing for error responses', () => {
@@ -94,11 +91,15 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       session
     );
 
-    // Both should return valid suggestions
+    // Both should return valid suggestions that also match the question create's requirements
     expect(computerQuizSuggestion.statusCode).toStrictEqual(OK);
     expect(computerQuizSuggestion.body).toHaveProperty('question');
+    expect(computerQuizSuggestion.body.question.length).toBeGreaterThan(0);
+    expect(computerQuizSuggestion.body.question.length).toBeLessThan(51);
 
     expect(historyQuizSuggestion.statusCode).toStrictEqual(OK);
     expect(historyQuizSuggestion.body).toHaveProperty('question');
+    expect(historyQuizSuggestion.body.question.length).toBeGreaterThan(0);
+    expect(historyQuizSuggestion.body.question.length).toBeLessThan(51);
   });
 });

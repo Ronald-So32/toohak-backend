@@ -46,7 +46,7 @@ const BADREQUEST = 400;
 const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
-const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
+const HUGGINGFACE_API_TOKEN = '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';
 
 // Set up web app
 const app = express();
@@ -460,6 +460,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     HUGGINGFACE_API_TOKEN
   );
 
+  // Not needed in specs but good for debugging (when llm api not working)
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
   }
