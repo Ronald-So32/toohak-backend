@@ -553,7 +553,7 @@ export function adminQuizQuestionMove(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  // check if userid is valid
+  // Check if userid is valid
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
@@ -570,33 +570,32 @@ export function adminQuizQuestionMove(
     return Errors.noPermission();
   }
 
-  // check if questionId is in given quiz
+  // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
   }
 
-  // newPosition is less than 0
+  // Position is less than 0
   if (newPosition < 0) {
     return Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT);
   }
 
-  // newPosition greater than number of questions
+  // Position greater than number of questions
   if (newPosition > quiz.numQuestions - 1) {
     return Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG);
   }
 
-  // newPostion is the same as current positon of question
+  // Postion is the same as current positon of question
   if (validQuestionIndex === newPosition) {
     return Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME);
   }
 
   const question = quiz.questions[validQuestionIndex];
-  // delete question that is to be moved from questions array
+  
   quiz.questions.splice(validQuestionIndex, 1);
-  // place question into new position
   quiz.questions.splice(newPosition, 0, question);
-  // Update timeLastEdited
+
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
 
   return {};
