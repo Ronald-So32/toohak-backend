@@ -624,8 +624,8 @@ export function adminQuizQuestionUpdate(
     return Errors.noPermission();
   }
 
-  const questionExist = quiz.questions.find(question => question.quizId === questionId);
-  if (!questionExist) {
+  const questionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
+  if (questionIndex === -1) {
     return Errors.invalidQuestion();
   }
 
@@ -649,7 +649,9 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) + timeLimit;
+  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) 
+    - quiz.questions[questionIndex].timeLimit 
+    + timeLimit;
   if (totalTime > 180) {
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
@@ -698,7 +700,17 @@ export function adminQuizQuestionUpdate(
     };
   });
 
-  // Need to update the data of question
+  // Update the question
+  quiz.questions[questionIndex] = {
+    questionId,
+    question,
+    timeLimit,
+    points,
+    answerOptions: updatedAnswerOptions
+  };
+
+  quiz.timeLastEdited = Date.now();
+  quiz.timeLimit = totalTime;
 
   return {};
 }
