@@ -376,7 +376,6 @@ export function adminDeleteQuizQuestion(
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestionId();
   }
-
   
   // delete question with passed in questionId that is to be moved from questions array
   quiz.questions.splice(validQuestionIndex, 1);
