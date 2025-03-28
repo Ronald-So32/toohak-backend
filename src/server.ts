@@ -42,7 +42,7 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 // const NOTFOUND = 404;
 
-const HUGGINGFACE_API_TOKEN = process.env.HUGGINGFACE_API_TOKEN;
+const HUGGINGFACE_API_TOKEN = ""
 
 // Set up web app
 const app = express();
@@ -320,7 +320,6 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   }
 
   return res.status(OK).json({});
-});
 });
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
