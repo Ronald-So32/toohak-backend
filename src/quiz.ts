@@ -570,7 +570,9 @@ export function adminQuizQuestionMove(
   }
 
   // Check if questionId is in given quiz
-  const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
+  const validQuestionIndex = quiz.questions.findIndex(
+    question => question.questionId === questionId
+  );
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
   }
