@@ -632,7 +632,7 @@ export function adminQuizQuestionSuggestion(
       json: {
         inputs: prompt
       }
-  });
+    });
 
   const responseBody = JSON.parse(response.body.toString());
 
@@ -655,5 +655,5 @@ export function adminQuizQuestionSuggestion(
     generatedQuestion = generatedQuestion.substring(0, 47) + '...';
   }
 
-  return { question: generatedQuestion};
+  return { question: generatedQuestion };
 }

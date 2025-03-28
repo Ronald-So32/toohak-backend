@@ -435,39 +435,38 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
+    const session = req.headers.session as string;
+    const quizId = parseInt(req.params.quizid);
 
-  // Authenticate the user with the session
-  const userIdResult = findUserIdFromSession(session);
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
 
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
 
-  const userId = userIdResult.userId;
+    const userId = userIdResult.userId;
 
-  // Get the quiz details to use in the prompt
-  const quizDetailsResult = adminQuizGet(userId, quizId);
+    // Get the quiz details to use in the prompt
+    const quizDetailsResult = adminQuizGet(userId, quizId);
 
-  if ('error' in quizDetailsResult) {
-    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-  }
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
 
-  const result = adminQuizQuestionSuggestion(
-    quizDetailsResult.details.name,
-    quizDetailsResult.details.description,
-    HUGGINGFACE_API_TOKEN
-  );
+    const result = adminQuizQuestionSuggestion(
+      quizDetailsResult.details.name,
+      quizDetailsResult.details.description,
+      HUGGINGFACE_API_TOKEN
+    );
 
-  // Not needed in specs but good for debugging (when llm api not working)
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-  
-  return res.status(OK).json({ question: result.question });
-});
+    // Not needed in specs but good for debugging (when llm api not working)
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
 
+    return res.status(OK).json({ question: result.question });
+  });
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
