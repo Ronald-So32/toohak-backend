@@ -17,7 +17,7 @@ interface answerInterface {
   correct: boolean;
 }
 
-export interface questionInterface {
+export interface questionsInterface {
   questionId: number;
   question: string;
   timeLimit: number;
@@ -33,7 +33,7 @@ interface quizInterface {
   description: string;
   createdBy: number;
   numQuestions: number;
-  questions: questionInterface[];
+  questions: questionsInterface[];
   timeLimit: number;
 }
 
