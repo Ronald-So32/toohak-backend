@@ -368,6 +368,7 @@ export function adminQuizQuestionCreate(
     return Errors.invalidQuiz();
   }
 
+  // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
     return Errors.noPermission();
   }
@@ -453,6 +454,7 @@ export function adminQuizQuestionCreate(
 
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Date.now();
+  quiz.timeLimit += timeLimit;
 
   return {
     questionId: id
@@ -499,13 +501,54 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
+export function adminDeleteQuizQuestion(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> | errorInterface {
+  const data = getData();
+
+  // Check if userId is valid
+  const user = data.users.find(user => user.userId === userId);
+  if (!user) {
+    return Errors.invalidUser();
+  }
+
+  // Check if quizId is valid
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  // Check if questionId is in given quiz
+  const validQuestionIndex = quiz.questions.findIndex(
+    question => question.questionId === questionId
+  );
+  if (validQuestionIndex === -1) {
+    return Errors.invalidQuestion();
+  }
+
+  const deletedQuestion = quiz.questions[validQuestionIndex];
+
+  quiz.timeLimit -= deletedQuestion.timeLimit;
+
+  // Delete question from its questionId
+  quiz.questions.splice(validQuestionIndex, 1);
+
+  return {};
+}
+
 export function adminQuizQuestionMove(
   quizId: number, 
-  userId: number, 
-  questionId: number, 
-  session: string, 
+  userId: number,
+  questionId: number,
   newPosition: number
-  ): Record<string, never> | errorInterface {
+): Record<string, never> | errorInterface {
   const data = getData();
 
   // check if userid is valid
@@ -528,7 +571,7 @@ export function adminQuizQuestionMove(
   // check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
   if (validQuestionIndex === -1) {
-    return Errors.invalidQuestionId();
+    return Errors.invalidQuestion();
   }
 
   // newPosition is less than 0
