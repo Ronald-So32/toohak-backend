@@ -42,7 +42,7 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 // const NOTFOUND = 404;
 
-const HUGGINGFACE_API_TOKEN = ""
+const HUGGINGFACE_API_TOKEN = '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';
 
 // Set up web app
 const app = express();
