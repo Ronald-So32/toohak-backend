@@ -10,7 +10,7 @@ import {
   quizIdInterface,
   quizDetailsInterface,
   quizGetDetailsInterface,
-  questionIdInterface
+  Errors
 } from './functionsHelper';
 
 /**
@@ -30,7 +30,7 @@ export function adminQuizList(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quizzes: quizSummariesInterface[] = [];
@@ -65,7 +65,7 @@ export function adminQuizGet(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const quiz = data.quizzes.find(
@@ -73,7 +73,7 @@ export function adminQuizGet(
   );
 
   if (!quiz) {
-    return { error: `Quiz with Id ${quizId} not found or user is not the owner` };
+    return Errors.invalidQuiz();
   }
 
   return {
@@ -110,7 +110,7 @@ export function adminQuizCreate(
 
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   const validName = validQuizName(name);
@@ -120,11 +120,11 @@ export function adminQuizCreate(
 
   const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
   if (duplicate) {
-    return { error: 'Quiz name is already in use by the current logged in user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   if (description.length > 100) {
-    return { error: 'Quiz description is more than 100 characters' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   const id = createUUID();
@@ -172,7 +172,7 @@ export function adminQuizRemove(
   // Validates if the user exists
   const userExists = data.users.some(user => user.userId === userId);
   if (!userExists) {
-    return { error: `User Id ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz index of the quiz in the quizzes array
@@ -180,13 +180,13 @@ export function adminQuizRemove(
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
-    return { error: `Quiz with Id ${quizId} does not exist` };
+    return Errors.invalidQuiz();
   }
 
   // Checks if the user owns the quiz
   const quiz = data.quizzes[quizIndex];
   if (quiz.createdBy !== userId) {
-    return { error: 'You do not have permission to remove this quiz' };
+    return Errors.noPermission();
   }
 
   // Removes the quiz from the quizzes array
@@ -216,7 +216,7 @@ export function adminQuizInfo(
   // Check if user exists
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+    return Errors.invalidUser();
   }
 
   // Finds the quiz that matches both quizId and userId
@@ -224,7 +224,7 @@ export function adminQuizInfo(
 
   if (!quiz) {
     // Returns error if quiz is not found or not owned by user
-    return { error: 'Quiz not found or not owned by user' };
+    return Errors.invalidQuiz();
   }
 
   // Return quiz details if found
@@ -258,18 +258,18 @@ export function adminQuizNameUpdate(
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   const validName = validQuizName(name);
@@ -285,7 +285,7 @@ export function adminQuizNameUpdate(
   );
 
   if (nameExists) {
-    return { error: 'Name already used by this user for another quiz' };
+    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
   // Update the quiz name
@@ -318,23 +318,23 @@ export function adminQuizDescriptionUpdate(
   // Check if userId is valid
   const user = data.users.find(user => user.userId === userId);
   if (!user) {
-    return { error: 'Invalid user ID' };
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
-    return { error: 'Description is too long' };
+    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
   // Update the quiz description
@@ -351,31 +351,32 @@ export function adminDeleteQuizQuestion(
   userId: number, 
   questionId: number, 
   session: string
-  ): questionIdInterface | errorInterface {
+  ): Record<string, never> | errorInterface {
     const data = getData();
 
-    // check if userid is valid
-  const userFound = data.users.some(user => user.userId === userId);
-  if (!userFound) {
-    return { error: `User Id of ${userId} is not valid` };
+  // Check if userId is valid
+  const user = data.users.find(user => user.userId === userId);
+  if (!user) {
+    return Errors.invalidUser();
   }
 
   // Check if quizId is valid
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return { error: 'Invalid quiz ID' };
+    return Errors.invalidQuiz();
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return { error: 'User does not own this quiz' };
+    return Errors.noPermission();
   }
 
   // check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
   if (validQuestionIndex === -1) {
-    return { error: 'Question ID not found in quiz' };
+    return Errors.invalidQuestionId();
   }
+
   
   // delete question with passed in questionId that is to be moved from questions array
   quiz.questions.splice(validQuestionIndex, 1);

@@ -5,15 +5,29 @@ import {
   adminUserDetails,
   adminUserDetailsUpdate,
   adminUserPasswordUpdate,
+<<<<<<< HEAD
+=======
+  adminAuthLogout,
+>>>>>>> 908821f8c5d5556c524e74f571fb27878ba2b966
 } from './auth';
 import {
   adminQuizList,
   adminQuizRemove,
   adminQuizCreate,
   adminQuizGet,
+<<<<<<< HEAD
   adminQuizQuestionCreate,
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
+=======
+  adminQuizDescriptionUpdate,
+  adminQuizNameUpdate
+} from './quiz';
+import {
+  findUserIdFromSession,
+  Errors
+} from './functionsHelper';
+>>>>>>> 908821f8c5d5556c524e74f571fb27878ba2b966
 
 import express, {
   json,
@@ -250,6 +264,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   return res.status(OK).json(result.details);
 });
 
+<<<<<<< HEAD
 // DELETE//v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/{quizid}/question/{questionid}', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -278,6 +293,74 @@ app.delete('/v1/admin/quiz/{quizid}/question/{questionid}', (req: Request, res: 
   return res.status(OK).json({});
 });
 
+=======
+// PUT /v1/admin/quiz/{quizid}/name
+app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { name } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizNameUpdate(userId, quizId, name);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// PUT /v1/admin/quiz/{quizid}/description
+app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { description } = req.body;
+
+  const userIdResult = findUserIdFromSession(session);
+
+  if ('error' in userIdResult) {
+    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+  }
+
+  const userId = userIdResult.userId;
+  const result = adminQuizDescriptionUpdate(userId, quizId, description);
+
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+
+// POST /v1/admin/auth/logout
+app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+
+  const result = adminAuthLogout(session);
+
+  if ('error' in result) {
+    return res.status(UNAUTHORISED).json({ error: result.error });
+  }
+
+  return res.status(OK).json({});
+});
+>>>>>>> 908821f8c5d5556c524e74f571fb27878ba2b966
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
