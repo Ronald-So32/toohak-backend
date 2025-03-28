@@ -20,7 +20,8 @@ import {
 } from './quiz';
 import {
   findUserIdFromSession,
-  Errors
+  Errors,
+  findQuestionIdInQuiz
 } from './functionsHelper';
 
 import express, {
@@ -401,9 +402,9 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
   }
 
-  const question = quizDetailsResult.questions.find(question => question.quizId === questionId);
-  if (!question) {
-    return Errors.invalidQuestion();
+  const questionExist = findQuestionIdInQuiz(quizId, questionId);
+  if ('error' in questionExist) {
+    return res.status(FORBIDDEN).json({ error: questionExist.error });
   }
 
   const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
@@ -412,7 +413,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     return res.status(BADREQUEST).json({ error: result.error });
   }
 
-  return res.status(OK).json({ questionId: result.questionId });
+  return res.status(OK).json({});
 });
 
 // ====================================================================
