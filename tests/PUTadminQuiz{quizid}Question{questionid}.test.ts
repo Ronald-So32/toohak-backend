@@ -96,7 +96,7 @@ describe('Test invalid cases', () => {
         }
       );
       expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
 
     describe('Invalid question strings', () => {
@@ -395,7 +395,7 @@ describe('Test invalid cases', () => {
         const questionBody = {
           questionBody: {
             question: 'Question',
-            timeLimit: 60,
+            timeLimit: 50,
             points: 5,
             answerOptions: [
               {
@@ -412,16 +412,13 @@ describe('Test invalid cases', () => {
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
         questionId = responseQuestionCreate.body.questionId;
 
-        responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        const questionId2 = responseQuestionCreate.body.questionId;
-      
-        responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        const questionId3 = responseQuestionCreate.body.questionId;
+        requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        requestAdminQuizQuestionCreate(quizId, session, questionBody);
         // summed with other two question bodies, time limit will exceed 3 min
         const updateQuestionBody = {
           questionBody: {
             question: 'Question',
-            timeLimit: 61,
+            timeLimit: 99,
             points: 5,
             answerOptions: [
               {
@@ -756,81 +753,82 @@ describe('Test valid cases', () => {
     const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-
-    describe('Valid timelimit', () => {
-      test.each([
-        {
-          timeLimit: 1,
-          description: 'Is a positive number'
-        },
-        {
-          timeLimit: 180,
-          description: 'Timelimit exceeds 3 minutes'
-        },
-      ])('$desription', ({ timeLimit }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-          quizId,
-          questionId,
-          session,
-          {
-            questionBody: {
-              question: 'Question',
-              timeLimit,
-              points: 5,
-              answerOptions: [
-                {
-                  answer: 'Right',
-                  correct: true
-                },
-                {
-                  answer: 'Wrong',
-                  correct: false
-                }
-              ]
-            }
-          }
-        );
-        expect(responseQuestionUpdate.body).toStrictEqual({});
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-      });
-    });
-
-    describe('Valid points awarded', () => {
-      test.each([
-        {
-          points: 1,
-          description: 'Point awarded is exactly 1'
-        },
-        {
-          points: 10,
-          description: 'Point awarded is exactly 10'
-        },
-      ])('$desription', ({ points }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-          quizId,
-          questionId,
-          session,
-          {
-            questionBody: {
-              question: 'Question',
-              timeLimit: 4,
-              points,
-              answerOptions: [
-                {
-                  answer: 'Right',
-                  correct: true
-                },
-                {
-                  answer: 'Wrong',
-                  correct: false
-                }
-              ]
-            }
-          }
-        );
-        expect(responseQuestionUpdate.body).toStrictEqual({});
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-      });
     });
   });
+    
+  describe('Valid timelimit', () => {
+    test.each([
+      {
+        timeLimit: 1,
+        description: 'Is a positive number'
+      },
+      {
+        timeLimit: 180,
+        description: 'Timelimit exceeds 3 minutes'
+      },
+    ])('$desription', ({ timeLimit }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
+  });
+
+  describe('Valid points awarded', () => {
+    test.each([
+      {
+        points: 1,
+        description: 'Point awarded is exactly 1'
+      },
+      {
+        points: 10,
+        description: 'Point awarded is exactly 10'
+      },
+    ])('$desription', ({ points }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+    
 });
