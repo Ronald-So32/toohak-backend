@@ -22,12 +22,8 @@ const questionIdOffset = 999;
 
 let responseRegister: responseInterface;
 let session: string;
-let session2: string;
 let quizId: number;
-let quizId2: number;
 let questionId: number;
-let questionId2: number;
-let questionId3: number;
 let responseQuizCreate: responseInterface;
 let responseQuestionCreate: responseInterface;
 
@@ -41,7 +37,7 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
-  const responseQuizCreate = requestAdminQuizCreate(
+  responseQuizCreate = requestAdminQuizCreate(
     session,
     'Quiz Name',
     'Description'
@@ -417,10 +413,10 @@ describe('Test invalid cases', () => {
         questionId = responseQuestionCreate.body.questionId;
 
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        questionId2 = responseQuestionCreate.body.questionId;
-
+        const questionId2 = responseQuestionCreate.body.questionId;
+      
         responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        questionId3 = responseQuestionCreate.body.questionId;
+        const questionId3 = responseQuestionCreate.body.questionId;
         // summed with other two question bodies, time limit will exceed 3 min
         const updateQuestionBody = {
           questionBody: {
@@ -554,15 +550,15 @@ describe('Test invalid cases', () => {
         'First',
         'Last'
       );
-      session2 = responseRegister.body.session;
-
+      const session2 = responseRegister.body.session;
       const responseQuizCreate = requestAdminQuizCreate(
         session,
         'Quiz Name',
         'Description'
       );
-      quizId2 = responseQuizCreate.body.quizId;
 
+      const quizId2 = responseQuizCreate.body.quizId;
+  
       responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId,
         session,
@@ -734,10 +730,10 @@ describe('Test valid cases', () => {
     questionId = responseQuestionCreate.body.questionId;
 
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-    questionId2 = responseQuestionCreate.body.questionId;
-
+    const questionId2 = responseQuestionCreate.body.questionId;
+    
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-    questionId3 = responseQuestionCreate.body.questionId;
+    const questionId3 = responseQuestionCreate.body.questionId;
 
     // summed with other two question bodies, time limit equal 3 min exaclty
     const updateQuestionBody = {
