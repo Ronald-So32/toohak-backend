@@ -2,13 +2,12 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  requestAdminAuthLogin,
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizQuestionUpdate,
   requestAdminAuthLogout,
-  requestGetQuiz
+  // requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -432,7 +431,12 @@ describe('Test invalid cases', () => {
             ]
           }
         };
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          updateQuestionBody
+        );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -547,7 +551,6 @@ describe('Test invalid cases', () => {
         'First',
         'Last'
       );
-      const session2 = responseRegister.body.session;
       const responseQuizCreate = requestAdminQuizCreate(
         session,
         'Quiz Name',
@@ -555,7 +558,7 @@ describe('Test invalid cases', () => {
       );
 
       const quizId2 = responseQuizCreate.body.quizId;
-  
+
       responseQuestionCreate = requestAdminQuizQuestionCreate(
         quizId,
         session,
@@ -577,7 +580,6 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      const questionId2 = responseQuestionCreate.body.questionId;
 
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId2,
@@ -727,10 +729,8 @@ describe('Test valid cases', () => {
     questionId = responseQuestionCreate.body.questionId;
 
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-    const questionId2 = responseQuestionCreate.body.questionId;
-    
+
     responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-    const questionId3 = responseQuestionCreate.body.questionId;
 
     // summed with other two question bodies, time limit equal 3 min exaclty
     const updateQuestionBody = {
@@ -750,85 +750,88 @@ describe('Test valid cases', () => {
         ]
       }
     };
-    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId, questionId, session, updateQuestionBody);
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId,
+      questionId,
+      session,
+      updateQuestionBody
+    );
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-    });
   });
-    
-  describe('Valid timelimit', () => {
-    test.each([
-      {
-        timeLimit: 1,
-        description: 'Is a positive number'
-      },
-      {
-        timeLimit: 180,
-        description: 'Timelimit exceeds 3 minutes'
-      },
-    ])('$desription', ({ timeLimit }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-        quizId,
-        questionId,
-        session,
-        {
-          questionBody: {
-            question: 'Question',
-            timeLimit,
-            points: 5,
-            answerOptions: [
-              {
-                answer: 'Right',
-                correct: true
-              },
-              {
-                answer: 'Wrong',
-                correct: false
-              }
-            ]
-          }
-        }
-      );
-      expect(responseQuestionUpdate.body).toStrictEqual({});
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-    });
-  });
+});
 
-  describe('Valid points awarded', () => {
-    test.each([
+describe('Valid timelimit', () => {
+  test.each([
+    {
+      timeLimit: 1,
+      description: 'Is a positive number'
+    },
+    {
+      timeLimit: 180,
+      description: 'Timelimit exceeds 3 minutes'
+    },
+  ])('$desription', ({ timeLimit }) => {
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      quizId,
+      questionId,
+      session,
       {
-        points: 1,
-        description: 'Point awarded is exactly 1'
-      },
-      {
-        points: 10,
-        description: 'Point awarded is exactly 10'
-      },
-    ])('$desription', ({ points }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-        quizId,
-        questionId,
-        session,
-        {
-          questionBody: {
-            question: 'Question',
-            timeLimit: 4,
-            points,
-            answerOptions: [
-              {
-                answer: 'Right',
-                correct: true
-              },
-              {
-                answer: 'Wrong',
-                correct: false
-              }
-            ]
-          }
+        questionBody: {
+          question: 'Question',
+          timeLimit,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
         }
-      );
-      expect(responseQuestionUpdate.body).toStrictEqual({});
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      }
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
   });
-    
+});
+
+describe('Valid points awarded', () => {
+  test.each([
+    {
+      points: 1,
+      description: 'Point awarded is exactly 1'
+    },
+    {
+      points: 10,
+      description: 'Point awarded is exactly 10'
+    },
+  ])('$desription', ({ points }) => {
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      quizId,
+      questionId,
+      session,
+      {
+        questionBody: {
+          question: 'Question',
+          timeLimit: 4,
+          points,
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
 });
