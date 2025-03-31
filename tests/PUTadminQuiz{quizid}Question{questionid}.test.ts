@@ -580,7 +580,7 @@ describe('Test invalid cases', () => {
           }
         }
       );
-      questionId2 = responseQuestionCreate.body.questionId;
+      const questionId2 = responseQuestionCreate.body.questionId;
 
       const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
         quizId2,
