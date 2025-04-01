@@ -14,7 +14,8 @@ import {
   questionIdInterface,
   Errors,
   validQuestionString,
-  randomColour
+  randomColour,
+  validatePoints
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -712,12 +713,9 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
 
-  // Another helper
-  if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
-  }
-  if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  const pointsValid = validatePoints(points);
+  if (!pointsValid) {
+    return pointsValid as errorInterface;
   }
 
   const answerStrings: string[] = [];

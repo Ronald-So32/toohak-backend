@@ -440,3 +440,15 @@ export function randomColour(): string {
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
 }
+
+export function validatePoints(points: number): boolean | errorInterface {
+  if (points < 1) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+  }
+
+  if (points > 10) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  }
+
+  return true;
+}
