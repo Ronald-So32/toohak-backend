@@ -15,7 +15,8 @@ import {
   Errors,
   validQuestionString,
   randomColour,
-  validatePoints
+  validatePoints,
+  validateAnswer
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -694,12 +695,9 @@ export function adminQuizQuestionUpdate(
     return questionValidation as errorInterface;
   }
 
-  // DO this in a helper instead
-  if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
-  }
-  if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  const answerValid = validateAnswer(answerOptions);
+  if (!answerValid) {
+    return answerValid as errorInterface;
   }
 
   if (timeLimit <= 0) {

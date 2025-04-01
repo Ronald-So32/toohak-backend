@@ -452,3 +452,15 @@ export function validatePoints(points: number): boolean | errorInterface {
 
   return true;
 }
+
+export function validateAnswer(answerOptions: string): boolean | errorInterface {
+  if (answerOptions.length < 2) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+  }
+  
+  if (answerOptions.length > 6) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  }
+
+  return true;
+}
