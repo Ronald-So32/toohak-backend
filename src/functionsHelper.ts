@@ -222,7 +222,7 @@ export class Errors {
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
-  static readonly invalidQuestionError = 'Question Id not found in quiz';
+  static readonly invalidQuestionError = 'Invalid question ID';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -403,6 +403,18 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   }
 
   return { userId: theSession.userId };
+}
+
+export function findQuestionIdInQuiz(quizId: number, questionId: number): null| errorInterface {
+  const data = getData();
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+
+  const questionExist = quiz.questions.find(question => question.questionId === questionId);
+  if (!questionExist) {
+    return Errors.invalidQuestion();
+  }
+
+  return {};
 }
 
 export function validQuestionString(question: string): boolean | errorInterface {

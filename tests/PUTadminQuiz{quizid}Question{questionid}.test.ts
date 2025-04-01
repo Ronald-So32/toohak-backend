@@ -1,5 +1,952 @@
-describe('Placeholder test suite', () => {
-  test('should pass', () => {
-    expect(true).toBe(true); // This test will always pass
+
+import {
+  requestClear,
+  requestAdminAuthRegister,
+  responseInterface,
+  requestAdminQuizCreate,
+  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionUpdate,
+  requestAdminAuthLogout,
+  requestGetQuiz
+} from './testsHelper';
+
+import { describe } from 'node:test';
+
+const OK = 200;
+const BADREQUEST = 400;
+const UNAUTHORISED = 401;
+const FORBIDDEN = 403;
+const quizIdOffset = 727;
+const questionIdOffset = 999;
+
+let responseRegister: responseInterface;
+let session: string;
+let quizId: number;
+let questionId: number;
+let responseQuizCreate: responseInterface;
+let responseQuestionCreate: responseInterface;
+
+beforeEach(() => {
+  requestClear();
+  responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+
+  responseQuizCreate = requestAdminQuizCreate(
+    session,
+    'Quiz Name',
+    'Description'
+  );
+  quizId = responseQuizCreate.body.quizId;
+
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  questionId = responseQuestionCreate.body.questionId;
+  expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+  expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+});
+
+describe('Test invalid cases', () => {
+  describe('error case 400 examples', () => {
+    test('Invalid questionId', () => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId + questionIdOffset,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+    });
+
+    describe('Invalid question strings', () => {
+      test.each([
+        {
+          question: 'Ques',
+          description: 'Containing less than 5 characters'
+        },
+        {
+          question: 'Quest'.repeat(11),
+          description: 'Containing more than 50 characters'
+        },
+        {
+          question: '',
+          description: 'Empty string'
+        }
+      ])('$description', ({ question }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: question,
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ]
+            }
+          }
+
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
+
+    describe('Invalid answers', () => {
+      test.each([
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            }
+          ],
+          description: 'Containing less than 2 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong1',
+              correct: false
+            },
+            {
+              answer: 'Wrong2',
+              correct: false
+            },
+            {
+              answer: 'Wrong3',
+              correct: false
+            },
+            {
+              answer: 'Wrong4',
+              correct: false
+            },
+            {
+              answer: 'Wrong5',
+              correct: false
+            },
+            {
+              answer: 'Wrong6',
+              correct: false
+            }
+          ],
+          description: 'Containing more than 6 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Duplicate answer strings within same questions'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: false
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'No correct answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: '',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing less than 1 character'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right'.repeat(7),
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing more than 30 character'
+        }
+      ])('$description', ({ answerOptions }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
+
+    describe('Valid answers', () => {
+      test.each([
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Containing exactly 2 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong1',
+              correct: false
+            },
+            {
+              answer: 'Wrong2',
+              correct: false
+            },
+            {
+              answer: 'Wrong3',
+              correct: false
+            },
+            {
+              answer: 'Wrong4',
+              correct: false
+            },
+            {
+              answer: 'Wrong5',
+              correct: false
+            },
+          ],
+          description: 'Containing exactly 6 answers'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'R',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing exactly 1 character'
+        },
+        {
+          answerOptions: [
+            {
+              answer: 'Right'.repeat(6),
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ],
+          description: 'Answer containing exactly 30 character'
+        },
+      ])('$description', ({ answerOptions }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({});
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
+
+    describe('Invalid timelimit', () => {
+      test.each([
+        {
+          timeLimit: -1,
+          description: 'Not a positive number'
+        },
+        {
+          timeLimit: 0,
+          description: 'Neither a positive or a negative number'
+        },
+        {
+          timeLimit: 181,
+          description: 'Timelimit exceeds 3 minutes'
+        },
+      ])('$description', ({ timeLimit }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ]
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+
+      test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
+        const questionBody = {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 50,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        };
+        responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        questionId = responseQuestionCreate.body.questionId;
+
+        requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        // summed with other two question bodies, time limit will exceed 3 min
+        const updateQuestionBody = {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 99,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        };
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          updateQuestionBody
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
+
+    describe('Invalid points awarded', () => {
+      test.each([
+        {
+          points: -1,
+          description: 'Not a positive number'
+        },
+        {
+          points: 0,
+          description: 'Neither a positive or a negative number'
+        },
+        {
+          points: 11,
+          description: 'Points awarded is greater then 10'
+        },
+      ])('$description', ({ points }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ]
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
   });
+
+  describe('Test cases for error 401', () => {
+    test('Logged out session', () => {
+      requestAdminAuthLogout(session);
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+
+    test('Invalid user session', () => {
+      requestAdminAuthLogout(session);
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session + 'Invalid Session',
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+  });
+
+  describe('Test cases for error 403', () => {
+    test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
+      responseRegister = requestAdminAuthRegister(
+        'z7277272@ad.unsw.edu.au',
+        'Password1',
+        'First',
+        'Last'
+      );
+      const responseQuizCreate = requestAdminQuizCreate(
+        session,
+        'Quiz Name',
+        'Description'
+      );
+
+      const quizId2 = responseQuizCreate.body.quizId;
+
+      responseQuestionCreate = requestAdminQuizQuestionCreate(
+        quizId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId2,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 20,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+    });
+
+    test('Quiz does not exist', () => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId + quizIdOffset,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+    });
+  });
+});
+
+describe('Test valid cases', () => {
+  test('Testing correct return value', () => {
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      quizId,
+      questionId,
+      session,
+      {
+        questionBody: {
+          question: 'Question',
+          // change timeLimit to 9
+          timeLimit: 9,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+
+  describe('Valid question strings', () => {
+    test.each([
+      {
+        question: 'Quest',
+        description: 'Containing exactly 5 characters'
+      },
+      {
+        question: 'Quest'.repeat(10),
+        description: 'Containing exactly 50 characters'
+      },
+      {
+        question: "Ab1!@#$%^&*()_+-= []{}\\|'\";:?/.,<>`~",
+        description: 'Containing different types of chacters'
+      }
+    ])('$description', ({ question }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: question,
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ]
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
+  });
+
+  test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
+    const questionBody = {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 59,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    };
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    questionId = responseQuestionCreate.body.questionId;
+
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+
+    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+
+    // summed with other two question bodies, time limit equal 3 min exaclty
+    const updateQuestionBody = {
+      questionBody: {
+        question: 'Question',
+        timeLimit: 62,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    };
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId,
+      questionId,
+      session,
+      updateQuestionBody
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+});
+
+describe('Valid timelimit', () => {
+  test.each([
+    {
+      timeLimit: 1,
+      description: 'Is a positive number'
+    },
+    {
+      timeLimit: 180,
+      description: 'Timelimit exceeds 3 minutes'
+    },
+  ])('$desription', ({ timeLimit }) => {
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      quizId,
+      questionId,
+      session,
+      {
+        questionBody: {
+          question: 'Question',
+          timeLimit,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+});
+
+describe('Valid points awarded', () => {
+  test.each([
+    {
+      points: 1,
+      description: 'Point awarded is exactly 1'
+    },
+    {
+      points: 10,
+      description: 'Point awarded is exactly 10'
+    },
+  ])('$desription', ({ points }) => {
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      quizId,
+      questionId,
+      session,
+      {
+        questionBody: {
+          question: 'Question',
+          timeLimit: 4,
+          points,
+          answerOptions: [
+            {
+              answer: 'Right',
+              correct: true
+            },
+            {
+              answer: 'Wrong',
+              correct: false
+            }
+          ]
+        }
+      }
+    );
+    expect(responseQuestionUpdate.body).toStrictEqual({});
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  });
+});
+
+test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Question2',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  const question2Id = responseQuestionCreate.body.questionId;
+
+  const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+    quizId,
+    questionId,
+    session,
+    {
+      questionBody: {
+        question: 'Question1',
+        timeLimit: 45,
+        points: 6,
+        answerOptions: [
+          {
+            answer: 'Changed Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          },
+          {
+            answer: 'Extra',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+
+  expect(responseQuestionUpdate.body).toStrictEqual({});
+  expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+
+  const responseQuizDetails = requestGetQuiz(quizId, session);
+  expect(responseQuizDetails.body).toStrictEqual({
+    quizId: quizId,
+    name: 'Quiz Name',
+    timeCreated: expect.any(Number),
+    timeLastEdited: expect.any(Number),
+    description: 'Description',
+    numQuestions: 2,
+    questions: [
+      {
+        question: 'Question1',
+        questionId: questionId,
+        timeLimit: 45,
+        points: 6,
+        answerOptions: [
+          {
+            answer: 'Changed Right',
+            colour: expect.any(String),
+            correct: true,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Wrong',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Extra',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          }
+        ]
+      },
+      {
+        question: 'Question2',
+        questionId: question2Id,
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            colour: expect.any(String),
+            correct: true,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Wrong',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          }
+        ]
+      }
+    ],
+    timeLimit: expect.any(Number)
+  });
+  expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 });
