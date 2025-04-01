@@ -133,3 +133,26 @@ Please note this is a a guide/template which you do not need to use.
 ### Questions for tutor
 * Can we spam reruns
 * Feedback on everything so far
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 6                                     |
+| --------- | ------------------------------------- |
+| Date/time | 28/03 15:02                           |
+|   Week    | 6                                     |
+| Attendees | Brian, Justin, Ronald, Sagar, Weiming |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests and         | Created a merge request each for what is left to be done and        |    
+| Assigning task             | allocated a person to each merge request also discussed the current |
+|                            | with the work ( style )                                             |
+
+### Action Items/reminders
+- [ ] Finish the remaining tests
+- [ ] Finish the routes and implementation of each feature by next meeting
+
+### Questions for tutor
+* 
