@@ -14,6 +14,7 @@ tests:
   script:
     - npm run lint-fix
     - npm run lint
+    - npm run tsc
     - SERVER_LOG=$(mktemp)
     - npm run start >& $SERVER_LOG &
     - timeout 10s grep -q "⚡️ Server started on port" <(tail -f $SERVER_LOG) || (cat $SERVER_LOG && exit 1)
