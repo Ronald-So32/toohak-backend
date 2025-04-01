@@ -22,10 +22,9 @@ import {
 import request from 'sync-request-curl';
 
 /**
-  * Provide a list of all quizzes that are owned by the currently logged in user.
+  * Provides a list of all quizzes that are owned by the currently logged in user.
   *
   * @param {number} userId - Id of the user
-  * ...
   *
   * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
   * an object, quizzes with an array of quizSummariesInterface inside of it unless
@@ -61,7 +60,6 @@ export function adminQuizList(
   * TODO
   *
   * @param {number}
-  * ...
   *
   * @returns
 */
@@ -104,7 +102,6 @@ export function adminQuizGet(
   * @param {number} userId - Id of the user
   * @param {string} name - Name of quiz
   * @param {string} description - Description of quiz
-  * ...
   *
   * @returns {quizId | error} - Always return quizId object otherwise an
   * error object with relevant error message
@@ -164,7 +161,6 @@ export function adminQuizCreate(
   *
   * @param {number} userId - Id of the user
   * @param {number} quizId - Id of the quiz
-  * ...
   *
   * @returns {object} - Always return an empty object otherwise an
   * error object with relevant error message
@@ -208,7 +204,6 @@ export function adminQuizRemove(
   *
   * @param {number} userId - Id of the user
   * @param {number} quizId - Id of the quiz
-  * ...
   *
   * @returns {quiz | error} - Always return quiz object otherwise an
   * error object with relevant error message
@@ -251,7 +246,6 @@ export function adminQuizInfo(
   * @param {number} userId - Id of the user
   * @param {number} quizId - Id of the quiz
   * @param {string} name - Name of the quiz
-  * ...
   *
   * @returns {object} - Always return an empty object otherwise an
   * error object with relevant error message
@@ -311,7 +305,6 @@ export function adminQuizNameUpdate(
   * @param {number} userId - Id of the user
   * @param {number} quizId - Id of the quiz
   * @param {string} description - Description of the quiz
-  * ...
   *
   * @returns {object} - Always return an empty object otherwise an
   * error object with relevant error message
