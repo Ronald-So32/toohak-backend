@@ -32,7 +32,7 @@ components:
       example: Yuchao
     NameLast:
       type: string
-      example: Smith
+      example: Jiang
     Session:
       type: string
       example: 23748
@@ -148,7 +148,7 @@ components:
           example: Rani Jiang
         email:
           type: string
-          example: yuchao@unsw.edu.au
+          example: rani@unsw.edu.au
         numSuccessfulLogins:
           type: integer
           example: 5
@@ -348,7 +348,7 @@ components:
         $ref: '#/components/prim/QuestionPosition'
     QuizId:
       in: path
-      name: quizid
+      name: quizId
       required: true
       schema:
         $ref: '#/components/prim/QuizId'
@@ -1098,9 +1098,54 @@ paths:
           schema:
             $ref: '#/components/return/Error'
   
-  /v1/admin/quiz/{quizId}/question/suggestion:
+  /v2/admin/quiz/{quizid}/question:
+    post:
+      summary: Create quiz question
+      description: |
+        Create a new stub question for a particular quiz.
+        When this route is called, and a question is created, the timeLastEdited is set as the same as the created time, and the colours of all answers of that question are randomly generated.
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizQuestionMutateIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizQuestionNew'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Question string is less than 5 characters in length or greater than 50 characters in length
+            - The question has more than 6 answers or less than 2 answers
+            - The question timeLimit is not a positive number
+            - The sum of the question timeLimits in the quiz exceeds 3 minutes
+            - The points awarded for the question are less than 1 or greater than 10
+            - The length of any answer is shorter than 1 character long, or longer than 30 characters long
+            - Any answer strings are duplicates of one another (within the same question)
+            - There are no correct answers
+            - The thumbnailUrl is an empty string
+            - The thumbnailUrl does not end with one of the following filetypes (case insensitive): jpg, jpeg, png
+            - The thumbnailUrl does not begin with 'http://' or 'https://'
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+  
+  /v1/admin/quiz/{quizid}/question/suggestion:
     get:
-      summary: Get an LLM-generated question suggestion.
+      summary: Get an LLM-generatied question suggestion.
       description: |
         Get a question suggestion from the LLM API. 
         The question suggestion should be meaningful and contextually relevant to the quiz name and description.
