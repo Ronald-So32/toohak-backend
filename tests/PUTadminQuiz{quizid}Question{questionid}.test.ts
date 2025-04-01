@@ -7,7 +7,7 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminQuizQuestionUpdate,
   requestAdminAuthLogout,
-  // requestGetQuiz
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -834,4 +834,119 @@ describe('Valid points awarded', () => {
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
   });
+});
+
+test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
+  responseQuestionCreate = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Question2',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  const question2Id = responseQuestionCreate.body.questionId;
+
+  const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+    quizId,
+    questionId,
+    session,
+    {
+      questionBody: {
+        question: 'Question1',
+        timeLimit: 45,
+        points: 6,
+        answerOptions: [
+          {
+            answer: 'Changed Right',
+            correct: true
+          },
+          {
+            answer: 'Wrong',
+            correct: false
+          },
+          {
+            answer: 'Extra',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+
+  expect(responseQuestionUpdate.body).toStrictEqual({});
+  expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+
+  const responseQuizDetails = requestGetQuiz(quizId, session);
+  expect(responseQuizDetails.body).toStrictEqual({
+    quizId: quizId,
+    name: 'Quiz Name',
+    timeCreated: expect.any(Number),
+    timeLastEdited: expect.any(Number),
+    description: 'Description',
+    numQuestions: 2,
+    questions: [
+      {
+        question: 'Question1',
+        questionId: questionId,
+        timeLimit: 45,
+        points: 6,
+        answerOptions: [
+          {
+            answer: 'Changed Right',
+            colour: expect.any(String),
+            correct: true,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Wrong',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Extra',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          }
+        ]
+      },
+      {
+        question: 'Question2',
+        questionId: question2Id,
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Right',
+            colour: expect.any(String),
+            correct: true,
+            id: expect.any(Number)
+          },
+          {
+            answer: 'Wrong',
+            colour: expect.any(String),
+            correct: false,
+            id: expect.any(Number)
+          }
+        ]
+      }
+    ],
+    timeLimit: expect.any(Number)
+  });
+  expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 });
