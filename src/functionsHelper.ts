@@ -6,11 +6,8 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * A instance of this object:
- * {
- *    error: error message,
- * }
- *
+ * Interface representing an error object containing an error message.
+ * 
  * @typedef {object} error - Object containing just the error message
  *
  * @property {string} error - Error message relevant to the problem
@@ -285,7 +282,7 @@ export class Errors {
 }
 
 /**
- * Creates a unique user id from the current registered users
+ * Creates a unique user id from the current registered users.
  *
  * @returns {number} - Returns the created uuid
  */
@@ -298,7 +295,7 @@ export function createUUID(): number {
 }
 
 /**
- * Validates the name the first or last name the user intends to use for their account
+ * Validates the name the first or last name the user intends to use for their account.
  *
  * @param {string} name - The first or the last name of the user
  * @param {boolean} isFirst - Whether or not it is the user's first name
@@ -336,7 +333,7 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
 }
 
 /**
- * Validate the password that the user intends to use for their account
+ * Validate the password that the user intends to use for their account.
  *
  * @param {string} password - Intended password of user
  * @returns {boolean | error} - Retursn true for valid password else an
@@ -362,7 +359,7 @@ export function validPassword(password: string): boolean | errorInterface {
 }
 
 /**
- * Validates the name that the user intends to use for their quiz
+ * Validates the name that the user intends to use for their quiz.
  *
  * @param {string} name - Intended quiz name user wants
  * @returns {boolean | error} - Returns true for valid quiz name else an

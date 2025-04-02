@@ -107,7 +107,7 @@ interface Data {
 }
 
 /**
- * The data store
+ * The data store.
  * @type {Data}
  */
 const data: Data = {
@@ -119,7 +119,7 @@ const data: Data = {
 };
 
 /**
- * Gets the current state of the application data store
+ * Gets the current state of the application data store.
  *
  * @returns {Data} - The entire data store object
  */
