@@ -1,5 +1,5 @@
 /**
- * Interface representing the users
+ * Interface representing the users.
  * 
  * @typedef {Object} userInterface
  *
@@ -25,7 +25,7 @@ interface userInterface {
 }
 
 /**
- * Interface representing the answers inside the questions
+ * Interface representing the answers inside the questions.
  * 
  * @typedef {Object} answersInterface
  *
@@ -42,7 +42,7 @@ export interface answersInterface {
 }
 
 /**
- * Interface representing the questions inside the quiz
+ * Interface representing the questions inside the quiz.
  * 
  * @typedef {Object} questionsInterface
  *
@@ -61,7 +61,7 @@ export interface questionsInterface {
 }
 
 /**
- * Interface representing the quizzes
+ * Interface representing the quizzes.
  * 
  * @typedef {Object} quizInterface
  *
@@ -88,7 +88,7 @@ interface quizInterface {
 }
 
 /**
- * Interface representing the active sessions
+ * Interface representing the active sessions.
  * 
  * @typedef {Object} sessionInterface
  *
@@ -101,7 +101,7 @@ interface sessionInterface {
 }
 
 /**
- * Interface representing the data store of this program
+ * Interface representing the data store of this program.
  * 
  * @typedef {Object} Data
  *
