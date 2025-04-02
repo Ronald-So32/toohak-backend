@@ -158,10 +158,8 @@ export interface quizGetDetailsInterface {
 }
 
 interface answerOptionsInterface {
-  answerOptions: {
-    answer: string,
-    correct: boolean
-  }
+  answer: string,
+  correct: boolean
 }
 
 export interface questionBodyInterface {
@@ -471,7 +469,7 @@ export function validatePoints(points: number): boolean | errorInterface {
   return true;
 }
 
-export function validateAnswer(answerOptions: string): boolean | errorInterface {
+export function validateAnswer(answerOptions: answerOptionsInterface[]): boolean | errorInterface {
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
   }

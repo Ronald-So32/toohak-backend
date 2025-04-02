@@ -361,7 +361,7 @@ export function adminQuizDescriptionUpdate(
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): questionIdInterface | errorInterface {
   const data = getData();
 
@@ -668,7 +668,7 @@ export function adminQuizQuestionUpdate(
   userId: number,
   quizId: number,
   questionId: number,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): Record<string, never> | errorInterface {
   const data = getData();
 
