@@ -260,6 +260,14 @@ export function adminUserPasswordUpdate(
   return {};
 }
 
+/**
+ * Remove a user's session token (logout).
+ *
+ * @param {string} session - Session token to remove
+ * 
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
+ */
 export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
   const data = getData();
 
