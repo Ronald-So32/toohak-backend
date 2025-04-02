@@ -4,7 +4,8 @@ import {
   responseInterface,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestGetQuizList
+  requestGetQuizList,
+  requestAdminAuthLogout
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -12,21 +13,23 @@ import { describe } from 'node:test';
 const OK = 200;
 const BADREQUEST = 400;
 
-let responseRegister: responseInterface;
 let session: string;
 
+// Clears the data before each test
 beforeEach(() => {
   requestClear();
 });
 
 describe('Testing POST /v1/admin/auth/register', () => {
   test('Testing the code 200 return value', () => {
-    responseRegister = requestAdminAuthRegister(
+    // To register a user 
+    const responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
       'Password1',
       'First',
       'Last'
     );
+    // Checks that a session object is returned and that the status code is 200
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
   });
@@ -34,7 +37,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
   describe('Testing for error responses', () => {
     describe('Testing the email', () => {
       test('Email has already been used', () => {
-        responseRegister = requestAdminAuthRegister(
+        let responseRegister = requestAdminAuthRegister(
           'z7277272@ad.unsw.edu.au',
           'Password1',
           'First',
@@ -49,12 +52,13 @@ describe('Testing POST /v1/admin/auth/register', () => {
           'First',
           'Last'
         );
+        // Checks that an error object is returned and that the status code is 400
         expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
         expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
       });
 
       test('Email has not been used', () => {
-        responseRegister = requestAdminAuthRegister(
+        const responseRegister = requestAdminAuthRegister(
           'z6969420@ad.unsw.edu.au',
           'Password1',
           'First',
@@ -349,7 +353,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
   });
 
   test('Testing POST /v1/admin/auth/register works as intended', () => {
-    responseRegister = requestAdminAuthRegister(
+    const responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
       'Password1',
       'First',
@@ -359,13 +363,19 @@ describe('Testing POST /v1/admin/auth/register', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
-    // Check user can login
+    // Check user can log out
+    const responseLogout = requestAdminAuthLogout(session)
+    expect(responseLogout.body).toStrictEqual({});
+    expect(responseLogout.statusCode).toStrictEqual(OK);
+
+    // Check user can log back in
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
     expect(responseLogin.body).toStrictEqual({ session: responseLogin.body.session });
     expect(responseLogin.statusCode).toStrictEqual(OK);
+    session = responseLogin.body.session;
 
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(session);
