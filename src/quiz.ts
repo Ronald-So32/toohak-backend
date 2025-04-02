@@ -700,7 +700,7 @@ export function adminQuizQuestionUpdate(
   }
 
   const answerValid = validateAnswer(answerOptions);
-  if (!answerValid) {
+  if (answerValid !== true) {
     return answerValid as errorInterface;
   }
 
@@ -716,7 +716,7 @@ export function adminQuizQuestionUpdate(
   }
 
   const pointsValid = validatePoints(points);
-  if (!pointsValid) {
+  if (pointsValid !== true) {
     return pointsValid as errorInterface;
   }
 

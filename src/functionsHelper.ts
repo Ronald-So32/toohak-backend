@@ -420,7 +420,10 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   return { userId: theSession.userId };
 }
 
-export function findQuestionIdInQuiz(quizId: number, questionId: number): Record<string, never> | errorInterface {
+export function findQuestionIdInQuiz(
+  quizId: number,
+  questionId: number
+): Record<string, never> | errorInterface {
   const data = getData();
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
 
