@@ -21,13 +21,26 @@ export interface responseInterface {
 }
 
 /**
- * Interface representing the 
+ * Interface representing the body of a question.
+ * 
+ * @typedef {object} questionBodyInterface
+ * 
+ * @property {questionsInterface} questionBody - An object containing all the details in a question
  */
 export interface questionBodyInterface {
   questionBody: questionsInterface;
 }
 
-// Helper function to handle common request logic
+/**
+ * Helper function to handle common request logic
+ * 
+ * @param {HttpVerb} method - The type of the route
+ * @param {string} endpoint - The url of the route
+ * @param {any} [body] - The optional body to send to the route
+ * @param {any} [headers] - Optional headers to send to the route
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 function makeRequest(
   method: HttpVerb,
   endpoint: string,
@@ -49,7 +62,11 @@ function makeRequest(
   };
 }
 
-// Wrapper for DELETE /v1/clear
+/**
+ * Wrapper for DELETE /v1/clear
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestClear(): responseInterface {
   return makeRequest(
     'DELETE',
@@ -59,7 +76,14 @@ export function requestClear(): responseInterface {
   );
 }
 
-// Wrapper for DELETE /v1/admin/quiz/{quizid}
+/**
+ * Wrapper for DELETE /v1/admin/quiz/{quizid}
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestDeleteQuiz(
   quizId: number,
   session: string
@@ -72,7 +96,15 @@ export function requestDeleteQuiz(
   );
 }
 
-// Wrapper for DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * Wrapper for DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestDeleteQuizQuestion(
   quizId: number,
   questionId: number,
@@ -86,7 +118,14 @@ export function requestDeleteQuizQuestion(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/{quizid}
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuiz(
   quizId: number,
   session: string
