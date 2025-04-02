@@ -34,14 +34,14 @@ export interface userIdInterface {
  *
  * @typedef {object} quizIdInterface
  *
- * @property {number} quizId - Id of user
+ * @property {number} quizId - Id of quiz
  */
 export interface quizIdInterface {
   quizId: number;
 }
 
 /**
- * 
+ * Interface representing a question ID.
  *
  * @typedef {object} questionIdInterface
  *
@@ -52,10 +52,9 @@ export interface questionIdInterface {
 }
 
 /**
- * 
+ * Interface representing basic quiz summary information.
  *
  * @typedef {object} quizSummariesInterface
- * quiz summaries
  *
  * @property {number} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
@@ -66,7 +65,7 @@ export interface quizSummariesInterface {
 }
 
 /**
- * 
+ * Interface representing detailed quiz information.
  *
  * @typedef {object} quizDetailsInterface
  *
@@ -85,7 +84,7 @@ export interface quizDetailsInterface {
 }
 
 /**
- * 
+ * Interface representing detailed user information.
  *
  * @typedef {object} userDetailsInterface
  *
@@ -106,11 +105,19 @@ export interface userDetailsInterface {
 }
 
 /**
- *
- *
+ * Interface representing complete quiz details including questions.
+ * 
  * @typedef {object} quizGetDetailsInterface
  *
- * @property {number}
+ * @property {object} details - Quiz details object
+ * @property {number} details.quizId - ID of the quiz
+ * @property {string} details.name - Name of the quiz
+ * @property {number} details.timeCreated - Timestamp when quiz was created
+ * @property {number} details.timeLastEdited - Timestamp of last edit
+ * @property {string} details.description - Description of the quiz
+ * @property {number} details.numQuestions - Count of questions in the quiz
+ * @property {questionsInterface[]} details.questions - Array of question objects
+ * @property {number} details.timeLimit - Time limit for the quiz in seconds
  */
 export interface quizGetDetailsInterface {
   details: {
@@ -125,11 +132,30 @@ export interface quizGetDetailsInterface {
   }
 }
 
+/**
+ * Interface representing a single answer option for a question.
+ * 
+ * @typedef {object} answerOptionsInterface
+ *
+ * @property {string} answer - The answer text
+ * @property {boolean} correct - Whether this answer is correct
+ */
 interface answerOptionsInterface {
   answer: string,
   correct: boolean
 }
 
+/**
+ * Interface representing the body of a question.
+ * 
+ * @typedef {object} questionBodyInterface
+ *
+ * @property {object} questionBody - Question details object
+ * @property {string} questionBody.question - The question text
+ * @property {number} questionBody.timeLimit - Time limit for the question in seconds
+ * @property {number} questionBody.points - Points awarded for correct answer
+ * @property {answerOptionsInterface[]} questionBody.answerOptions - Array of possible answers
+ */
 export interface questionBodyInterface {
   questionBody: {
     question: string,
