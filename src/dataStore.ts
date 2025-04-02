@@ -1,3 +1,15 @@
+/**
+ * @typedef {Object} userInterface
+ * 
+ * @property {number} userId - Id for user
+ * @property {string} nameFirst - User's first name
+ * @property {string} nameLast - User's last name
+ * @property {string} email - User's email address
+ * @property {number} numSuccessfulLogins - Count of successful logins
+ * @property {number} numFailedPasswordsSinceLastLogin - Count of failed password attempts since last login
+ * @property {string} password - The current password
+ * @property {string[]} oldPasswords - History of old passwords
+ */
 interface userInterface {
   userId: number;
   nameFirst: string;
@@ -9,6 +21,14 @@ interface userInterface {
   oldPasswords: string[];
 }
 
+/**
+ * @typedef {Object} answersInterface
+ * 
+ * @property {number} [answerId] - ID for the answer (optional)
+ * @property {string} answer - The answer text
+ * @property {string} [colour] - Display color for the answer (optional)
+ * @property {boolean} correct - Whether this answer is correct
+ */
 export interface answersInterface {
   answerId?: number;
   answer: string;
@@ -16,6 +36,15 @@ export interface answersInterface {
   correct: boolean;
 }
 
+/**
+ * @typedef {Object} questionsInterface
+ * 
+ * @property {number} [questionId] - Unique identifier for the question (optional)
+ * @property {string} question - The question text
+ * @property {number} timeLimit - Time limit to answer in seconds
+ * @property {number} points - Points awarded for correct answer
+ * @property {Answer[]} answerOptions - Available answer options
+ */
 export interface questionsInterface {
   questionId?: number;
   question: string;
@@ -24,6 +53,19 @@ export interface questionsInterface {
   answerOptions: answersInterface[];
 }
 
+/**
+ * @typedef {Object} quizInterface
+ * 
+ * @property {number} quizId - ID for the quiz
+ * @property {string} name - Name of the quiz
+ * @property {number} timeCreated - Timestamp when quiz was created
+ * @property {number} timeLastEdited - Timestamp when quiz was last edited
+ * @property {string} description - Description of the quiz
+ * @property {number} createdBy - User ID of the quiz owner
+ * @property {number} numQuestions - Number of questions in the quiz
+ * @property {Question[]} questions - Array of questions in the quiz
+ * @property {number} timeLimit - Total time limit for the quiz in seconds
+ */
 interface quizInterface {
   quizId: number;
   name: string;
@@ -57,7 +99,11 @@ const data: Data = {
   sessions: []
 };
 
-// Use getData() to access the data
+/**
+ * Gets the current state of the application data store
+ * 
+ * @returns {Data} - The entire data store object
+ */
 export function getData(): Data {
   return data;
 }
