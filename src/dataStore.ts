@@ -43,7 +43,7 @@ export interface answersInterface {
  * @property {string} question - The question text
  * @property {number} timeLimit - Time limit to answer in seconds
  * @property {number} points - Points awarded for correct answer
- * @property {Answer[]} answerOptions - Available answer options
+ * @property {answersInterface[]} answerOptions - Available answer options
  */
 export interface questionsInterface {
   questionId?: number;
@@ -63,7 +63,7 @@ export interface questionsInterface {
  * @property {string} description - Description of the quiz
  * @property {number} createdBy - User ID of the quiz owner
  * @property {number} numQuestions - Number of questions in the quiz
- * @property {Question[]} questions - Array of questions in the quiz
+ * @property {questionsInterface[]} questions - Array of questions in the quiz
  * @property {number} timeLimit - Total time limit for the quiz in seconds
  */
 interface quizInterface {
@@ -78,11 +78,25 @@ interface quizInterface {
   timeLimit: number;
 }
 
+/**
+ * @typedef {Object} sessionInterface
+ * 
+ * @property {number} userId - User ID associated with the session
+ * @property {string} session - Session token
+ */
 interface sessionInterface {
   userId: number;
   session: string;
 }
 
+/**
+ * @typedef {Object} Data
+ * 
+ * @property {userInterface[]} users - Array of all users
+ * @property {quizInterface[]} quizzes - Array of all quizzes
+ * @property {number} highestID - Highest ID in the system
+ * @property {sessionInterface[]} sessions - Array of active sessions
+ */
 interface Data {
   users: userInterface[];
   quizzes: quizInterface[];
@@ -91,6 +105,10 @@ interface Data {
   sessions: sessionInterface[];
 }
 
+/** 
+ * The data store
+ * @type {Data}
+ */
 const data: Data = {
   users: [],
   quizzes: [],
