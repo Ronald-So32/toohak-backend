@@ -292,7 +292,6 @@ export function createUUID(): number {
  * @returns {boolean | error} - Returns true for a valid name else returns
  * an object with relevant error message
  */
-
 export function validName(name: string, isFirst: boolean): boolean | errorInterface {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
