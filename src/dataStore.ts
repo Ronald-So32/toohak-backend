@@ -1,12 +1,13 @@
 /**
  * @typedef {Object} userInterface
- * 
+ *
  * @property {number} userId - Id for user
  * @property {string} nameFirst - User's first name
  * @property {string} nameLast - User's last name
  * @property {string} email - User's email address
  * @property {number} numSuccessfulLogins - Count of successful logins
- * @property {number} numFailedPasswordsSinceLastLogin - Count of failed password attempts since last login
+ * @property {number} numFailedPasswordsSinceLastLogin - Count of failed password
+ * attempts since last login
  * @property {string} password - The current password
  * @property {string[]} oldPasswords - History of old passwords
  */
@@ -23,7 +24,7 @@ interface userInterface {
 
 /**
  * @typedef {Object} answersInterface
- * 
+ *
  * @property {number} [answerId] - ID for the answer (optional)
  * @property {string} answer - The answer text
  * @property {string} [colour] - Display color for the answer (optional)
@@ -38,7 +39,7 @@ export interface answersInterface {
 
 /**
  * @typedef {Object} questionsInterface
- * 
+ *
  * @property {number} [questionId] - Unique identifier for the question (optional)
  * @property {string} question - The question text
  * @property {number} timeLimit - Time limit to answer in seconds
@@ -55,7 +56,7 @@ export interface questionsInterface {
 
 /**
  * @typedef {Object} quizInterface
- * 
+ *
  * @property {number} quizId - ID for the quiz
  * @property {string} name - Name of the quiz
  * @property {number} timeCreated - Timestamp when quiz was created
@@ -80,7 +81,7 @@ interface quizInterface {
 
 /**
  * @typedef {Object} sessionInterface
- * 
+ *
  * @property {number} userId - User ID associated with the session
  * @property {string} session - Session token
  */
@@ -91,7 +92,7 @@ interface sessionInterface {
 
 /**
  * @typedef {Object} Data
- * 
+ *
  * @property {userInterface[]} users - Array of all users
  * @property {quizInterface[]} quizzes - Array of all quizzes
  * @property {number} highestID - Highest ID in the system
@@ -105,7 +106,7 @@ interface Data {
   sessions: sessionInterface[];
 }
 
-/** 
+/**
  * The data store
  * @type {Data}
  */
@@ -119,7 +120,7 @@ const data: Data = {
 
 /**
  * Gets the current state of the application data store
- * 
+ *
  * @returns {Data} - The entire data store object
  */
 export function getData(): Data {

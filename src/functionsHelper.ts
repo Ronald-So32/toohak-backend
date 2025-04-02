@@ -473,7 +473,7 @@ export function validateAnswer(answerOptions: answerOptionsInterface[]): boolean
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
   }
-  
+
   if (answerOptions.length > 6) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
   }

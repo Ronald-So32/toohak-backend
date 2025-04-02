@@ -355,7 +355,7 @@ export function adminQuizDescriptionUpdate(
  * @param {number} quizId - The ID of the quiz to add the question to
  * @param {questionBodyInterface} questionBody - The question details including
  * text, time limit, points, and answers
- * 
+ *
  * @returns {questionIdInterface | errorInterface} - Returns either the new question
  * ID or an error object
  */
@@ -476,7 +476,7 @@ export function adminQuizQuestionCreate(
  * @param {number} quizId - The ID of the quiz to transfer
  * @param {number} userId - The ID of the current owner
  * @param {string} userEmail - The email of the new owner
- * 
+ *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
@@ -526,7 +526,7 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
  * @param {number} quizId - The ID of the quiz containing the question
  * @param {number} userId - The ID of the user deleting the question
  * @param {number} questionId - The ID of the question to delete
- * 
+ *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
@@ -580,7 +580,7 @@ export function adminDeleteQuizQuestion(
  * @param {number} userId - The ID of the user moving the question
  * @param {number} questionId - The ID of the question to move
  * @param {number} newPosition - The new position for the question
- * 
+ *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
@@ -648,7 +648,7 @@ export function adminQuizQuestionMove(
  * @param {string} quizName - The name of the quiz
  * @param {string} quizDescription - The description of the quiz
  * @param {string} HUGGINGFACE_API_TOKEN - The API token for HuggingFace
- * 
+ *
  * @returns {{ question: string } | errorInterface} - Returns either the generated
  * question or an error object
  */
@@ -713,7 +713,7 @@ export function adminQuizQuestionSuggestion(
  * @param {number} quizId - The ID of the quiz containing the question
  * @param {number} questionId - The ID of the question to update
  * @param {questionBodyInterface} questionBody - The new question details
- * 
+ *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
