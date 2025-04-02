@@ -16,7 +16,8 @@ import {
   validQuestionString,
   randomColour,
   validatePoints,
-  validateAnswer
+  validateAnswer,
+  questionBodyInterface
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -352,8 +353,10 @@ export function adminQuizDescriptionUpdate(
  *
  * @param {number} userId - The ID of the user creating the question
  * @param {number} quizId - The ID of the quiz to add the question to
- * @param {any} questionBody - The question details including text, time limit, points, and answers
- * @returns {questionIdInterface | errorInterface} - Returns either the new question ID or an error object
+ * @param {questionBodyInterface} questionBody - The question details including
+ * text, time limit, points, and answers
+ * @returns {questionIdInterface | errorInterface} - Returns either the new question
+ * ID or an error object
  */
 export function adminQuizQuestionCreate(
   userId: number,
