@@ -23,7 +23,7 @@ import validator from 'validator';
  *
  * @returns {userId | error} - Always return userId object otherwise
  * an error object with relevant message
-*/
+ */
 export function adminAuthRegister(
   email: string,
   password: string,
@@ -90,7 +90,7 @@ export function adminAuthRegister(
  *
  * @returns {userId | error} - Always return userId object otherwise
  * an error object with relevant message
-*/
+ */
 export function adminAuthLogin(
   email: string,
   password: string
@@ -130,7 +130,7 @@ export function adminAuthLogin(
  *
  * @returns {user | error} - Always return userDetails object otherwise
  * an error object with relevant error message
-*/
+ */
 export function adminUserDetails(
   userId: number
 ): { user: userDetailsInterface} | errorInterface {
@@ -154,17 +154,17 @@ export function adminUserDetails(
 }
 
 /**
-  * Given an admin user's userId and a set of properties, update the properties
-  * of this logged in admin user.
-  *
-  * @param {number} - Id of the user
-  * @param {string} - Email address of the user
-  * @param {string} - First name of the user
-  * @param {string} - Last name of the user
-  *
-  * @returns {object | error} - Always return an empty object otherwise
-  * an error object with relevant error message
-*/
+ * Given an admin user's userId and a set of properties, update the properties
+ * of this logged in admin user.
+ *
+ * @param {number} - Id of the user
+ * @param {string} - Email address of the user
+ * @param {string} - First name of the user
+ * @param {string} - Last name of the user
+ *
+ * @returns {object | error} - Always return an empty object otherwise
+ * an error object with relevant error message
+ */
 export function adminUserDetailsUpdate(
   userId: number,
   email: string,
@@ -209,16 +209,16 @@ export function adminUserDetailsUpdate(
 }
 
 /**
-  * Given details relating to a password change, update the password of a
-  * logged in user.
-  *
-  * @param {number} - Id of the user
-  * @param {string} - The old password of the user
-  * @param {string} - The new password of the user
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Given details relating to a password change, update the password of a
+ * logged in user.
+ *
+ * @param {number} - Id of the user
+ * @param {string} - The old password of the user
+ * @param {string} - The new password of the user
+ *
+ * @returns {object} - Always return an empty object otherwise an
+ * error object with relevant error message
+ */
 export function adminUserPasswordUpdate(
   userId: number,
   oldPassword: string,
