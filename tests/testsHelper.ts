@@ -138,7 +138,14 @@ export function requestGetQuiz(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/{quizId}/question/suggestion
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizId}/question/suggestion
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuizQuestionSuggestion(
   quizId: number,
   session: string
@@ -151,7 +158,13 @@ export function requestGetQuizQuestionSuggestion(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/list
+/**
+ * Wrapper for GET /v1/admin/quiz/list
+ * 
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuizList(
   session: string
 ): responseInterface {
@@ -163,7 +176,13 @@ export function requestGetQuizList(
   );
 }
 
-// Wrapper for GET /v1/admin/user/details
+/**
+ * Wrapper for GET /v1/admin/user/details
+ * 
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetUserDetails(
   session: string
 ): responseInterface {
@@ -175,7 +194,14 @@ export function requestGetUserDetails(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/login
+/**
+ * Wrapper for POST /v1/admin/auth/login
+ * 
+ * @param {string} email - The email of the user
+ * @param {string} password - The password of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthLogin(
   email: string,
   password: string
@@ -187,7 +213,13 @@ export function requestAdminAuthLogin(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/logout
+/**
+ * Wrapper for POST /v1/admin/auth/logout
+ * 
+ * @param {string} session - The session of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthLogout(
   session: string
 ): responseInterface {
@@ -199,7 +231,16 @@ export function requestAdminAuthLogout(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/register
+/**
+ * Wrapper for POST /v1/admin/auth/register
+ * 
+ * @param {string} email - The email of the user
+ * @param {string} password - The password of the user
+ * @param {string} nameFirst - The first name of the user
+ * @param {string} nameLast - The last name of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthRegister(
   email: string,
   password: string,
@@ -213,7 +254,15 @@ export function requestAdminAuthRegister(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz
+/**
+ * Wrapper for POST /v1/admin/quiz
+ * 
+ * @param {string} session - The session of the user
+ * @param {string} name - The name of the quiz
+ * @param {string} description - The description of the quiz
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizCreate(
   session: string,
   name: string,
@@ -227,7 +276,15 @@ export function requestAdminQuizCreate(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz/{quizid}/question
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/question
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {questionBodyInterface} questionBody - The details of the question
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionCreate(
   quizId: number,
   session: string,
@@ -241,7 +298,15 @@ export function requestAdminQuizQuestionCreate(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz/{quizid}/transfer
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/transfer
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} userEmail - The email of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizTransfer(
   quizId: number,
   session: string,
@@ -255,7 +320,15 @@ export function requestAdminQuizTransfer(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/description
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/description
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} description - The description of the quiz
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizUpdateDescription(
   quizId: number,
   session: string,
