@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Interface representing an error object containing an error message.
  * 
- * @typedef {object} error - Object containing just the error message
+ * @typedef {object} errorInterface
  *
  * @property {string} error - Error message relevant to the problem
  */
@@ -17,12 +17,12 @@ export interface errorInterface {
 }
 
 /**
- * 
+ * Interface representing a user ID and session token pair.
  *
- * @typedef {object} userId - Object containing just the user Id
+ * @typedef {object} userIdInterface
  *
  * @property {number} userId - Id of user
- * @property {string}
+ * @property {string} session - Authentication session token
  */
 export interface userIdInterface {
   userId: number;
@@ -30,9 +30,9 @@ export interface userIdInterface {
 }
 
 /**
- * 
+ * Interface representing a quiz ID.
  *
- * @typedef {object} quizId - Object containing just the user Id
+ * @typedef {object} quizIdInterface
  *
  * @property {number} quizId - Id of user
  */
@@ -43,7 +43,7 @@ export interface quizIdInterface {
 /**
  * 
  *
- * @typedef {object} QuestionId - Object containing just the question Id
+ * @typedef {object} questionIdInterface
  *
  * @property {number} questionId - Id of the question
  */
@@ -54,7 +54,7 @@ export interface questionIdInterface {
 /**
  * 
  *
- * @typedef {object} quizzes - Data structure containing an array of
+ * @typedef {object} quizSummariesInterface
  * quiz summaries
  *
  * @property {number} quizId - Id of the quiz
@@ -68,7 +68,7 @@ export interface quizSummariesInterface {
 /**
  * 
  *
- * @typedef {object} quiz - Data structure containing the details of the quiz
+ * @typedef {object} quizDetailsInterface
  *
  * @property {number} quizId - Id of the quiz
  * @property {string} name - F6ull name of the quiz
@@ -87,7 +87,7 @@ export interface quizDetailsInterface {
 /**
  * 
  *
- * @typedef {object} user - Data structure containing the details of the user
+ * @typedef {object} userDetailsInterface
  *
  * @property {number} userId - Id of the user
  * @property {string} name - Full name of the user
@@ -108,7 +108,7 @@ export interface userDetailsInterface {
 /**
  *
  *
- * @typedef {object}
+ * @typedef {object} quizGetDetailsInterface
  *
  * @property {number}
  */
