@@ -157,13 +157,13 @@ export function adminUserDetails(
  * Given an admin user's userId and a set of properties, update the properties
  * of this logged in admin user.
  *
- * @param {number} - Id of the user
- * @param {string} - Email address of the user
- * @param {string} - First name of the user
- * @param {string} - Last name of the user
+ * @param {number} userId - Id of the user
+ * @param {string} email - Email address of the user
+ * @param {string} nameFirst - First name of the user
+ * @param {string} nameLast - Last name of the user
  *
- * @returns {object | error} - Always return an empty object otherwise
- * an error object with relevant error message
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
  */
 export function adminUserDetailsUpdate(
   userId: number,
@@ -212,12 +212,12 @@ export function adminUserDetailsUpdate(
  * Given details relating to a password change, update the password of a
  * logged in user.
  *
- * @param {number} - Id of the user
- * @param {string} - The old password of the user
- * @param {string} - The new password of the user
+ * @param {number} userId - Id of the user
+ * @param {string} oldPassword - The old password of the user
+ * @param {string} newPassword - The new password of the user
  *
- * @returns {object} - Always return an empty object otherwise an
- * error object with relevant error message
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
  */
 export function adminUserPasswordUpdate(
   userId: number,
