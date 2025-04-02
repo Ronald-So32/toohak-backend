@@ -6,7 +6,7 @@ import {
   requestGetUserDetails,
   requestAdminUserPasswordUpdate,
   requestAdminAuthLogout 
-} from '.testsHelper';
+} from './testsHelper';
 
 import { describe } from 'node:test';
 
@@ -144,6 +144,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
+    session = responseLogin.body.session
 
     // Updates the current password
     const requestUpdate = requestAdminUserPasswordUpdate(

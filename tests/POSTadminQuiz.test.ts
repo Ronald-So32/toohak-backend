@@ -4,7 +4,7 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestGetQuizList,
-  // requestGetQuiz
+  requestGetQuiz
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -16,6 +16,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
+// Before each test clears the data and registers a user and obtains the current session
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -29,11 +30,13 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/quiz', () => {
   test('Testing the return value', () => {
+    // Creates a quiz and save it's response
     const responseQuizCreate = requestAdminQuizCreate(
       session,
       'My Quiz Name',
       'A description of my quiz'
     );
+    // Checks that the response returns an quizId object and a status code of 200
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
   });
@@ -45,7 +48,8 @@ describe('Testing POST /v1/admin/quiz', () => {
         'My Quiz Name',
         'A description of my quiz'
       );
-
+      // Checks that unotherised attempt to create quiz returns an eror object and a
+      // status code 401
       expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizCreate.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -65,6 +69,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           'My Quiz Name',
           'A description of my quiz'
         );
+        // Checkts that a bad request returns an error object and a status code of 400
         expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -222,8 +227,10 @@ describe('Testing POST /v1/admin/quiz', () => {
     const id = responseQuizCreate.body.quizId;
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
-    /*
-    const responseQuizDetails = requestGetQuiz(quizId, session);
+
+    // Gets the details of the quiz created
+    const responseQuizDetails = requestGetQuiz(id, session);
+    // Checks that the details of the quiz is correct and has a status code of 200
     expect(responseQuizDetails.body).toStrictEqual({
       "quizId": id,
       "name": "Quiz Name",
@@ -235,8 +242,10 @@ describe('Testing POST /v1/admin/quiz', () => {
       "timeLimit": expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-*/
+
+    // Gets the list of quiz that the current user has
     const responseQuizList = requestGetQuizList(session);
+    // Checks that the list of quiz is correct and has a status code of 200
     expect(responseQuizList.body).toStrictEqual({
       quizzes: [
         {
