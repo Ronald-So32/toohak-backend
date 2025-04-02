@@ -57,11 +57,13 @@ export function adminQuizList(
 }
 
 /**
- * TODO
+ * Retrieves all information about a specific quiz.
  *
- * @param {number}
+ * @param {number} userId - The ID of the user requesting the quiz
+ * @param {number} quizId - The ID of the quiz to retrieve
  *
- * @returns
+ * @returns {quizGetDetailsInterface | errorInterface} - Returns either the quiz
+ * details or an error object
  */
 export function adminQuizGet(
   userId: number,
@@ -100,10 +102,10 @@ export function adminQuizGet(
  * Given basic details about a new quiz, create one for the logged in user.
  *
  * @param {number} userId - Id of the user
- * @param {string} name - Name of quiz
- * @param {string} description - Description of quiz
+ * @param {string} name - Name of the quiz
+ * @param {string} description - Description of the quiz
  *
- * @returns {quizId | error} - Always return quizId object otherwise an
+ * @returns {quizIdInterface | errorInterface} - Always return quizId object otherwise an
  * error object with relevant error message
  */
 export function adminQuizCreate(
@@ -162,8 +164,8 @@ export function adminQuizCreate(
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
  *
- * @returns {object} - Always return an empty object otherwise an
- * error object with relevant error message
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
  */
 export function adminQuizRemove(
   userId: number,
@@ -204,8 +206,8 @@ export function adminQuizRemove(
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
  *
- * @returns {quiz | error} - Always return quiz object otherwise an
- * error object with relevant error message
+ * @returns {quizDetailsInterface | errorInterface} - Always return quiz object
+ * otherwise an error object with relevant error message
  */
 export function adminQuizInfo(
   userId: number,
@@ -243,10 +245,10 @@ export function adminQuizInfo(
  *
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
- * @param {string} name - Name of the quiz
+ * @param {string} name - The new name of the quiz
  *
- * @returns {object} - Always return an empty object otherwise an
- * error object with relevant error message
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
  */
 export function adminQuizNameUpdate(
   userId: number,
@@ -302,10 +304,10 @@ export function adminQuizNameUpdate(
  *
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
- * @param {string} description - Description of the quiz
+ * @param {string} description - The new description of the quiz
  *
- * @returns {object} - Always return an empty object otherwise an
- * error object with relevant error message
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
  */
 export function adminQuizDescriptionUpdate(
   userId: number,
@@ -344,6 +346,7 @@ export function adminQuizDescriptionUpdate(
 
   return {};
 }
+
 
 export function adminQuizQuestionCreate(
   userId: number,
