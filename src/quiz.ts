@@ -22,14 +22,14 @@ import {
 import request from 'sync-request-curl';
 
 /**
-  * Provides a list of all quizzes that are owned by the currently logged in user.
-  *
-  * @param {number} userId - Id of the user
-  *
-  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
-  * an object, quizzes with an array of quizSummariesInterface inside of it unless
-  * there is an error which returns errorInterface
-*/
+ * Provides a list of all quizzes that are owned by the currently logged in user.
+ *
+ * @param {number} userId - The ID of the user
+ *
+ * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
+ * an object, quizzes with an array of quizSummariesInterface inside of it unless
+ * there is an error which returns errorInterface
+ */
 export function adminQuizList(
   userId: number
 ): { quizzes: quizSummariesInterface[] } | errorInterface {
@@ -57,12 +57,12 @@ export function adminQuizList(
 }
 
 /**
-  * TODO
-  *
-  * @param {number}
-  *
-  * @returns
-*/
+ * TODO
+ *
+ * @param {number}
+ *
+ * @returns
+ */
 export function adminQuizGet(
   userId: number,
   quizId: number
@@ -97,15 +97,15 @@ export function adminQuizGet(
 }
 
 /**
-  * Given basic details about a new quiz, create one for the logged in user.
-  *
-  * @param {number} userId - Id of the user
-  * @param {string} name - Name of quiz
-  * @param {string} description - Description of quiz
-  *
-  * @returns {quizId | error} - Always return quizId object otherwise an
-  * error object with relevant error message
-*/
+ * Given basic details about a new quiz, create one for the logged in user.
+ *
+ * @param {number} userId - Id of the user
+ * @param {string} name - Name of quiz
+ * @param {string} description - Description of quiz
+ *
+ * @returns {quizId | error} - Always return quizId object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizCreate(
   userId: number,
   name: string,
@@ -157,15 +157,14 @@ export function adminQuizCreate(
 }
 
 /**
-  * Given a particular quiz, permanently remove the quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
-
+ * Given a particular quiz, permanently remove the quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ *
+ * @returns {object} - Always return an empty object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizRemove(
   userId: number,
   quizId: number
@@ -200,15 +199,14 @@ export function adminQuizRemove(
 }
 
 /**
-  * Get all the relevant information about the current quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  *
-  * @returns {quiz | error} - Always return quiz object otherwise an
-  * error object with relevant error message
-*/
-
+ * Get all the relevant information about the current quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ *
+ * @returns {quiz | error} - Always return quiz object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizInfo(
   userId: number,
   quizId: number
@@ -241,15 +239,15 @@ export function adminQuizInfo(
 }
 
 /**
-  * Update the name of the relevant quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * @param {string} name - Name of the quiz
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Update the name of the relevant quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ * @param {string} name - Name of the quiz
+ *
+ * @returns {object} - Always return an empty object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizNameUpdate(
   userId: number,
   quizId: number,
@@ -300,15 +298,15 @@ export function adminQuizNameUpdate(
 }
 
 /**
-  * Update the description of the relevant quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * @param {string} description - Description of the quiz
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Update the description of the relevant quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ * @param {string} description - Description of the quiz
+ *
+ * @returns {object} - Always return an empty object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
