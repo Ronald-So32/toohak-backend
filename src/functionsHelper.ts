@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Interface representing an error object containing an error message.
- * 
+ *
  * @typedef {object} errorInterface
  *
  * @property {string} error - Error message relevant to the problem
@@ -106,7 +106,7 @@ export interface userDetailsInterface {
 
 /**
  * Interface representing complete quiz details including questions.
- * 
+ *
  * @typedef {object} quizGetDetailsInterface
  *
  * @property {object} details - Quiz details object
@@ -134,7 +134,7 @@ export interface quizGetDetailsInterface {
 
 /**
  * Interface representing a single answer option for a question.
- * 
+ *
  * @typedef {object} answerOptionsInterface
  *
  * @property {string} answer - The answer text
@@ -147,7 +147,7 @@ interface answerOptionsInterface {
 
 /**
  * Interface representing the body of a question.
- * 
+ *
  * @typedef {object} questionBodyInterface
  *
  * @property {object} questionBody - Question details object
@@ -164,7 +164,6 @@ export interface questionBodyInterface {
     answerOptions: answerOptionsInterface[]
   }
 }
-
 
 export class Errors {
   // Specific validation reasons
@@ -334,7 +333,7 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
  * Validate the password that the user intends to use for their account.
  *
  * @param {string} password - Intended password of user
- * 
+ *
  * @returns {boolean | errorInterface} - Retursn true for valid password else an
  * object with relevant error message
  */
@@ -361,7 +360,7 @@ export function validPassword(password: string): boolean | errorInterface {
  * Validates the name that the user intends to use for their quiz.
  *
  * @param {string} name - Intended quiz name user wants
- * 
+ *
  * @returns {boolean | errorInterface} - Returns true for valid quiz name else an
  * object with relevant error message
  */
@@ -384,7 +383,7 @@ export function validQuizName(name: string): boolean | errorInterface {
 
 /**
  * Generates a unique session token using UUID v4.
- * 
+ *
  * @returns {string} - The newly generated session token
  */
 export function generateSession(): string {
@@ -400,9 +399,9 @@ export function generateSession(): string {
 
 /**
  * Finds a user's session token by their user ID.
- * 
+ *
  * @param {number} userId - The user ID to search for
- * 
+ *
  * @returns {string | errorInterface} - The session token if found, otherwise an error
  */
 export function findSessionFromUserId(userId: number): string | errorInterface {
@@ -420,7 +419,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
  * Finds a user ID by their session token.
  *
  * @param {string} session - The session token to search for
- * 
+ *
  * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
  */
 export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
@@ -439,7 +438,7 @@ export function findUserIdFromSession(session: string): { userId: number } | err
  *
  * @param {number} quizId - The quiz ID to search in
  * @param {number} questionId - The question ID to find
- * 
+ *
  * @returns {Record<string, never> | errorInterface} - Empty object if found, otherwise an error
  */
 export function findQuestionIdInQuiz(
@@ -461,7 +460,7 @@ export function findQuestionIdInQuiz(
  * Validates a question string according to length requirements.
  *
  * @param {string} question - The question text to validate
- * 
+ *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
 export function validQuestionString(question: string): boolean | errorInterface {
@@ -497,7 +496,7 @@ export function randomColour(): string {
  * Validates that points are within acceptable range.
  *
  * @param {number} points - The points value to validate
- * 
+ *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
 export function validatePoints(points: number): boolean | errorInterface {
@@ -516,6 +515,7 @@ export function validatePoints(points: number): boolean | errorInterface {
  * Validates that answer options meet quantity requirements.
  *
  * @param {answerOptionsInterface[]} answerOptions - Array of answer options to validate
+ *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
 export function validateAnswer(answerOptions: answerOptionsInterface[]): boolean | errorInterface {

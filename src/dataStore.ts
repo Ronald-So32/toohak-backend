@@ -1,6 +1,6 @@
 /**
  * Interface representing the users.
- * 
+ *
  * @typedef {Object} userInterface
  *
  * @property {number} userId - Id for user
@@ -26,7 +26,7 @@ interface userInterface {
 
 /**
  * Interface representing the answers inside the questions.
- * 
+ *
  * @typedef {Object} answersInterface
  *
  * @property {number} [answerId] - ID for the answer (optional)
@@ -43,7 +43,7 @@ export interface answersInterface {
 
 /**
  * Interface representing the questions inside the quiz.
- * 
+ *
  * @typedef {Object} questionsInterface
  *
  * @property {number} [questionId] - Unique identifier for the question (optional)
@@ -62,7 +62,7 @@ export interface questionsInterface {
 
 /**
  * Interface representing the quizzes.
- * 
+ *
  * @typedef {Object} quizInterface
  *
  * @property {number} quizId - ID for the quiz
@@ -89,7 +89,7 @@ interface quizInterface {
 
 /**
  * Interface representing the active sessions.
- * 
+ *
  * @typedef {Object} sessionInterface
  *
  * @property {number} userId - User ID associated with the session
@@ -102,7 +102,7 @@ interface sessionInterface {
 
 /**
  * Interface representing the data store of this program.
- * 
+ *
  * @typedef {Object} Data
  *
  * @property {userInterface[]} users - Array of all users
