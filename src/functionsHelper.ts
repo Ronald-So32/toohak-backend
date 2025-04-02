@@ -416,6 +416,13 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
   return theSession.session;
 }
 
+/**
+ * Finds a user ID by their session token.
+ *
+ * @param {string} session - The session token to search for
+ * 
+ * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
+ */
 export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
@@ -427,6 +434,14 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   return { userId: theSession.userId };
 }
 
+/**
+ * Validates that a question exists in a specified quiz.
+ *
+ * @param {number} quizId - The quiz ID to search in
+ * @param {number} questionId - The question ID to find
+ * 
+ * @returns {Record<string, never> | errorInterface} - Empty object if found, otherwise an error
+ */
 export function findQuestionIdInQuiz(
   quizId: number,
   questionId: number
@@ -442,6 +457,13 @@ export function findQuestionIdInQuiz(
   return {};
 }
 
+/**
+ * Validates a question string according to length requirements.
+ *
+ * @param {string} question - The question text to validate
+ * 
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
 export function validQuestionString(question: string): boolean | errorInterface {
   if (question.length < 5) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
@@ -454,6 +476,11 @@ export function validQuestionString(question: string): boolean | errorInterface 
   return true;
 }
 
+/**
+ * Selects a random color from a predefined array.
+ *
+ * @returns {string} - The randomly selected color name
+ */
 export function randomColour(): string {
   const colors = [
     'red', // #FF0000
@@ -466,6 +493,13 @@ export function randomColour(): string {
   return colors[randomIndex];
 }
 
+/**
+ * Validates that points are within acceptable range.
+ *
+ * @param {number} points - The points value to validate
+ * 
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
 export function validatePoints(points: number): boolean | errorInterface {
   if (points < 1) {
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
@@ -478,6 +512,12 @@ export function validatePoints(points: number): boolean | errorInterface {
   return true;
 }
 
+/**
+ * Validates that answer options meet quantity requirements.
+ *
+ * @param {answerOptionsInterface[]} answerOptions - Array of answer options to validate
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
 export function validateAnswer(answerOptions: answerOptionsInterface[]): boolean | errorInterface {
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
