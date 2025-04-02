@@ -15,5 +15,7 @@ export function clear(): Record<string, never> {
   data.highestID = 0;
   data.sessions = [];
 
+  // TODO: clear the file
+
   return {};
 }
