@@ -347,7 +347,14 @@ export function adminQuizDescriptionUpdate(
   return {};
 }
 
-
+/**
+ * Creates a new question for a quiz.
+ *
+ * @param {number} userId - The ID of the user creating the question
+ * @param {number} quizId - The ID of the quiz to add the question to
+ * @param {any} questionBody - The question details including text, time limit, points, and answers
+ * @returns {questionIdInterface | errorInterface} - Returns either the new question ID or an error object
+ */
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,

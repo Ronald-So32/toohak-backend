@@ -157,6 +157,22 @@ export interface quizGetDetailsInterface {
   }
 }
 
+interface answerOptionsInterface {
+  answerOptions: {
+    answer: string,
+    correct: boolean
+  }
+}
+
+export interface questionBodyInterface {
+  questionBody: {
+    question: string,
+    timeLimit: number,
+    points: number,
+    answerOptions: answerOptionsInterface[]
+  }
+}
+
 export class Errors {
   // Specific validation reasons
   static readonly Specific = {
