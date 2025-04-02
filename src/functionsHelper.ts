@@ -17,10 +17,7 @@ export interface errorInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    userId: 1,
- * }
+ * 
  *
  * @typedef {object} userId - Object containing just the user Id
  *
@@ -33,10 +30,7 @@ export interface userIdInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    quizId: 1,
- * }
+ * 
  *
  * @typedef {object} quizId - Object containing just the user Id
  *
@@ -47,10 +41,7 @@ export interface quizIdInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    questionId: 1,
- * }
+ * 
  *
  * @typedef {object} QuestionId - Object containing just the question Id
  *
@@ -61,11 +52,7 @@ export interface questionIdInterface {
 }
 
 /**
- * A instance of this object:
- *{
-    quizId: 1,
-    name: 'My Quiz',
-  }
+ * 
  *
  * @typedef {object} quizzes - Data structure containing an array of
  * quiz summaries
@@ -79,14 +66,7 @@ export interface quizSummariesInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    quizId: 1,
- *    name: 'My Quiz',
- *    timeCreated: 1683125870,
- *    timeLastEdited: 1683125871,
- *    description: 'This is my quiz',
- * }
+ * 
  *
  * @typedef {object} quiz - Data structure containing the details of the quiz
  *
@@ -105,14 +85,7 @@ export interface quizDetailsInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    userId: 1,
- *    name: 'Hayden Smith',
- *    email: 'hayden.smith@unsw.edu.au',
- *    numSuccessfulLogins: 3,
- *    numFailedPasswordsSinceLastLogin: 1,
- * }
+ * 
  *
  * @typedef {object} user - Data structure containing the details of the user
  *
@@ -133,8 +106,6 @@ export interface userDetailsInterface {
 }
 
 /**
- * A instance of this object:
- * {
  *
  *
  * @typedef {object}
