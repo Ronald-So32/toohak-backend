@@ -1,17 +1,15 @@
 import {
   getData,
-  questionsInterface
+  questionsInterface,
+  answersInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * A instance of this object:
- * {
- *    error: error message,
- * }
+ * Interface representing an error object containing an error message.
  *
- * @typedef {object} error - Object containing just the error message
+ * @typedef {object} errorInterface
  *
  * @property {string} error - Error message relevant to the problem
  */
@@ -20,15 +18,12 @@ export interface errorInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    userId: 1,
- * }
+ * Interface representing a user ID and session token pair.
  *
- * @typedef {object} userId - Object containing just the user Id
+ * @typedef {object} userIdInterface
  *
  * @property {number} userId - Id of user
- * @property {string}
+ * @property {string} session - Authentication session token
  */
 export interface userIdInterface {
   userId: number;
@@ -36,26 +31,20 @@ export interface userIdInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    quizId: 1,
- * }
+ * Interface representing a quiz ID.
  *
- * @typedef {object} quizId - Object containing just the user Id
+ * @typedef {object} quizIdInterface
  *
- * @property {number} quizId - Id of user
+ * @property {number} quizId - Id of quiz
  */
 export interface quizIdInterface {
   quizId: number;
 }
 
 /**
- * A instance of this object:
- * {
- *    questionId: 1,
- * }
+ * Interface representing a question ID.
  *
- * @typedef {object} QuestionId - Object containing just the question Id
+ * @typedef {object} questionIdInterface
  *
  * @property {number} questionId - Id of the question
  */
@@ -64,14 +53,9 @@ export interface questionIdInterface {
 }
 
 /**
- * A instance of this object:
- *{
-    quizId: 1,
-    name: 'My Quiz',
-  }
+ * Interface representing basic quiz summary information.
  *
- * @typedef {object} quizzes - Data structure containing an array of
- * quiz summaries
+ * @typedef {object} quizSummariesInterface
  *
  * @property {number} quizId - Id of the quiz
  * @property {string} name - Full name of the quiz
@@ -82,16 +66,9 @@ export interface quizSummariesInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    quizId: 1,
- *    name: 'My Quiz',
- *    timeCreated: 1683125870,
- *    timeLastEdited: 1683125871,
- *    description: 'This is my quiz',
- * }
+ * Interface representing detailed quiz information.
  *
- * @typedef {object} quiz - Data structure containing the details of the quiz
+ * @typedef {object} quizDetailsInterface
  *
  * @property {number} quizId - Id of the quiz
  * @property {string} name - F6ull name of the quiz
@@ -108,16 +85,9 @@ export interface quizDetailsInterface {
 }
 
 /**
- * A instance of this object:
- * {
- *    userId: 1,
- *    name: 'Hayden Smith',
- *    email: 'hayden.smith@unsw.edu.au',
- *    numSuccessfulLogins: 3,
- *    numFailedPasswordsSinceLastLogin: 1,
- * }
+ * Interface representing detailed user information.
  *
- * @typedef {object} user - Data structure containing the details of the user
+ * @typedef {object} userDetailsInterface
  *
  * @property {number} userId - Id of the user
  * @property {string} name - Full name of the user
@@ -136,13 +106,19 @@ export interface userDetailsInterface {
 }
 
 /**
- * A instance of this object:
- * {
+ * Interface representing complete quiz details including questions.
  *
+ * @typedef {object} quizGetDetailsInterface
  *
- * @typedef {object}
- *
- * @property {number}
+ * @property {object} details - Quiz details object
+ * @property {number} details.quizId - ID of the quiz
+ * @property {string} details.name - Name of the quiz
+ * @property {number} details.timeCreated - Timestamp when quiz was created
+ * @property {number} details.timeLastEdited - Timestamp of last edit
+ * @property {string} details.description - Description of the quiz
+ * @property {number} details.numQuestions - Count of questions in the quiz
+ * @property {questionsInterface[]} details.questions - Array of question objects
+ * @property {number} details.timeLimit - Time limit for the quiz in seconds
  */
 export interface quizGetDetailsInterface {
   details: {
@@ -271,7 +247,7 @@ export class Errors {
 }
 
 /**
- * Creates a unique user id from the current registered users
+ * Creates a unique user id from the current registered users.
  *
  * @returns {number} - Returns the created uuid
  */
@@ -284,15 +260,14 @@ export function createUUID(): number {
 }
 
 /**
- * Validates the name the first or last name the user intends to use for their account
+ * Validates the name the first or last name the user intends to use for their account.
  *
  * @param {string} name - The first or the last name of the user
  * @param {boolean} isFirst - Whether or not it is the user's first name
  *
- * @returns {boolean | error} - Returns true for a valid name else returns
+ * @returns {boolean | errorInterface} - Returns true for a valid name else returns
  * an object with relevant error message
  */
-
 export function validName(name: string, isFirst: boolean): boolean | errorInterface {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
@@ -323,10 +298,11 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
 }
 
 /**
- * Validate the password that the user intends to use for their account
+ * Validate the password that the user intends to use for their account.
  *
  * @param {string} password - Intended password of user
- * @returns {boolean | error} - Retursn true for valid password else an
+ *
+ * @returns {boolean | errorInterface} - Retursn true for valid password else an
  * object with relevant error message
  */
 export function validPassword(password: string): boolean | errorInterface {
@@ -349,10 +325,11 @@ export function validPassword(password: string): boolean | errorInterface {
 }
 
 /**
- * Validates the name that the user intends to use for their quiz
+ * Validates the name that the user intends to use for their quiz.
  *
  * @param {string} name - Intended quiz name user wants
- * @returns {boolean | error} - Returns true for valid quiz name else an
+ *
+ * @returns {boolean | errorInterface} - Returns true for valid quiz name else an
  * object with relevant error message
  */
 export function validQuizName(name: string): boolean | errorInterface {
@@ -372,6 +349,11 @@ export function validQuizName(name: string): boolean | errorInterface {
   return true;
 }
 
+/**
+ * Generates a unique session token using UUID v4.
+ *
+ * @returns {string} - The newly generated session token
+ */
 export function generateSession(): string {
   const data = getData();
   let sessionNew = uuidv4();
@@ -383,6 +365,13 @@ export function generateSession(): string {
   return sessionNew;
 }
 
+/**
+ * Finds a user's session token by their user ID.
+ *
+ * @param {number} userId - The user ID to search for
+ *
+ * @returns {string | errorInterface} - The session token if found, otherwise an error
+ */
 export function findSessionFromUserId(userId: number): string | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
@@ -394,6 +383,13 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
   return theSession.session;
 }
 
+/**
+ * Finds a user ID by their session token.
+ *
+ * @param {string} session - The session token to search for
+ *
+ * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
+ */
 export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
@@ -405,7 +401,18 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   return { userId: theSession.userId };
 }
 
-export function findQuestionIdInQuiz(quizId: number, questionId: number): null| errorInterface {
+/**
+ * Validates that a question exists in a specified quiz.
+ *
+ * @param {number} quizId - The quiz ID to search in
+ * @param {number} questionId - The question ID to find
+ *
+ * @returns {Record<string, never> | errorInterface} - Empty object if found, otherwise an error
+ */
+export function findQuestionIdInQuiz(
+  quizId: number,
+  questionId: number
+): Record<string, never> | errorInterface {
   const data = getData();
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
 
@@ -417,6 +424,13 @@ export function findQuestionIdInQuiz(quizId: number, questionId: number): null| 
   return {};
 }
 
+/**
+ * Validates a question string according to length requirements.
+ *
+ * @param {string} question - The question text to validate
+ *
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
 export function validQuestionString(question: string): boolean | errorInterface {
   if (question.length < 5) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
@@ -429,6 +443,11 @@ export function validQuestionString(question: string): boolean | errorInterface 
   return true;
 }
 
+/**
+ * Selects a random color from a predefined array.
+ *
+ * @returns {string} - The randomly selected color name
+ */
 export function randomColour(): string {
   const colors = [
     'red', // #FF0000
@@ -439,4 +458,42 @@ export function randomColour(): string {
 
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
+}
+
+/**
+ * Validates that points are within acceptable range.
+ *
+ * @param {number} points - The points value to validate
+ *
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
+export function validatePoints(points: number): boolean | errorInterface {
+  if (points < 1) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+  }
+
+  if (points > 10) {
+    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  }
+
+  return true;
+}
+
+/**
+ * Validates that answer options meet quantity requirements.
+ *
+ * @param {answersInterface[]} answerOptions - Array of answer options to validate
+ *
+ * @returns {boolean | errorInterface} - True if valid, otherwise an error object
+ */
+export function validateAnswer(answerOptions: answersInterface[]): boolean | errorInterface {
+  if (answerOptions.length < 2) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+  }
+
+  if (answerOptions.length > 6) {
+    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  }
+
+  return true;
 }

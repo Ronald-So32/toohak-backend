@@ -21,9 +21,9 @@ import validator from 'validator';
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
  *
- * @returns {userId | error} - Always return userId object otherwise
- * an error object with relevant message
-*/
+ * @returns {userIdInterface | errorInterface} - Returns userId and session token
+ * if successful, otherwise returns error
+ */
 export function adminAuthRegister(
   email: string,
   password: string,
@@ -83,14 +83,14 @@ export function adminAuthRegister(
 }
 
 /**
- * Given a registered user's email and password, return their userId value.
+ * Given a registered user's email and password, return their userId value and a new session token.
  *
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  *
- * @returns {userId | error} - Always return userId object otherwise
- * an error object with relevant message
-*/
+ * @returns {userIdInterface | errorInterface} - Returns userId and session token
+ * if successful, otherwise returns error
+ */
 export function adminAuthLogin(
   email: string,
   password: string
@@ -128,9 +128,9 @@ export function adminAuthLogin(
  *
  * @param {number} userId - Id of the user
  *
- * @returns {user | error} - Always return userDetails object otherwise
- * an error object with relevant error message
-*/
+ * @returns {{user: userDetailsInterface} | errorInterface} - Returns user details
+ * if found, otherwise returns error
+ */
 export function adminUserDetails(
   userId: number
 ): { user: userDetailsInterface} | errorInterface {
@@ -154,17 +154,17 @@ export function adminUserDetails(
 }
 
 /**
-  * Given an admin user's userId and a set of properties, update the properties
-  * of this logged in admin user.
-  *
-  * @param {number} - Id of the user
-  * @param {string} - Email address of the user
-  * @param {string} - First name of the user
-  * @param {string} - Last name of the user
-  *
-  * @returns {object | error} - Always return an empty object otherwise
-  * an error object with relevant error message
-*/
+ * Given an admin user's userId and a set of properties, update the properties
+ * of this logged in admin user.
+ *
+ * @param {number} userId - Id of the user
+ * @param {string} email - Email address of the user
+ * @param {string} nameFirst - First name of the user
+ * @param {string} nameLast - Last name of the user
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
+ */
 export function adminUserDetailsUpdate(
   userId: number,
   email: string,
@@ -209,16 +209,16 @@ export function adminUserDetailsUpdate(
 }
 
 /**
-  * Given details relating to a password change, update the password of a
-  * logged in user.
-  *
-  * @param {number} - Id of the user
-  * @param {string} - The old password of the user
-  * @param {string} - The new password of the user
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Given details relating to a password change, update the password of a
+ * logged in user.
+ *
+ * @param {number} userId - Id of the user
+ * @param {string} oldPassword - The old password of the user
+ * @param {string} newPassword - The new password of the user
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
+ */
 export function adminUserPasswordUpdate(
   userId: number,
   oldPassword: string,
@@ -260,6 +260,14 @@ export function adminUserPasswordUpdate(
   return {};
 }
 
+/**
+ * Remove a user's session token (logout).
+ *
+ * @param {string} session - Session token to remove
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns empty object if
+ * successful, otherwise returns error
+ */
 export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
   const data = getData();
 

@@ -7,16 +7,40 @@ const url = config.url;
 const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
+/**
+ * Interface representing the output of the responses
+ *
+ * @typedef {object} responseInterface
+ *
+ * @property {any} body - The body of the response
+ * @property {number} statusCode - The status code of the response
+ */
 export interface responseInterface {
   body: any;
   statusCode: number;
 }
 
+/**
+ * Interface representing the body of a question.
+ *
+ * @typedef {object} questionBodyInterface
+ *
+ * @property {questionsInterface} questionBody - An object containing all the details in a question
+ */
 export interface questionBodyInterface {
   questionBody: questionsInterface;
 }
 
-// Helper function to handle common request logic
+/**
+ * Helper function to handle common request logic
+ *
+ * @param {HttpVerb} method - The type of the route
+ * @param {string} endpoint - The url of the route
+ * @param {any} [body] - The optional body to send to the route
+ * @param {any} [headers] - Optional headers to send to the route
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 function makeRequest(
   method: HttpVerb,
   endpoint: string,
@@ -38,7 +62,11 @@ function makeRequest(
   };
 }
 
-// Wrapper for DELETE /v1/clear
+/**
+ * Wrapper for DELETE /v1/clear
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestClear(): responseInterface {
   return makeRequest(
     'DELETE',
@@ -48,7 +76,14 @@ export function requestClear(): responseInterface {
   );
 }
 
-// Wrapper for DELETE /v1/admin/quiz/{quizid}
+/**
+ * Wrapper for DELETE /v1/admin/quiz/{quizid}
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestDeleteQuiz(
   quizId: number,
   session: string
@@ -61,7 +96,15 @@ export function requestDeleteQuiz(
   );
 }
 
-// Wrapper for DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * Wrapper for DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestDeleteQuizQuestion(
   quizId: number,
   questionId: number,
@@ -75,7 +118,14 @@ export function requestDeleteQuizQuestion(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/{quizid}
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuiz(
   quizId: number,
   session: string
@@ -88,7 +138,14 @@ export function requestGetQuiz(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/{quizId}/question/suggestion
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizId}/question/suggestion
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuizQuestionSuggestion(
   quizId: number,
   session: string
@@ -101,7 +158,13 @@ export function requestGetQuizQuestionSuggestion(
   );
 }
 
-// Wrapper for GET /v1/admin/quiz/list
+/**
+ * Wrapper for GET /v1/admin/quiz/list
+ *
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetQuizList(
   session: string
 ): responseInterface {
@@ -113,7 +176,13 @@ export function requestGetQuizList(
   );
 }
 
-// Wrapper for GET /v1/admin/user/details
+/**
+ * Wrapper for GET /v1/admin/user/details
+ *
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestGetUserDetails(
   session: string
 ): responseInterface {
@@ -125,7 +194,14 @@ export function requestGetUserDetails(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/login
+/**
+ * Wrapper for POST /v1/admin/auth/login
+ *
+ * @param {string} email - The email of the user
+ * @param {string} password - The password of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthLogin(
   email: string,
   password: string
@@ -137,7 +213,13 @@ export function requestAdminAuthLogin(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/logout
+/**
+ * Wrapper for POST /v1/admin/auth/logout
+ *
+ * @param {string} session - The session of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthLogout(
   session: string
 ): responseInterface {
@@ -149,7 +231,16 @@ export function requestAdminAuthLogout(
   );
 }
 
-// Wrapper for POST /v1/admin/auth/register
+/**
+ * Wrapper for POST /v1/admin/auth/register
+ *
+ * @param {string} email - The email of the user
+ * @param {string} password - The password of the user
+ * @param {string} nameFirst - The first name of the user
+ * @param {string} nameLast - The last name of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminAuthRegister(
   email: string,
   password: string,
@@ -163,7 +254,15 @@ export function requestAdminAuthRegister(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz
+/**
+ * Wrapper for POST /v1/admin/quiz
+ *
+ * @param {string} session - The session of the user
+ * @param {string} name - The name of the quiz
+ * @param {string} description - The description of the quiz
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizCreate(
   session: string,
   name: string,
@@ -177,7 +276,15 @@ export function requestAdminQuizCreate(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz/{quizid}/question
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/question
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {questionBodyInterface} questionBody - The details of the question
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionCreate(
   quizId: number,
   session: string,
@@ -191,7 +298,15 @@ export function requestAdminQuizQuestionCreate(
   );
 }
 
-// Wrapper for POST /v1/admin/quiz/{quizid}/transfer
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/transfer
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} userEmail - The email of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizTransfer(
   quizId: number,
   session: string,
@@ -205,7 +320,15 @@ export function requestAdminQuizTransfer(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/description
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/description
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} description - The description of the quiz
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizUpdateDescription(
   quizId: number,
   session: string,
@@ -219,7 +342,15 @@ export function requestAdminQuizUpdateDescription(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/name
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/name
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} name - The name of the quiz
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizUpdateName(
   quizId: number,
   session: string,
@@ -233,7 +364,16 @@ export function requestAdminQuizUpdateName(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ * @param {questionBodyInterface} questionBody - The details of the question
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionUpdate(
   quizId: number,
   questionId: number,
@@ -248,7 +388,16 @@ export function requestAdminQuizQuestionUpdate(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+ *
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ * @param {number} newPosition - The new position of the question
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionMove(
   quizId: number,
   questionId: number,
@@ -263,7 +412,16 @@ export function requestAdminQuizQuestionMove(
   );
 }
 
-// Wrapper for PUT /v1/admin/user/details
+/**
+ * Wrapper for PUT /v1/admin/user/details
+ *
+ * @param {string} session - The session of the user
+ * @param {string} email - The email of the user
+ * @param {string} nameFirst - The first name of the user
+ * @param {string} nameLast - The last name of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminUserDetailsUpdate(
   session: string,
   email: string,
@@ -278,7 +436,15 @@ export function requestAdminUserDetailsUpdate(
   );
 }
 
-// Wrapper for PUT /v1/admin/user/password
+/**
+ * Wrapper for PUT /v1/admin/user/password
+ *
+ * @param {string} session - The session of the user
+ * @param {string} oldPassword - The old password of the user
+ * @param {string} newPassword - The new password of the user
+ *
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminUserPasswordUpdate(
   session: string,
   oldPassword: string,

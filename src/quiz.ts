@@ -14,21 +14,23 @@ import {
   questionIdInterface,
   Errors,
   validQuestionString,
-  randomColour
+  randomColour,
+  validatePoints,
+  validateAnswer
 } from './functionsHelper';
+import { questionBodyInterface } from '../tests/testsHelper';
 
 import request from 'sync-request-curl';
 
 /**
-  * Provide a list of all quizzes that are owned by the currently logged in user.
-  *
-  * @param {number} userId - Id of the user
-  * ...
-  *
-  * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
-  * an object, quizzes with an array of quizSummariesInterface inside of it unless
-  * there is an error which returns errorInterface
-*/
+ * Provides a list of all quizzes that are owned by the currently logged in user.
+ *
+ * @param {number} userId - The ID of the user
+ *
+ * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
+ * an object, quizzes with an array of quizSummariesInterface inside of it unless
+ * there is an error which returns errorInterface
+ */
 export function adminQuizList(
   userId: number
 ): { quizzes: quizSummariesInterface[] } | errorInterface {
@@ -56,13 +58,14 @@ export function adminQuizList(
 }
 
 /**
-  * TODO
-  *
-  * @param {number}
-  * ...
-  *
-  * @returns
-*/
+ * Retrieves all information about a specific quiz.
+ *
+ * @param {number} userId - The ID of the user requesting the quiz
+ * @param {number} quizId - The ID of the quiz to retrieve
+ *
+ * @returns {quizGetDetailsInterface | errorInterface} - Returns either the quiz
+ * details or an error object
+ */
 export function adminQuizGet(
   userId: number,
   quizId: number
@@ -97,16 +100,15 @@ export function adminQuizGet(
 }
 
 /**
-  * Given basic details about a new quiz, create one for the logged in user.
-  *
-  * @param {number} userId - Id of the user
-  * @param {string} name - Name of quiz
-  * @param {string} description - Description of quiz
-  * ...
-  *
-  * @returns {quizId | error} - Always return quizId object otherwise an
-  * error object with relevant error message
-*/
+ * Given basic details about a new quiz, create one for the logged in user.
+ *
+ * @param {number} userId - Id of the user
+ * @param {string} name - Name of the quiz
+ * @param {string} description - Description of the quiz
+ *
+ * @returns {quizIdInterface | errorInterface} - Always return quizId object otherwise an
+ * error object with relevant error message
+ */
 export function adminQuizCreate(
   userId: number,
   name: string,
@@ -158,16 +160,14 @@ export function adminQuizCreate(
 }
 
 /**
-  * Given a particular quiz, permanently remove the quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * ...
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
-
+ * Given a particular quiz, permanently remove the quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ *
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
+ */
 export function adminQuizRemove(
   userId: number,
   quizId: number
@@ -202,16 +202,14 @@ export function adminQuizRemove(
 }
 
 /**
-  * Get all the relevant information about the current quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * ...
-  *
-  * @returns {quiz | error} - Always return quiz object otherwise an
-  * error object with relevant error message
-*/
-
+ * Get all the relevant information about the current quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ *
+ * @returns {quizDetailsInterface | errorInterface} - Always return quiz object
+ * otherwise an error object with relevant error message
+ */
 export function adminQuizInfo(
   userId: number,
   quizId: number
@@ -244,16 +242,15 @@ export function adminQuizInfo(
 }
 
 /**
-  * Update the name of the relevant quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * @param {string} name - Name of the quiz
-  * ...
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Update the name of the relevant quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ * @param {string} name - The new name of the quiz
+ *
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
+ */
 export function adminQuizNameUpdate(
   userId: number,
   quizId: number,
@@ -304,16 +301,15 @@ export function adminQuizNameUpdate(
 }
 
 /**
-  * Update the description of the relevant quiz.
-  *
-  * @param {number} userId - Id of the user
-  * @param {number} quizId - Id of the quiz
-  * @param {string} description - Description of the quiz
-  * ...
-  *
-  * @returns {object} - Always return an empty object otherwise an
-  * error object with relevant error message
-*/
+ * Update the description of the relevant quiz.
+ *
+ * @param {number} userId - Id of the user
+ * @param {number} quizId - Id of the quiz
+ * @param {string} description - The new description of the quiz
+ *
+ * @returns {Record<string, never> | errorInterface} - Always return an empty
+ * object otherwise an error object with relevant error message
+ */
 export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
@@ -352,10 +348,21 @@ export function adminQuizDescriptionUpdate(
   return {};
 }
 
+/**
+ * Creates a new question for a quiz.
+ *
+ * @param {number} userId - The ID of the user creating the question
+ * @param {number} quizId - The ID of the quiz to add the question to
+ * @param {questionBodyInterface} questionBody - The question details including
+ * text, time limit, points, and answers
+ *
+ * @returns {questionIdInterface | errorInterface} - Returns either the new question
+ * ID or an error object
+ */
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): questionIdInterface | errorInterface {
   const data = getData();
 
@@ -463,6 +470,16 @@ export function adminQuizQuestionCreate(
   };
 }
 
+/**
+ * Transfers ownership of a quiz to another user.
+ *
+ * @param {number} quizId - The ID of the quiz to transfer
+ * @param {number} userId - The ID of the current owner
+ * @param {string} userEmail - The email of the new owner
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
   const data = getData();
 
@@ -503,6 +520,16 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
+/**
+ * Deletes a question from a quiz.
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user deleting the question
+ * @param {number} questionId - The ID of the question to delete
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminDeleteQuizQuestion(
   quizId: number,
   userId: number,
@@ -546,6 +573,17 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+/**
+ * Moves a question to a new position within a quiz.
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user moving the question
+ * @param {number} questionId - The ID of the question to move
+ * @param {number} newPosition - The new position for the question
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizQuestionMove(
   quizId: number,
   userId: number,
@@ -604,6 +642,16 @@ export function adminQuizQuestionMove(
   return {};
 }
 
+/**
+ * Generates a suggested question for a quiz using a LLM.
+ *
+ * @param {string} quizName - The name of the quiz
+ * @param {string} quizDescription - The description of the quiz
+ * @param {string} HUGGINGFACE_API_TOKEN - The API token for HuggingFace
+ *
+ * @returns {{ question: string } | errorInterface} - Returns either the generated
+ * question or an error object
+ */
 export function adminQuizQuestionSuggestion(
   quizName: string,
   quizDescription: string,
@@ -658,11 +706,22 @@ export function adminQuizQuestionSuggestion(
   return { question: generatedQuestion };
 }
 
+/**
+ * Updates an existing question in a quiz.
+ *
+ * @param {number} userId - The ID of the user updating the question
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} questionId - The ID of the question to update
+ * @param {questionBodyInterface} questionBody - The new question details
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizQuestionUpdate(
   userId: number,
   quizId: number,
   questionId: number,
-  questionBody: any
+  questionBody: questionBodyInterface
 ): Record<string, never> | errorInterface {
   const data = getData();
 
@@ -693,12 +752,9 @@ export function adminQuizQuestionUpdate(
     return questionValidation as errorInterface;
   }
 
-  // DO this in a helper instead
-  if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
-  }
-  if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  const answerValid = validateAnswer(answerOptions);
+  if (answerValid !== true) {
+    return answerValid as errorInterface;
   }
 
   if (timeLimit <= 0) {
@@ -712,12 +768,9 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
 
-  // Another helper
-  if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
-  }
-  if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  const pointsValid = validatePoints(points);
+  if (pointsValid !== true) {
+    return pointsValid as errorInterface;
   }
 
   const answerStrings: string[] = [];
