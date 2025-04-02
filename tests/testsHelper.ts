@@ -342,7 +342,15 @@ export function requestAdminQuizUpdateDescription(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/name
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/name
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {string} session - The session of the user
+ * @param {string} name - The name of the quiz
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizUpdateName(
   quizId: number,
   session: string,
@@ -356,7 +364,16 @@ export function requestAdminQuizUpdateName(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ * @param {questionBodyInterface} questionBody - The details of the question
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionUpdate(
   quizId: number,
   questionId: number,
@@ -371,7 +388,16 @@ export function requestAdminQuizQuestionUpdate(
   );
 }
 
-// Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+ * 
+ * @param {number} quizId - ID of the quiz
+ * @param {number} questionId - ID of the question
+ * @param {string} session - The session of the user
+ * @param {number} newPosition - The new position of the question
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminQuizQuestionMove(
   quizId: number,
   questionId: number,
@@ -386,7 +412,16 @@ export function requestAdminQuizQuestionMove(
   );
 }
 
-// Wrapper for PUT /v1/admin/user/details
+/**
+ * Wrapper for PUT /v1/admin/user/details
+ * 
+ * @param {string} session - The session of the user
+ * @param {string} email - The email of the user
+ * @param {string} nameFirst - The first name of the user
+ * @param {string} nameLast - The last name of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminUserDetailsUpdate(
   session: string,
   email: string,
@@ -401,7 +436,15 @@ export function requestAdminUserDetailsUpdate(
   );
 }
 
-// Wrapper for PUT /v1/admin/user/password
+/**
+ * Wrapper for PUT /v1/admin/user/password
+ * 
+ * @param {string} session - The session of the user
+ * @param {string} oldPassword - The old password of the user
+ * @param {string} newPassword - The new password of the user
+ * 
+ * @returns {responseInterface} - The response of the route call
+ */
 export function requestAdminUserPasswordUpdate(
   session: string,
   oldPassword: string,
