@@ -21,8 +21,8 @@ import validator from 'validator';
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
  *
- * @returns {userId | error} - Always return userId object otherwise
- * an error object with relevant message
+ * @returns {userIdInterface | errorInterface} - Returns userId and session token
+ * if successful, otherwise returns error
  */
 export function adminAuthRegister(
   email: string,
@@ -83,13 +83,13 @@ export function adminAuthRegister(
 }
 
 /**
- * Given a registered user's email and password, return their userId value.
+ * Given a registered user's email and password, return their userId value and a new session token.
  *
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  *
- * @returns {userId | error} - Always return userId object otherwise
- * an error object with relevant message
+ * @returns {userIdInterface | errorInterface} - Returns userId and session token
+ * if successful, otherwise returns error
  */
 export function adminAuthLogin(
   email: string,
@@ -128,8 +128,8 @@ export function adminAuthLogin(
  *
  * @param {number} userId - Id of the user
  *
- * @returns {user | error} - Always return userDetails object otherwise
- * an error object with relevant error message
+ * @returns {{user: userDetailsInterface} | errorInterface} - Returns user details
+ * if found, otherwise returns error
  */
 export function adminUserDetails(
   userId: number
