@@ -3,7 +3,8 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminAuthLogin,
-  requestGetUserDetails
+  requestGetUserDetails,
+  requestGetQuizList
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -378,5 +379,10 @@ describe('Testing POST /v1/admin/auth/register', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
+    
+    // Check that user has no quiz created
+    const responseQuizList = requestGetQuizList(session);
+    expect(responseQuizList.body).toStrictEqual({ quizzes:[] });
+    expect(responseQuizList.statusCode).toStrictEqual(OK);
   });
 });
