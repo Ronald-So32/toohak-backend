@@ -355,6 +355,7 @@ export function adminQuizDescriptionUpdate(
  * @param {number} quizId - The ID of the quiz to add the question to
  * @param {questionBodyInterface} questionBody - The question details including
  * text, time limit, points, and answers
+ * 
  * @returns {questionIdInterface | errorInterface} - Returns either the new question
  * ID or an error object
  */
@@ -469,6 +470,16 @@ export function adminQuizQuestionCreate(
   };
 }
 
+/**
+ * Transfers ownership of a quiz to another user.
+ *
+ * @param {number} quizId - The ID of the quiz to transfer
+ * @param {number} userId - The ID of the current owner
+ * @param {string} userEmail - The email of the new owner
+ * 
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
   const data = getData();
 
@@ -509,6 +520,16 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
+/**
+ * Deletes a question from a quiz.
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user deleting the question
+ * @param {number} questionId - The ID of the question to delete
+ * 
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminDeleteQuizQuestion(
   quizId: number,
   userId: number,
@@ -552,6 +573,17 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+/**
+ * Moves a question to a new position within a quiz.
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user moving the question
+ * @param {number} questionId - The ID of the question to move
+ * @param {number} newPosition - The new position for the question
+ * 
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizQuestionMove(
   quizId: number,
   userId: number,
@@ -610,6 +642,16 @@ export function adminQuizQuestionMove(
   return {};
 }
 
+/**
+ * Generates a suggested question for a quiz using a LLM.
+ *
+ * @param {string} quizName - The name of the quiz
+ * @param {string} quizDescription - The description of the quiz
+ * @param {string} HUGGINGFACE_API_TOKEN - The API token for HuggingFace
+ * 
+ * @returns {{ question: string } | errorInterface} - Returns either the generated
+ * question or an error object
+ */
 export function adminQuizQuestionSuggestion(
   quizName: string,
   quizDescription: string,
@@ -664,6 +706,17 @@ export function adminQuizQuestionSuggestion(
   return { question: generatedQuestion };
 }
 
+/**
+ * Updates an existing question in a quiz.
+ *
+ * @param {number} userId - The ID of the user updating the question
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} questionId - The ID of the question to update
+ * @param {questionBodyInterface} questionBody - The new question details
+ * 
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizQuestionUpdate(
   userId: number,
   quizId: number,
