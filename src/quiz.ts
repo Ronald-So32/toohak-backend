@@ -16,9 +16,9 @@ import {
   validQuestionString,
   randomColour,
   validatePoints,
-  validateAnswer,
-  questionBodyInterface
+  validateAnswer
 } from './functionsHelper';
+import { questionBodyInterface } from '../tests/testsHelper';
 
 import request from 'sync-request-curl';
 

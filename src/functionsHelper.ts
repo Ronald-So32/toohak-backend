@@ -1,7 +1,9 @@
 import {
   getData,
-  questionsInterface
+  questionsInterface,
+  answersInterface
 } from './dataStore';
+import { questionBodyInterface } from '../tests/testsHelper'
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -129,39 +131,6 @@ export interface quizGetDetailsInterface {
     numQuestions: number;
     questions: questionsInterface[];
     timeLimit: number;
-  }
-}
-
-/**
- * Interface representing a single answer option for a question.
- *
- * @typedef {object} answerOptionsInterface
- *
- * @property {string} answer - The answer text
- * @property {boolean} correct - Whether this answer is correct
- */
-interface answerOptionsInterface {
-  answer: string,
-  correct: boolean
-}
-
-/**
- * Interface representing the body of a question.
- *
- * @typedef {object} questionBodyInterface
- *
- * @property {object} questionBody - Question details object
- * @property {string} questionBody.question - The question text
- * @property {number} questionBody.timeLimit - Time limit for the question in seconds
- * @property {number} questionBody.points - Points awarded for correct answer
- * @property {answerOptionsInterface[]} questionBody.answerOptions - Array of possible answers
- */
-export interface questionBodyInterface {
-  questionBody: {
-    question: string,
-    timeLimit: number,
-    points: number,
-    answerOptions: answerOptionsInterface[]
   }
 }
 
@@ -514,11 +483,11 @@ export function validatePoints(points: number): boolean | errorInterface {
 /**
  * Validates that answer options meet quantity requirements.
  *
- * @param {answerOptionsInterface[]} answerOptions - Array of answer options to validate
+ * @param {answersInterface[]} answerOptions - Array of answer options to validate
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validateAnswer(answerOptions: answerOptionsInterface[]): boolean | errorInterface {
+export function validateAnswer(answerOptions: answersInterface[]): boolean | errorInterface {
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
   }

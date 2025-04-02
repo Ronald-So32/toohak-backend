@@ -7,11 +7,22 @@ const url = config.url;
 const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
+/**
+ * Interface representing the output of the responses
+ * 
+ * @typedef {object} responseInterface
+ * 
+ * @property {any} body - The body of the response
+ * @property {number} statusCode - The status code of the response
+ */
 export interface responseInterface {
   body: any;
   statusCode: number;
 }
 
+/**
+ * Interface representing the 
+ */
 export interface questionBodyInterface {
   questionBody: questionsInterface;
 }
