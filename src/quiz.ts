@@ -41,18 +41,14 @@ export function adminQuizList(
     return Errors.invalidUser();
   }
 
-  const quizzes: quizSummariesInterface[] = [];
-
   // Iterate through all quizzes and put in quizzes array if quiz is created by
   // user of passed in userId
-  for (const quiz of data.quizzes) {
-    if (quiz.createdBy === userId) {
-      quizzes.push({
-        quizId: quiz.quizId,
-        name: quiz.name,
-      });
-    }
-  }
+  const quizzes = data.quizzes
+    .filter(quiz => quiz.createdBy === userId)
+    .map(quiz => ({
+      quizId: quiz.quizId,
+      name: quiz.name,
+    }));
 
   return { quizzes };
 }
