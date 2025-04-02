@@ -3,7 +3,6 @@ import {
   questionsInterface,
   answersInterface
 } from './dataStore';
-import { questionBodyInterface } from '../tests/testsHelper'
 
 import { v4 as uuidv4 } from 'uuid';
 
