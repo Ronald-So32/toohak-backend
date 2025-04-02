@@ -165,6 +165,7 @@ export interface questionBodyInterface {
   }
 }
 
+
 export class Errors {
   // Specific validation reasons
   static readonly Specific = {
@@ -297,7 +298,7 @@ export function createUUID(): number {
  * @param {string} name - The first or the last name of the user
  * @param {boolean} isFirst - Whether or not it is the user's first name
  *
- * @returns {boolean | error} - Returns true for a valid name else returns
+ * @returns {boolean | errorInterface} - Returns true for a valid name else returns
  * an object with relevant error message
  */
 export function validName(name: string, isFirst: boolean): boolean | errorInterface {
@@ -333,7 +334,8 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
  * Validate the password that the user intends to use for their account.
  *
  * @param {string} password - Intended password of user
- * @returns {boolean | error} - Retursn true for valid password else an
+ * 
+ * @returns {boolean | errorInterface} - Retursn true for valid password else an
  * object with relevant error message
  */
 export function validPassword(password: string): boolean | errorInterface {
@@ -359,7 +361,8 @@ export function validPassword(password: string): boolean | errorInterface {
  * Validates the name that the user intends to use for their quiz.
  *
  * @param {string} name - Intended quiz name user wants
- * @returns {boolean | error} - Returns true for valid quiz name else an
+ * 
+ * @returns {boolean | errorInterface} - Returns true for valid quiz name else an
  * object with relevant error message
  */
 export function validQuizName(name: string): boolean | errorInterface {
@@ -379,6 +382,11 @@ export function validQuizName(name: string): boolean | errorInterface {
   return true;
 }
 
+/**
+ * Generates a unique session token using UUID v4.
+ * 
+ * @returns {string} - The newly generated session token
+ */
 export function generateSession(): string {
   const data = getData();
   let sessionNew = uuidv4();
@@ -390,6 +398,13 @@ export function generateSession(): string {
   return sessionNew;
 }
 
+/**
+ * Finds a user's session token by their user ID.
+ * 
+ * @param {number} userId - The user ID to search for
+ * 
+ * @returns {string | errorInterface} - The session token if found, otherwise an error
+ */
 export function findSessionFromUserId(userId: number): string | errorInterface {
   const data = getData();
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
