@@ -26,6 +26,7 @@ import {
   Errors,
   findQuestionIdInQuiz
 } from './functionsHelper';
+import { getData } from './dataStore';
 
 import express, {
   json,
@@ -48,6 +49,7 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
 const HUGGINGFACE_API_TOKEN = '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';
+const DB_PATH = '../DATABASE.json';
 
 // Set up web app
 const app = express();
@@ -71,6 +73,22 @@ const HOST: string = process.env.IP || '127.0.0.1';
 // ====================================================================
 //  ================= WORK IS DONE BELOW THIS LINE ===================
 // ====================================================================
+
+export function save(): void {
+  console.log(`Updating ${DB_PATH}`);
+  const jsonData = JSON.stringify(getData(), null, 2);
+  fs.writeFileSync(DB_PATH, jsonData);
+}
+
+export function load(): void {
+  const data = getData();
+  if (fs.existsSync(DB_PATH)) {
+    console.log(`Loading data from ${DB_PATH}`);
+    const jsonData = fs.readFileSync(DB_PATH).toString();
+    const dataStore = JSON.parse(jsonData);
+    Object.assign(data, dataStore);
+  }
+}
 
 // Example get request
 app.get('/echo', (req: Request, res: Response) => {
@@ -526,10 +544,16 @@ app.use((req: Request, res: Response) => {
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);
+
+  // Load any saves
+  load();
 });
 
 // For coverage, handle Ctrl+C gracefully
 process.on('SIGINT', () => {
+  // Save the current database
+  save();
+
   server.close(() => {
     console.log('Shutting down server gracefully.');
     process.exit();

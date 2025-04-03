@@ -1,12 +1,11 @@
 import { getData } from './dataStore';
 
 /**
-  * Reset the state of the application back to the start.
-  *
-  * @param {void} - No parameters
-  *
-  * @returns {Object} - Always return an empty object
-*/
+ * Resets the application state to its initial empty state.
+ * Clears all users, quizzes, sessions, and resets the highest ID counter.
+ *
+ * @returns {Record<string, never>} - Always returns an empty object indicating successful reset
+ */
 export function clear(): Record<string, never> {
   const data = getData();
 
@@ -15,6 +14,8 @@ export function clear(): Record<string, never> {
 
   data.highestID = 0;
   data.sessions = [];
+
+  // TODO: clear the file
 
   return {};
 }
