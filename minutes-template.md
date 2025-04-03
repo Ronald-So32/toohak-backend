@@ -144,11 +144,10 @@ Please note this is a a guide/template which you do not need to use.
 | Attendees | Brian, Justin, Ronald, Sagar, Weiming |
 
 ### Agenda
-| Item                       | Discussion/decision                                                 |
-| -------------------------- | ------------------------------------------------------------------- |
-| Merge requests and         | Created a merge request each for what is left to be done and        |    
-| Assigning task             | allocated a person to each merge request also discussed the current |
-|                            | with the work ( style )                                             |
+| Item                       | Discussion/decision                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------- |
+| Merge requests             | Created a merge request each for what is left to be done                                    |    
+| Assigning task             | Allocated a person to each merge request also discussed the current with the work ( style ) |
 
 ### Action Items/reminders
 - [ ] Finish the remaining tests
@@ -156,3 +155,27 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * 
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 7                                                  |
+| --------- | -------------------------------------------------- |
+| Date/time | 02/04 15:00                                        |
+|   Week    | 7                                                  |
+| Attendees | Brian, Justin, Ronald, Weiming, Sagar (left early) |
+
+### Agenda
+| Item                       | Discussion/decision                                                 |
+| -------------------------- | ------------------------------------------------------------------- |
+| Merge requests             | Created a merge request each for what is left to be done            |    
+| Assigning task             | allocated a person to each merge request also discussed the current |
+
+### Action Items/reminders
+- [ ] Implement persistence
+- [ ] Add tests for new routes
+- [ ] Split the functions into helpers
+- [ ] Documentation
+
+### Questions for tutor
+* Do we need to add defaults to the question create?
