@@ -75,17 +75,17 @@ const HOST: string = process.env.IP || '127.0.0.1';
 // ====================================================================
 
 export function save(): void {
-  console.log(`Updating ${DB_PATH}`)
-  const jsonData = JSON.stringify(getData(), null, 2)
-  fs.writeFileSync(DB_PATH, jsonData)
+  console.log(`Updating ${DB_PATH}`);
+  const jsonData = JSON.stringify(getData(), null, 2);
+  fs.writeFileSync(DB_PATH, jsonData);
 }
 
 export function load(): void {
   const data = getData();
   if (fs.existsSync(DB_PATH)) {
-    console.log(`Loading data from ${DB_PATH}`)
+    console.log(`Loading data from ${DB_PATH}`);
     const jsonData = fs.readFileSync(DB_PATH).toString();
-    const dataStore = JSON.parse(jsonData)
+    const dataStore = JSON.parse(jsonData);
     Object.assign(data, dataStore);
   }
 }
