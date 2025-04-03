@@ -17,6 +17,8 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
+// Before each test clears the data and then registers an user, obtaining the
+// current session
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -30,7 +32,10 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/auth/logout', () => {
   test('Testing the code 200 return value', () => {
+    // Gets the response of when user logs out
     const responseLogout = requestAdminAuthLogout(session);
+    // Checks that a valid response returns an empty object and a
+    // status code of 200
     expect(responseLogout.body).toStrictEqual({});
     expect(responseLogout.statusCode).toStrictEqual(OK);
   });
@@ -38,6 +43,8 @@ describe('Testing POST /v1/admin/auth/logout', () => {
   describe('Testing for error responses', () => {
     test('Invalid session', () => {
       const responseLogout = requestAdminAuthLogout(session + 'Invalid Session');
+      // Checks that a unauthorised logout returns an error object and a 
+      // status code of 401 
       expect(responseLogout.body).toStrictEqual({ error: expect.any(String) });
       expect(responseLogout.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -127,15 +134,6 @@ describe('Testing POST /v1/admin/auth/logout', () => {
     expect(responseCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseCreate.statusCode).toStrictEqual(OK);
 
-    // Login (In a theoretical different device)
-    const responseLogin = requestAdminAuthLogin(
-      'z7277272@ad.unsw.edu.au',
-      'Password1'
-    );
-    expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin.statusCode).toStrictEqual(OK);
-
-    // Logout
     const responseLogout = requestAdminAuthLogout(responseLogin.body.session);
     expect(responseLogout.body).toStrictEqual({});
     expect(responseLogout.statusCode).toStrictEqual(OK);
@@ -163,7 +161,6 @@ describe('Testing POST /v1/admin/auth/logout', () => {
     expect(responseUpdateDescription.body).toStrictEqual({});
     expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
 
-    // Check quiz again to see the changes
     const responseQuizGet2 = requestGetQuiz(quizId, session);
     expect(responseQuizGet2.body).toStrictEqual({
       quizId: quizId,
@@ -177,7 +174,6 @@ describe('Testing POST /v1/admin/auth/logout', () => {
     });
     expect(responseQuizGet2.statusCode).toStrictEqual(OK);
 
-    // Logout
     const responseLogout2 = requestAdminAuthLogout(session);
     expect(responseLogout2.body).toStrictEqual({});
     expect(responseLogout2.statusCode).toStrictEqual(OK);
