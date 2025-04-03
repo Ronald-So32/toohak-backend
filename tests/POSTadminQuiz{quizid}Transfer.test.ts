@@ -2,7 +2,6 @@ import {
   requestClear,
   responseInterface,
   requestAdminAuthRegister,
-  requestAdminAuthLogout,
   requestAdminQuizTransfer,
   requestAdminQuizCreate,
   requestGetQuizList
@@ -123,7 +122,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session + 'Invalid Session',
           'z6969@ad.unsw.edu.au'
         );
-        // Checks that an unauthorised transfer returns an errors object and a 
+        // Checks that an unauthorised transfer returns an errors object and a
         // status code of 401
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
@@ -147,7 +146,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session3,
           'z6969@ad.unsw.edu.au'
         );
-        // Checks that an forbidden transfer returns an error object and a 
+        // Checks that an forbidden transfer returns an error object and a
         // status code of 403
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
