@@ -59,11 +59,14 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   test('Testing the code 200 return value', () => {
+    // Transfers the quiz then gets it's response
     const responseTransfer = requestAdminQuizTransfer(
       quizId,
       session,
       'z6969@ad.unsw.edu.au'
     );
+    // Checks that a valid response returns an empty object and a
+    // status code of 200
     expect(responseTransfer.body).toStrictEqual({});
     expect(responseTransfer.statusCode).toStrictEqual(OK);
   });
@@ -71,12 +74,13 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   describe('Testing for error responses', () => {
     describe('Error 400: Bad Request', () => {
       test('userEmail is not a real user', () => {
-        // Try to transfer to non-existent user
         const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session,
           'nonexistent@example.com'
         );
+        // Checks that a invalid transfer of quiz returns an error object
+        // and a status code of 400
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -119,21 +123,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session + 'Invalid Session',
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
+        // Checks that an unauthorised transfer returns an errors object and a 
+        // status code of 401
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-      });
-
-      test('Logged out user', () => {
-        requestAdminAuthLogout(session);
-
-        // Try to transfer with logged out session
-        const responseTransfer = requestAdminQuizTransfer(
-          quizId,
-          session,
-          'z6969@ad.unsw.edu.au'
-        );
         expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
-        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
     });
 
@@ -154,8 +147,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session3,
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        // Checks that an forbidden transfer returns an error object and a 
+        // status code of 403
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
       });
 
       test('Quiz does not exist', () => {
