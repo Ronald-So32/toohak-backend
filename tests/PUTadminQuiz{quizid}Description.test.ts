@@ -23,6 +23,8 @@ let responseQuizGet: responseInterface;
 let session: string;
 let quizId: number;
 
+// Before each test clears the data and registers a user, getting the session id
+// then creates a quiz and gets the quiz id and quiz details
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -44,11 +46,14 @@ beforeEach(() => {
 describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
+      // Updates the decsription of the quiz
       const responseUpdateDescription = requestAdminQuizUpdateDescription(
         quizId,
         session,
         'New Description'
       );
+      // Checks that the response from the update returns an empty object
+      // and a status code of 200
       expect(responseUpdateDescription.body).toStrictEqual({});
       expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
     });
@@ -60,6 +65,8 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         quizId, session + 'Invalid Session',
         'New Description'
       );
+      // Checks that the response when update with invalid session returns an error object
+      // and a stsatus code of 401
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -76,6 +83,8 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         session,
         'New Description'
       );
+      // Checks that the response from a non-existant quiz returns an error string and 
+      // a status code of 403
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
 
@@ -103,7 +112,6 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
       expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
     });
 
-    // To test the validity of descriptions
     describe('Test validity of Description', () => {
       describe('Invalid cases', () => {
         test.each([
@@ -173,9 +181,9 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
     const responseUpdateDescription = requestAdminQuizUpdateDescription(
-      quizId,
-      session,
-      'New Description'
+        quizId,
+        session,
+        'New Description'
     );
     expect(responseUpdateDescription.body).toStrictEqual({});
     expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
@@ -194,6 +202,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
     });
     expect(responseQuizGet2.statusCode).toStrictEqual(OK);
 
+    // Deletes the quiz
     requestDeleteQuiz(quizId, session);
 
     // Should be unavailable after deletion
