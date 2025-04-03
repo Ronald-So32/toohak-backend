@@ -60,7 +60,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         session + 'Invalid Session',
         'New Quiz Name'
       );
-      // Checks that a invalid session returns an error object and a status code 
+      // Checks that a invalid session returns an error object and a status code
       // of 401
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);

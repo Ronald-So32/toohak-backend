@@ -2,7 +2,6 @@ import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
-  requestGetQuizList,
   requestAdminQuizCreate,
   requestDeleteQuiz,
   requestAdminQuizQuestionCreate,
@@ -66,7 +65,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
@@ -120,7 +119,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuizDetails = requestGetQuiz(quizId + quizIdOffset, session);
-      // Checks that the non-existant quiz returns an error object and a status code 
+      // Checks that the non-existant quiz returns an error object and a status code
       // of 403
       expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
@@ -289,7 +288,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-    
+
     // Deletes all the questions
     requestDeleteQuizQuestion(quizId, questionId, session);
     requestDeleteQuizQuestion(quizId, questionId2, session);
@@ -308,7 +307,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
-    
+
     // Deletes the quiz
     requestDeleteQuiz(quizId, session);
 

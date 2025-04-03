@@ -60,7 +60,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
-      // Checks that the deletion of a non-existent quiz returns and error object and 
+      // Checks that the deletion of a non-existent quiz returns and error object and
       // a status code of 403
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);

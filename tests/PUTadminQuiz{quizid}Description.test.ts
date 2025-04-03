@@ -83,7 +83,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         session,
         'New Description'
       );
-      // Checks that the response from a non-existant quiz returns an error string and 
+      // Checks that the response from a non-existant quiz returns an error string and
       // a status code of 403
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
@@ -181,9 +181,9 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
 
   test('Testing PUT v1/admin/quiz/{quizid}/description works as intended', () => {
     const responseUpdateDescription = requestAdminQuizUpdateDescription(
-        quizId,
-        session,
-        'New Description'
+      quizId,
+      session,
+      'New Description'
     );
     expect(responseUpdateDescription.body).toStrictEqual({});
     expect(responseUpdateDescription.statusCode).toStrictEqual(OK);

@@ -41,7 +41,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     test('Testing when the session is invalid', () => {
       const responseList = requestGetQuizList(session + 'Invalid Session');
       // Checks that the response when fetching for quiz list of invalid sesion
-      // returns an error object and a status code of 401 
+      // returns an error object and a status code of 401
       expect(responseList.body).toStrictEqual({ error: expect.any(String) });
       expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
     });

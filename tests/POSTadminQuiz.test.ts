@@ -232,14 +232,14 @@ describe('Testing POST /v1/admin/quiz', () => {
     const responseQuizDetails = requestGetQuiz(id, session);
     // Checks that the details of the quiz is correct and has a status code of 200
     expect(responseQuizDetails.body).toStrictEqual({
-      "quizId": id,
-      "name": "Quiz Name",
-      "timeCreated": expect.any(Number),
-      "timeLastEdited": expect.any(Number),
-      "description": "Description",
-      "numQuestions": 0,
-      "questions": [],
-      "timeLimit": expect.any(Number)
+      quizId: id,
+      name: 'Quiz Name',
+      timeCreated: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 

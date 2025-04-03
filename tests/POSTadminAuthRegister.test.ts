@@ -1,7 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestGetQuizList,
@@ -22,7 +21,7 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/auth/register', () => {
   test('Testing the code 200 return value', () => {
-    // To register a user 
+    // To register a user
     const responseRegister = requestAdminAuthRegister(
       'z7277272@ad.unsw.edu.au',
       'Password1',
@@ -56,7 +55,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
         expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
       });
-      
+
       test('Email has not been used', () => {
         const responseRegister = requestAdminAuthRegister(
           'z6969420@ad.unsw.edu.au',
@@ -364,7 +363,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
     expect(responseRegister.statusCode).toStrictEqual(OK);
 
     // Check user can log out
-    const responseLogout = requestAdminAuthLogout(session)
+    const responseLogout = requestAdminAuthLogout(session);
     expect(responseLogout.body).toStrictEqual({});
     expect(responseLogout.statusCode).toStrictEqual(OK);
 
@@ -389,10 +388,10 @@ describe('Testing POST /v1/admin/auth/register', () => {
       }
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
-    
+
     // Check that user has no quiz created
     const responseQuizList = requestGetQuizList(session);
-    expect(responseQuizList.body).toStrictEqual({ quizzes:[] });
+    expect(responseQuizList.body).toStrictEqual({ quizzes: [] });
     expect(responseQuizList.statusCode).toStrictEqual(OK);
   });
 });
