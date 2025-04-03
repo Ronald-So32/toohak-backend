@@ -28,6 +28,8 @@ let session: string;
 let quizId: number;
 let questionId: number;
 
+// Before each test clears the data then registers a user, creating a quiz
+// with a question, obtaining the current session, the quizId and the questionId
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -69,7 +71,10 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
+    // Gets the latest details of the quiz
     const responseQuizDetails = requestGetQuiz(quizId, session);
+    // Checks that the response from the function is an quiz object and that the
+    // status code returned is 200
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
       name: 'Name',
@@ -107,12 +112,16 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
       const responseQuizDetails = requestGetQuiz(quizId, session + 'Invalid Session');
+      // Checks that an unauthorised call to fetch quiz detail returns an error object
+      // and a status code of 401
       expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizDetails.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuizDetails = requestGetQuiz(quizId + quizIdOffset, session);
+      // Checks that the non-existant quiz returns an error object and a status code 
+      // of 403
       expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
     });
@@ -152,6 +161,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+
+    // Creates a second quiz and gets the second quiz's id
     responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId,
       session,
@@ -175,17 +186,20 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     );
     const questionId2 = responseQuestionCreate.body.questionId;
 
+    // Update the quiz's name
     requestAdminQuizUpdateName(
       quizId,
       session,
       'New Name'
     );
+    // Update the quiz's description
     requestAdminQuizUpdateDescription(
       quizId,
       session,
       'New Description'
     );
 
+    // Updates the first question in the quiz
     requestAdminQuizQuestionUpdate(
       quizId,
       questionId,
@@ -212,7 +226,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
         }
       }
     );
+
+    // Overites the response of quiz detail to latest
     responseQuizDetails = requestGetQuiz(quizId, session);
+    // Checks that the response can get the latest quiz details after update
+    // and that the status code is 200
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
       name: 'New Name',
@@ -272,10 +290,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
     
+    // Deletes all the questions
     requestDeleteQuizQuestion(quizId, questionId, session);
     requestDeleteQuizQuestion(quizId, questionId2, session);
 
     responseQuizDetails = requestGetQuiz(quizId, session);
+    // Checks that the quiz detail can't get the deleted questions
+    // and returns it still returns an quiz object and a status code of 200
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
       name: 'New Name',
@@ -288,9 +309,12 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
     
+    // Deletes the quiz
     requestDeleteQuiz(quizId, session);
 
     responseQuizDetails = requestGetQuiz(quizId, session);
+    // Checks that deleted quiz's details is unavailable and returns an error object and
+    // a status code of 403
     expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
     expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
   });

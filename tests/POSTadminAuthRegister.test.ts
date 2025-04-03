@@ -56,7 +56,7 @@ describe('Testing POST /v1/admin/auth/register', () => {
         expect(responseRegister.body).toStrictEqual({ error: expect.any(String) });
         expect(responseRegister.statusCode).toStrictEqual(BADREQUEST);
       });
-
+      
       test('Email has not been used', () => {
         const responseRegister = requestAdminAuthRegister(
           'z6969420@ad.unsw.edu.au',
