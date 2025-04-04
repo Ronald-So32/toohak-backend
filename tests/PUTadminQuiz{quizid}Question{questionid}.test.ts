@@ -19,18 +19,15 @@ const FORBIDDEN = 403;
 const quizIdOffset = 727;
 const questionIdOffset = 999;
 
-let responseRegister: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
-let responseQuizCreate: responseInterface;
-let responseQuestionCreate: responseInterface;
 
 // Before each test clears the data and registers a user and creates a quiz
 // and question and gets the current session, quiz id and quetsion id
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
@@ -38,14 +35,14 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
-  responseQuizCreate = requestAdminQuizCreate(
+  const responseQuizCreate = requestAdminQuizCreate(
     session,
     'Quiz Name',
     'Description'
   );
   quizId = responseQuizCreate.body.quizId;
 
-  responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -192,7 +189,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
       });
   
       test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
-        responseRegister = requestAdminAuthRegister(
+        const responseRegister = requestAdminAuthRegister(
           'z7277272@ad.unsw.edu.au',
           'Password1',
           'First',
@@ -206,7 +203,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
   
         const quizId2 = responseQuizCreate.body.quizId;
   
-        responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
           session,
           {
@@ -593,7 +590,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         };
         // Creates 3 questions that has a summed timelimit of under 3 minutes
-        responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
         questionId = responseQuestionCreate.body.questionId;
 
         requestAdminQuizQuestionCreate(quizId, session, questionBody);
@@ -734,12 +731,11 @@ describe('Test valid cases', () => {
       }
     };
     // Creates 3 question with summed timelimit of under 3 minute
-    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
-
-    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
-
-    responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+  
+    requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    requestAdminQuizQuestionCreate(quizId, session, questionBody);
 
     // Change timelimit of first question so that the sum with other two
     // question is exactly 3 minutes
@@ -847,7 +843,7 @@ describe('Valid points awarded', () => {
 
 test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
   // Creates a second question and gets the question id
-  responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
