@@ -2,7 +2,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizQuestionUpdate,
@@ -128,7 +127,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
       });
-  
+
       test('Invalid user session', () => {
         requestAdminAuthLogout(session);
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -187,9 +186,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
-        const responseRegister = requestAdminAuthRegister(
+        requestAdminAuthRegister(
           'z7277272@ad.unsw.edu.au',
           'Password1',
           'First',
@@ -200,10 +199,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           'Quiz Name',
           'Description'
         );
-  
+
         const quizId2 = responseQuizCreate.body.quizId;
-  
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+
+        requestAdminQuizQuestionCreate(
           quizId,
           session,
           {
@@ -224,7 +223,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
             }
           }
         );
-  
+
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId2,
           questionId,
@@ -250,7 +249,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Quiz does not exist', () => {
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId + quizIdOffset,
@@ -278,7 +277,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
       });
     });
-  
+
     describe('Invalid question strings', () => {
       test.each([
         {
@@ -590,12 +589,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         };
         // Creates 3 questions that has a summed timelimit of under 3 minutes
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          quizId,
+          session,
+          questionBody
+        );
         questionId = responseQuestionCreate.body.questionId;
 
         requestAdminQuizQuestionCreate(quizId, session, questionBody);
         requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        
+
         // Update the first question so that the timelimit summed with
         // the other two question will exceed 3 minutes
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
@@ -733,7 +736,7 @@ describe('Test valid cases', () => {
     // Creates 3 question with summed timelimit of under 3 minute
     const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
-  
+
     requestAdminQuizQuestionCreate(quizId, session, questionBody);
     requestAdminQuizQuestionCreate(quizId, session, questionBody);
 
@@ -866,7 +869,7 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
   );
   const question2Id = responseQuestionCreate.body.questionId;
 
-  // Updates the question created before the test 
+  // Updates the question created before the test
   const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
     quizId,
     questionId,

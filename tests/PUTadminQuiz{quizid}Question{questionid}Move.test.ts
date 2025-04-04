@@ -1,6 +1,5 @@
 import {
   requestClear,
-  responseInterface,
   requestAdminAuthLogout,
   requestAdminQuizQuestionMove,
   requestAdminQuizQuestionCreate,
@@ -168,7 +167,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         session2,
         1
       );
-      // Checks that a forbidden call to move question returns an error object and a 
+      // Checks that a forbidden call to move question returns an error object and a
       // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);

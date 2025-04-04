@@ -24,7 +24,7 @@ let session: string;
 let quizId: number;
 let questionId: number;
 
-// Before each test clears the data then registers a user, gets the 
+// Before each test clears the data then registers a user, gets the
 // current session then creates a quiz and gets the quiz and question id
 // with the quiz details
 beforeEach(() => {
