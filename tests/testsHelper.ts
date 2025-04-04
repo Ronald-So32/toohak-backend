@@ -293,7 +293,7 @@ export function requestAdminQuizQuestionCreate(
   return makeRequest(
     'POST',
     `/admin/quiz/${quizId}/question`,
-    { questionBody },
+    questionBody,
     { session }
   );
 }
@@ -383,7 +383,7 @@ export function requestAdminQuizQuestionUpdate(
   return makeRequest(
     'PUT',
     `/admin/quiz/${quizId}/question/${questionId}`,
-    { questionBody },
+    questionBody,
     { session }
   );
 }

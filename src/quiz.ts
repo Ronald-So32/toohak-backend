@@ -18,7 +18,6 @@ import {
   validatePoints,
   validateAnswer
 } from './functionsHelper';
-import { questionBodyInterface } from '../tests/testsHelper';
 
 import request from 'sync-request-curl';
 
@@ -349,7 +348,7 @@ export function adminQuizDescriptionUpdate(
  *
  * @param {number} userId - The ID of the user creating the question
  * @param {number} quizId - The ID of the quiz to add the question to
- * @param {questionBodyInterface} questionBody - The question details including
+ * @param {questionsInterface} questionBody - The question details including
  * text, time limit, points, and answers
  *
  * @returns {questionIdInterface | errorInterface} - Returns either the new question
@@ -358,7 +357,7 @@ export function adminQuizDescriptionUpdate(
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
-  questionBody: questionBodyInterface
+  questionBody: questionsInterface
 ): questionIdInterface | errorInterface {
   const data = getData();
 
@@ -377,7 +376,7 @@ export function adminQuizQuestionCreate(
     return Errors.noPermission();
   }
 
-  const { question, timeLimit, points, answerOptions } = questionBody.questionBody;
+  const { question, timeLimit, points, answerOptions } = questionBody;
 
   // Validate question string
   const questionValidation = validQuestionString(question);
@@ -708,7 +707,7 @@ export function adminQuizQuestionSuggestion(
  * @param {number} userId - The ID of the user updating the question
  * @param {number} quizId - The ID of the quiz containing the question
  * @param {number} questionId - The ID of the question to update
- * @param {questionBodyInterface} questionBody - The new question details
+ * @param {questionsInterface} questionBody - The new question details
  *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
@@ -717,7 +716,7 @@ export function adminQuizQuestionUpdate(
   userId: number,
   quizId: number,
   questionId: number,
-  questionBody: questionBodyInterface
+  questionBody: questionsInterface
 ): Record<string, never> | errorInterface {
   const data = getData();
 
@@ -740,7 +739,7 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidQuestion();
   }
 
-  const { question, timeLimit, points, answerOptions } = questionBody.questionBody;
+  const { question, timeLimit, points, answerOptions } = questionBody;
 
   // Validate question string
   const questionValidation = validQuestionString(question);
