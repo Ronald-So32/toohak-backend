@@ -1,9 +1,9 @@
 import {
   requestClear,
-  responseInterface,
   requestAdminAuthRegister,
   requestAdminQuizTransfer,
   requestAdminQuizCreate,
+  requestGetQuiz,
   requestGetQuizList
 } from './testsHelper';
 
@@ -14,20 +14,18 @@ const FORBIDDEN = 403;
 
 const quizIdOffset = 727;
 
-let responseRegister: responseInterface;
-let responseRegister2: responseInterface;
-let responseCreate: responseInterface;
-let responseCreate2: responseInterface;
 let session: string;
 let session2: string;
 let quizId: number;
 let quizId2: number;
+let timeCreated: number;
 
 // Before each test clears the data and registers two users then
 // creates a quiz for each using their session and obtains their quiz id
+// and time created
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
@@ -35,14 +33,15 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
-  responseCreate = requestAdminQuizCreate(
+  const responseCreate = requestAdminQuizCreate(
     session,
     'Quiz Name',
     'Quiz Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  responseRegister2 = requestAdminAuthRegister(
+  const responseRegister2 = requestAdminAuthRegister(
     'z6969@ad.unsw.edu.au',
     'Password2',
     'Firstt',
@@ -50,7 +49,7 @@ beforeEach(() => {
   );
   session2 = responseRegister2.body.session;
 
-  responseCreate2 = requestAdminQuizCreate(
+  const responseCreate2 = requestAdminQuizCreate(
     session2,
     'Quiz Namee',
     'Quiz Descriptionn'
@@ -235,6 +234,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       ]
     });
     expect(responseQuizGet3.statusCode).toStrictEqual(OK);
+
+    // Check that the tranferred quiz has the correct timeCreated
+    const responseQuizDetails = requestGetQuiz(quizId, session2);
+    responseQuizDetails.body.timeCreated = timeCreated;
 
     // Check user1 no longer has the quiz
     const responseQuizGet4 = requestGetQuizList(session);
