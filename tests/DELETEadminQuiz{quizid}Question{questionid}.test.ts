@@ -19,9 +19,6 @@ const FORBIDDEN = 403;
 const quizIdOffset = 727;
 const questionIdOffset = 727;
 
-let responseRegister: responseInterface;
-let responseCreate: responseInterface;
-let responseQuestion: responseInterface;
 let responseQuizGet: responseInterface;
 let session: string;
 let quizId: number;
@@ -32,20 +29,20 @@ let questionId: number;
 // with the quiz details
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
     'Last'
   );
   session = responseRegister.body.session;
-  responseCreate = requestAdminQuizCreate(
+  const responseCreate = requestAdminQuizCreate(
     session,
     'Name',
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  responseQuestion = requestAdminQuizQuestionCreate(
+  const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -177,7 +174,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
               id: 1,
             },
             {
-              answer: 'ur mom',
+              answer: 'Queen Elizibeth',
               colour: expect.any(String),
               correct: false,
               id: 2,
