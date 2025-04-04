@@ -224,6 +224,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       'Quiz Name',
       'Description'
     );
+    const timeCreated = Math.floor(Date.now() / 1000);
     const id = responseQuizCreate.body.quizId;
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
@@ -234,8 +235,8 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: id,
       name: 'Quiz Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeCreated,
       description: 'Description',
       numQuestions: 0,
       questions: [],
