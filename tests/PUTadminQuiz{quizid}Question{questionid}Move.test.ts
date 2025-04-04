@@ -19,33 +19,30 @@ const FORBIDDEN = 403;
 const quizIdOffset = 727;
 const questionIdOffset = 727;
 
-let responseRegister: responseInterface;
-let responseCreate: responseInterface;
-let responseQuestion: responseInterface;
-let responseQuestion2: responseInterface;
-let responseQuestion3: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
 let questionId2: number;
 let questionId3: number;
 
+// Before each test clears the data then registers a user and gets the current
+// session then creates a quiz with 3 questions and gets the quiz id and question ids
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
     'Last'
   );
   session = responseRegister.body.session;
-  responseCreate = requestAdminQuizCreate(
+  const responseCreate = requestAdminQuizCreate(
     session,
     'Name',
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  responseQuestion = requestAdminQuizQuestionCreate(
+  const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -59,7 +56,7 @@ beforeEach(() => {
             correct: true
           },
           {
-            answer: 'ur mom',
+            answer: 'Queen Elizebeth',
             correct: false
           }
         ]
@@ -67,7 +64,7 @@ beforeEach(() => {
     }
   );
   questionId = responseQuestion.body.questionId;
-  responseQuestion2 = requestAdminQuizQuestionCreate(
+  const responseQuestion2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -89,7 +86,7 @@ beforeEach(() => {
     }
   );
   questionId2 = responseQuestion2.body.questionId;
-  responseQuestion3 = requestAdminQuizQuestionCreate(
+  const responseQuestion3 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -116,12 +113,15 @@ beforeEach(() => {
 describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
+      // Moves the question and gets the response
       const responseMove = requestAdminQuizQuestionMove(
         quizId,
         questionId,
         session,
         1
       );
+      // Checkst that a valid call to move question returns an empty object
+      // and a status code of 200
       expect(responseMove.body).toStrictEqual({});
       expect(responseMove.statusCode).toStrictEqual(OK);
     });
@@ -135,6 +135,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         session + 'Invalid Session',
         1
       );
+      // Checks that a unauthorised call to move question returns an error object and a
+      // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -166,6 +168,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         session2,
         1
       );
+      // Checks that a forbidden call to move question returns an error object and a 
+      // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
     });
@@ -199,7 +203,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           newPosition: 5
         },
         {
-          description: ' newPosition is the same as current one',
+          description: 'NewPosition is the same as current one',
           questionId: questionId,
           newPosition: 0
         }
@@ -217,7 +221,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move works as intended', () => {
-    const responseQuizGet = requestGetQuiz(quizId, session);
+    // Gets the latest details of the quiz
+    let responseQuizGet = requestGetQuiz(quizId, session);
     expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
       name: 'Name',
@@ -232,7 +237,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               id: 1,
             },
             {
-              answer: 'ur mom',
+              answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
               id: 2,
@@ -292,7 +297,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
 
     // Move 1 to 2 (0 2 1)
-    const responseMove = requestAdminQuizQuestionMove(
+    let responseMove = requestAdminQuizQuestionMove(
       quizId,
       questionId2,
       session,
@@ -302,8 +307,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     expect(responseMove.statusCode).toStrictEqual(OK);
 
     // Check again
-    const responseQuizGet2 = requestGetQuiz(quizId, session);
-    expect(responseQuizGet2.body).toStrictEqual({
+    responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
       name: 'Name',
       numQuestions: 3,
@@ -317,7 +322,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               id: 1,
             },
             {
-              answer: 'ur mom',
+              answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
               id: 2,
@@ -374,21 +379,21 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       timeLastEdited: expect.any(Number),
       timeLimit: 17,
     });
-    expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
 
     // Move 2 to 0 (2 0 1)
-    const responseMove2 = requestAdminQuizQuestionMove(
+    responseMove = requestAdminQuizQuestionMove(
       quizId,
       questionId3,
       session,
       0
     );
-    expect(responseMove2.body).toStrictEqual({});
-    expect(responseMove2.statusCode).toStrictEqual(OK);
+    expect(responseMove.body).toStrictEqual({});
+    expect(responseMove.statusCode).toStrictEqual(OK);
 
     // Check again
-    const responseQuizGet3 = requestGetQuiz(quizId, session);
-    expect(responseQuizGet3.body).toStrictEqual({
+    responseQuizGet = requestGetQuiz(quizId, session);
+    expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
       name: 'Name',
       numQuestions: 3,
@@ -422,7 +427,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               id: 1,
             },
             {
-              answer: 'ur mom',
+              answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
               id: 2,
@@ -459,6 +464,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       timeLastEdited: expect.any(Number),
       timeLimit: 17,
     });
-    expect(responseQuizGet3.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(OK);
   });
 });
