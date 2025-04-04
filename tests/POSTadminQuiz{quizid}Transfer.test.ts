@@ -23,6 +23,8 @@ let session2: string;
 let quizId: number;
 let quizId2: number;
 
+// Before each test clears the data and registers two users then
+// creates a quiz for each using their session and obtains their quiz id
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
