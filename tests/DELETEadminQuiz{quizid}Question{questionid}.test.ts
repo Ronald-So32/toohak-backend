@@ -27,6 +27,9 @@ let session: string;
 let quizId: number;
 let questionId: number;
 
+// Before each test clears the data then registers a user, gets the 
+// current session then creates a quiz and gets the quiz and question id
+// with the quiz details
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -56,7 +59,7 @@ beforeEach(() => {
             correct: true
           },
           {
-            answer: 'ur mom',
+            answer: 'Queen Elizibeth',
             correct: false
           }
         ]
@@ -70,11 +73,14 @@ beforeEach(() => {
 describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
+      // Deletes the question and gets the response
       const responseQuestionDelete = requestDeleteQuizQuestion(
         quizId,
         questionId,
         session
       );
+      // Checks that a valid deltion returns an empty object and a
+      // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
       expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
     });
@@ -87,6 +93,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session + 'Invalid Session'
       );
+      // Checks that a unauthorised deletion returns an error object and a
+      // status code of 401
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -102,6 +110,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
+      // Checks that a foribidden deletion returns an error object and a
+      // status code of 403
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
 
@@ -128,6 +138,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   });
 
   test('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
+    // Registers a second user and gets it's session
     const responseRegister2 = requestAdminAuthRegister(
       'z6969@ad.unsw.edu.au',
       'Password2',

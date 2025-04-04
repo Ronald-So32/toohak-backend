@@ -17,6 +17,8 @@ let responseCreate: responseInterface;
 let session: string;
 let quizId: number;
 
+// Before each test clears the data then registers a user and gets
+// the current session then creating a quiz and gets the quiz id
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -36,14 +38,17 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
   test('Testing the code 200 return value', () => {
+    // Generates a question suggestion and gets the response
     const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
       quizId,
       session
     );
-    expect(responseQuestionSuggestion.statusCode).toStrictEqual(OK);
+    // Checks that a valid response returns a question object with suggested
+    // quiz and a status code of 200
     expect(responseQuestionSuggestion.body).toStrictEqual({
       question: expect.any(String)
     });
+    expect(responseQuestionSuggestion.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
@@ -52,9 +57,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
         quizId,
         session + 'Invalid Session'
       );
-
-      expect(responseQuestionSuggestion.statusCode).toStrictEqual(UNAUTHORISED);
+      // Checks that a unauthorised call to suggest question returns an error object
+      // and a status code of 401
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionSuggestion.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
@@ -62,9 +68,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
         quizId + quizIdOffset,
         session
       );
-
-      expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);
+      // Checks that a call to suggest from non-existant quiz returns an error object
+      // and status code of 403
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 
