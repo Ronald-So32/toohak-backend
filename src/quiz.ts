@@ -385,12 +385,9 @@ export function adminQuizQuestionCreate(
     return questionValidation as errorInterface;
   }
 
-  // DO this in a helper instead
-  if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
-  }
-  if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  const answerValid = validateAnswer(answerOptions);
+  if (answerValid !== true) {
+    return answerValid as errorInterface;
   }
 
   if (timeLimit <= 0) {
@@ -402,12 +399,9 @@ export function adminQuizQuestionCreate(
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
 
-  // Another helper
-  if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
-  }
-  if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  const pointsValid = validatePoints(points);
+  if (pointsValid !== true) {
+    return pointsValid as errorInterface;
   }
 
   const answerStrings: string[] = [];
