@@ -500,7 +500,7 @@ export function validateAnswer(answerOptions: answersInterface[]): boolean | err
 
 /**
  * Generates a consistent timestamp in seconds for tracking edits and creation times.
- * 
+ *
  * @returns {number} - Current timestamp in seconds since epoch
  */
 export function getCurrentTimestamp(): number {

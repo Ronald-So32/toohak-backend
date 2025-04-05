@@ -74,12 +74,14 @@ const HOST: string = process.env.IP || '127.0.0.1';
 //  ================= WORK IS DONE BELOW THIS LINE ===================
 // ====================================================================
 
+// Save the current state of the data into the json file
 export function save(): void {
   console.log(`Updating ${DB_PATH}`);
   const jsonData = JSON.stringify(getData(), null, 2);
   fs.writeFileSync(DB_PATH, jsonData);
 }
 
+// Load data from whatever is stored in the json file
 export function load(): void {
   const data = getData();
   if (fs.existsSync(DB_PATH)) {
