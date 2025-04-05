@@ -16,7 +16,8 @@ import {
   validQuestionString,
   randomColour,
   validatePoints,
-  validateAnswer
+  validateAnswer,
+  getCurrentTimestamp
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -132,7 +133,7 @@ export function adminQuizCreate(
 
   const id = createUUID();
 
-  const timeStamp = Math.floor(Date.now() / 1000);
+  const timeStamp = getCurrentTimestamp();
 
   const questionsArray: questionsInterface[] = [];
 
@@ -290,7 +291,7 @@ export function adminQuizNameUpdate(
   quiz.name = name;
 
   // Update timeLastEdited
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -338,7 +339,7 @@ export function adminQuizDescriptionUpdate(
   quiz.description = description;
 
   // Update timeLastEdited
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -456,7 +457,7 @@ export function adminQuizQuestionCreate(
   };
 
   quiz.questions.push(newQuestion);
-  quiz.timeLastEdited = Date.now();
+  quiz.timeLastEdited = getCurrentTimestamp();
   quiz.timeLimit += timeLimit;
   quiz.numQuestions += 1;
 
@@ -632,7 +633,7 @@ export function adminQuizQuestionMove(
   quiz.questions.splice(validQuestionIndex, 1);
   quiz.questions.splice(newPosition, 0, question);
 
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -813,7 +814,7 @@ export function adminQuizQuestionUpdate(
     answerOptions: updatedAnswerOptions
   };
 
-  quiz.timeLastEdited = Date.now();
+  quiz.timeLastEdited = getCurrentTimestamp();
   quiz.timeLimit = totalTime;
 
   return {};
