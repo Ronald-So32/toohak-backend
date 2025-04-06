@@ -1,4 +1,4 @@
-import { getData } from './dataStore';
+import { getData, sessionInterface, userInterface } from './dataStore';
 import {
   createUUID,
   validName,
@@ -33,7 +33,7 @@ export function adminAuthRegister(
   const data = getData();
 
   // Check if email has already been used
-  const emailUsed = data.users.some(user => user.email === email);
+  const emailUsed = data.users.some((user: userInterface) => user.email === email);
   if (emailUsed) {
     return Errors.invalidEmail();
   }
@@ -106,7 +106,7 @@ export function adminAuthLogin(
   const data = getData();
 
   // Checks if the user/email exists or not
-  const userData = data.users.find(user => user.email === email);
+  const userData = data.users.find((user: userInterface) => user.email === email);
   if (!userData) {
     return Errors.invalidEmail();
   }
@@ -145,7 +145,7 @@ export function adminUserDetails(
 ): { user: userDetailsInterface} | errorInterface {
   const data = getData();
 
-  const userData = data.users.find(user => user.userId === userId);
+  const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
     return Errors.invalidUser();
   }
@@ -182,14 +182,14 @@ export function adminUserDetailsUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userData = data.users.find(user => user.userId === userId);
+  const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
     return Errors.invalidUser();
   }
 
   // Check if new email has been used by other user
   const isEmailUsedByOtherUser = data.users.some(
-    user => user.email === email && user.userId !== userId
+    (user: userInterface) => user.email === email && user.userId !== userId
   );
   if (isEmailUsedByOtherUser) {
     return Errors.invalidEmail();
@@ -235,13 +235,13 @@ export function adminUserPasswordUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userData = data.users.find(user => user.userId === userId);
+  const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
     return Errors.invalidUser();
   }
 
   // Check if password of passed in userId is correct oldPassword
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user || user.password !== oldPassword) {
     return Errors.invalidUser();
   }
@@ -253,7 +253,9 @@ export function adminUserPasswordUpdate(
 
   userData.oldPasswords.push(userData.password);
 
-  const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
+  const isPasswordReused = userData.oldPasswords.some(
+    (pastPassword: string) => pastPassword === newPassword
+  );
   if (isPasswordReused) {
     return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
   }
@@ -281,7 +283,9 @@ export function adminAuthLogout(session: string): Record<string, never> | errorI
   const data = getData();
 
   // Finds the current session index from all the sessions
-  const sessionIndex = data.sessions.findIndex(sessions => sessions.session === session);
+  const sessionIndex = data.sessions.findIndex(
+    (sessions: sessionInterface) => sessions.session === session
+  );
 
   // Checks the session is valid
   if (sessionIndex === -1) {
