@@ -242,6 +242,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       session,
       newQuizName
     );
+    const timeEdited = Math.floor(Date.now() / 1000);
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
 
@@ -251,9 +252,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
 
     // Verify timeLastEdited has been updated
-    expect(responseQuizGet.body.timeLastEdited).toBeGreaterThanOrEqual(
-      responseQuizGet.body.timeCreated
-    );
+    expect(responseQuizGet.body.timeLastEdited).toStrictEqual(timeEdited);
 
     // Verify other properties remain unchanged
     expect(responseQuizGet.body.quizId).toStrictEqual(quizId);

@@ -23,6 +23,8 @@ let responseQuizGet: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
+let timeCreated: number;
+let timeEdited: number;
 
 // Before each test clears the data then registers a user, gets the
 // current session then creates a quiz and gets the quiz and question id
@@ -41,6 +43,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
   const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
@@ -63,6 +66,7 @@ beforeEach(() => {
       }
     }
   );
+  timeEdited = Math.floor(Date.now() / 1000);
   questionId = responseQuestion.body.questionId;
   responseQuizGet = requestGetQuiz(quizId, session);
 });
@@ -187,8 +191,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         },
       ],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 4,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
@@ -199,6 +203,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       questionId,
       session2
     );
+    timeEdited = Math.floor(Date.now() / 1000);
     expect(responseQuestionDelete.body).toStrictEqual({});
     expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
 
@@ -210,8 +215,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       numQuestions: 0,
       questions: [],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 0
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
