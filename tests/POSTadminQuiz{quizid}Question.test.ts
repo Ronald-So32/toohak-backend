@@ -16,16 +16,17 @@ const UNAUTHORISED = 401;
 const FORBIDDEN = 403;
 
 const quizIdOffset = 727;
-// const questionIdOffset = 727;
 
-let responseRegister: responseInterface;
-// let responseQuizCreate: responseInterface;
 let session: string;
 let quizId: number;
+let timeCreated: number;
 
+// Before each test clears the data, then registers a user and gets
+// the current session, then creates a quiz and gets the quiz id and
+// time created
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
@@ -38,11 +39,13 @@ beforeEach(() => {
     'Quiz Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 });
 
 describe('Testing POST /v1/admin/quiz', () => {
   test('Testing the return value', () => {
+    // Creates a question in the quiz and gets it's response
     const responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId,
       session,
@@ -64,6 +67,8 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
+    // Checks that a valid call to create question returns a questionId object
+    // and a status code 200
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
   });
@@ -91,21 +96,21 @@ describe('Testing POST /v1/admin/quiz', () => {
           }
         }
       );
+      // Checks that a unauthorised call to create question returns an error object and
+      // a status code of 401
       expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionCreate.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     describe('Testing the 403 errors', () => {
       test('Quiz not owned by user', () => {
-        responseRegister = requestAdminAuthRegister(
+        const responseRegister = requestAdminAuthRegister(
           'z5277272@ad.unsw.edu.au',
           'Password1',
           'First',
           'Last'
         );
         session = responseRegister.body.session;
-
-        requestAdminAuthLogin('z5277272@ad.unsw.edu.au', 'Password1');
 
         const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
@@ -128,6 +133,8 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           }
         );
+        // Checks that a forbiddent call to create question returns an error object and
+        // a status code of 403
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionCreate.statusCode).toStrictEqual(FORBIDDEN);
       });
@@ -196,6 +203,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             }
           );
+          // Checks that a invalid call to create question returns an error object and 
+          // a status code of 400
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
         });
@@ -510,7 +519,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               ]
             }
           };
-
+        
           requestAdminQuizQuestionCreate(
             quizId,
             session,
@@ -688,6 +697,7 @@ describe('Testing POST /v1/admin/quiz', () => {
   });
 
   test('Testing POST /v1/admin/quiz/{quizid}/question works as intended', () => {
+    // Creates one question and gets it's question id
     let responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId,
       session,
@@ -713,6 +723,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
+    // Creates another question and gets it's id and time question was created
     responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId,
       session,
@@ -738,17 +749,21 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
+    const timeLastEdited1 = Math.floor(Date.now() / 1000);
     const question2Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
+    // Creates a second quiz and gets it's id and time created
     const responseQuizCreate2 = requestAdminQuizCreate(
       session,
       'Quiz Name2',
       'Description2'
     );
+    const timeCreated2 = Math.floor(Date.now() / 1000);
     const quizId2 = responseQuizCreate2.body.quizId;
-
+    
+    // Creates a question in the second quiz and gets it's id and time created
     responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId2,
       session,
@@ -774,16 +789,19 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       }
     );
+    const timeLastEdited2 = Math.floor(Date.now() / 1000);
     const question3Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
+    // Checkt that the first quiz has the right details and that the time editted is when
+    // the latest question was made in the quiz
     let responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
       name: 'Quiz Name',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeLastEdited1,
       description: 'Description',
       numQuestions: 2,
       questions: [
@@ -838,12 +856,13 @@ describe('Testing POST /v1/admin/quiz', () => {
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
+    // Checks again for the second quiz
     responseQuizDetails = requestGetQuiz(quizId2, session);
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId2,
       name: 'Quiz Name2',
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated2,
+      timeLastEdited: timeLastEdited2,
       description: 'Description2',
       numQuestions: 1,
       questions: [
