@@ -23,6 +23,8 @@ let quizId: number;
 let questionId: number;
 let questionId2: number;
 let questionId3: number;
+let timeCreated: number;
+let timeEdited: number;
 
 // Before each test clears the data then registers a user and gets the current
 // session then creates a quiz with 3 questions and gets the quiz id and question ids
@@ -40,6 +42,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
   const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
@@ -106,6 +109,7 @@ beforeEach(() => {
       }
     }
   );
+  timeEdited = Math.floor(Date.now() / 1000);
   questionId3 = responseQuestion3.body.questionId;
 });
 
@@ -289,8 +293,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         }
       ],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 17,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
@@ -302,6 +306,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       session,
       2
     );
+    timeEdited = Math.floor(Date.now() / 1000);
     expect(responseMove.body).toStrictEqual({});
     expect(responseMove.statusCode).toStrictEqual(OK);
 
@@ -374,8 +379,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         },
       ],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 17,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
@@ -387,6 +392,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       session,
       0
     );
+    timeEdited = Math.floor(Date.now() / 1000);
     expect(responseMove.body).toStrictEqual({});
     expect(responseMove.statusCode).toStrictEqual(OK);
 
@@ -459,8 +465,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         },
       ],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 17,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);

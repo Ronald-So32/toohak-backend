@@ -21,6 +21,7 @@ const questionIdOffset = 999;
 let session: string;
 let quizId: number;
 let questionId: number;
+let timeCreated: number;
 
 // Before each test clears the data and registers a user and creates a quiz
 // and question and gets the current session, quiz id and quetsion id
@@ -39,6 +40,7 @@ beforeEach(() => {
     'Quiz Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 
   const responseQuestionCreate = requestAdminQuizQuestionCreate(
@@ -896,7 +898,7 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
       }
     }
   );
-
+  const timeEdited = Math.floor(Date.now() / 1000);
   expect(responseQuestionUpdate.body).toStrictEqual({});
   expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
 
@@ -907,8 +909,8 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
   expect(responseQuizDetails.body).toStrictEqual({
     quizId: quizId,
     name: 'Quiz Name',
-    timeCreated: expect.any(Number),
-    timeLastEdited: expect.any(Number),
+    timeCreated: timeCreated,
+    timeLastEdited: timeEdited,
     description: 'Description',
     numQuestions: 2,
     questions: [
