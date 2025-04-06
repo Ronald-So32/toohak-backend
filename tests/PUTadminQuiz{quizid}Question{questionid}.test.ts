@@ -95,7 +95,7 @@ describe('Test invalid cases', () => {
         }
       );
       expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
     });
 
     describe('Invalid question strings', () => {
