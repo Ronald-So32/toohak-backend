@@ -634,8 +634,6 @@ export function adminQuizQuestionSuggestion(
   // Ensure the question meets our requirements
   if (generatedQuestion.length < 5) {
     generatedQuestion = `What is ${quizName} about?`;
-  } else if (generatedQuestion.length > 50) {
-    generatedQuestion = generatedQuestion.substring(0, 47) + '...';
   }
 
   return { question: generatedQuestion };
