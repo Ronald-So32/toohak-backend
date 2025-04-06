@@ -1,7 +1,9 @@
 import {
   getData,
   questionsInterface,
-  answersInterface
+  answersInterface,
+  userInterface,
+  quizInterface
 } from './dataStore';
 import {
   createUUID,
@@ -16,7 +18,9 @@ import {
   validQuestionString,
   randomColour,
   validatePoints,
-  validateAnswer
+  validateAnswers,
+  getCurrentTimestamp,
+  findQuizByUser
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -33,9 +37,11 @@ import request from 'sync-request-curl';
 export function adminQuizList(
   userId: number
 ): { quizzes: quizSummariesInterface[] } | errorInterface {
+  // Fetches the latest data from the dataStore
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  // Checks if the user exists
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -43,8 +49,8 @@ export function adminQuizList(
   // Iterate through all quizzes and put in quizzes array if quiz is created by
   // user of passed in userId
   const quizzes = data.quizzes
-    .filter(quiz => quiz.createdBy === userId)
-    .map(quiz => ({
+    .filter((quiz: quizInterface) => quiz.createdBy === userId)
+    .map((quiz: quizInterface) => ({
       quizId: quiz.quizId,
       name: quiz.name,
     }));
@@ -67,17 +73,15 @@ export function adminQuizGet(
 ): quizGetDetailsInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(
-    (q) => q.quizId === quizId && q.createdBy === userId
-  );
-
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  // Checks if the quiz exists and created by the user
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   return {
@@ -111,28 +115,35 @@ export function adminQuizCreate(
 ): quizIdInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
+  // Checks if the name of the quiz is valid
   const validName = validQuizName(name);
   if (validName !== true) {
     return validName as errorInterface;
   }
 
-  const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
+  // Checks if the name is alread in use
+  const duplicate = data.quizzes.some(
+    (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
+  );
   if (duplicate) {
     return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
 
+  // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
 
+  // Creates a UUID for the quiz
   const id = createUUID();
 
-  const timeStamp = Math.floor(Date.now() / 1000);
+  // Gets the current timestamp
+  const timeStamp = getCurrentTimestamp();
 
   const questionsArray: questionsInterface[] = [];
 
@@ -167,17 +178,15 @@ export function adminQuizRemove(
   userId: number,
   quizId: number
 ): Record<string, never> | errorInterface {
-  // Retrieves data from the data store
   const data = getData();
 
-  // Validates if the user exists
-  const userExists = data.users.some(user => user.userId === userId);
+  const userExists = data.users.some((user: userInterface) => user.userId === userId);
   if (!userExists) {
     return Errors.invalidUser();
   }
 
   // Finds the quiz index of the quiz in the quizzes array
-  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
@@ -209,21 +218,16 @@ export function adminQuizInfo(
   userId: number,
   quizId: number
 ): quizDetailsInterface | errorInterface {
-  // Retrieve data from the data store
   const data = getData();
 
-  // Check if user exists
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
-  // Finds the quiz that matches both quizId and userId
-  const quiz = data.quizzes.find(q => q.quizId === quizId && q.createdBy === userId);
-
-  if (!quiz) {
-    // Returns error if quiz is not found or not owned by user
-    return Errors.invalidQuiz();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   // Return quiz details if found
@@ -253,21 +257,14 @@ export function adminQuizNameUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  // Check if userId is valid
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   const validName = validQuizName(name);
@@ -276,7 +273,7 @@ export function adminQuizNameUpdate(
   }
 
   // Check if name is already used by the same user for another quiz
-  const nameExists = data.quizzes.some(q =>
+  const nameExists = data.quizzes.some((q: quizInterface) =>
     q.createdBy === userId &&
     q.name === name &&
     q.quizId !== quizId
@@ -290,7 +287,7 @@ export function adminQuizNameUpdate(
   quiz.name = name;
 
   // Update timeLastEdited
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -312,24 +309,16 @@ export function adminQuizDescriptionUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  // Check if userId is valid
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
-  }
-
-  // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
@@ -337,8 +326,7 @@ export function adminQuizDescriptionUpdate(
   // Update the quiz description
   quiz.description = description;
 
-  // Update timeLastEdited
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -361,80 +349,50 @@ export function adminQuizQuestionCreate(
 ): questionIdInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
-  // Validate question string
+  // Validates the question string
   const questionValidation = validQuestionString(question);
   if (questionValidation !== true) {
     return questionValidation as errorInterface;
   }
 
-  // DO this in a helper instead
-  if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
-  }
-  if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+  // Validates the answers given
+  const answersValid = validateAnswers(answerOptions);
+  if (answersValid !== true) {
+    return answersValid as errorInterface;
   }
 
+  // Checks if the time limit given is positive
   if (timeLimit <= 0) {
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) + timeLimit;
+  // Checks if the total time limit of quiz exceeds 3 minutes
+  const totalTime = quiz.questions.reduce(
+    (sum: number, q: questionsInterface) => sum + q.timeLimit, 0
+  ) + timeLimit;
   if (totalTime > 180) {
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
 
-  // Another helper
-  if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
-  }
-  if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+  // Checks if the points given is valid
+  const pointsValid = validatePoints(points);
+  if (pointsValid !== true) {
+    return pointsValid as errorInterface;
   }
 
-  const answerStrings: string[] = [];
-  let hasCorrectAnswer = false;
-
-  for (const answer of answerOptions) {
-    if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
-    }
-    if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
-    }
-
-    // Check for duplicate answers
-    if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
-    }
-    answerStrings.push(answer.answer);
-
-    if (answer.correct) {
-      hasCorrectAnswer = true;
-    }
-  }
-
-  if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
-  }
-
+  // Gives a unique id to each answer in the question
   let answerId = 0;
   const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
     answerId++;
@@ -447,6 +405,7 @@ export function adminQuizQuestionCreate(
 
   const id = createUUID();
 
+  // Creates the questionInterface body
   const newQuestion: questionsInterface = {
     questionId: id,
     question,
@@ -454,10 +413,11 @@ export function adminQuizQuestionCreate(
     points,
     answerOptions: updatedAnswerOptions
   };
-
+  // Appends the new question to the questionsInterface array of current quiz
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
+  // Updates the count for numbers of questions in quiz
   quiz.numQuestions += 1;
 
   return {
@@ -478,38 +438,39 @@ export function adminQuizQuestionCreate(
 export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
   const data = getData();
 
-  // Check for the quiz
-  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  // Checks if the quiz exists and gets the index of the quiz
+  const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
   if (quizIndex === -1) {
     return Errors.invalidQuiz();
   }
 
   const quiz = data.quizzes[quizIndex];
 
-  // Check for the user
+  // Checks if the quiz is created by the user
   if (quiz.createdBy !== userId) {
     return Errors.noPermission();
   }
 
-  // Check userEmail
-  const targetUser = data.users.find(user => user.email === userEmail);
+  // Checks if the target exist through email
+  const targetUser = data.users.find((user: userInterface) => user.email === userEmail);
   if (!targetUser) {
     return Errors.invalidEmail();
   }
 
-  // Target email is the same as self
-  const currentUser = data.users.find(user => user.userId === userId);
+  // Checks if the target email is the user himself
+  const currentUser = data.users.find((user: userInterface) => user.userId === userId);
   if (userEmail === currentUser.email) {
     return Errors.invalidString('User email', Errors.Specific.Email.SELF);
   }
 
-  // Target user already has a quiz with the same name
-  const nameConflict = data.quizzes.some(quizzes =>
+  // Checks if the target user has the quiz of the same name
+  const nameConflict = data.quizzes.some((quizzes: quizInterface) =>
     quizzes.createdBy === targetUser.userId && quiz.name === quizzes.name);
   if (nameConflict) {
     return Errors.invalidString('User email', Errors.Specific.Email.NAME);
   }
 
+  // Transfers the ownership of the quiz to target user
   data.quizzes[quizIndex].createdBy = targetUser.userId;
 
   return {};
@@ -532,26 +493,19 @@ export function adminDeleteQuizQuestion(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  // Check if userId is valid
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(
-    question => question.questionId === questionId
+    (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
@@ -559,7 +513,9 @@ export function adminDeleteQuizQuestion(
 
   const deletedQuestion = quiz.questions[validQuestionIndex];
 
+  // Updates the time limit of the quiz after the questions deleted
   quiz.timeLimit -= deletedQuestion.timeLimit;
+  // Updates the number of question in the quiz after the questions deleted
   quiz.numQuestions -= 1;
 
   // Delete question from its questionId
@@ -587,26 +543,18 @@ export function adminQuizQuestionMove(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  // Check if userid is valid
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
-  }
-
-  // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(
-    question => question.questionId === questionId
+    (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
@@ -628,11 +576,11 @@ export function adminQuizQuestionMove(
   }
 
   const question = quiz.questions[validQuestionIndex];
-
+  // Changes the position of the questions
   quiz.questions.splice(validQuestionIndex, 1);
   quiz.questions.splice(newPosition, 0, question);
 
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }
@@ -694,8 +642,6 @@ export function adminQuizQuestionSuggestion(
   // Ensure the question meets our requirements
   if (generatedQuestion.length < 5) {
     generatedQuestion = `What is ${quizName} about?`;
-  } else if (generatedQuestion.length > 50) {
-    generatedQuestion = generatedQuestion.substring(0, 47) + '...';
   }
 
   return { question: generatedQuestion };
@@ -720,43 +666,42 @@ export function adminQuizQuestionUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  const quiz = findQuizByUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
-  }
-
-  const questionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
+  const questionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
   if (questionIndex === -1) {
     return Errors.invalidQuestion();
   }
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
-  // Validate question string
   const questionValidation = validQuestionString(question);
   if (questionValidation !== true) {
     return questionValidation as errorInterface;
   }
 
-  const answerValid = validateAnswer(answerOptions);
-  if (answerValid !== true) {
-    return answerValid as errorInterface;
+  const answersValid = validateAnswers(answerOptions);
+  if (answersValid !== true) {
+    return answersValid as errorInterface;
   }
 
   if (timeLimit <= 0) {
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
 
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) -
+  // Checks that the time limit of quiz does not exceed 3 minutes after updating
+  const totalTime = quiz.questions.reduce(
+    (sum: number, q: questionsInterface) => sum + q.timeLimit, 0) -
     quiz.questions[questionIndex].timeLimit +
     timeLimit;
   if (totalTime > 180) {
@@ -766,32 +711,6 @@ export function adminQuizQuestionUpdate(
   const pointsValid = validatePoints(points);
   if (pointsValid !== true) {
     return pointsValid as errorInterface;
-  }
-
-  const answerStrings: string[] = [];
-  let hasCorrectAnswer = false;
-
-  for (const answer of answerOptions) {
-    if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
-    }
-    if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
-    }
-
-    // Check for duplicate answers
-    if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
-    }
-    answerStrings.push(answer.answer);
-
-    if (answer.correct) {
-      hasCorrectAnswer = true;
-    }
-  }
-
-  if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
   }
 
   let answerId = 0;

@@ -183,10 +183,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
             }
           }
         );
-        // Checks that forbidden call to update question returns an error object and
-        // a status code of 403
+        // Checks that invalid call to update question returns an error object and
+        // a status code of 400
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
 
       test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
@@ -248,6 +248,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
             }
           }
         );
+        // Checks that forbidden call to update question returns an error object and
+        // a status code of 403
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
       });

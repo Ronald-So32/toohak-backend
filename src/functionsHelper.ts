@@ -1,7 +1,8 @@
 import {
   getData,
   questionsInterface,
-  answersInterface
+  answersInterface,
+  quizInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -252,8 +253,10 @@ export class Errors {
  * @returns {number} - Returns the created uuid
  */
 export function createUUID(): number {
+  // Fetches the latest data from dataStore
   const data = getData();
 
+  // Updates the highest idg in the data
   data.highestID += 1;
 
   return data.highestID;
@@ -356,8 +359,10 @@ export function validQuizName(name: string): boolean | errorInterface {
  */
 export function generateSession(): string {
   const data = getData();
+  // Generates a session string using uuidv4
   let sessionNew = uuidv4();
 
+  // Generates a new session string if it already exist
   while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
     sessionNew = uuidv4();
   }
@@ -374,8 +379,10 @@ export function generateSession(): string {
  */
 export function findSessionFromUserId(userId: number): string | errorInterface {
   const data = getData();
+  // Finds a session with the given user id
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
 
+  // Checks if the session exists
   if (!theSession) {
     return Errors.invalidSession();
   }
@@ -392,6 +399,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
  */
 export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
   const data = getData();
+  // Finds a session with the session string
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
 
   if (!theSession) {
@@ -402,29 +410,6 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 }
 
 /**
- * Validates that a question exists in a specified quiz.
- *
- * @param {number} quizId - The quiz ID to search in
- * @param {number} questionId - The question ID to find
- *
- * @returns {Record<string, never> | errorInterface} - Empty object if found, otherwise an error
- */
-export function findQuestionIdInQuiz(
-  quizId: number,
-  questionId: number
-): Record<string, never> | errorInterface {
-  const data = getData();
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-
-  const questionExist = quiz.questions.find(question => question.questionId === questionId);
-  if (!questionExist) {
-    return Errors.invalidQuestion();
-  }
-
-  return {};
-}
-
-/**
  * Validates a question string according to length requirements.
  *
  * @param {string} question - The question text to validate
@@ -432,10 +417,12 @@ export function findQuestionIdInQuiz(
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
 export function validQuestionString(question: string): boolean | errorInterface {
+  // Checks if the length of question string is lesser then 5
   if (question.length < 5) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
   }
 
+  // Checks if the length of question string is greater then 50
   if (question.length > 50) {
     return Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG);
   }
@@ -449,6 +436,7 @@ export function validQuestionString(question: string): boolean | errorInterface 
  * @returns {string} - The randomly selected color name
  */
 export function randomColour(): string {
+  // Define the colours
   const colors = [
     'red', // #FF0000
     'blue', // #0000FF
@@ -456,6 +444,7 @@ export function randomColour(): string {
     'yellow', // #FFFF00
   ];
 
+  // Chooses a random colour
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
 }
@@ -468,10 +457,12 @@ export function randomColour(): string {
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
 export function validatePoints(points: number): boolean | errorInterface {
+  // Checks if the points is lesser then 1
   if (points < 1) {
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
   }
 
+  // Checks if the points is greater then 10
   if (points > 10) {
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
   }
@@ -486,14 +477,83 @@ export function validatePoints(points: number): boolean | errorInterface {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validateAnswer(answerOptions: answersInterface[]): boolean | errorInterface {
+export function validateAnswers(answerOptions: answersInterface[]): boolean | errorInterface {
+  // Checks if the amount of answers is lesser then 2
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
   }
 
+  // Checks if the amount of answers is greater then 6
   if (answerOptions.length > 6) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
   }
 
+  // Checks each answer in the answerOptions of the question
+  const answerStrings: string[] = [];
+  let hasCorrectAnswer = false;
+
+  for (const answer of answerOptions) {
+    // Checks if the answer string is lesser then 1
+    if (answer.answer.length < 1) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+    }
+    // Checks if the answer string is greater then 30
+    if (answer.answer.length > 30) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+    }
+
+    // Check for duplicate answers
+    if (answerStrings.includes(answer.answer)) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+    }
+    answerStrings.push(answer.answer);
+
+    // Checks if the question has a correct answer
+    if (answer.correct) {
+      hasCorrectAnswer = true;
+    }
+  }
+
+  // Checks if there is a correct answer in the available options
+  if (!hasCorrectAnswer) {
+    return Errors.noCorrectAnswers();
+  }
+
   return true;
+}
+
+/**
+ * Generates a consistent timestamp in seconds for tracking edits and creation times.
+ *
+ * @returns {number} - Current timestamp in seconds since epoch
+ */
+export function getCurrentTimestamp(): number {
+  return Math.floor(Date.now() / 1000);
+}
+
+/**
+ * Finds a quiz thats made by the given user through their quiz and user Ids
+ *
+ * @param {number} userId The user ID to search for
+ * @param {number} quizId The quiz ID to search for
+ *
+ * @returns {quizInterface | errorInterface} - The detail of the quiz if found,
+ * otherwise an error object
+ */
+
+export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
+  const data = getData();
+
+  // Check if quizId exist
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+
+  return quiz;
 }

@@ -23,8 +23,7 @@ import {
 } from './quiz';
 import {
   findUserIdFromSession,
-  Errors,
-  findQuestionIdInQuiz
+  Errors
 } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -74,12 +73,14 @@ const HOST: string = process.env.IP || '127.0.0.1';
 //  ================= WORK IS DONE BELOW THIS LINE ===================
 // ====================================================================
 
+// Save the current state of the data into the json file
 export function save(): void {
   console.log(`Updating ${DB_PATH}`);
   const jsonData = JSON.stringify(getData(), null, 2);
   fs.writeFileSync(DB_PATH, jsonData);
 }
 
+// Load data from whatever is stored in the json file
 export function load(): void {
   const data = getData();
   if (fs.existsSync(DB_PATH)) {
@@ -419,12 +420,15 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
   }
 
-  const questionExist = findQuestionIdInQuiz(quizId, questionId);
-  if ('error' in questionExist) {
-    return res.status(FORBIDDEN).json({ error: questionExist.error });
-  }
-
   const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+  if ('error' in result) {
+    // Check for specific error messages to determine status code
+    if (result.error === Errors.noPermissionError ||
+        result.error === Errors.invalidQuizError) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+    return res.status(BADREQUEST).json({ error: result.error });
+  }
 
   if ('error' in result) {
     return res.status(BADREQUEST).json({ error: result.error });
