@@ -38,25 +38,30 @@ export function adminAuthRegister(
     return Errors.invalidEmail();
   }
 
+  // Checks if the email is valid
   if (!(validator.isEmail(email))) {
     return Errors.invalidEmail();
   }
 
+  // Checks if the first name is valid
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
     return validFirst as errorInterface;
   }
 
+  // Checks if the last name is valid
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
     return validLast as errorInterface;
   }
 
+  // Checks if the password is valid
   const validPass = validPassword(password);
   if (validPass !== true) {
     return validPass as errorInterface;
   }
 
+  // Creates a UUID for the user
   const id = createUUID();
 
   // All user details are correct so push append them to the users array
@@ -71,8 +76,10 @@ export function adminAuthRegister(
     oldPasswords: [],
   });
 
+  // Generates the current session of user
   const currentSession = generateSession();
 
+  // Pushes the current session to data base of sessions
   data.sessions.push({ userId: id, session: currentSession });
 
   // New User registered correctly, return id and currentSession
@@ -95,14 +102,16 @@ export function adminAuthLogin(
   email: string,
   password: string
 ): userIdInterface | errorInterface {
+  // Fetches the latest data from dataStore
   const data = getData();
 
+  // Checks if the user/email exists or not
   const userData = data.users.find(user => user.email === email);
   if (!userData) {
     return Errors.invalidEmail();
   }
 
-  // User password is not correct
+  // Checks if the password entered is correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
     return Errors.invalidPassword();
@@ -237,11 +246,11 @@ export function adminUserPasswordUpdate(
     return Errors.invalidUser();
   }
 
+  // Check if newPassword has been used before
   if (oldPassword === newPassword) {
     return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
   }
 
-  // Check if newPassword has been used before
   userData.oldPasswords.push(userData.password);
 
   const isPasswordReused = userData.oldPasswords.some(pastPassword => pastPassword === newPassword);
@@ -271,12 +280,15 @@ export function adminUserPasswordUpdate(
 export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
   const data = getData();
 
+  // Finds the current session index from all the sessions
   const sessionIndex = data.sessions.findIndex(sessions => sessions.session === session);
 
+  // Checks the session is valid
   if (sessionIndex === -1) {
     return Errors.invalidSession();
   }
 
+  // Deletes the session from all the sessions
   data.sessions.splice(sessionIndex, 1);
 
   return {};
