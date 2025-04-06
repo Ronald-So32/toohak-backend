@@ -2,6 +2,7 @@ import {
   getData,
   questionsInterface,
   answersInterface,
+  userInterface,
   quizInterface
 } from './dataStore';
 import {
@@ -40,7 +41,7 @@ export function adminQuizList(
   const data = getData();
 
   // Checks if the user exists
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -48,8 +49,8 @@ export function adminQuizList(
   // Iterate through all quizzes and put in quizzes array if quiz is created by
   // user of passed in userId
   const quizzes = data.quizzes
-    .filter(quiz => quiz.createdBy === userId)
-    .map(quiz => ({
+    .filter((quiz: quizInterface) => quiz.createdBy === userId)
+    .map((quiz: quizInterface) => ({
       quizId: quiz.quizId,
       name: quiz.name,
     }));
@@ -72,7 +73,7 @@ export function adminQuizGet(
 ): quizGetDetailsInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -114,7 +115,7 @@ export function adminQuizCreate(
 ): quizIdInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -126,7 +127,7 @@ export function adminQuizCreate(
   }
 
   // Checks if the name is alread in use
-  const duplicate = data.quizzes.some(quiz => quiz.name === name && quiz.createdBy === userId);
+  const duplicate = data.quizzes.some((quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId);
   if (duplicate) {
     return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
@@ -177,13 +178,13 @@ export function adminQuizRemove(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userExists = data.users.some(user => user.userId === userId);
+  const userExists = data.users.some((user: userInterface) => user.userId === userId);
   if (!userExists) {
     return Errors.invalidUser();
   }
 
   // Finds the quiz index of the quiz in the quizzes array
-  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
@@ -217,7 +218,7 @@ export function adminQuizInfo(
 ): quizDetailsInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -254,7 +255,7 @@ export function adminQuizNameUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
@@ -270,7 +271,7 @@ export function adminQuizNameUpdate(
   }
 
   // Check if name is already used by the same user for another quiz
-  const nameExists = data.quizzes.some(q =>
+  const nameExists = data.quizzes.some((q: quizInterface) =>
     q.createdBy === userId &&
     q.name === name &&
     q.quizId !== quizId
@@ -306,7 +307,7 @@ export function adminQuizDescriptionUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
@@ -346,7 +347,7 @@ export function adminQuizQuestionCreate(
 ): questionIdInterface | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -437,7 +438,7 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   const data = getData();
 
   // Checks if the quiz exists and gets the index of the quiz
-  const quizIndex = data.quizzes.findIndex(quiz => quiz.quizId === quizId);
+  const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
   if (quizIndex === -1) {
     return Errors.invalidQuiz();
   }
@@ -450,19 +451,19 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   }
 
   // Checks if the target exist through email
-  const targetUser = data.users.find(user => user.email === userEmail);
+  const targetUser = data.users.find((user: userInterface) => user.email === userEmail);
   if (!targetUser) {
     return Errors.invalidEmail();
   }
 
   // Checks if the target email is the user himself
-  const currentUser = data.users.find(user => user.userId === userId);
+  const currentUser = data.users.find((user: userInterface) => user.userId === userId);
   if (userEmail === currentUser.email) {
     return Errors.invalidString('User email', Errors.Specific.Email.SELF);
   }
 
   // Checks if the target user has the quiz of the same name
-  const nameConflict = data.quizzes.some(quizzes =>
+  const nameConflict = data.quizzes.some((quizzes: quizInterface) =>
     quizzes.createdBy === targetUser.userId && quiz.name === quizzes.name);
   if (nameConflict) {
     return Errors.invalidString('User email', Errors.Specific.Email.NAME);
@@ -491,7 +492,7 @@ export function adminDeleteQuizQuestion(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const user = data.users.find(user => user.userId === userId);
+  const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
     return Errors.invalidUser();
   }
@@ -541,7 +542,7 @@ export function adminQuizQuestionMove(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
@@ -664,7 +665,7 @@ export function adminQuizQuestionUpdate(
 ): Record<string, never> | errorInterface {
   const data = getData();
 
-  const userFound = data.users.some(user => user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
   }
