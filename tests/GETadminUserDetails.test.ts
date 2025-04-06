@@ -17,6 +17,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
+// Before each test clears the data and registers a user, obtaining the current
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -30,7 +31,10 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/user/details', () => {
   test('Testing the code 200 return value', () => {
+    // Gets user details of current user
     const responseUserDetails = requestGetUserDetails(session);
+    // Checks that it returns and user object with the correct user details
+    // and that the status code is 200
     expect(responseUserDetails.body).toStrictEqual({
       user: {
         userId: expect.any(Number),
@@ -48,9 +52,11 @@ describe('Testing GET /v1/admin/user/details', () => {
       expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
       expect(responseRegister.statusCode).toStrictEqual(OK);
 
+      // Gets user details of an invalid session
       const responseUserDetails = requestGetUserDetails(
         session + 'Wrong session'
       );
+      // Checks that it returns an error object and that the status code is 401
       expect(responseUserDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUserDetails.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -95,6 +101,8 @@ describe('Testing GET /v1/admin/user/details', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
+    // Checkts that logging in with invalid detail returns an error object with
+    // the status code 400
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
 

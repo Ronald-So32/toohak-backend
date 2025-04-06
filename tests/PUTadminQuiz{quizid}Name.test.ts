@@ -20,6 +20,8 @@ let responseRegister: responseInterface;
 let session: string;
 let quizId: number;
 
+// Before each test clears the data and registers a user, obtaining the
+// session and also creates a quiz getting the quiz id
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -39,11 +41,14 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the name of the user's quiz
     const responseUpdate = requestAdminQuizUpdateName(
       quizId,
       session,
       'New Quiz Name'
     );
+    // Checkts that the response from a name update returns an empty object
+    // and a status code of 200
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
   });
@@ -55,6 +60,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         session + 'Invalid Session',
         'New Quiz Name'
       );
+      // Checks that a invalid session returns an error object and a status code
+      // of 401
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -65,6 +72,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         session,
         'New Quiz Name'
       );
+      // Checks that the non-existant quiz returns an error object and a status code
+      // of 403
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
     });
@@ -233,6 +242,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       session,
       newQuizName
     );
+    const timeEdited = Math.floor(Date.now() / 1000);
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
 
@@ -242,9 +252,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
 
     // Verify timeLastEdited has been updated
-    expect(responseQuizGet.body.timeLastEdited).toBeGreaterThanOrEqual(
-      responseQuizGet.body.timeCreated
-    );
+    expect(responseQuizGet.body.timeLastEdited).toStrictEqual(timeEdited);
 
     // Verify other properties remain unchanged
     expect(responseQuizGet.body.quizId).toStrictEqual(quizId);

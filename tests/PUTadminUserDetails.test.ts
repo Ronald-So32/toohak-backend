@@ -15,6 +15,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
+// Before each test clears the data and registers a user, obtaining the current
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -28,12 +29,14 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/user/details', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the user details
     const responseUpdate = requestAdminUserDetailsUpdate(
       session,
       'z69727@ad.unsw.edu.au',
       'Firsttt',
       'Lasttt'
     );
+    // Checks that the response returns an empty object and a status code of 200
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
   });
@@ -47,7 +50,8 @@ describe('Testing PUT /v1/admin/user/details', () => {
           'First',
           'Last'
         );
-
+        // Checks that the response on updating invalid session returns an error
+        // object and a status code of 401
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
       });
@@ -67,6 +71,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
           'First',
           'Last'
         );
+        // Checks that the response returns an error object and a status code of 400
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -330,6 +335,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
       expect(responseUpdate.body).toStrictEqual({});
       expect(responseUpdate.statusCode).toStrictEqual(OK);
 
+      // Retrieves the latest user detail of this session
       const responseDetails = requestGetUserDetails(session);
 
       expect(responseDetails.body).toStrictEqual({
