@@ -526,5 +526,3 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface | 
   
   return quiz;
 }
-
-export function validateQuestionAnswers()
