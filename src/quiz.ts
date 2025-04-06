@@ -16,7 +16,7 @@ import {
   validQuestionString,
   randomColour,
   validatePoints,
-  validateAnswer,
+  validateAnswers,
   getCurrentTimestamp,
   findQuizByUser
 } from './functionsHelper';
@@ -367,9 +367,9 @@ export function adminQuizQuestionCreate(
     return questionValidation as errorInterface;
   }
 
-  const answerValid = validateAnswer(answerOptions);
-  if (answerValid !== true) {
-    return answerValid as errorInterface;
+  const answersValid = validateAnswers(answerOptions);
+  if (answersValid !== true) {
+    return answersValid as errorInterface;
   }
 
   if (timeLimit <= 0) {
@@ -384,32 +384,6 @@ export function adminQuizQuestionCreate(
   const pointsValid = validatePoints(points);
   if (pointsValid !== true) {
     return pointsValid as errorInterface;
-  }
-
-  const answerStrings: string[] = [];
-  let hasCorrectAnswer = false;
-
-  for (const answer of answerOptions) {
-    if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
-    }
-    if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
-    }
-
-    // Check for duplicate answers
-    if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
-    }
-    answerStrings.push(answer.answer);
-
-    if (answer.correct) {
-      hasCorrectAnswer = true;
-    }
-  }
-
-  if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
   }
 
   let answerId = 0;
@@ -709,7 +683,7 @@ export function adminQuizQuestionUpdate(
     return questionValidation as errorInterface;
   }
 
-  const answerValid = validateAnswer(answerOptions);
+  const answerValid = validateAnswers(answerOptions);
   if (answerValid !== true) {
     return answerValid as errorInterface;
   }
@@ -728,32 +702,6 @@ export function adminQuizQuestionUpdate(
   const pointsValid = validatePoints(points);
   if (pointsValid !== true) {
     return pointsValid as errorInterface;
-  }
-
-  const answerStrings: string[] = [];
-  let hasCorrectAnswer = false;
-
-  for (const answer of answerOptions) {
-    if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
-    }
-    if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
-    }
-
-    // Check for duplicate answers
-    if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
-    }
-    answerStrings.push(answer.answer);
-
-    if (answer.correct) {
-      hasCorrectAnswer = true;
-    }
-  }
-
-  if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
   }
 
   let answerId = 0;
