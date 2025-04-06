@@ -483,3 +483,20 @@ export function validateAnswer(answerOptions: answersInterface[]): boolean | err
 export function getCurrentTimestamp(): number {
   return Math.floor(Date.now() / 1000);
 }
+
+
+export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
+  // Check if quizId is valid
+  const data = getData();
+  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  if (!quiz) {
+    return Errors.invalidQuiz();
+  }
+
+  // Check if user owns the quiz
+  if (quiz.createdBy !== userId) {
+    return Errors.noPermission();
+  }
+  
+  return quiz;
+}

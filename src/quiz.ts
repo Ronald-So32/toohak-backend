@@ -18,7 +18,7 @@ import {
   validatePoints,
   validateAnswer,
   getCurrentTimestamp,
-  findQuizbyUser
+  findQuizByUser
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -77,7 +77,7 @@ export function adminQuizGet(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -220,7 +220,7 @@ export function adminQuizInfo(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -258,7 +258,7 @@ export function adminQuizNameUpdate(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -312,7 +312,7 @@ export function adminQuizDescriptionUpdate(
   }
 
   // Checks if quizId is valid and if it's created by user
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -354,7 +354,7 @@ export function adminQuizQuestionCreate(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -515,7 +515,7 @@ export function adminDeleteQuizQuestion(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -565,7 +565,7 @@ export function adminQuizQuestionMove(
   }
 
   // Check if quizId is valid
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
@@ -691,7 +691,7 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidUser();
   }
 
-  const quiz = findQuizbyUser(userId, quizId);
+  const quiz = findQuizByUser(userId, quizId);
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
