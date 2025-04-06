@@ -402,29 +402,6 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 }
 
 /**
- * Validates that a question exists in a specified quiz.
- *
- * @param {number} quizId - The quiz ID to search in
- * @param {number} questionId - The question ID to find
- *
- * @returns {Record<string, never> | errorInterface} - Empty object if found, otherwise an error
- */
-export function findQuestionIdInQuiz(
-  quizId: number,
-  questionId: number
-): Record<string, never> | errorInterface {
-  const data = getData();
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-
-  const questionExist = quiz.questions.find(question => question.questionId === questionId);
-  if (!questionExist) {
-    return Errors.invalidQuestion();
-  }
-
-  return {};
-}
-
-/**
  * Validates a question string according to length requirements.
  *
  * @param {string} question - The question text to validate

@@ -23,8 +23,7 @@ import {
 } from './quiz';
 import {
   findUserIdFromSession,
-  Errors,
-  findQuestionIdInQuiz
+  Errors
 } from './functionsHelper';
 import { getData } from './dataStore';
 
