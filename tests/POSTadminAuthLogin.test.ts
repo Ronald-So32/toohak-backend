@@ -4,7 +4,8 @@ import {
   responseInterface,
   requestAdminAuthLogin,
   requestGetUserDetails,
-  requestAdminUserPasswordUpdate
+  requestAdminUserPasswordUpdate,
+  requestAdminAuthLogout
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -16,6 +17,8 @@ let responseRegister: responseInterface;
 let responseDetails: responseInterface;
 let session: string;
 
+// Before each test clears the datas then registers a user, it's current
+// session and user details
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -30,13 +33,17 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/auth/login', () => {
   test('Testing the code 200 return value', () => {
+    // Logs in the user
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
+    // Checks that logging in returns the current session and has a status code of 200
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
+    // Retrieves the new user details checking that the number of successful logins is
+    // 1 more then last login
     const responseDetailsNew = requestGetUserDetails(session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 1
@@ -70,6 +77,8 @@ describe('Testing POST /v1/admin/auth/login', () => {
           'z696969@ad.unsw.edu.au',
           'Password1'
         );
+        // Checks that the login attempt fails, returning an error object
+        // and a status code of 400
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
         expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
 
@@ -124,14 +133,21 @@ describe('Testing POST /v1/admin/auth/login', () => {
     expect(responseDetails.body.user.numSuccessfulLogins).toStrictEqual(1);
     expect(responseDetails.body.user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
 
-    // Can login
+    // Check user can log out
+    const responseLogout = requestAdminAuthLogout(session);
+    expect(responseLogout.body).toStrictEqual({});
+    expect(responseLogout.statusCode).toStrictEqual(OK);
+
+    // Can log back in
     const responseLogin = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
     expect(responseLogin.statusCode).toStrictEqual(OK);
+    session = responseLogin.body.session;
 
+    // Updates the current password
     const requestUpdate = requestAdminUserPasswordUpdate(
       session,
       'Password1',

@@ -16,6 +16,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
+// Before each test clears the data and register an user and obtains the current session
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -29,11 +30,14 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/user/password', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the password of the current user
     const responsePassword = requestAdminUserPasswordUpdate(
       session,
       'Password1',
       'Password2'
     );
+    // Checks that response from password update returns an empty object
+    // and a status code of 200
     expect(responsePassword.body).toStrictEqual({});
     expect(responsePassword.statusCode).toStrictEqual(OK);
   });
@@ -45,6 +49,8 @@ describe('Testing PUT /v1/admin/user/password', () => {
         'Password1',
         'Password2'
       );
+      // Checks that the response of the invalid password update returns an error object
+      // and a status code of 401
       expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePassword.statusCode).toStrictEqual(UNAUTHORISED);
     });
@@ -58,6 +64,8 @@ describe('Testing PUT /v1/admin/user/password', () => {
         'Password2',
         'Password1'
       );
+      // Checks that the response from password update returns an error obeject
+      // and a status code of 400
       expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePassword.statusCode).toStrictEqual(BADREQUEST);
     });

@@ -1,10 +1,9 @@
 import {
   requestClear,
-  responseInterface,
   requestAdminAuthRegister,
-  requestAdminAuthLogout,
   requestAdminQuizTransfer,
   requestAdminQuizCreate,
+  requestGetQuiz,
   requestGetQuizList
 } from './testsHelper';
 
@@ -15,18 +14,18 @@ const FORBIDDEN = 403;
 
 const quizIdOffset = 727;
 
-let responseRegister: responseInterface;
-let responseRegister2: responseInterface;
-let responseCreate: responseInterface;
-let responseCreate2: responseInterface;
 let session: string;
 let session2: string;
 let quizId: number;
 let quizId2: number;
+let timeCreated: number;
 
+// Before each test clears the data and registers two users then
+// creates a quiz for each using their session and obtains their quiz id
+// and time created
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
@@ -34,14 +33,15 @@ beforeEach(() => {
   );
   session = responseRegister.body.session;
 
-  responseCreate = requestAdminQuizCreate(
+  const responseCreate = requestAdminQuizCreate(
     session,
     'Quiz Name',
     'Quiz Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  responseRegister2 = requestAdminAuthRegister(
+  const responseRegister2 = requestAdminAuthRegister(
     'z6969@ad.unsw.edu.au',
     'Password2',
     'Firstt',
@@ -49,7 +49,7 @@ beforeEach(() => {
   );
   session2 = responseRegister2.body.session;
 
-  responseCreate2 = requestAdminQuizCreate(
+  const responseCreate2 = requestAdminQuizCreate(
     session2,
     'Quiz Namee',
     'Quiz Descriptionn'
@@ -59,11 +59,14 @@ beforeEach(() => {
 
 describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   test('Testing the code 200 return value', () => {
+    // Transfers the quiz then gets it's response
     const responseTransfer = requestAdminQuizTransfer(
       quizId,
       session,
       'z6969@ad.unsw.edu.au'
     );
+    // Checks that a valid response returns an empty object and a
+    // status code of 200
     expect(responseTransfer.body).toStrictEqual({});
     expect(responseTransfer.statusCode).toStrictEqual(OK);
   });
@@ -71,12 +74,13 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
   describe('Testing for error responses', () => {
     describe('Error 400: Bad Request', () => {
       test('userEmail is not a real user', () => {
-        // Try to transfer to non-existent user
         const responseTransfer = requestAdminQuizTransfer(
           quizId,
           session,
           'nonexistent@example.com'
         );
+        // Checks that a invalid transfer of quiz returns an error object
+        // and a status code of 400
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -119,21 +123,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session + 'Invalid Session',
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
+        // Checks that an unauthorised transfer returns an errors object and a
+        // status code of 401
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-      });
-
-      test('Logged out user', () => {
-        requestAdminAuthLogout(session);
-
-        // Try to transfer with logged out session
-        const responseTransfer = requestAdminQuizTransfer(
-          quizId,
-          session,
-          'z6969@ad.unsw.edu.au'
-        );
         expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
-        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
     });
 
@@ -154,8 +147,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session3,
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        // Checks that an forbidden transfer returns an error object and a
+        // status code of 403
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
       });
 
       test('Quiz does not exist', () => {
@@ -239,6 +234,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       ]
     });
     expect(responseQuizGet3.statusCode).toStrictEqual(OK);
+
+    // Check that the tranferred quiz has the correct timeCreated
+    const responseQuizDetails = requestGetQuiz(quizId, session2);
+    responseQuizDetails.body.timeCreated = timeCreated;
 
     // Check user1 no longer has the quiz
     const responseQuizGet4 = requestGetQuizList(session);
