@@ -1,8 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  requestAdminAuthLogin,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestGetQuiz
@@ -203,7 +201,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             }
           );
-          // Checks that a invalid call to create question returns an error object and 
+          // Checks that a invalid call to create question returns an error object and
           // a status code of 400
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
@@ -519,7 +517,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               ]
             }
           };
-        
+
           requestAdminQuizQuestionCreate(
             quizId,
             session,
@@ -762,7 +760,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     );
     const timeCreated2 = Math.floor(Date.now() / 1000);
     const quizId2 = responseQuizCreate2.body.quizId;
-    
+
     // Creates a question in the second quiz and gets it's id and time created
     responseQuestionCreate = requestAdminQuizQuestionCreate(
       quizId2,

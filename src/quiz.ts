@@ -461,7 +461,7 @@ export function adminQuizQuestionCreate(
   };
 
   quiz.questions.push(newQuestion);
-  quiz.timeLastEdited = Math.floor(Date.now() / 1000);;
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
   quiz.numQuestions += 1;
 

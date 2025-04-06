@@ -186,7 +186,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
       session,
       'New Description'
     );
-    let timeEdited = Math.floor(Date.now() / 1000);
+    const timeEdited = Math.floor(Date.now() / 1000);
     expect(responseUpdateDescription.body).toStrictEqual({});
     expect(responseUpdateDescription.statusCode).toStrictEqual(OK);
 
