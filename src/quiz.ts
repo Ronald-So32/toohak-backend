@@ -17,7 +17,8 @@ import {
   randomColour,
   validatePoints,
   validateAnswer,
-  getCurrentTimestamp
+  getCurrentTimestamp,
+  findQuizbyUser
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -34,8 +35,11 @@ import request from 'sync-request-curl';
 export function adminQuizList(
   userId: number
 ): { quizzes: quizSummariesInterface[] } | errorInterface {
+  // Gets the latest data from the dataStore
   const data = getData();
 
+  // Tries to find the user in the data then returns an error object user
+  // doesn't exist
   const userFound = data.users.some(user => user.userId === userId);
   if (!userFound) {
     return Errors.invalidUser();
@@ -73,12 +77,9 @@ export function adminQuizGet(
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(
-    (q) => q.quizId === quizId && q.createdBy === userId
-  );
-
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   return {
@@ -219,12 +220,9 @@ export function adminQuizInfo(
     return Errors.invalidUser();
   }
 
-  // Finds the quiz that matches both quizId and userId
-  const quiz = data.quizzes.find(q => q.quizId === quizId && q.createdBy === userId);
-
-  if (!quiz) {
-    // Returns error if quiz is not found or not owned by user
-    return Errors.invalidQuiz();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   // Return quiz details if found
@@ -260,15 +258,9 @@ export function adminQuizNameUpdate(
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   const validName = validQuizName(name);
@@ -319,17 +311,12 @@ export function adminQuizDescriptionUpdate(
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
+  // Checks if quizId is valid and if it's created by user
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
-  }
-
+  
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
@@ -367,14 +354,9 @@ export function adminQuizQuestionCreate(
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   const { question, timeLimit, points, answerOptions } = questionBody;
@@ -533,15 +515,9 @@ export function adminDeleteQuizQuestion(
     return Errors.invalidUser();
   }
 
-  // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   // Check if questionId is in given quiz
@@ -589,14 +565,9 @@ export function adminQuizQuestionMove(
   }
 
   // Check if quizId is valid
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  // Check if user owns the quiz
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   // Check if questionId is in given quiz
@@ -720,13 +691,9 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidUser();
   }
 
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
-  if (!quiz) {
-    return Errors.invalidQuiz();
-  }
-
-  if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+  const quiz = findQuizbyUser(userId, quizId);
+  if ('error' in quiz) {
+    return quiz as errorInterface;
   }
 
   const questionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
