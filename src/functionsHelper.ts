@@ -1,7 +1,8 @@
 import {
   getData,
   questionsInterface,
-  answersInterface
+  answersInterface,
+  quizInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';

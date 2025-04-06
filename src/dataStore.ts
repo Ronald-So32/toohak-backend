@@ -13,7 +13,7 @@
  * @property {string} password - The current password
  * @property {string[]} oldPasswords - History of old passwords
  */
-interface userInterface {
+export interface userInterface {
   userId: number;
   nameFirst: string;
   nameLast: string;
@@ -75,7 +75,7 @@ export interface questionsInterface {
  * @property {questionsInterface[]} questions - Array of questions in the quiz
  * @property {number} timeLimit - Total time limit for the quiz in seconds
  */
-interface quizInterface {
+export interface quizInterface {
   quizId: number;
   name: string;
   timeCreated: number;
@@ -95,7 +95,7 @@ interface quizInterface {
  * @property {number} userId - User ID associated with the session
  * @property {string} session - Session token
  */
-interface sessionInterface {
+export interface sessionInterface {
   userId: number;
   session: string;
 }
@@ -110,7 +110,7 @@ interface sessionInterface {
  * @property {number} highestID - Highest ID in the system
  * @property {sessionInterface[]} sessions - Array of active sessions
  */
-interface Data {
+export interface Data {
   users: userInterface[];
   quizzes: quizInterface[];
 

@@ -1,7 +1,8 @@
 import {
   getData,
   questionsInterface,
-  answersInterface
+  answersInterface,
+  quizInterface
 } from './dataStore';
 import {
   createUUID,
@@ -375,7 +376,9 @@ export function adminQuizQuestionCreate(
   }
 
   // Checks if the total time limit of quiz exceeds 3 minutes
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) + timeLimit;
+  const totalTime = quiz.questions.reduce(
+    (sum: number, q: questionsInterface) => sum + q.timeLimit, 0
+  ) + timeLimit;
   if (totalTime > 180) {
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
@@ -500,7 +503,7 @@ export function adminDeleteQuizQuestion(
 
   // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(
-    question => question.questionId === questionId
+    (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
@@ -549,7 +552,7 @@ export function adminQuizQuestionMove(
   }
 
   const validQuestionIndex = quiz.questions.findIndex(
-    question => question.questionId === questionId
+    (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
     return Errors.invalidQuestion();
@@ -671,7 +674,9 @@ export function adminQuizQuestionUpdate(
     return quiz as errorInterface;
   }
 
-  const questionIndex = quiz.questions.findIndex(question => question.questionId === questionId);
+  const questionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
   if (questionIndex === -1) {
     return Errors.invalidQuestion();
   }
@@ -693,7 +698,8 @@ export function adminQuizQuestionUpdate(
   }
 
   // Checks that the time limit of quiz does not exceed 3 minutes after updating
-  const totalTime = quiz.questions.reduce((sum, q) => sum + q.timeLimit, 0) -
+  const totalTime = quiz.questions.reduce(
+    (sum: number, q: questionsInterface) => sum + q.timeLimit, 0) -
     quiz.questions[questionIndex].timeLimit +
     timeLimit;
   if (totalTime > 180) {
