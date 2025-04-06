@@ -463,7 +463,7 @@ export function validatePoints(points: number): boolean | errorInterface {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validateAnswer(answerOptions: answersInterface[]): boolean | errorInterface {
+export function validateAnswers(answerOptions: answersInterface[]): boolean | errorInterface {
   if (answerOptions.length < 2) {
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
   }
@@ -472,6 +472,32 @@ export function validateAnswer(answerOptions: answersInterface[]): boolean | err
     return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
   }
 
+  const answerStrings: string[] = [];
+  let hasCorrectAnswer = false;
+
+  for (const answer of answerOptions) {
+    if (answer.answer.length < 1) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+    }
+    if (answer.answer.length > 30) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+    }
+
+    // Check for duplicate answers
+    if (answerStrings.includes(answer.answer)) {
+      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+    }
+    answerStrings.push(answer.answer);
+
+    if (answer.correct) {
+      hasCorrectAnswer = true;
+    }
+  }
+
+  if (!hasCorrectAnswer) {
+    return Errors.noCorrectAnswers();
+  }
+  
   return true;
 }
 
@@ -500,3 +526,5 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface | 
   
   return quiz;
 }
+
+export function validateQuestionAnswers()
