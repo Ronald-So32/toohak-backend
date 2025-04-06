@@ -413,8 +413,7 @@ export function adminQuizQuestionCreate(
   };
   // Appends the new question to the questionsInterface array of current quiz
   quiz.questions.push(newQuestion);
-  quiz.timeLastEdited = getCurrentTimestamp();
-  // Updates the total time limit of quiz
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
   // Updates the count for numbers of questions in quiz
   quiz.numQuestions += 1;
@@ -731,7 +730,7 @@ export function adminQuizQuestionUpdate(
     answerOptions: updatedAnswerOptions
   };
 
-  quiz.timeLastEdited = getCurrentTimestamp();
+  quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit = totalTime;
 
   return {};

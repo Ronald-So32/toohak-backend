@@ -19,30 +19,33 @@ const FORBIDDEN = 403;
 const quizIdOffset = 727;
 const questionIdOffset = 727;
 
-let responseRegister: responseInterface;
-let responseCreate: responseInterface;
-let responseQuestion: responseInterface;
 let responseQuizGet: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
+let timeCreated: number;
+let timeEdited: number;
 
+// Before each test clears the data then registers a user, gets the
+// current session then creates a quiz and gets the quiz and question id
+// with the quiz details
 beforeEach(() => {
   requestClear();
-  responseRegister = requestAdminAuthRegister(
+  const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
     'First',
     'Last'
   );
   session = responseRegister.body.session;
-  responseCreate = requestAdminQuizCreate(
+  const responseCreate = requestAdminQuizCreate(
     session,
     'Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
-  responseQuestion = requestAdminQuizQuestionCreate(
+  const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -56,13 +59,14 @@ beforeEach(() => {
             correct: true
           },
           {
-            answer: 'ur mom',
+            answer: 'Queen Elizibeth',
             correct: false
           }
         ]
       }
     }
   );
+  timeEdited = Math.floor(Date.now() / 1000);
   questionId = responseQuestion.body.questionId;
   responseQuizGet = requestGetQuiz(quizId, session);
 });
@@ -70,11 +74,14 @@ beforeEach(() => {
 describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
+      // Deletes the question and gets the response
       const responseQuestionDelete = requestDeleteQuizQuestion(
         quizId,
         questionId,
         session
       );
+      // Checks that a valid deltion returns an empty object and a
+      // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
       expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
     });
@@ -87,6 +94,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session + 'Invalid Session'
       );
+      // Checks that a unauthorised deletion returns an error object and a
+      // status code of 401
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -102,6 +111,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
+      // Checks that a foribidden deletion returns an error object and a
+      // status code of 403
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
 
@@ -128,6 +139,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   });
 
   test('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
+    // Registers a second user and gets it's session
     const responseRegister2 = requestAdminAuthRegister(
       'z6969@ad.unsw.edu.au',
       'Password2',
@@ -166,7 +178,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
               id: 1,
             },
             {
-              answer: 'ur mom',
+              answer: 'Queen Elizibeth',
               colour: expect.any(String),
               correct: false,
               id: 2,
@@ -179,8 +191,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         },
       ],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 4,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
@@ -191,6 +203,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       questionId,
       session2
     );
+    timeEdited = Math.floor(Date.now() / 1000);
     expect(responseQuestionDelete.body).toStrictEqual({});
     expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
 
@@ -202,8 +215,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       numQuestions: 0,
       questions: [],
       quizId: 2,
-      timeCreated: expect.any(Number),
-      timeLastEdited: expect.any(Number),
+      timeCreated: timeCreated,
+      timeLastEdited: timeEdited,
       timeLimit: 0
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);

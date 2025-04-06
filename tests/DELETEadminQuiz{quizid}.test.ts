@@ -20,6 +20,8 @@ let responseCreate: responseInterface;
 let session: string;
 let quizId: number;
 
+// Before each test clears the data and registers an user, obtaining it's
+// session and also creates a quiz for the user, obtaining the quiz id for it
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -39,7 +41,10 @@ beforeEach(() => {
 
 describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
+    // Deletes the quiz created by the current user and gets it's response
     const responseDeleteQuiz = requestDeleteQuiz(quizId, session);
+    // Checks that the response of the quiz deletion returns an empty object
+    // and a status code of 200
     expect(responseDeleteQuiz.body).toStrictEqual({});
     expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
   });
@@ -47,18 +52,23 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
       const responseDeleteQuiz = requestDeleteQuiz(quizId, session + 'Invalid Session');
+      // Checks that the response of an unauthorised quiz deletion returns an error object
+      // and a status code of 401
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
+      // Checks that the deletion of a non-existent quiz returns and error object and
+      // a status code of 403
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 
   test('Testing DELETE /v1/admin/quiz/{quizid} works as intended', () => {
+    // Get the quiz list of the current user to check that there is a quiz
     const responseList = requestGetQuizList(session);
     expect(responseList.body).toStrictEqual({
       quizzes: [
@@ -91,11 +101,13 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
       ]
     });
     expect(responseList2.statusCode).toStrictEqual(OK);
-
-    requestDeleteQuiz(
+    // Deletes a quiz using the list of quiz obtained
+    const responseDeleteQuiz = requestDeleteQuiz(
       responseList2.body.quizzes[0].quizId,
       session
     );
+    expect(responseDeleteQuiz.body).toStrictEqual({});
+    expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
 
     const responseList3 = requestGetQuizList(session);
     expect(responseList3.body).toStrictEqual({
