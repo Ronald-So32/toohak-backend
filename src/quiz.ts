@@ -127,16 +127,18 @@ export function adminQuizCreate(
   }
 
   // Checks if the name is alread in use
-  const duplicate = data.quizzes.some((quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId);
+  const duplicate = data.quizzes.some(
+    (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
+  );
   if (duplicate) {
     return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
   }
-  
+
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
-   
+
   // Creates a UUID for the quiz
   const id = createUUID();
 
@@ -316,7 +318,7 @@ export function adminQuizDescriptionUpdate(
   if ('error' in quiz) {
     return quiz as errorInterface;
   }
-  
+
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
   }
@@ -711,7 +713,7 @@ export function adminQuizQuestionUpdate(
   if (pointsValid !== true) {
     return pointsValid as errorInterface;
   }
-  
+
   let answerId = 0;
   const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
     answerId++;

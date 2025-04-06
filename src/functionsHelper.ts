@@ -461,7 +461,7 @@ export function validatePoints(points: number): boolean | errorInterface {
   if (points < 1) {
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
   }
-  
+
   // Checks if the points is greater then 10
   if (points > 10) {
     return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
@@ -507,7 +507,7 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
       return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
     }
     answerStrings.push(answer.answer);
-    
+
     // Checks if the question has a correct answer
     if (answer.correct) {
       hasCorrectAnswer = true;
@@ -518,7 +518,7 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
   if (!hasCorrectAnswer) {
     return Errors.noCorrectAnswers();
   }
-  
+
   return true;
 }
 
@@ -533,11 +533,12 @@ export function getCurrentTimestamp(): number {
 
 /**
  * Finds a quiz thats made by the given user through their quiz and user Ids
- * 
+ *
  * @param {number} userId The user ID to search for
  * @param {number} quizId The quiz ID to search for
  *
- * @returns {quizInterface | errorInterface} - The detail of the quiz if found, otherwise an error object
+ * @returns {quizInterface | errorInterface} - The detail of the quiz if found,
+ * otherwise an error object
  */
 
 export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
@@ -553,6 +554,6 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface | 
   if (quiz.createdBy !== userId) {
     return Errors.noPermission();
   }
-  
+
   return quiz;
 }
