@@ -4,13 +4,12 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestGetQuizList,
-  requestAdminAuthLogout
+  requestAdminAuthLogout,
+  OK,
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
 
 let session: string;
 

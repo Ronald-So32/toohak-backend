@@ -5,18 +5,16 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestGetQuiz
+  requestGetQuiz,
+  OK,
+  BADREQUEST,
+  UNAUTHORISED,
+  FORBIDDEN,
+  quizIdOffset,
+  questionIdOffset
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
-
-const quizIdOffset = 727;
-const questionIdOffset = 727;
 
 let session: string;
 let quizId: number;
