@@ -577,4 +577,3 @@ export function getLongestQuestionLine(text: string): null | string {
     current.length > longest.length ? current : longest
   );
 }
-
