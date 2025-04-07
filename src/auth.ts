@@ -95,26 +95,26 @@ export function adminAuthRegister(
  * @param {string} email - Email address of the user
  * @param {string} password - Password of the user
  *
- * @returns {userIdInterface | errorInterface} - Returns userId and session token
+ * @returns {userIdInterface} - Returns userId and session token
  * if successful, otherwise returns error
  */
 export function adminAuthLogin(
   email: string,
   password: string
-): userIdInterface | errorInterface {
+): userIdInterface {
   // Fetches the latest data from dataStore
   const data = getData();
 
   // Checks if the user/email exists or not
   const userData = data.users.find((user: userInterface) => user.email === email);
   if (!userData) {
-    return Errors.invalidEmail();
+    throw new Error(Errors.invalidEmail().error);
   }
 
   // Checks if the password entered is correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
-    return Errors.invalidPassword();
+    throw new Error(Errors.invalidPassword().error);
   }
 
   const currentSession = generateSession();
