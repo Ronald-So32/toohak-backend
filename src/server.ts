@@ -114,6 +114,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
 
   try {
     const result = adminAuthRegister(email, password, nameFirst, nameLast);
+    
     return res.status(OK).json({ session: result.session });
   } catch (error) {
     return res.status(BADREQUEST).json({ error: error.message });
@@ -126,6 +127,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 
   try {
     const result = adminAuthLogin(email, password);
+
     return res.status(OK).json({ session: result.session });
   } catch (error) {
     return res.status(BADREQUEST).json({ error: error.message });
@@ -136,20 +138,16 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
-  const userIdResult = findUserIdFromSession(session);
+  try {
+    const userIdResult = findUserIdFromSession(session);
 
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    const userId = userIdResult.userId;
+    const result = adminUserDetails(userId);
+
+    return res.status(OK).json({ user: result.user });
+  } catch(error) {
+    return res.status(UNAUTHORISED).json({ error: error.message });
   }
-
-  const userId = userIdResult.userId;
-  const result = adminUserDetails(userId);
-
-  if ('error' in result) {
-    return res.status(UNAUTHORISED).json({ error: result.error });
-  }
-
-  return res.status(OK).json({ user: result.user });
 });
 
 // PUT /v1/admin/user/details
