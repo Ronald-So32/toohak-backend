@@ -20,7 +20,8 @@ import {
   validatePoints,
   validateAnswers,
   getCurrentTimestamp,
-  findQuizByUser
+  findQuizByUser,
+  getLongestQuestionLine
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -632,7 +633,7 @@ export function adminQuizQuestionSuggestion(
   }
 
   let generatedQuestion = responseBody[0].generated_text;
-  const questionMatch = generatedQuestion.match(/^\w.*\?$/m);
+  const questionMatch = getLongestQuestionLine(generatedQuestion);
   if (!questionMatch) {
     generatedQuestion = `What is ${quizName} about?`;
   } else {
