@@ -60,7 +60,7 @@ app.use(cors());
 app.use(morgan('dev'));
 // For producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
-app.get('/', (res: Response) => res.redirect('/docs'));
+app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
 app.use('/docs', sui.serve, sui.setup(
   YAML.parse(file),
   { swaggerOptions: { docExpansion: config.expandDocs ? 'full' : 'list' } }
@@ -102,7 +102,7 @@ app.get('/echo', (req: Request, res: Response) => {
 });
 
 // DELETE /v1/clear route
-app.delete('/v1/clear', (res: Response) => {
+app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
 
   return res.status(OK).json({});
