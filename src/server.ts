@@ -112,13 +112,12 @@ app.delete('/v1/clear', (req: Request, res: Response) => {
 app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
-  const result = adminAuthRegister(email, password, nameFirst, nameLast);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
+  try {
+    const result = adminAuthRegister(email, password, nameFirst, nameLast);
+    return res.status(OK).json({ session: result.session });
+  } catch (error) {
+    return res.status(BADREQUEST).json({ error: error.message });
   }
-
-  return res.status(OK).json({ session: result.session });
 });
 
 // POST /v1/admin/auth/login
