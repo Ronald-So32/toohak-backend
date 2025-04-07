@@ -79,7 +79,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     });
     expect(responseUserDetails.statusCode).toStrictEqual(OK);
 
-    // Chage Password
+    // Change Password
     const requestUpdate = requestAdminUserPasswordUpdate(
       session,
       'Password1',
@@ -101,7 +101,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       'z7277272@ad.unsw.edu.au',
       'Password1'
     );
-    // Checkts that logging in with invalid detail returns an error object with
+    // Checks that logging in with invalid detail returns an error object with
     // the status code 400
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
     expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);

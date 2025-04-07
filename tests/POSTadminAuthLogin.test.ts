@@ -17,7 +17,7 @@ let responseRegister: responseInterface;
 let responseDetails: responseInterface;
 let session: string;
 
-// Before each test clears the datas then registers a user, it's current
+// Before each test clears the data then registers a user, it's current
 // session and user details
 beforeEach(() => {
   requestClear();
@@ -43,7 +43,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     expect(responseLogin.statusCode).toStrictEqual(OK);
 
     // Retrieves the new user details checking that the number of successful logins is
-    // 1 more then last login
+    // 1 more than last login
     const responseDetailsNew = requestGetUserDetails(session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
       responseDetails.body.user.numSuccessfulLogins + 1

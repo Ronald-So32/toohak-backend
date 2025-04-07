@@ -46,7 +46,7 @@ beforeEach(() => {
 describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
-      // Updates the decsription of the quiz
+      // Updates the description of the quiz
       const responseUpdateDescription = requestAdminQuizUpdateDescription(
         quizId,
         session,
@@ -66,7 +66,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         'New Description'
       );
       // Checks that the response when update with invalid session returns an error object
-      // and a stsatus code of 401
+      // and a status code of 401
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(UNAUTHORISED);
 
@@ -83,7 +83,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
         session,
         'New Description'
       );
-      // Checks that the response from a non-existant quiz returns an error string and
+      // Checks that the response from a non-existent quiz returns an error string and
       // a status code of 403
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(FORBIDDEN);
@@ -136,7 +136,7 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
           expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
           expect(responseUpdateDescription.statusCode).toStrictEqual(BADREQUEST);
 
-          // check that quiz description has not been changed
+          // Check that quiz description has not been changed
           const responseQuizGet2 = requestGetQuiz(quizId, session);
           expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
           expect(responseQuizGet2.statusCode).toStrictEqual(OK);

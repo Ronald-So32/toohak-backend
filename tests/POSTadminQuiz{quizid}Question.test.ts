@@ -94,7 +94,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           }
         }
       );
-      // Checks that a unauthorised call to create question returns an error object and
+      // Checks that an unauthorised call to create question returns an error object and
       // a status code of 401
       expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionCreate.statusCode).toStrictEqual(UNAUTHORISED);
@@ -131,7 +131,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           }
         );
-        // Checks that a forbiddent call to create question returns an error object and
+        // Checks that a forbidden call to create question returns an error object and
         // a status code of 403
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionCreate.statusCode).toStrictEqual(FORBIDDEN);
@@ -201,7 +201,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             }
           );
-          // Checks that a invalid call to create question returns an error object and
+          // Checks that an invalid call to create question returns an error object and
           // a status code of 400
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
@@ -792,7 +792,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
-    // Checkt that the first quiz has the right details and that the time editted is when
+    // Check that the first quiz has the right details and that the time edited is when
     // the latest question was made in the quiz
     let responseQuizDetails = requestGetQuiz(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({

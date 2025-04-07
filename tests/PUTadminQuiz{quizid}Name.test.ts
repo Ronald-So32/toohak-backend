@@ -21,7 +21,7 @@ let session: string;
 let quizId: number;
 
 // Before each test clears the data and registers a user, obtaining the
-// session and also creates a quiz getting the quiz id
+// session and creates a quiz getting the quiz id
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -47,7 +47,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       session,
       'New Quiz Name'
     );
-    // Checkts that the response from a name update returns an empty object
+    // Checks that the response from a name update returns an empty object
     // and a status code of 200
     expect(responseUpdate.body).toStrictEqual({});
     expect(responseUpdate.statusCode).toStrictEqual(OK);
@@ -60,7 +60,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         session + 'Invalid Session',
         'New Quiz Name'
       );
-      // Checks that a invalid session returns an error object and a status code
+      // Checks that an invalid session returns an error object and a status code
       // of 401
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
@@ -72,7 +72,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         session,
         'New Quiz Name'
       );
-      // Checks that the non-existant quiz returns an error object and a status code
+      // Checks that the non-existent quiz returns an error object and a status code
       // of 403
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);

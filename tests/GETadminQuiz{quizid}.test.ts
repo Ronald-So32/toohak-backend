@@ -72,7 +72,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
     // Gets the latest details of the quiz
     const responseQuizDetails = requestGetQuiz(quizId, session);
-    // Checks that the response from the function is an quiz object and that the
+    // Checks that the response from the function is a quiz object and that the
     // status code returned is 200
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
@@ -119,7 +119,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuizDetails = requestGetQuiz(quizId + quizIdOffset, session);
-      // Checks that the non-existant quiz returns an error object and a status code
+      // Checks that the non-existent quiz returns an error object and a status code
       // of 403
       expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
@@ -226,7 +226,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       }
     );
 
-    // Overites the response of quiz detail to latest
+    // Overwrites the response of quiz detail to latest
     responseQuizDetails = requestGetQuiz(quizId, session);
     // Checks that the response can get the latest quiz details after update
     // and that the status code is 200

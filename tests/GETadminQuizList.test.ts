@@ -15,7 +15,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
-// Before each test clears the data and registers an user and obtains the current session
+// Before each test clears the data and registers a user and obtains the current session
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(
@@ -31,8 +31,8 @@ describe('Testing GET /v1/admin/quiz/list', () => {
   test('Testing the code 200 return value', () => {
     // Gets the quiz list of the current user
     const responseList = requestGetQuizList(session);
-    // Checks that it returns an quizzes object with an empty array
-    // and also a status code of 200
+    // Checks that it returns a quizzes object with an empty array
+    // and a status code of 200
     expect(responseList.body).toStrictEqual({ quizzes: [] });
     expect(responseList.statusCode).toStrictEqual(OK);
   });
@@ -40,7 +40,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
       const responseList = requestGetQuizList(session + 'Invalid Session');
-      // Checks that the response when fetching for quiz list of invalid sesion
+      // Checks that the response when fetching for quiz list of invalid session
       // returns an error object and a status code of 401
       expect(responseList.body).toStrictEqual({ error: expect.any(String) });
       expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);

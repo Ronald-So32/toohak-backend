@@ -17,7 +17,7 @@ const UNAUTHORISED = 401;
 let responseRegister: responseInterface;
 let session: string;
 
-// Before each test clears the data and then registers an user, obtaining the
+// Before each test clears the data and then registers a user, obtaining the
 // current session
 beforeEach(() => {
   requestClear();
@@ -43,7 +43,7 @@ describe('Testing POST /v1/admin/auth/logout', () => {
   describe('Testing for error responses', () => {
     test('Invalid session', () => {
       const responseLogout = requestAdminAuthLogout(session + 'Invalid Session');
-      // Checks that a unauthorised logout returns an error object and a
+      // Checks that an unauthorised logout returns an error object and a
       // status code of 401
       expect(responseLogout.body).toStrictEqual({ error: expect.any(String) });
       expect(responseLogout.statusCode).toStrictEqual(UNAUTHORISED);

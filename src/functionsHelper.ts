@@ -256,7 +256,7 @@ export function createUUID(): number {
   // Fetches the latest data from dataStore
   const data = getData();
 
-  // Updates the highest idg in the data
+  // Updates the highest id in the data
   data.highestID += 1;
 
   return data.highestID;
@@ -532,7 +532,7 @@ export function getCurrentTimestamp(): number {
 }
 
 /**
- * Finds a quiz thats made by the given user through their quiz and user Ids
+ * Finds a quiz that's made by the given user through their quiz and user Ids
  *
  * @param {number} userId The user ID to search for
  * @param {number} quizId The quiz ID to search for
@@ -540,7 +540,6 @@ export function getCurrentTimestamp(): number {
  * @returns {quizInterface | errorInterface} - The detail of the quiz if found,
  * otherwise an error object
  */
-
 export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
   const data = getData();
 
@@ -556,4 +555,25 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface | 
   }
 
   return quiz;
+}
+
+/**
+ * Gets the longest line with a question mark ('?') character
+ *
+ * @param {string} text - The output of the llm prompt
+ *
+ * @returns {null | string} - Either a null or the question string
+ */
+export function getLongestQuestionLine(text: string): null | string {
+  const lines = text.split('\n');
+  const questionLines = lines.filter(line => /\?/.test(line));
+
+  if (questionLines.length === 0) {
+    return null;
+  }
+
+  // Only get the longest line with a '?' character
+  return questionLines.reduce((longest, current) =>
+    current.length > longest.length ? current : longest
+  );
 }

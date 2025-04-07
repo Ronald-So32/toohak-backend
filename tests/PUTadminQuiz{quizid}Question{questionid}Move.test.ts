@@ -123,7 +123,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         session,
         1
       );
-      // Checkst that a valid call to move question returns an empty object
+      // Checks that a valid call to move question returns an empty object
       // and a status code of 200
       expect(responseMove.body).toStrictEqual({});
       expect(responseMove.statusCode).toStrictEqual(OK);
@@ -138,7 +138,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         session + 'Invalid Session',
         1
       );
-      // Checks that a unauthorised call to move question returns an error object and a
+      // Checks that an unauthorised call to move question returns an error object and a
       // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
@@ -157,7 +157,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     });
 
     test('Session has no quizzes', () => {
-      // New session with no quizes
+      // New session with no quizzes
       const responseRegister2 = requestAdminAuthRegister(
         'z72696969@ad.unsw.edu.au',
         'Password1',

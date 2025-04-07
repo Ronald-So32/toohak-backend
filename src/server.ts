@@ -56,9 +56,9 @@ const app = express();
 app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
-// for logging errors (print to terminal)
+// For logging errors (print to terminal)
 app.use(morgan('dev'));
-// for producing the docs that define the API
+// For producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
 app.use('/docs', sui.serve, sui.setup(
@@ -444,7 +444,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   const questionId = parseInt(req.params.questionid);
 
   const userIdResult = findUserIdFromSession(session);
-  // check if userId is valid
+  // Check if userId is valid
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
   }
@@ -544,7 +544,7 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error });
 });
 
-// start server
+// Start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);

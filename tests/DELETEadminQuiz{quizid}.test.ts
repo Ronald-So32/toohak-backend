@@ -20,8 +20,8 @@ let responseCreate: responseInterface;
 let session: string;
 let quizId: number;
 
-// Before each test clears the data and registers an user, obtaining it's
-// session and also creates a quiz for the user, obtaining the quiz id for it
+// Before each test clears the data and registers a user, obtaining it's
+// session and creates a quiz for the user, obtaining the quiz id for it
 beforeEach(() => {
   requestClear();
   responseRegister = requestAdminAuthRegister(

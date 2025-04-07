@@ -80,7 +80,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
-      // Checks that a valid deltion returns an empty object and a
+      // Checks that a valid deletion returns an empty object and a
       // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
       expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
@@ -94,7 +94,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session + 'Invalid Session'
       );
-      // Checks that a unauthorised deletion returns an error object and a
+      // Checks that an unauthorised deletion returns an error object and a
       // status code of 401
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(UNAUTHORISED);
@@ -111,7 +111,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
-      // Checks that a foribidden deletion returns an error object and a
+      // Checks that a forbidden deletion returns an error object and a
       // status code of 403
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
