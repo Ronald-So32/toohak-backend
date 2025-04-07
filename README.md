@@ -1410,7 +1410,7 @@ The remaining time will be Q&A led by a tutor. That tutor may not necessarily be
 The formula used for automarking in this iteration is:
 
 `Mark = 90*(g * i^2 * min(c + 1, 100)^3) + 5*e + 5*t`
-(Mark equals 90% of `g` multiplied by `i` squared multiplied by the lower of `c + 1` or `100`, to the power of four, plus 5% of `e`, plus 5% of `t`).
+(Mark equals 90% of `g` multiplied by `i` squared multiplied by the lower of `c + 1` or `100`, to the power of three, plus 5% of `e`, plus 5% of `t`).
 
 Where:
  * `g` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
@@ -1526,13 +1526,13 @@ Demonstrations consist of a 15 minute Q&A in front of your tutor and potentially
 
 For Iteration 3, you will be demonstrating your work in week 11.
 
-This will consist of a 10 minute presentation and Q&A with 1-2 tutors.
+This will consist of a 15 minute presentation and Q&A with 1-2 tutors.
 
 You will be notified via course announcement when you can select the time of your presentation.
 
 If you are in an in-person tutorial, your week 11 presentation will be in-person. If you are in an online tutorial, your week 11 presentation will be online.
 
-More information about the details of this 10 minute presentation will be made available in the iteration 3 part of the spec.
+More information about the details of this 15 minute presentation will be made available in the iteration 3 part of the spec.
 
 ## 👌 7. Individual Contribution
 
