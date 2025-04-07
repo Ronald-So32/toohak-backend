@@ -24,7 +24,7 @@ let questionId: number;
 let timeCreated: number;
 
 // Before each test clears the data and registers a user and creates a quiz
-// and question and gets the current session, quiz id and quetsion id
+// and question and gets the current session, quiz id and question id
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -69,7 +69,7 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
   test('Testing correct return value', () => {
-    // Updates the qusetion and gets the reponse
+    // Updates the question and gets the response
     const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
       quizId,
       questionId,
@@ -124,7 +124,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
             }
           }
         );
-        // Checks that a unauthorised call to update question returns an error object
+        // Checks that an unauthorised call to update question returns an error object
         // and a status code of 401
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
@@ -592,7 +592,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
             ]
           }
         };
-        // Creates 3 questions that has a summed timelimit of under 3 minutes
+        // Creates 3 questions that has a summed time limit of under 3 minutes
         const responseQuestionCreate = requestAdminQuizQuestionCreate(
           quizId,
           session,
@@ -603,7 +603,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         requestAdminQuizQuestionCreate(quizId, session, questionBody);
         requestAdminQuizQuestionCreate(quizId, session, questionBody);
 
-        // Update the first question so that the timelimit summed with
+        // Update the first question so that the time limit summed with
         // the other two question will exceed 3 minutes
         const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
           quizId,
@@ -737,14 +737,14 @@ describe('Test valid cases', () => {
         ]
       }
     };
-    // Creates 3 question with summed timelimit of under 3 minute
+    // Creates 3 question with summed time limit of under 3 minute
     const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
 
     requestAdminQuizQuestionCreate(quizId, session, questionBody);
     requestAdminQuizQuestionCreate(quizId, session, questionBody);
 
-    // Change timelimit of first question so that the sum with other two
+    // Change time limit of first question so that the sum with other two
     // question is exactly 3 minutes
     const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId,
       questionId,
@@ -907,7 +907,7 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
   // Gets the latest details of the quiz with the first and second question
   const responseQuizDetails = requestGetQuiz(quizId, session);
   // Checks that the details of the quiz is correct and that the question
-  // was succefully updated
+  // was successfully updated
   expect(responseQuizDetails.body).toStrictEqual({
     quizId: quizId,
     name: 'Quiz Name',
