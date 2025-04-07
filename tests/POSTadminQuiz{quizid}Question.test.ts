@@ -3,17 +3,15 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestGetQuiz
+  requestGetQuiz,
+  OK,
+  BADREQUEST,
+  UNAUTHORISED,
+  FORBIDDEN,
+  quizIdOffset
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
-
-const quizIdOffset = 727;
 
 let session: string;
 let quizId: number;

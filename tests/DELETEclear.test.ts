@@ -4,14 +4,13 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminQuizCreate,
-  requestGetQuizList
+  requestGetQuizList,
+  OK,
+  BADREQUEST,
+  UNAUTHORISED
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
 
 // Before each test clears the data
 beforeEach(() => {

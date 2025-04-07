@@ -5,13 +5,12 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminUserPasswordUpdate,
-  requestAdminAuthLogout
+  requestAdminAuthLogout,
+  OK,
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
 
 let responseRegister: responseInterface;
 let responseDetails: responseInterface;

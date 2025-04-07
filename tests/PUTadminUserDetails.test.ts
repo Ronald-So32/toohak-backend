@@ -4,13 +4,12 @@ import {
   responseInterface,
   requestGetUserDetails,
   requestAdminUserDetailsUpdate,
+  OK,
+  BADREQUEST,
+  UNAUTHORISED
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
 let session: string;
