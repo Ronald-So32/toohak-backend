@@ -43,15 +43,9 @@ We highly recommend **creating and playing** a Kahoot game to better understand 
 
 Completed! 
 
-<<<<<<< HEAD
 ## 🐶 3. Iteration 1: Basic Functionality and Tests
 
 [You can watch the iteration 1 introductory video here.](https://youtu.be/81r1oUQHRNA) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
-=======
-## 🐶 3. Iteration 1: Requirements, Basic Functionality and Tests
-
-[You can watch the iteration 1 introductory video here.](https://youtu.be/hEmdnk39qLg) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
->>>>>>> master
 
 ### 🐶 3.1. Task
 
