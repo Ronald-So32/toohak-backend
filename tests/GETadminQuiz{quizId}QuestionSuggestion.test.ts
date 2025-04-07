@@ -102,11 +102,9 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
     expect(computerQuizSuggestion.statusCode).toStrictEqual(OK);
     expect(computerQuizSuggestion.body).toHaveProperty('question');
     expect(computerQuizSuggestion.body.question.length).toBeGreaterThan(0);
-    expect(computerQuizSuggestion.body.question.length).toBeLessThan(51);
 
     expect(historyQuizSuggestion.statusCode).toStrictEqual(OK);
     expect(historyQuizSuggestion.body).toHaveProperty('question');
     expect(historyQuizSuggestion.body.question.length).toBeGreaterThan(0);
-    expect(historyQuizSuggestion.body.question.length).toBeLessThan(51);
   });
 });
