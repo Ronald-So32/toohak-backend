@@ -79,7 +79,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session,
           'nonexistent@example.com'
         );
-        // Checks that a invalid transfer of quiz returns an error object
+        // Checks that an invalid transfer of quiz returns an error object
         // and a status code of 400
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
@@ -147,7 +147,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session3,
           'z6969@ad.unsw.edu.au'
         );
-        // Checks that an forbidden transfer returns an error object and a
+        // Checks that a forbidden transfer returns an error object and a
         // status code of 403
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
@@ -235,7 +235,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     });
     expect(responseQuizGet3.statusCode).toStrictEqual(OK);
 
-    // Check that the tranferred quiz has the correct timeCreated
+    // Check that the transferred quiz has the correct timeCreated
     const responseQuizDetails = requestGetQuiz(quizId, session2);
     responseQuizDetails.body.timeCreated = timeCreated;
 

@@ -57,7 +57,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
         quizId,
         session + 'Invalid Session'
       );
-      // Checks that a unauthorised call to suggest question returns an error object
+      // Checks that an unauthorised call to suggest question returns an error object
       // and a status code of 401
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionSuggestion.statusCode).toStrictEqual(UNAUTHORISED);
@@ -68,7 +68,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
         quizId + quizIdOffset,
         session
       );
-      // Checks that a call to suggest from non-existant quiz returns an error object
+      // Checks that a call to suggest from non-existent quiz returns an error object
       // and status code of 403
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);

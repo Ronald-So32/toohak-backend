@@ -36,7 +36,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       'My Quiz Name',
       'A description of my quiz'
     );
-    // Checks that the response returns an quizId object and a status code of 200
+    // Checks that the response returns a quizId object and a status code of 200
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
     expect(responseQuizCreate.statusCode).toStrictEqual(OK);
   });
@@ -48,7 +48,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         'My Quiz Name',
         'A description of my quiz'
       );
-      // Checks that unotherised attempt to create quiz returns an eror object and a
+      // Checks that unauthorised attempt to create quiz returns an error object and a
       // status code 401
       expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuizCreate.statusCode).toStrictEqual(UNAUTHORISED);
@@ -69,7 +69,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           'My Quiz Name',
           'A description of my quiz'
         );
-        // Checkts that a bad request returns an error object and a status code of 400
+        // Checks that a bad request returns an error object and a status code of 400
         expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
       });
