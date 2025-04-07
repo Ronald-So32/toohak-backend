@@ -127,7 +127,7 @@ export function adminQuizCreate(
     return validName as errorInterface;
   }
 
-  // Checks if the name is alread in use
+  // Checks if the name is already in use
   const duplicate = data.quizzes.some(
     (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
   );
@@ -571,7 +571,7 @@ export function adminQuizQuestionMove(
     return Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG);
   }
 
-  // Postion is the same as current positon of question
+  // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     return Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME);
   }
@@ -587,7 +587,7 @@ export function adminQuizQuestionMove(
 }
 
 /**
- * Generates a suggested question for a quiz using a LLM.
+ * Generates a suggested question for a quiz using an LLM.
  *
  * @param {string} quizName - The name of the quiz
  * @param {string} quizDescription - The description of the quiz

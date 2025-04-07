@@ -256,7 +256,7 @@ export function createUUID(): number {
   // Fetches the latest data from dataStore
   const data = getData();
 
-  // Updates the highest idg in the data
+  // Updates the highest id in the data
   data.highestID += 1;
 
   return data.highestID;
@@ -532,7 +532,7 @@ export function getCurrentTimestamp(): number {
 }
 
 /**
- * Finds a quiz thats made by the given user through their quiz and user Ids
+ * Finds a quiz that's made by the given user through their quiz and user Ids
  *
  * @param {number} userId The user ID to search for
  * @param {number} quizId The quiz ID to search for
@@ -573,7 +573,8 @@ export function getLongestQuestionLine(text: string): null | string {
   }
 
   // Only get the longest line with a '?' character
-  return questionLines.reduce((longest, current) => 
+  return questionLines.reduce((longest, current) =>
     current.length > longest.length ? current : longest
   );
 }
+
