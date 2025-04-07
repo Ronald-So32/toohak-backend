@@ -21,21 +21,21 @@ import validator from 'validator';
  * @param {string} nameFirst - First name of the user
  * @param {string} nameLast - Last name of the user
  *
- * @returns {userIdInterface | errorInterface} - Returns userId and session token
- * if successful, otherwise returns error
+ * @returns {userIdInterface} - Returns userId and session token
+ * if successful
  */
 export function adminAuthRegister(
   email: string,
   password: string,
   nameFirst: string,
   nameLast: string
-): userIdInterface | errorInterface {
+): userIdInterface {
   const data = getData();
 
   // Check if email has already been used
   const emailUsed = data.users.some((user: userInterface) => user.email === email);
   if (emailUsed) {
-    return Errors.invalidEmail();
+    throw new Error(Errors.invalidEmail().error);
   }
 
   // Checks if the email is valid
