@@ -637,7 +637,7 @@ export function adminQuizQuestionSuggestion(
   if (!questionMatch) {
     generatedQuestion = `What is ${quizName} about?`;
   } else {
-    generatedQuestion = questionMatch[0];
+    generatedQuestion = questionMatch;
   }
 
   // Ensure the question meets our requirements
