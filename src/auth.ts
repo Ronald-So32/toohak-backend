@@ -40,25 +40,25 @@ export function adminAuthRegister(
 
   // Checks if the email is valid
   if (!(validator.isEmail(email))) {
-    return Errors.invalidEmail();
+    throw new Error(Errors.invalidEmail().error);
   }
 
   // Checks if the first name is valid
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
-    return validFirst as errorInterface;
+    throw new Error((validFirst as errorInterface).error);
   }
 
   // Checks if the last name is valid
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
-    return validLast as errorInterface;
+    throw new Error((validLast as errorInterface).error);
   }
 
   // Checks if the password is valid
   const validPass = validPassword(password);
   if (validPass !== true) {
-    return validPass as errorInterface;
+    throw new Error((validPass as errorInterface).error);
   }
 
   // Creates a UUID for the user
