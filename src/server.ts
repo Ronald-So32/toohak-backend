@@ -124,13 +124,12 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
 app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const result = adminAuthLogin(email, password);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
+  try {
+    const result = adminAuthLogin(email, password);
+    return res.status(OK).json({ session: result.session });
+  } catch (error) {
+    return res.status(BADREQUEST).json({ error: error.message });
   }
-
-  return res.status(OK).json({ session: result.session });
 });
 
 // GET /v1/admin/user/details
