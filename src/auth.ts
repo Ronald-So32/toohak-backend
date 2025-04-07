@@ -137,17 +137,17 @@ export function adminAuthLogin(
  *
  * @param {number} userId - Id of the user
  *
- * @returns {{user: userDetailsInterface} | errorInterface} - Returns user details
+ * @returns {{user: userDetailsInterface}} - Returns user details
  * if found, otherwise returns error
  */
 export function adminUserDetails(
   userId: number
-): { user: userDetailsInterface} | errorInterface {
+): { user: userDetailsInterface} {
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
-    return Errors.invalidUser();
+    throw new Error(Errors.invalidUser().error);
   }
 
   // If the variable userId exists, return user details
