@@ -43,9 +43,9 @@ We highly recommend **creating and playing** a Kahoot game to better understand 
 
 Completed! 
 
-## 🐶 3. Iteration 1: Requirements, Basic Functionality and Tests
+## 🐶 3. Iteration 1: Basic Functionality and Tests
 
-[You can watch the iteration 1 introductory video here.](https://youtu.be/hEmdnk39qLg) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
+[You can watch the iteration 1 introductory video here.](https://youtu.be/81r1oUQHRNA) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
 
 ### 🐶 3.1. Task
 
@@ -234,7 +234,7 @@ For timestamps, these are Unix timestamps in seconds. You can find more informat
       <code>{ userId }</code>
     </td>
     <td>
-      <b>Return object <code>{error: 'specific error message here'}</code></b> when any of:
+      <b>Return object</b> <code>{`{ error: 'specific error message here' }`}</code> when any of:
       <ul>
         <li>Email address is used by another user.</li>
         <li>Email does not satisfy this: <a href="https://www.npmjs.com/package/validator">https://www.npmjs.com/package/validator</a> (validator.isEmail function).</li>
@@ -850,8 +850,6 @@ Implementation details are up to you, though the key things to ensure that you c
 * Session values must be passed via HTTP headers.
 * Your system allows multiple sessions to be able to be logged in and logged out at the same time.
 
-#### Other notes
-
 ### 🐝 4.10. Error returning
 
 Either a `400 (Bad Request)` or `401 (Unauthorized)` or `403 (Forbidden)` is returned when something goes wrong. A `400` error refers to issues with user input; a `401` error refers to when someone does not attempt to authenticate properly, and a `403` error refers to issues with authorisation. Most of the routes in the API interface provided throw types of these errors under various conditions.
@@ -1020,7 +1018,428 @@ Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425609">
 
 ## 🦆 5. Iteration 3: Completing the Lifecycle
 
-Coming soon.
+Iteration 3 builds off all of the work you've completed in iteration 1 and 2. You need to complete iteration 2 as part of this iteration, if you haven't completed them. Most of the work from iteration 1 and 2 can be recycled, but the following consideration(s) need to be made:
+* `PUT /v2/admin/quiz/{quizid}/question/{questionid}` has different body input.
+* `GET /v2/admin/quiz/{quizid}` has different return type.
+* `POST /v2/admin/quiz/{quizid}/question` has a different input type.
+* `DELETE /v2/admin/quiz/{quizId}/question/{questionId}` has a new error condition.
+* `POST /v2/admin/quiz/{quizId}/transfer` has a new error condition.
+* `DELETE /v2/admin/quiz/{quizid}` has a new error condition.
+
+Iteration 2 routes and Iteration 3 routes do not need to be interoperable. You can assume that for a given usage of your system, once someone is using iteration 3 routes they can be assumed to not be calling any iteration 2 routes. In this way we need iteration 2 routes to still function properly, but in a way that is fine to be isolated from iteration 3 routes.
+
+### 🦆 5.1. Task
+
+In this iteration, you are expected to:
+
+1. Make adjustments to your existing code and tests as per any feedback given by your tutor for iteration 2. In particular, you should take time to ensure that your code is well-styled and complies with good software writing practices and software and test design principles discussed in lectures. This includes focusing on:
+
+    1. Applying designing for maintainability concepts were taught in lectures
+    2. Using exceptions to "throw errors" instead of returning errors in the functions you call from `server.ts`.
+    3. Ensuring abstraction between the HTTP layer and the application logic layer, i.e. there are no references to express.js variables such as `req`, `res`, or other server-specific logic in implementation functions outside of `server.ts`. You may utilise these within helper/utility files designed to simplify server logic.
+
+2. Implement and test the HTTP Express server according to the [entire interface provided in the specification](swagger.yaml), including all new routes added in iteration 3.
+
+    * Part of this section will be automarked.
+
+    * It is required that your data is persistent, just like in iteration 2.
+
+    * `eslint` is assessed identically to iteration 2.
+
+    * Good coverage for all files that aren't tests will be assessed: see section 5.4 for details.
+
+    * You should structure your test files inside a `/tests`, folder and append them with `.test.ts`. For this iteration, we will only be testing your HTTP layer of tests. 
+
+    * In iteration 2 and 3, we provide a frontend that can be powered by your backend: see section 4.11 for details. Note that the frontend will not work correctly with an incomplete backend. As part of this iteration, it is required that your backend code can correctly power the frontend.
+    
+    * You must comply with instructions laid out in `5.3`
+
+    * Ensure that you correctly manage user sessions and passwords in terms of authentication and authorisation, as per requirements laid out in section `5.8`.
+
+3. Continue demonstrating effective project management and git usage.
+
+    * You will be marked on your thoughtful approach to project management and effective use of git. The degree to which your team works effectively will also be assessed.
+
+    * As for iteration 1 and 2, all task tracking and management will need to be done via the GitLab Taskboard or other tutor-approved tracking mechanism.
+
+    * As for iteration 1 and 2, regular group meetings must be documented with meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo wiki after each meeting).
+
+    * As for iteration 1 and 2, you must be able to demonstrate evidence of regular standups.
+
+    * You are required to regularly and thoughtfully make merge requests for the smallest reasonable units, and merge them into `master`.
+
+### 🦆 5.2. Running the server
+
+To run the server, you can run the following command from the root directory of your project (e.g. `/project-backend`):
+
+```bash
+npm start
+```
+
+This will start the server on the port in the `src/server.ts` file, using `ts-node`.
+
+If you get an error stating that the address is already in use, you can change the port number in `config.json` to any number from 1024 to 49151. Is it likely that another student may be using your original port number.
+
+Please note: For routes involving the playing of a game and waiting for questions to end, you are not required to account for situations where the server process crashes or restarts while waiting. If the server ever restarts while these active "quiz games" are ongoing, you can assume they are no longer happening after restart.
+
+### 🦆 5.3. Implementing and testing features
+
+Continue working on this project by making distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+2. Write tests for that feature and commit them to the branch. These will fail as you have not yet implemented the feature.
+3. Implement that feature.
+4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on your tests.
+5. Create a merge request for the branch.
+6. Get someone in your team who **did not** work on the feature to review the merge request. When reviewing, **not only should you ensure the new feature has tests that pass, but you should also check that the coverage percentage has not been significantly reduced.**
+7. Fix any issues identified in the review.
+8. Merge the merge request into master.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.ts`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features.
+
+* We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
+* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write white-box unit tests in this iteration if you see that as important.
+* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your team's ability to work on different features at the same time, and thus slow down development - it is something you will be penalised for in marking.
+* Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
+* Pushing directly to `master` is not possible for this repo. The only way to get code into `master` is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
+
+### 🦆 5.4. Test coverage
+
+To get the coverage of your tests locally, you will need to have two terminals open. Run these commands from the root directory of your project (e.g. `/project-backend`).
+
+In the first terminal, run
+```bash
+npm run ts-node-coverage
+```
+
+In the second terminal, run jest as usual
+```bash
+npm run test
+```
+
+Back in the first terminal, stop the server with Ctrl+C or Command+C. There should now be a `/coverage` directory available. Open the `index.html` file in your web browser to see its output.
+
+### 🦆 5.5. States & Actions
+
+Iteration 3 sees the introduction of a quiz game, which describes a particular instance of a quiz being run.
+
+Quiz games can be in one of many states:
+ * **LOBBY**: Players can join in this state, and nothing has started.
+ * **QUESTION_COUNTDOWN**: This is the question countdown period. It always exists before a question is open.
+ * **QUESTION_OPEN**: This is when players can see the question, and the answers, and submit their answers (as many times as they like).
+ * **QUESTION_CLOSE**: This is when players can still see the question, and the answers, but can no longer submit answers.
+ * **ANSWER_SHOW**: This is when players can see the correct answer, as well as everyone playings' performance in that question, whilst they typically wait to go to the next countdown.
+ * **FINAL_RESULTS**: This is where the final results are displayed for all players and questions.
+ * **END**: The game is now over and inactive.
+
+There are 5 key actions that an admin can send that moves us between these states:
+ * **NEXT_QUESTION**: Move onto the countdown for the next question.
+ * **SKIP_COUNTDOWN**: This is how to skip the question countdown period immediately.
+ * **GO_TO_ANSWER**: Go straight to the next most immediate answers show state.
+ * **GO_TO_FINAL_RESULTS**: Go straight to the final results state.
+ * **END**: Go straight to the END state.
+
+The constraints on moving between these states can be found in the state diagram here: https://miro.com/app/board/uXjVMNVSA6o=/?share_link_id=275801581370. 
+
+### 🦆 5.6. Error raising
+
+It's important that as part of separating the concerns of the HTTP server and the application logic that your server never passes in an express.js request or response object to any subsequent functions that handle application logic. The application shouldn't be aware of the fact that is being used by an HTTP server.
+
+In iteration 3, we require you to use *exceptions* to handle errors being returned up to your `server.ts` file. Your `server.ts` will still be using `res.status(400)`, `res.status(401)`, or `res.status(403)`.
+
+Another way to explain this is that all of the functions that your `server.ts` calls should only "return" a value if successful, or throw an exception if unsuccessful.
+
+How you use exceptions is up to you - this is a refactor, so tutors will manually mark this as the API behaviour will remain unchanged.
+
+A sample before and after snippet of code is used below to explain.
+
+**before**
+
+```javascript
+const otherFunction = (id) => {
+  if (id === 0) {
+    return {
+      error: 'Cannot be 0'
+    };
+  }
+  return {
+    result: id * 2
+  };
+};
+
+app.get((req, res) => {
+  const value = otherFunction(req.query.id);
+  if (value.error) {
+    res.status(400);
+  }
+  res.json(value);
+});
+```
+
+**after**
+
+```javascript
+const otherFunction = (id) => {
+  if (id === 0) {
+    throw new Error('Cannot be 0');
+  }
+  return {
+    result: id * 2
+  };
+};
+
+app.get((req, res) => {
+  try {
+    const value = otherFunction(req.query.id);
+    res.json(value);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+```
+
+We recommend that you refactor **gradually** and not in one giant merge request.
+
+### 🦆 5.7. Safer User Sessions and Secure Passwords
+
+#### 🦆 5.7.1. Secure Passwords
+
+For iteration 3, we require that passwords must be stored in a **hashed** form.
+
+##### Background
+
+Hashes are one-way encryption where you can convert raw text (e.g. a password like `password123`) to a hash (e.g. a sha256 hash `ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f`).
+
+If we store passwords as the hash of the plain text password, as opposed to the plain text password itself, it means that if our data store is compromised that attackers would not know the plain text passwords of our users.
+
+We do not require you to implement a hashing algorithm that is not brute forcable. If you are interested in current industry standards for password hashing see https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html.
+
+##### Example
+Using https://www.npmjs.com/package/jssha:
+
+```js
+import jsSHA from "jssha";
+
+const shaObj = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
+
+shaObj.update("password123");
+
+const hash = shaObj.getHash("HEX");
+```
+
+#### 🦆 5.7.2. More random user session IDs
+
+We require that you obfuscate your user sessions to prevent enumeration. You can do this one of two ways:
+ 1. Using a randomly generated session ID (rather than incremental session IDs, such as 3492, 485845, 49030); or
+ 2. Returning a hash of a sequentially generated session ID (e.g. session IDs are 1, 2, 3, 4, but then you return the hash of it)
+
+You may already be doing (1) depending on your implementation from the previous iteration.
+
+#### 🦆 5.7.3. Summary
+
+The following describes one potential way of implementing:
+
+A sample flow logging a user in might be as follows (other flows exist too):
+1. Client makes a valid `auth/register` call.
+2. Server stores the hash of the plain text password that was provided over the request, but does not store the plain text password.
+3. Server generates an incremental session ID (e.g. 1, 2, 3) and then stores a hash of that session ID to create something obfuscated.
+4. Server returns that hash of the session ID to the user in the response body.
+
+
+### 🦆 5.8. Scoring & Ranking
+
+To determine the score a user receives for a particular question:
+ * If they do not get the question correct or do not answer the question, they receive a score of 0.
+ * If they do get the question correct, the score they received is P\*S where P is the points for the question, and S is the scaling factor of the question.
+   * The scaling factor of the question is 1/N, where N is the number of how quickly they correctly answered the question. N = 1 is first person who answered correctly, N = 2 is second person who answered correctly, N = 3 is third person who answered correctly, etc.
+   * Players who answer the question at the exact same time results in undefined behaviour.
+ * For multiple-correct-answer questions, people need to select all the correct answers (no less, no more) to be considered having gotten the question correct.
+
+When returned through any of the inputs:
+ * All scores for a particular question are rounded to the nearest integer.
+ * If there are players with the same final score, they share the same rank, e.g. players scoring 5, 3, 3, 2, 2, 1 have ranks 1, 2, 2, 4, 4, 6.
+
+### 🦆 5.9. Open-ended Feature(s)
+<i>Only attempt this section if you have already completed the rest of the project. The time investment to earn these marks is significantly higher than other components of this iteration.</i>
+
+#### Part A: Thinking Bigger with LLMs (50%)
+
+In iteration 2, you implemented a route utilising the Hugging Face Inference API to make requests to an LLM to generate quiz question solutions. In this iteration, you will design a new route (or set of routes) which utilizes an LLM API to extend on the existing Toohak features.
+
+Examples you may choose to design and implement:
+* Automatic Question Generation: Extend upon the suggestion route to generate a question and answer set that is directly added to a quiz's question set
+* Answer Explanation: Provide answer explanations to help users understand the correct answer
+* Language Translation: Translate quizzes into multiple languages to cater to a global audience.
+* Difficulty Adjustment: Automatically adjust the difficulty of questions based on the user's performance.
+* Hints: Provide hints during the game if users are performing poorly and/or taking a long time to answer a question.
+
+You may choose any free <a href="https://huggingface.co/models">model</a> that best suits your feature design.
+
+#### Part B: Thinking Bigger with Files or Multi-user elements (50%)
+
+You've been taught the basics of persistance via file storage, and multi-user interaction via sessions. In this section, you should design a route (or set of routes) which deal with either files or feature interactive/multi-user elements.
+
+Examples you may choose to design and implement:
+* Collaborative Quizzes: Enable collaborative quizzes where multiple users can work together to answer questions.
+* Music: users have the option to add the iconic Kahoot theme song, or another song of their choosing to a quiz.
+* CSV Results: users can generate a file (e.g., CSV, JSON) of a quiz's final results for a quiz admin to download.
+* Quiz Import/Export: Allow users to import and export quizzes in various formats (e.g., CSV, JSON) for easy sharing and backup.
+* File Attachments: Allow users to attach files (e.g., images, PDFs) to quiz questions for more comprehensive content.
+
+#### How to deliver your feature(s)
+
+Add your route design to the existing `swagger.yaml` file, or via a markdown table (similar to iteration 1 spec) with the route name, description, error cases, and expected request and response objects.
+
+You should write black-box tests, add the route to your `server.ts` file, and implement logic within your `src` directory, as with other routes.
+
+You will present any functioning open-ended routes during the iteration 3 final presentation via an API platform (e.g. Postman, Insomnia). Non-functional routes will **not** be given partial marks.
+
+You may document any notes on your implementation that you would like to highlight during the final presentation in `open.md`.
+
+You must implement independent routes for both Part A and B to receive 100% in this section.
+
+### 🦆 5.10. Iteration 3 Final Presentation
+
+Iteration 3 final presentation is a 15 minute demo and Q&A session.
+
+During this session, at a minimum we will expect groups to:
+ * Each give a quick one sentence explanation of what you contributed
+ * Complete a demonstration of your server working with the supplied frontend
+ * (If attempted) present any functioning open-ended routes via API platform (e.g. Postman, Insomnia)
+ * Answer any questions/demonstrate features on request of demo tutors
+
+Times mentioned above will be adhered to strictly.
+
+The remaining time will be Q&A led by a tutor. That tutor may not necessarily be your normal class tutor.
+
+### 🦆 5.11. Marking Criteria
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Weighting</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Automarking (Testing & Implementation)</td>
+    <td>55%</td>
+    <td>
+    <ul>
+      <li>Correct implementation of specified functions.</li>
+      <li>Correctly written tests based on the specification requirements.</li>
+      <li>Code coverage.</li>
+      <li>Correctly linted code.</li>
+      <li>Correctly type-checked code.</li>
+    </ul>
+     Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+     Note: <b>Up to 10% of the automarking will be done on iteration 2 routes that we still expect to be functional / backwards compatible.</b>
+  </td>
+  </tr>
+  <tr>
+    <td>General Code Quality</td>
+    <td>5%</td>
+    <td>
+      <ul>
+        <li>Appropriate use of Javascript data structures (arrays, objects, etc.).</li>
+        <li>Appropriate style and documentation as described in section 7.4. and all lecture material</li>
+        <li>Appropriate layout of files and use of modularity to reduce repetition and improve readability.</li>
+        <li>Through comments/naming it is clear what the code is doing via human reading. Error messages aren't marked for quality.</li>
+        <li>Appropriate application of good software design practices.</li>
+        <li>Implementation of persistent state.</li>
+        <li>Appropriate separation of server and implementation logic, as per section 5.1.</li>
+      </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>Git Practices, Project Management, Teamwork</td>
+    <td>10%</td>
+    <td>
+      As an individual, in terms of git:
+      <ul>
+        <li>For particular features, committing the bulk of your tests prior to your implementation.</li>
+        <li>Your git commit messages are meaningful, clear, and informative.</li>
+        <li>You contribute at least 2 meaningful merge requests (approved by a team member) that merge your branch code to master.</li>
+      </ul>
+      As an individual, in terms of project management and teamwork:
+      <ul>
+        <li>Attendance to group check ins every week.</li>
+        <li>Effective and regular use of course-provided MS Teams for communication (or another app approved by your tutor with evidence added to Teams), demonstrating an ability to competently manage teamwork online.</li>
+        <li>Use of issue board on Gitlab OR another equivalent tool that is used to effectively track your tasks.</li>
+        <li>Attendance and contributions at your teams meetings and standups, including at least one scenario where you were the leader of the meeting and took the minutes/notes for that meeting.</li>
+      </ul>
+      As a group, in terms of project management and teamwork:
+      <ul>
+        <li>Group contract is followed or revised to reflect the team's evolving work patterns.</l1>
+      </ul>
+     </td>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Features</td>
+    <td>10%</td>
+    <td><ul>
+      <li>Demonstrated successful connection of the supplied frontend to the backend code.</li>
+      <li>Correct implementation of section 5.7. Safer User Sessions and Secure Passwords</li>
+    </ul>
+  </td>
+  </tr>
+    <td>Open-ended Features</td>
+    <td>20% (50% each for Part A & B)</td>
+    <td>
+    <ul>
+      <li>Correctness and Integration: Working demonstration of a complete feature that includes persistence and multi-user support. The feature integrates well with Toohak’s existing requirements and meaningfully extends the current project state.</li>
+      <li>Technical Complexity: The feature presents a non-trivial technical challenge and demonstrates application of skills beyond the core course content. </li>
+      <li>Creativity: The solution shows original thought, creativity, or personal insight. It might solve an uncommon problem, approach a common need in a novel way, or address a user scenario not previously covered.</li>
+      <li>API Specification: API routes are clearly and modularly defined in swagger.json, with accurate reflection of purpose, implementation, and required query/body parameters. Correct HTTP methods and relevant error conditions are documented.</li>
+    </ul>
+    Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+  </td>
+  </tr>
+</table>
+
+The formula used for automarking in this iteration is:
+
+`Mark = 90*(g * i^2 * min(c + 1, 100)^3) + 5*e + 5*t`
+(Mark equals 90% of `g` multiplied by `i` squared multiplied by the lower of `c + 1` or `100`, to the power of three, plus 5% of `e`, plus 5% of `t`).
+
+Where:
+ * `g` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
+ * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
+ * `c` is the statement coverage score achieved by running coverage on your entire codebase. A single mark is added to this to account for anything impossible to test in a blackbox manner, and is capped at 100. Please note in the formula above coverage is **heavily weighted**.
+ * `e` is the score between 0-100 achieved by running <code>eslint</code> against your code and the provided configuration. You may find a mark of 0 if you have used eslint disable comments in your code.
+ * `t` is the score between 0-10 achieved by running <code>tsc</code> against your code and the provided configuration.
+
+ Please note coverage is heavily weighted in the formula above. Your overall automark is limited by your code coverage performance.
+
+### 🦆 5.11. Dryrun
+
+The dryrun checks the format of your return types and simple expected behaviour for a few basic routes. Do not rely on these as an indicator for the correctness of your implementation or tests.
+
+To run the dryrun, you should be in the root directory of your project (e.g. `/project-backend`) and use the command:
+
+```bash
+1531 dryrun 3
+```
+
+To view the dryrun tests, you can run the following command on CSE machines:
+```bash
+cat ~cs1531/bin/iter3.test.js
+```
+
+### 🦆 5.12. Submission & teamwork evaluation
+
+Please see section 6 for information on **due date**. There will be no demonstration for iteration 3.
+
+Please see section 7.5 for information on **teamwork evaluation**.
+
+### 🦆 5.13. FAQs
+
+Please see the <a href="https://edstem.org/au/courses/21170/discussion/2425611">this EdStem megapost</a> for iteration 3 FAQs.
+
 
 ## 🌸 6. Due Dates and Weightings
 
@@ -1101,13 +1520,13 @@ Demonstrations consist of a 15 minute Q&A in front of your tutor and potentially
 
 For Iteration 3, you will be demonstrating your work in week 11.
 
-This will consist of a 10 minute presentation and Q&A with 1-2 tutors.
+This will consist of a 15 minute presentation and Q&A with 1-2 tutors.
 
 You will be notified via course announcement when you can select the time of your presentation.
 
 If you are in an in-person tutorial, your week 11 presentation will be in-person. If you are in an online tutorial, your week 11 presentation will be online.
 
-More information about the details of this 10 minute presentation will be made available in the iteration 3 part of the spec.
+More information about the details of this 15 minute presentation will be made available in the iteration 3 part of the spec.
 
 ## 👌 7. Individual Contribution
 
