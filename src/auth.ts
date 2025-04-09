@@ -220,18 +220,21 @@ export function adminUserPasswordUpdate(
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
-    return Errors.invalidUser();
+    throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
   }
 
   // Check if password of passed in userId is correct oldPassword
   const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user || user.password !== oldPassword) {
-    return Errors.invalidUser();
+    throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
   }
 
   // Check if newPassword has been used before
   if (oldPassword === newPassword) {
-    return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
+    throw new BetterError(
+      Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   userData.oldPasswords.push(userData.password);
@@ -240,7 +243,10 @@ export function adminUserPasswordUpdate(
     (pastPassword: string) => pastPassword === newPassword
   );
   if (isPasswordReused) {
-    return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
+    throw new BetterError(
+      Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   validPassword(newPassword);
@@ -269,7 +275,7 @@ export function adminAuthLogout(session: string): Record<string, never> {
 
   // Checks the session is valid
   if (sessionIndex === -1) {
-    return Errors.invalidSession();
+    throw new BetterError(Errors.invalidSession().error, ErrorCodes.BADREQUEST);
   }
 
   // Deletes the session from all the sessions
