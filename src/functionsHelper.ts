@@ -29,7 +29,7 @@ export interface errorInterface {
  */
 export interface userIdInterface {
   userId: number;
-  session: string;
+  session?: string;
 }
 
 /**
@@ -248,6 +248,26 @@ export class Errors {
   }
 }
 
+export enum ErrorCodes {
+  BADREQUEST = 400,
+  UNAUTHORISED = 401,
+  FORBIDDEN = 403
+}
+
+export class BetterError extends Error {
+  readonly statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export function errorThrower(errorObj: errorInterface, code: number): never {
+  throw new BetterError(errorObj.error, code);
+}
+
 /**
  * Creates a unique user id from the current registered users.
  *
@@ -272,33 +292,49 @@ export function createUUID(): number {
  * @returns {boolean | errorInterface} - Returns true for a valid name else returns
  * an object with relevant error message
  */
-export function validName(name: string, isFirst: boolean): boolean | errorInterface {
+export function validName(name: string, isFirst: boolean): void {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
   // Checks if there is more than 20 characters in the name
   if (name.length > 20) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
-
-  return true;
 }
 
 /**
@@ -309,23 +345,30 @@ export function validName(name: string, isFirst: boolean): boolean | errorInterf
  * @returns {boolean | errorInterface} - Retursn true for valid password else an
  * object with relevant error message
  */
-export function validPassword(password: string): boolean | errorInterface {
+export function validPassword(password: string): void {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LETTER);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.NO_LETTER).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   if (passwordNumber === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_NUMBER);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.NO_NUMBER).error,
+      ErrorCodes.BADREQUEST
+    );
   }
-
-  return true;
 }
 
 /**
@@ -336,21 +379,28 @@ export function validPassword(password: string): boolean | errorInterface {
  * @returns {boolean | errorInterface} - Returns true for valid quiz name else an
  * object with relevant error message
  */
-export function validQuizName(name: string): boolean | errorInterface {
+export function validQuizName(name: string): void {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   // Checks if the quiz name has less than 3
   if (name.length < 3) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   // Checks if the quiz name has more than 30
   if (name.length > 30) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
-
-  return true;
 }
 
 /**
@@ -378,7 +428,7 @@ export function generateSession(): string {
  *
  * @returns {string | errorInterface} - The session token if found, otherwise an error
  */
-export function findSessionFromUserId(userId: number): string | errorInterface {
+export function findSessionFromUserId(userId: number): string {
   const data = getData();
   // Finds a session with the given user id
   const theSession = data.sessions.find(
@@ -387,7 +437,10 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
 
   // Checks if the session exists
   if (!theSession) {
-    return Errors.invalidSession();
+    throw new BetterError(
+      Errors.invalidSession().error,
+      ErrorCodes.UNAUTHORISED
+    );
   }
 
   return theSession.session;
@@ -400,7 +453,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
  *
  * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
  */
-export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
+export function findUserIdFromSession(session: string): userIdInterface {
   const data = getData();
   // Finds a session with the session string
   const theSession = data.sessions.find(
@@ -408,7 +461,10 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   );
 
   if (!theSession) {
-    return Errors.invalidSession();
+    throw new BetterError(
+      Errors.invalidSession().error,
+      ErrorCodes.UNAUTHORISED
+    );
   }
 
   return { userId: theSession.userId };
@@ -421,18 +477,22 @@ export function findUserIdFromSession(session: string): { userId: number } | err
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validQuestionString(question: string): boolean | errorInterface {
+export function validQuestionString(question: string): void {
   // Checks if the length of question string is lesser then 5
   if (question.length < 5) {
-    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the length of question string is greater then 50
   if (question.length > 50) {
-    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
-
-  return true;
 }
 
 /**
@@ -461,18 +521,22 @@ export function randomColour(): string {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validatePoints(points: number): boolean | errorInterface {
+export function validatePoints(points: number): void {
   // Checks if the points is lesser then 1
   if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the points is greater then 10
   if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
-
-  return true;
 }
 
 /**
@@ -482,15 +546,21 @@ export function validatePoints(points: number): boolean | errorInterface {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validateAnswers(answerOptions: answersInterface[]): boolean | errorInterface {
+export function validateAnswers(answerOptions: answersInterface[]): void {
   // Checks if the amount of answers is lesser then 2
   if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the amount of answers is greater then 6
   if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks each answer in the answerOptions of the question
@@ -500,16 +570,25 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
   for (const answer of answerOptions) {
     // Checks if the answer string is lesser then 1
     if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     }
     // Checks if the answer string is greater then 30
     if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     }
 
     // Check for duplicate answers
     if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE).error,
+        ErrorCodes.BADREQUEST
+      );
     }
     answerStrings.push(answer.answer);
 
@@ -521,10 +600,11 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
 
   // Checks if there is a correct answer in the available options
   if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
+    throw new BetterError(
+      Errors.noCorrectAnswers().error,
+      ErrorCodes.BADREQUEST
+    );
   }
-
-  return true;
 }
 
 /**
@@ -545,18 +625,24 @@ export function getCurrentTimestamp(): number {
  * @returns {quizInterface | errorInterface} - The detail of the quiz if found,
  * otherwise an error object
  */
-export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
+export function findQuizByUser(userId: number, quizId: number): quizInterface {
   const data = getData();
 
   // Check if quizId exist
   const quiz = data.quizzes.find((quiz: quizInterface) => quiz.quizId === quizId);
   if (!quiz) {
-    return Errors.invalidQuiz();
+    throw new BetterError(
+      Errors.invalidQuiz().error,
+      ErrorCodes.FORBIDDEN
+    );
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+    throw new BetterError(
+      Errors.noPermission().error,
+      ErrorCodes.FORBIDDEN
+    );
   }
 
   return quiz;
