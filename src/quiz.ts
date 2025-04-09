@@ -243,7 +243,10 @@ export function adminQuizInfo(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -277,7 +280,10 @@ export function adminQuizNameUpdate(
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -292,7 +298,10 @@ export function adminQuizNameUpdate(
   );
 
   if (nameExists) {
-    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Update the quiz name
@@ -323,13 +332,19 @@ export function adminQuizDescriptionUpdate(
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
 
   if (description.length > 100) {
-    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Update the quiz description
@@ -360,7 +375,10 @@ export function adminQuizQuestionCreate(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -375,7 +393,10 @@ export function adminQuizQuestionCreate(
 
   // Checks if the time limit given is positive
   if (timeLimit <= 0) {
-    return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
+    throw new BetterError(
+      Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the total time limit of quiz exceeds 3 minutes
@@ -383,7 +404,10 @@ export function adminQuizQuestionCreate(
     (sum: number, q: questionsInterface) => sum + q.timeLimit, 0
   ) + timeLimit;
   if (totalTime > 180) {
-    return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the points given is valid
@@ -438,33 +462,48 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   // Checks if the quiz exists and gets the index of the quiz
   const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
   if (quizIndex === -1) {
-    return Errors.invalidQuiz();
+    throw new BetterError(
+      Errors.invalidQuiz().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = data.quizzes[quizIndex];
 
   // Checks if the quiz is created by the user
   if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+    throw new BetterError(
+      Errors.noPermission().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the target exist through email
   const targetUser = data.users.find((user: userInterface) => user.email === userEmail);
   if (!targetUser) {
-    return Errors.invalidEmail();
+    throw new BetterError(
+      Errors.invalidEmail().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the target email is the user himself
   const currentUser = data.users.find((user: userInterface) => user.userId === userId);
   if (userEmail === currentUser.email) {
-    return Errors.invalidString('User email', Errors.Specific.Email.SELF);
+    throw new BetterError(
+      Errors.invalidString('User email', Errors.Specific.Email.SELF).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the target user has the quiz of the same name
   const nameConflict = data.quizzes.some((quizzes: quizInterface) =>
     quizzes.createdBy === targetUser.userId && quiz.name === quizzes.name);
   if (nameConflict) {
-    return Errors.invalidString('User email', Errors.Specific.Email.NAME);
+    throw new BetterError(
+      Errors.invalidString('User email', Errors.Specific.Email.NAME).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Transfers the ownership of the quiz to target user
