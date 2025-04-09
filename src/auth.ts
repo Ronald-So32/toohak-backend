@@ -8,7 +8,8 @@ import {
   generateSession,
   Errors,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  hashString
 } from './functionsHelper';
 
 import validator from 'validator';
