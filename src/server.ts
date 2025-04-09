@@ -21,11 +21,7 @@ import {
   adminDeleteQuizQuestion,
   adminQuizQuestionSuggestion
 } from './quiz';
-import {
-  findUserIdFromSession,
-  Errors,
-  BetterError
-} from './functionsHelper';
+import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
 import express, {
@@ -112,7 +108,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
 
   try {
     const result = adminAuthRegister(email, password, nameFirst, nameLast);
-    
+
     return res.status(OK).json({ session: result.session });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -155,10 +151,10 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
-  
+    adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -172,10 +168,10 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
-  
+    adminUserPasswordUpdate(userId, oldPassword, newPassword);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -189,10 +185,10 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     const result = adminQuizCreate(userId, name, description);
-  
+
     return res.status(OK).json({ quizId: result.quizId });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -205,10 +201,10 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     const result = adminQuizList(userId);
-  
+
     return res.status(OK).json({ quizzes: result.quizzes });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -222,10 +218,10 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminQuizRemove(userId, quizId);
-  
+    adminQuizRemove(userId, quizId);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -239,10 +235,10 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     const result = adminQuizGet(userId, quizId);
-  
+
     return res.status(OK).json(result.details);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -262,7 +258,7 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
     adminQuizGet(userId, quizId);
 
     const result = adminQuizQuestionCreate(userId, quizId, questionBody);
-  
+
     return res.status(OK).json({ questionId: result.questionId });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -277,10 +273,10 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminQuizNameUpdate(userId, quizId, name);
-  
+    adminQuizNameUpdate(userId, quizId, name);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -295,10 +291,10 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminQuizDescriptionUpdate(userId, quizId, description);
-  
+    adminQuizDescriptionUpdate(userId, quizId, description);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -310,8 +306,8 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
   try {
-    const result = adminAuthLogout(session);
-  
+    adminAuthLogout(session);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -326,10 +322,10 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
-    const result = adminQuizTransfer(quizId, userId, userEmail);
-  
+    adminQuizTransfer(quizId, userId, userEmail);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -345,10 +341,10 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-    
+
     adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
 
     return res.status(OK).json({});
@@ -365,7 +361,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
 
@@ -384,7 +380,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 
   try {
     const userIdResult = findUserIdFromSession(session);
-  
+
     const userId = userIdResult.userId;
     adminQuizQuestionMove(quizId, userId, questionId, newPosition);
 
@@ -397,29 +393,29 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
+    const session = req.headers.session as string;
+    const quizId = parseInt(req.params.quizid);
 
-  try {
+    try {
     // Authenticate the user with the session
-    const userIdResult = findUserIdFromSession(session);
+      const userIdResult = findUserIdFromSession(session);
 
-    const userId = userIdResult.userId;
+      const userId = userIdResult.userId;
 
-    // Get the quiz details to use in the prompt
-    const quizDetailsResult = adminQuizGet(userId, quizId);
-    const result = adminQuizQuestionSuggestion(
-      quizDetailsResult.details.name,
-      quizDetailsResult.details.description,
-      HUGGINGFACE_API_TOKEN
-    );
+      // Get the quiz details to use in the prompt
+      const quizDetailsResult = adminQuizGet(userId, quizId);
+      const result = adminQuizQuestionSuggestion(
+        quizDetailsResult.details.name,
+        quizDetailsResult.details.description,
+        HUGGINGFACE_API_TOKEN
+      );
 
-    return res.status(OK).json({ question: result.question });
-  } catch (error) {
+      return res.status(OK).json({ question: result.question });
+    } catch (error) {
     // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-});
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

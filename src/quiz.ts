@@ -8,7 +8,6 @@ import {
 import {
   createUUID,
   validQuizName,
-  errorInterface,
   quizSummariesInterface,
   quizIdInterface,
   quizDetailsInterface,

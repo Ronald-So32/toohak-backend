@@ -3,7 +3,6 @@ import {
   createUUID,
   validName,
   validPassword,
-  errorInterface,
   userIdInterface,
   userDetailsInterface,
   generateSession,
