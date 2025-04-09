@@ -348,7 +348,9 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-  
+    
+    adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -365,7 +367,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     const userIdResult = findUserIdFromSession(session);
   
     const userId = userIdResult.userId;
-    const result = adminDeleteQuizQuestion(quizId, userId, questionId);
+    adminDeleteQuizQuestion(quizId, userId, questionId);
 
     return res.status(OK).json({});
   } catch (error) {
@@ -384,7 +386,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
     const userIdResult = findUserIdFromSession(session);
   
     const userId = userIdResult.userId;
-    const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
+    adminQuizQuestionMove(quizId, userId, questionId, newPosition);
 
     return res.status(OK).json({});
   } catch (error) {
