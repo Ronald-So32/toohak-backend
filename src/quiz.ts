@@ -679,7 +679,10 @@ export function adminQuizQuestionSuggestion(
   const responseBody = JSON.parse(response.body.toString());
 
   if ('error' in responseBody) {
-    return { error: responseBody.error };
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   let generatedQuestion = responseBody[0].generated_text;
@@ -719,7 +722,10 @@ export function adminQuizQuestionUpdate(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -728,7 +734,10 @@ export function adminQuizQuestionUpdate(
     (question: questionsInterface) => question.questionId === questionId
   );
   if (questionIndex === -1) {
-    return Errors.invalidQuestion();
+    throw new BetterError(
+      Errors.invalidQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const { question, timeLimit, points, answerOptions } = questionBody;
@@ -737,7 +746,10 @@ export function adminQuizQuestionUpdate(
 
   validateAnswers(answerOptions);
   if (timeLimit <= 0) {
-    return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
+    throw new BetterError(
+      Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks that the time limit of quiz does not exceed 3 minutes after updating
@@ -746,7 +758,10 @@ export function adminQuizQuestionUpdate(
     quiz.questions[questionIndex].timeLimit +
     timeLimit;
   if (totalTime > 180) {
-    return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   validatePoints(points);
