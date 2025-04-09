@@ -344,7 +344,7 @@ export function validName(name: string, isFirst: boolean): void {
  * @returns {boolean | errorInterface} - Retursn true for valid password else an
  * object with relevant error message
  */
-export function validPassword(password: string): boolean | errorInterface {
+export function validPassword(password: string): void {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
     throw new BetterError(
@@ -368,8 +368,6 @@ export function validPassword(password: string): boolean | errorInterface {
       ErrorCodes.BADREQUEST
     );
   }
-
-  return true;
 }
 
 /**
@@ -380,7 +378,7 @@ export function validPassword(password: string): boolean | errorInterface {
  * @returns {boolean | errorInterface} - Returns true for valid quiz name else an
  * object with relevant error message
  */
-export function validQuizName(name: string): boolean | errorInterface {
+export function validQuizName(name: string): void {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
     throw new BetterError(
@@ -402,8 +400,6 @@ export function validQuizName(name: string): boolean | errorInterface {
       ErrorCodes.BADREQUEST
     );
   }
-
-  return true;
 }
 
 /**
@@ -431,7 +427,7 @@ export function generateSession(): string {
  *
  * @returns {string | errorInterface} - The session token if found, otherwise an error
  */
-export function findSessionFromUserId(userId: number): string | errorInterface {
+export function findSessionFromUserId(userId: number): string {
   const data = getData();
   // Finds a session with the given user id
   const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
@@ -454,7 +450,7 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
  *
  * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
  */
-export function findUserIdFromSession(session: string): { userId: number } | errorInterface {
+export function findUserIdFromSession(session: string): { userId: number } {
   const data = getData();
   // Finds a session with the session string
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
@@ -476,7 +472,7 @@ export function findUserIdFromSession(session: string): { userId: number } | err
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validQuestionString(question: string): boolean | errorInterface {
+export function validQuestionString(question: string): void {
   // Checks if the length of question string is lesser then 5
   if (question.length < 5) {
     throw new BetterError(
@@ -492,8 +488,6 @@ export function validQuestionString(question: string): boolean | errorInterface 
       ErrorCodes.BADREQUEST
     );
   }
-
-  return true;
 }
 
 /**
@@ -522,7 +516,7 @@ export function randomColour(): string {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validatePoints(points: number): boolean | errorInterface {
+export function validatePoints(points: number): void {
   // Checks if the points is lesser then 1
   if (points < 1) {
     throw new BetterError(
@@ -538,8 +532,6 @@ export function validatePoints(points: number): boolean | errorInterface {
       ErrorCodes.BADREQUEST
     );
   }
-
-  return true;
 }
 
 /**
@@ -549,7 +541,7 @@ export function validatePoints(points: number): boolean | errorInterface {
  *
  * @returns {boolean | errorInterface} - True if valid, otherwise an error object
  */
-export function validateAnswers(answerOptions: answersInterface[]): boolean | errorInterface {
+export function validateAnswers(answerOptions: answersInterface[]): void {
   // Checks if the amount of answers is lesser then 2
   if (answerOptions.length < 2) {
     throw new BetterError(
@@ -608,8 +600,6 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
       ErrorCodes.BADREQUEST
     );
   }
-
-  return true;
 }
 
 /**
@@ -630,7 +620,7 @@ export function getCurrentTimestamp(): number {
  * @returns {quizInterface | errorInterface} - The detail of the quiz if found,
  * otherwise an error object
  */
-export function findQuizByUser(userId: number, quizId: number): quizInterface | errorInterface {
+export function findQuizByUser(userId: number, quizId: number): quizInterface {
   const data = getData();
 
   // Check if quizId exist
