@@ -291,33 +291,49 @@ export function createUUID(): number {
  * @returns {boolean | errorInterface} - Returns true for a valid name else returns
  * an object with relevant error message
  */
-export function validName(name: string, isFirst: boolean): boolean | errorInterface {
+export function validName(name: string, isFirst: boolean): void {
   // Checks if there is lesser than 2 characters in the name
   if (name.length < 2) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
   // Checks if there is more than 20 characters in the name
   if (name.length > 20) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
   // Checks if the name has invalid characters
   if (name.search(/[^a-zA-Z\s-']/) !== -1) {
     if (isFirst) {
-      return Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS);
+      throw new BetterError(
+        Errors.invalidString('First name', Errors.Specific.Name.INVALID_CHARS).error,
+        ErrorCodes.BADREQUEST
+      );
     } else {
-      return Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS);
+      throw new BetterError(
+        Errors.invalidString('Last name', Errors.Specific.Name.INVALID_CHARS).error,
+        ErrorCodes.BADREQUEST
+      );
     }
   }
-
-  return true;
 }
 
 /**

@@ -186,7 +186,7 @@ export function adminUserDetailsUpdate(
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
-    return Errors.invalidUser();
+    throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
   }
 
   // Check if new email has been used by other user
@@ -194,11 +194,11 @@ export function adminUserDetailsUpdate(
     (user: userInterface) => user.email === email && user.userId !== userId
   );
   if (isEmailUsedByOtherUser) {
-    return Errors.invalidEmail();
+    throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
   if (!(validator.isEmail(email))) {
-    return Errors.invalidEmail();
+    throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
   const validFirst = validName(nameFirst, true);
