@@ -465,3 +465,98 @@ export function requestAdminUserPasswordUpdate(
     { session }
   );
 }
+
+/**
+ * Wrapper for DELETE /v2/admin/quiz/{quizid}
+ */
+export function requestDeleteQuizV2(
+  session: string,
+  quizId: number
+): responseInterface {
+  return makeRequest(
+    'DELETE',
+    `/admin/quiz/${quizId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v2/admin/quiz/{quizid}
+ */
+export function requestGetQuizV2(
+  session: string,
+  quizId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/admin/quiz/${quizId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v2/admin/quiz/{quizid}/transfer
+ */
+export function requestAdminQuizTransferV2(
+  session: string,
+  quizId: number,
+  userEmail: string
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/admin/quiz/${quizId}/transfer`,
+    { userEmail },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v2/admin/quiz/{quizid}/question
+ */
+export function requestAdminQuizQuestionCreateV2(
+  session: string,
+  quizId: number,
+  questionBody: questionBodyInterface
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/admin/quiz/${quizId}/question`,
+    { questionBody },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v2/admin/quiz/{quizid}/question/{questionid}
+ */
+export function requestAdminQuizQuestionUpdateV2(
+  session: string,
+  quizId: number,
+  questionId: number,
+  questionBody: questionBodyInterface
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/admin/quiz/${quizId}/question/${questionId}`,
+    { questionBody },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+ */
+export function requestDeleteQuizQuestionV2(
+  session: string,
+  quizId: number,
+  questionId: number
+): responseInterface {
+  return makeRequest(
+    'DELETE',
+    `/admin/quiz/${quizId}/question/${questionId}`,
+    null,
+    { session }
+  );
+}
