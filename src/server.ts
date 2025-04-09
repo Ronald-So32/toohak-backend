@@ -154,25 +154,23 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const { email, nameFirst, nameLast } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
+  
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // PUT /v1/admin/user/password
@@ -181,25 +179,23 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   const { oldPassword, newPassword } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
+  
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminUserPasswordUpdate(userId, oldPassword, newPassword);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // POST /v1/admin/quiz
@@ -208,25 +204,23 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   const { name, description } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizCreate(userId, name, description);
+  
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({ quizId: result.quizId });
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizCreate(userId, name, description);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({ quizId: result.quizId });
 });
 
 // GET /v1/admin/quiz/list
@@ -234,25 +228,23 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizList(userId);
+  
+    if ('error' in result) {
+      return res.status(UNAUTHORISED).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({ quizzes: result.quizzes });
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizList(userId);
-
-  if ('error' in result) {
-    return res.status(UNAUTHORISED).json({ error: result.error });
-  }
-
-  return res.status(OK).json({ quizzes: result.quizzes });
 });
 
 // DELETE /v1/admin/quiz/{quizid}
@@ -261,25 +253,23 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const quizId = parseInt(req.params.quizid);
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizRemove(userId, quizId);
+  
+    if ('error' in result) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizRemove(userId, quizId);
-
-  if ('error' in result) {
-    return res.status(FORBIDDEN).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // GET /v1/admin/quiz/{quizid}
@@ -288,25 +278,23 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const quizId = parseInt(req.params.quizid);
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizGet(userId, quizId);
+  
+    if ('error' in result) {
+      return res.status(FORBIDDEN).json({ error: result.error });
+    }
+  
+    return res.status(OK).json(result.details);
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizGet(userId, quizId);
-
-  if ('error' in result) {
-    return res.status(FORBIDDEN).json({ error: result.error });
-  }
-
-  return res.status(OK).json(result.details);
 });
 
 // POST /v1/admin/quiz/{quizid}/question
@@ -316,31 +304,29 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const { questionBody } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const quizDetailsResult = adminQuizGet(userId, quizId);
+  
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
+  
+    const result = adminQuizQuestionCreate(userId, quizId, questionBody);
+  
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({ questionId: result.questionId });
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const quizDetailsResult = adminQuizGet(userId, quizId);
-
-  if ('error' in quizDetailsResult) {
-    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-  }
-
-  const result = adminQuizQuestionCreate(userId, quizId, questionBody);
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({ questionId: result.questionId });
 });
 
 // PUT /v1/admin/quiz/{quizid}/name
@@ -350,30 +336,28 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   const { name } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizNameUpdate(userId, quizId, name);
+  
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizNameUpdate(userId, quizId, name);
-
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // PUT /v1/admin/quiz/{quizid}/description
@@ -383,30 +367,28 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   const { description } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizDescriptionUpdate(userId, quizId, description);
+  
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizDescriptionUpdate(userId, quizId, description);
-
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // POST /v1/admin/auth/logout
@@ -414,18 +396,16 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
   try {
+    const result = adminAuthLogout(session);
 
+    if ('error' in result) {
+      return res.status(UNAUTHORISED).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const result = adminAuthLogout(session);
-
-  if ('error' in result) {
-    return res.status(UNAUTHORISED).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // POST /v1/admin/quiz/{quizid}/transfer
@@ -435,29 +415,27 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const { userEmail } = req.body;
 
   try {
-
+    const userIdResult = findUserIdFromSession(session);
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizTransfer(quizId, userId, userEmail);
+  
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizTransfer(quizId, userId, userEmail);
-
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // PUT /v1/admin/quiz/{quizid}/question/{questionid}
@@ -468,39 +446,37 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   const { questionBody } = req.body;
 
   try {
+    const userIdResult = findUserIdFromSession(session);
 
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const quizDetailsResult = adminQuizGet(userId, quizId);
+  
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
+  
+    const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    if ('error' in result) {
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+  
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const quizDetailsResult = adminQuizGet(userId, quizId);
-
-  if ('error' in quizDetailsResult) {
-    return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-  }
-
-  const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  if ('error' in result) {
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-
-  return res.status(OK).json({});
 });
 
 // DELETE /v1/admin/quiz/{quizid}/question/{questionid}
@@ -510,29 +486,27 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   const questionId = parseInt(req.params.questionid);
 
   try {
-
+    const userIdResult = findUserIdFromSession(session);
+    // Check if userId is valid
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminDeleteQuizQuestion(quizId, userId, questionId);
+  
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-  // Check if userId is valid
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminDeleteQuizQuestion(quizId, userId, questionId);
-
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-  return res.status(OK).json({});
 });
 
 // PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
@@ -543,28 +517,26 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   const { newPosition } = req.body;
 
   try {
-
+    const userIdResult = findUserIdFromSession(session);
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+    }
+  
+    const userId = userIdResult.userId;
+    const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
+  
+    if ('error' in result) {
+      // Check for specific error messages to determine status code
+      if (result.error === Errors.noPermissionError ||
+          result.error === Errors.invalidQuizError) {
+        return res.status(FORBIDDEN).json({ error: result.error });
+      }
+      return res.status(BADREQUEST).json({ error: result.error });
+    }
+    return res.status(OK).json({});
   } catch (error) {
 
   }
-
-  const userIdResult = findUserIdFromSession(session);
-  if ('error' in userIdResult) {
-    return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-  }
-
-  const userId = userIdResult.userId;
-  const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
-
-  if ('error' in result) {
-    // Check for specific error messages to determine status code
-    if (result.error === Errors.noPermissionError ||
-        result.error === Errors.invalidQuizError) {
-      return res.status(FORBIDDEN).json({ error: result.error });
-    }
-    return res.status(BADREQUEST).json({ error: result.error });
-  }
-  return res.status(OK).json({});
 });
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
@@ -574,39 +546,37 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     const quizId = parseInt(req.params.quizid);
 
     try {
+      // Authenticate the user with the session
+      const userIdResult = findUserIdFromSession(session);
 
+      if ('error' in userIdResult) {
+        return res.status(UNAUTHORISED).json({ error: userIdResult.error });
+      }
+
+      const userId = userIdResult.userId;
+
+      // Get the quiz details to use in the prompt
+      const quizDetailsResult = adminQuizGet(userId, quizId);
+
+      if ('error' in quizDetailsResult) {
+        return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+      }
+
+      const result = adminQuizQuestionSuggestion(
+        quizDetailsResult.details.name,
+        quizDetailsResult.details.description,
+        HUGGINGFACE_API_TOKEN
+      );
+
+      // Not needed in specs but good for debugging (when llm api not working)
+      if ('error' in result) {
+        return res.status(BADREQUEST).json({ error: result.error });
+      }
+
+      return res.status(OK).json({ question: result.question });
     } catch (error) {
   
     }
-
-    // Authenticate the user with the session
-    const userIdResult = findUserIdFromSession(session);
-
-    if ('error' in userIdResult) {
-      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-    }
-
-    const userId = userIdResult.userId;
-
-    // Get the quiz details to use in the prompt
-    const quizDetailsResult = adminQuizGet(userId, quizId);
-
-    if ('error' in quizDetailsResult) {
-      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-    }
-
-    const result = adminQuizQuestionSuggestion(
-      quizDetailsResult.details.name,
-      quizDetailsResult.details.description,
-      HUGGINGFACE_API_TOKEN
-    );
-
-    // Not needed in specs but good for debugging (when llm api not working)
-    if ('error' in result) {
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
-
-    return res.status(OK).json({ question: result.question });
   });
 
 // ====================================================================
