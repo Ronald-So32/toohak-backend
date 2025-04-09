@@ -247,6 +247,20 @@ export class Errors {
   }
 }
 
+export class BetterError extends Error {
+  readonly statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export function errorThrower(errorObj: errorInterface, code: number): never {
+  throw new BetterError(errorObj.error, code);
+}
+
 /**
  * Creates a unique user id from the current registered users.
  *
