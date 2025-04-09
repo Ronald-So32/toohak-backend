@@ -347,17 +347,26 @@ export function validName(name: string, isFirst: boolean): void {
 export function validPassword(password: string): boolean | errorInterface {
   // Checks if the length of the password is lesser than 8
   if (password.length < 8) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Check if newPassword contains at least one letter and one number
   const passwordLetter = password.search(/[a-zA-Z]/);
   const passwordNumber = password.search(/\d/);
   if (passwordLetter === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_LETTER);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.NO_LETTER).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   if (passwordNumber === -1) {
-    return Errors.invalidString('Passowrd', Errors.Specific.Password.NO_NUMBER);
+    throw new BetterError(
+      Errors.invalidString('Password', Errors.Specific.Password.NO_NUMBER).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return true;
