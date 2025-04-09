@@ -7,7 +7,7 @@ import {
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
-import jsSHA from "jssha";
+import JSSHA from 'jssha';
 
 /**
  * Interface representing an error object containing an error message.
@@ -671,9 +671,9 @@ export function getLongestQuestionLine(text: string): null | string {
 }
 
 export function hashString(password: string): string {
-  const shaObj = new jsSHA("SHA-512", "TEXT");
+  const shaObj = new JSSHA('SHA-512', 'TEXT');
   shaObj.update(password);
-  const hash = shaObj.getHash("HEX");
+  const hash = shaObj.getHash('HEX');
 
   return hash;
 }
