@@ -8,7 +8,8 @@ import {
   generateSession,
   Errors,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  hashString
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -61,7 +62,7 @@ export function adminAuthRegister(
     email: email,
     numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
-    password: password,
+    password: hashString(password),
     oldPasswords: [],
   });
 
@@ -101,7 +102,7 @@ export function adminAuthLogin(
   }
 
   // Checks if the password entered is correct
-  if (userData.password !== password) {
+  if (userData.password !== hashString(password)) {
     userData.numFailedPasswordsSinceLastLogin += 1;
     throw new BetterError(Errors.invalidPassword().error, ErrorCodes.BADREQUEST);
   }
@@ -224,12 +225,12 @@ export function adminUserPasswordUpdate(
 
   // Check if password of passed in userId is correct oldPassword
   const user = data.users.find((user: userInterface) => user.userId === userId);
-  if (!user || user.password !== oldPassword) {
+  if (!user || user.password !== hashString(oldPassword)) {
     throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
   }
 
   // Check if newPassword has been used before
-  if (oldPassword === newPassword) {
+  if (hashString(oldPassword) === hashString(newPassword)) {
     throw new BetterError(
       Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME).error,
       ErrorCodes.BADREQUEST
@@ -239,7 +240,7 @@ export function adminUserPasswordUpdate(
   userData.oldPasswords.push(userData.password);
 
   const isPasswordReused = userData.oldPasswords.some(
-    (pastPassword: string) => pastPassword === newPassword
+    (pastPassword: string) => pastPassword === hashString(newPassword)
   );
   if (isPasswordReused) {
     throw new BetterError(
@@ -251,7 +252,7 @@ export function adminUserPasswordUpdate(
   validPassword(newPassword);
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
-  userData.password = newPassword;
+  userData.password = hashString(newPassword);
 
   return {};
 }
