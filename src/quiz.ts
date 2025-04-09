@@ -122,10 +122,7 @@ export function adminQuizCreate(
   }
 
   // Checks if the name of the quiz is valid
-  const validName = validQuizName(name);
-  if (validName !== true) {
-    return validName as errorInterface;
-  }
+  validQuizName(name);
 
   // Checks if the name is already in use
   const duplicate = data.quizzes.some(
@@ -264,14 +261,8 @@ export function adminQuizNameUpdate(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
-  const validName = validQuizName(name);
-  if (validName !== true) {
-    return validName as errorInterface;
-  }
+  validQuizName(name);
 
   // Check if name is already used by the same user for another quiz
   const nameExists = data.quizzes.some((q: quizInterface) =>
@@ -363,16 +354,10 @@ export function adminQuizQuestionCreate(
   const { question, timeLimit, points, answerOptions } = questionBody;
 
   // Validates the question string
-  const questionValidation = validQuestionString(question);
-  if (questionValidation !== true) {
-    return questionValidation as errorInterface;
-  }
+  validQuestionString(question);
 
   // Validates the answers given
-  const answersValid = validateAnswers(answerOptions);
-  if (answersValid !== true) {
-    return answersValid as errorInterface;
-  }
+  validateAnswers(answerOptions);
 
   // Checks if the time limit given is positive
   if (timeLimit <= 0) {
@@ -388,10 +373,7 @@ export function adminQuizQuestionCreate(
   }
 
   // Checks if the points given is valid
-  const pointsValid = validatePoints(points);
-  if (pointsValid !== true) {
-    return pointsValid as errorInterface;
-  }
+  validatePoints(points);
 
   // Gives a unique id to each answer in the question
   let answerId = 0;
