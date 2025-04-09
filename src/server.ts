@@ -23,7 +23,8 @@ import {
 } from './quiz';
 import {
   findUserIdFromSession,
-  Errors
+  Errors,
+  BetterError
 } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -130,7 +131,9 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 
     return res.status(OK).json({ session: result.session });
   } catch (error) {
-    return res.status(BADREQUEST).json({ error: error.message });
+    if (error instanceof BetterError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
   }
 });
 
