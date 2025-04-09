@@ -531,7 +531,10 @@ export function adminDeleteQuizQuestion(
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
   if (!user) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -541,7 +544,10 @@ export function adminDeleteQuizQuestion(
     (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
-    return Errors.invalidQuestion();
+    throw new BetterError(
+      Errors.invalidQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const deletedQuestion = quiz.questions[validQuestionIndex];
@@ -578,7 +584,10 @@ export function adminQuizQuestionMove(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const quiz = findQuizByUser(userId, quizId);
@@ -587,22 +596,34 @@ export function adminQuizQuestionMove(
     (question: questionsInterface) => question.questionId === questionId
   );
   if (validQuestionIndex === -1) {
-    return Errors.invalidQuestion();
+    throw new BetterError(
+      Errors.invalidQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Position is less than 0
   if (newPosition < 0) {
-    return Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Position greater than number of questions
   if (newPosition > quiz.numQuestions - 1) {
-    return Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Position', Errors.Specific.Position.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
-    return Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME);
+    throw new BetterError(
+      Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   const question = quiz.questions[validQuestionIndex];
