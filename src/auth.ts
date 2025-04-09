@@ -45,17 +45,8 @@ export function adminAuthRegister(
     throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
-  // Checks if the first name is valid
-  const validFirst = validName(nameFirst, true);
-  if (validFirst !== true) {
-    throw new BetterError((validFirst as errorInterface).error, ErrorCodes.BADREQUEST);
-  }
-
-  // Checks if the last name is valid
-  const validLast = validName(nameLast, false);
-  if (validLast !== true) {
-    throw new BetterError((validLast as errorInterface).error, ErrorCodes.BADREQUEST);
-  }
+  validName(nameFirst, true);
+  validName(nameLast, false);
 
   // Checks if the password is valid
   const validPass = validPassword(password);
@@ -201,15 +192,8 @@ export function adminUserDetailsUpdate(
     throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
-  const validFirst = validName(nameFirst, true);
-  if (validFirst !== true) {
-    return validFirst as errorInterface;
-  }
-
-  const validLast = validName(nameLast, false);
-  if (validLast !== true) {
-    return validLast as errorInterface;
-  }
+  validName(nameFirst, true);
+  validName(nameLast, false);
 
   // All new user details have been verified, user details are updated
   userData.email = email;
