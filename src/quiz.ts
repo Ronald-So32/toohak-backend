@@ -445,6 +445,15 @@ export function adminQuizQuestionCreate(
   };
 }
 
+export function adminQuizQuestionCreateV2(
+  userId: number,
+  quizId: number,
+  questionBody: questionsInterface
+): questionIdInterface {
+  const data = getData();
+
+}
+
 /**
  * Transfers ownership of a quiz to another user.
  *
