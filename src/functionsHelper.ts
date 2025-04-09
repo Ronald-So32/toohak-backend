@@ -479,12 +479,18 @@ export function findUserIdFromSession(session: string): { userId: number } | err
 export function validQuestionString(question: string): boolean | errorInterface {
   // Checks if the length of question string is lesser then 5
   if (question.length < 5) {
-    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Question name', Errors.Specific.Question.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the length of question string is greater then 50
   if (question.length > 50) {
-    return Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Question name', Errors.Specific.Question.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return true;
@@ -519,12 +525,18 @@ export function randomColour(): string {
 export function validatePoints(points: number): boolean | errorInterface {
   // Checks if the points is lesser then 1
   if (points < 1) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Point', Errors.Specific.Points.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the points is greater then 10
   if (points > 10) {
-    return Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Point', Errors.Specific.Points.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return true;
@@ -540,12 +552,18 @@ export function validatePoints(points: number): boolean | errorInterface {
 export function validateAnswers(answerOptions: answersInterface[]): boolean | errorInterface {
   // Checks if the amount of answers is lesser then 2
   if (answerOptions.length < 2) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Question', Errors.Specific.Answer.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the amount of answers is greater then 6
   if (answerOptions.length > 6) {
-    return Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Question', Errors.Specific.Answer.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks each answer in the answerOptions of the question
@@ -555,16 +573,25 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
   for (const answer of answerOptions) {
     // Checks if the answer string is lesser then 1
     if (answer.answer.length < 1) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_SHORT).error,
+        ErrorCodes.BADREQUEST
+      );
     }
     // Checks if the answer string is greater then 30
     if (answer.answer.length > 30) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.TOO_LONG).error,
+        ErrorCodes.BADREQUEST
+      );
     }
 
     // Check for duplicate answers
     if (answerStrings.includes(answer.answer)) {
-      return Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE);
+      throw new BetterError(
+        Errors.invalidString('Answer', Errors.Specific.AnswerString.DUPLICATE).error,
+        ErrorCodes.BADREQUEST
+      );
     }
     answerStrings.push(answer.answer);
 
@@ -576,7 +603,10 @@ export function validateAnswers(answerOptions: answersInterface[]): boolean | er
 
   // Checks if there is a correct answer in the available options
   if (!hasCorrectAnswer) {
-    return Errors.noCorrectAnswers();
+    throw new BetterError(
+      Errors.noCorrectAnswers().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return true;
