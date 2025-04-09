@@ -247,6 +247,12 @@ export class Errors {
   }
 }
 
+export enum ErrorCodes {
+  BADREQUEST = 400,
+  UNAUTHORISED = 401,
+  FORBIDDEN = 403
+}
+
 export class BetterError extends Error {
   readonly statusCode: number;
 

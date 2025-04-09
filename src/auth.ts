@@ -7,7 +7,9 @@ import {
   userIdInterface,
   userDetailsInterface,
   generateSession,
-  Errors
+  Errors,
+  BetterError,
+  ErrorCodes
 } from './functionsHelper';
 
 import validator from 'validator';
@@ -108,13 +110,13 @@ export function adminAuthLogin(
   // Checks if the user/email exists or not
   const userData = data.users.find((user: userInterface) => user.email === email);
   if (!userData) {
-    throw new Error(Errors.invalidEmail().error);
+    throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
   // Checks if the password entered is correct
   if (userData.password !== password) {
     userData.numFailedPasswordsSinceLastLogin += 1;
-    throw new Error(Errors.invalidPassword().error);
+    throw new BetterError(Errors.invalidPassword().error, ErrorCodes.BADREQUEST);
   }
 
   const currentSession = generateSession();
