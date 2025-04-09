@@ -169,7 +169,7 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -194,7 +194,7 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -219,7 +219,7 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   
     return res.status(OK).json({ quizId: result.quizId });
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -243,7 +243,7 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   
     return res.status(OK).json({ quizzes: result.quizzes });
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -268,7 +268,7 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -293,7 +293,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   
     return res.status(OK).json(result.details);
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -325,7 +325,7 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   
     return res.status(OK).json({ questionId: result.questionId });
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -356,7 +356,7 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -387,7 +387,7 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -404,7 +404,7 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -434,7 +434,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -475,7 +475,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -505,7 +505,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     }
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -535,49 +535,45 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
     }
     return res.status(OK).json({});
   } catch (error) {
-
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
-    const session = req.headers.session as string;
-    const quizId = parseInt(req.params.quizid);
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
 
-    try {
-      // Authenticate the user with the session
-      const userIdResult = findUserIdFromSession(session);
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
 
-      if ('error' in userIdResult) {
-        return res.status(UNAUTHORISED).json({ error: userIdResult.error });
-      }
-
-      const userId = userIdResult.userId;
-
-      // Get the quiz details to use in the prompt
-      const quizDetailsResult = adminQuizGet(userId, quizId);
-
-      if ('error' in quizDetailsResult) {
-        return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
-      }
-
-      const result = adminQuizQuestionSuggestion(
-        quizDetailsResult.details.name,
-        quizDetailsResult.details.description,
-        HUGGINGFACE_API_TOKEN
-      );
-
-      // Not needed in specs but good for debugging (when llm api not working)
-      if ('error' in result) {
-        return res.status(BADREQUEST).json({ error: result.error });
-      }
-
-      return res.status(OK).json({ question: result.question });
-    } catch (error) {
-  
+    if ('error' in userIdResult) {
+      return res.status(UNAUTHORISED).json({ error: userIdResult.error });
     }
-  });
+
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const quizDetailsResult = adminQuizGet(userId, quizId);
+
+    if ('error' in quizDetailsResult) {
+      return res.status(FORBIDDEN).json({ error: quizDetailsResult.error });
+    }
+
+    const result = adminQuizQuestionSuggestion(
+      quizDetailsResult.details.name,
+      quizDetailsResult.details.description,
+      HUGGINGFACE_API_TOKEN
+    );
+    
+    return res.status(OK).json({ question: result.question });
+  } catch (error) {
+    // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
