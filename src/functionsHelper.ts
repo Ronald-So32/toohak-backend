@@ -636,12 +636,18 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface | 
   // Check if quizId exist
   const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
   if (!quiz) {
-    return Errors.invalidQuiz();
+    throw new BetterError(
+      Errors.invalidQuiz().error,
+      ErrorCodes.FORBIDDEN
+    );
   }
 
   // Check if user owns the quiz
   if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+    throw new BetterError(
+      Errors.noPermission().error,
+      ErrorCodes.FORBIDDEN
+    );
   }
 
   return quiz;
