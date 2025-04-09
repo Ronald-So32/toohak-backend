@@ -37,7 +37,7 @@ import request from 'sync-request-curl';
  */
 export function adminQuizList(
   userId: number
-): { quizzes: quizSummariesInterface[] } | errorInterface {
+): { quizzes: quizSummariesInterface[] } {
   // Fetches the latest data from the dataStore
   const data = getData();
 
@@ -71,7 +71,7 @@ export function adminQuizList(
 export function adminQuizGet(
   userId: number,
   quizId: number
-): quizGetDetailsInterface | errorInterface {
+): quizGetDetailsInterface {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
@@ -110,7 +110,7 @@ export function adminQuizCreate(
   userId: number,
   name: string,
   description: string
-): quizIdInterface | errorInterface {
+): quizIdInterface {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
@@ -172,7 +172,7 @@ export function adminQuizCreate(
 export function adminQuizRemove(
   userId: number,
   quizId: number
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const userExists = data.users.some((user: userInterface) => user.userId === userId);
@@ -212,7 +212,7 @@ export function adminQuizRemove(
 export function adminQuizInfo(
   userId: number,
   quizId: number
-): quizDetailsInterface | errorInterface {
+): quizDetailsInterface {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
@@ -246,7 +246,7 @@ export function adminQuizNameUpdate(
   userId: number,
   quizId: number,
   name: string
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
@@ -292,7 +292,7 @@ export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
   description: string
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
@@ -329,7 +329,7 @@ export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
   questionBody: questionsInterface
-): questionIdInterface | errorInterface {
+): questionIdInterface {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
@@ -461,7 +461,7 @@ export function adminDeleteQuizQuestion(
   quizId: number,
   userId: number,
   questionId: number
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const user = data.users.find((user: userInterface) => user.userId === userId);
@@ -508,7 +508,7 @@ export function adminQuizQuestionMove(
   userId: number,
   questionId: number,
   newPosition: number
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
@@ -564,7 +564,7 @@ export function adminQuizQuestionSuggestion(
   quizName: string,
   quizDescription: string,
   HUGGINGFACE_API_TOKEN: string
-): { question: string } | errorInterface {
+): { question: string } {
   // Create a prompt for the LLM that includes the quiz context
   const prompt = `You are a helpful assistant that generates quiz questions. 
   Please suggest a single question for a quiz with the following details:
@@ -628,7 +628,7 @@ export function adminQuizQuestionUpdate(
   quizId: number,
   questionId: number,
   questionBody: questionsInterface
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
