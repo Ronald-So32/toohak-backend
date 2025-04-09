@@ -28,7 +28,7 @@ export interface errorInterface {
  */
 export interface userIdInterface {
   userId: number;
-  session: string;
+  session?: string;
 }
 
 /**
@@ -450,7 +450,7 @@ export function findSessionFromUserId(userId: number): string {
  *
  * @returns {{userId: number} | errorInterface} - The user ID if found, otherwise an error
  */
-export function findUserIdFromSession(session: string): { userId: number } {
+export function findUserIdFromSession(session: string): userIdInterface {
   const data = getData();
   // Finds a session with the session string
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
