@@ -118,7 +118,9 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
     
     return res.status(OK).json({ session: result.session });
   } catch (error) {
-    return res.status(BADREQUEST).json({ error: error.message });
+    if (error instanceof BetterError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
   }
 });
 

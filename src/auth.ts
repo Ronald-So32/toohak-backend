@@ -37,30 +37,30 @@ export function adminAuthRegister(
   // Check if email has already been used
   const emailUsed = data.users.some((user: userInterface) => user.email === email);
   if (emailUsed) {
-    throw new Error(Errors.invalidEmail().error);
+    throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
   // Checks if the email is valid
   if (!(validator.isEmail(email))) {
-    throw new Error(Errors.invalidEmail().error);
+    throw new BetterError(Errors.invalidEmail().error, ErrorCodes.BADREQUEST);
   }
 
   // Checks if the first name is valid
   const validFirst = validName(nameFirst, true);
   if (validFirst !== true) {
-    throw new Error((validFirst as errorInterface).error);
+    throw new BetterError((validFirst as errorInterface).error, ErrorCodes.BADREQUEST);
   }
 
   // Checks if the last name is valid
   const validLast = validName(nameLast, false);
   if (validLast !== true) {
-    throw new Error((validLast as errorInterface).error);
+    throw new BetterError((validLast as errorInterface).error, ErrorCodes.BADREQUEST);
   }
 
   // Checks if the password is valid
   const validPass = validPassword(password);
   if (validPass !== true) {
-    throw new Error((validPass as errorInterface).error);
+    throw new BetterError((validPass as errorInterface).error, ErrorCodes.BADREQUEST);
   }
 
   // Creates a UUID for the user
