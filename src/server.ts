@@ -145,7 +145,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
     const result = adminUserDetails(userId);
 
     return res.status(OK).json({ user: result.user });
-  } catch(error) {
+  } catch (error) {
     return res.status(UNAUTHORISED).json({ error: error.message });
   }
 });
@@ -154,6 +154,12 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
 app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { email, nameFirst, nameLast } = req.body;
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -176,6 +182,12 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { oldPassword, newPassword } = req.body;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {
@@ -197,6 +209,12 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { name, description } = req.body;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {
@@ -216,6 +234,12 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
 // GET /v1/admin/quiz/list
 app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   const session = req.headers.session as string;
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -238,6 +262,12 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {
@@ -258,6 +288,12 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -280,6 +316,12 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { questionBody } = req.body;
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -309,6 +351,12 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   const quizId = parseInt(req.params.quizid);
   const { name } = req.body;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {
@@ -336,6 +384,12 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   const quizId = parseInt(req.params.quizid);
   const { description } = req.body;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
 
   if ('error' in userIdResult) {
@@ -361,6 +415,12 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
 app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const result = adminAuthLogout(session);
 
   if ('error' in result) {
@@ -375,6 +435,12 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { userEmail } = req.body;
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
   if ('error' in userIdResult) {
@@ -402,6 +468,12 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
   const { questionBody } = req.body;
+
+  try {
+
+  } catch (error) {
+
+  }
 
   const userIdResult = findUserIdFromSession(session);
 
@@ -439,6 +511,12 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   const quizId = parseInt(req.params.quizid);
   const questionId = parseInt(req.params.questionid);
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
   // Check if userId is valid
   if ('error' in userIdResult) {
@@ -466,6 +544,12 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   const questionId = parseInt(req.params.questionid);
   const { newPosition } = req.body;
 
+  try {
+
+  } catch (error) {
+
+  }
+
   const userIdResult = findUserIdFromSession(session);
   if ('error' in userIdResult) {
     return res.status(UNAUTHORISED).json({ error: userIdResult.error });
@@ -490,6 +574,12 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
     const session = req.headers.session as string;
     const quizId = parseInt(req.params.quizid);
+
+    try {
+
+    } catch (error) {
+  
+    }
 
     // Authenticate the user with the session
     const userIdResult = findUserIdFromSession(session);
