@@ -81,9 +81,6 @@ export function adminQuizGet(
 
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   return {
     details: {
@@ -224,9 +221,6 @@ export function adminQuizInfo(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   // Return quiz details if found
   return {
@@ -307,9 +301,6 @@ export function adminQuizDescriptionUpdate(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   if (description.length > 100) {
     return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
@@ -347,9 +338,6 @@ export function adminQuizQuestionCreate(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
@@ -482,9 +470,6 @@ export function adminDeleteQuizQuestion(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   // Check if questionId is in given quiz
   const validQuestionIndex = quiz.questions.findIndex(
@@ -532,9 +517,6 @@ export function adminQuizQuestionMove(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   const validQuestionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
