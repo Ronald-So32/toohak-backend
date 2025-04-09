@@ -560,3 +560,178 @@ export function requestDeleteQuizQuestionV2(
     { session }
   );
 }
+
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/thumbnail
+ */
+export function requestAdminQuizThumbnailUpdate(
+  quizId: number,
+  session: string,
+  thumbnailUrl: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/admin/quiz/${quizId}/thumbnail`,
+    { thumbnailUrl },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/games
+ */
+export function requestAdminQuizGamesList(
+  session: string,
+  quizId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/admin/quiz/${quizId}/games`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/game/start
+ */
+export function requestAdminQuizGameStart(
+  session: string,
+  quizId: number,
+  autoStartNum: number
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/admin/quiz/${quizId}/game/start`,
+    { autoStartNum },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/game/{gameid}
+ */
+export function requestAdminQuizGameStateUpdate(
+  session: string,
+  quizId: number,
+  gameId: number,
+  action: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/admin/quiz/${quizId}/game/${gameId}`,
+    { action },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/game/{gameid}
+ */
+export function requestAdminQuizGameStatus(
+  session: string,
+  quizId: number,
+  gameId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/admin/quiz/${quizId}/game/${gameId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/game/{gameid}/results
+ */
+export function requestAdminQuizGameResults(
+  session: string,
+  quizId: number,
+  gameId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/admin/quiz/${quizId}/game/${gameId}/results`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v1/player/join
+ */
+export function requestPlayerJoin(
+  gameId: number,
+  playerName: string
+): responseInterface {
+  return makeRequest(
+    'POST',
+    '/player/join',
+    { gameId, playerName }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}
+ */
+export function requestPlayerStatus(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/player/${playerId}`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/question/{questionposition}
+ */
+export function requestPlayerQuestionInfo(
+  playerId: number,
+  questionPosition: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/player/${playerId}/question/${questionPosition}`
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/player/{playerid}/question/{questionposition}/answer
+ */
+export function requestPlayerAnswerSubmit(
+  playerId: number,
+  questionPosition: number,
+  answerIds: number[]
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/player/${playerId}/question/${questionPosition}/answer`,
+    { answerIds }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/question/{questionposition}/results
+ */
+export function requestPlayerQuestionResults(
+  playerId: number,
+  questionPosition: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/player/${playerId}/question/${questionPosition}/results`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/results
+ */
+export function requestPlayerFinalResults(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/player/${playerId}/results`
+  );
+}
