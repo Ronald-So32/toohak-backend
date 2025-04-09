@@ -281,15 +281,6 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
     const userId = userIdResult.userId;
     const result = adminQuizNameUpdate(userId, quizId, name);
   
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
-  
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -307,15 +298,6 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   
     const userId = userIdResult.userId;
     const result = adminQuizDescriptionUpdate(userId, quizId, description);
-  
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
   
     return res.status(OK).json({});
   } catch (error) {
@@ -348,15 +330,6 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
     const userId = userIdResult.userId;
     const result = adminQuizTransfer(quizId, userId, userEmail);
   
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
-  
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -374,17 +347,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     const userIdResult = findUserIdFromSession(session);
   
     const userId = userIdResult.userId;
-    const quizDetailsResult = adminQuizGet(userId, quizId);
-  
-    const result = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
+    adminQuizGet(userId, quizId);
   
     return res.status(OK).json({});
   } catch (error) {
@@ -403,15 +366,7 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   
     const userId = userIdResult.userId;
     const result = adminDeleteQuizQuestion(quizId, userId, questionId);
-  
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
@@ -430,15 +385,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   
     const userId = userIdResult.userId;
     const result = adminQuizQuestionMove(quizId, userId, questionId, newPosition);
-  
-    if ('error' in result) {
-      // Check for specific error messages to determine status code
-      if (result.error === Errors.noPermissionError ||
-          result.error === Errors.invalidQuizError) {
-        return res.status(FORBIDDEN).json({ error: result.error });
-      }
-      return res.status(BADREQUEST).json({ error: result.error });
-    }
+
     return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
