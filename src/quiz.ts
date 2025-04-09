@@ -216,7 +216,7 @@ export function adminQuizRemove(
   if (quiz.createdBy !== userId) {
     throw new BetterError(
       Errors.noPermission().error,
-      ErrorCodes.BADREQUEST
+      ErrorCodes.FORBIDDEN
     );
   }
 
@@ -474,7 +474,7 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   if (quiz.createdBy !== userId) {
     throw new BetterError(
       Errors.noPermission().error,
-      ErrorCodes.BADREQUEST
+      ErrorCodes.FORBIDDEN
     );
   }
 
