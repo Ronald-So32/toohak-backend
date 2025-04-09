@@ -40,8 +40,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       session,
       "http://google.com/some/image/path.jpg"
     );
-    expect(responseDeleteQuiz.body).toStrictEqual({});
-    expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+    expect(responseThumbnail.body).toStrictEqual({});
+    expect(responseThumbnail.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
@@ -61,8 +61,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           "http://google.com/some/image/path.jpg"
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseThumbnail.statusCode).toStrictEqual(UNAUTHORISED);
       });
     })
     
@@ -73,8 +73,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           "http://google.com/some/image/path.jpg"
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -90,8 +90,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           "http://google.com/some/image/path.jpg"
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
       });
     })
     
@@ -124,8 +124,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
       })
     })
 
@@ -149,8 +149,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({});
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+        expect(responseThumbnail.body).toStrictEqual({});
+        expect(responseThumbnail.statusCode).toStrictEqual(OK);
       })
     })
 
@@ -190,8 +190,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
       })
     })
 
@@ -211,8 +211,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
-        expect(responseDeleteQuiz.body).toStrictEqual({});
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+        expect(responseThumbnail.body).toStrictEqual({});
+        expect(responseThumbnail.statusCode).toStrictEqual(OK);
       })
     })
   });
