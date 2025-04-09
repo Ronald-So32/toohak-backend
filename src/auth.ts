@@ -169,7 +169,7 @@ export function adminUserDetailsUpdate(
   email: string,
   nameFirst: string,
   nameLast: string
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
@@ -215,7 +215,7 @@ export function adminUserPasswordUpdate(
   userId: number,
   oldPassword: string,
   newPassword: string
-): Record<string, never> | errorInterface {
+): Record<string, never> {
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
@@ -259,7 +259,7 @@ export function adminUserPasswordUpdate(
  * @returns {Record<string, never> | errorInterface} - Returns empty object if
  * successful, otherwise returns error
  */
-export function adminAuthLogout(session: string): Record<string, never> | errorInterface {
+export function adminAuthLogout(session: string): Record<string, never> {
   const data = getData();
 
   // Finds the current session index from all the sessions
