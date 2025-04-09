@@ -274,7 +274,7 @@ export function adminAuthLogout(session: string): Record<string, never> {
 
   // Checks the session is valid
   if (sessionIndex === -1) {
-    throw new BetterError(Errors.invalidSession().error, ErrorCodes.BADREQUEST);
+    throw new BetterError(Errors.invalidSession().error, ErrorCodes.UNAUTHORISED);
   }
 
   // Deletes the session from all the sessions

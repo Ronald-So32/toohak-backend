@@ -134,8 +134,7 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
-    const userId = userIdResult.userId as number;
+    const userId = userIdResult.userId;
     const result = adminUserDetails(userId);
 
     return res.status(OK).json({ user: result.user });
@@ -151,7 +150,6 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminUserDetailsUpdate(userId, email, nameFirst, nameLast);
 
@@ -168,7 +166,6 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminUserPasswordUpdate(userId, oldPassword, newPassword);
 
@@ -185,7 +182,6 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     const result = adminQuizCreate(userId, name, description);
 
@@ -201,7 +197,6 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     const result = adminQuizList(userId);
 
@@ -218,7 +213,6 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizRemove(userId, quizId);
 
@@ -235,7 +229,6 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     const result = adminQuizGet(userId, quizId);
 
@@ -253,10 +246,8 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-
     const result = adminQuizQuestionCreate(userId, quizId, questionBody);
 
     return res.status(OK).json({ questionId: result.questionId });
@@ -273,7 +264,6 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizNameUpdate(userId, quizId, name);
 
@@ -291,7 +281,6 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizDescriptionUpdate(userId, quizId, description);
 
@@ -322,7 +311,6 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizTransfer(quizId, userId, userEmail);
 
@@ -341,10 +329,8 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-
     adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
 
     return res.status(OK).json({});
@@ -361,7 +347,6 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
 
@@ -380,7 +365,6 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 
   try {
     const userIdResult = findUserIdFromSession(session);
-
     const userId = userIdResult.userId;
     adminQuizQuestionMove(quizId, userId, questionId, newPosition);
 
@@ -397,9 +381,8 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     const quizId = parseInt(req.params.quizid);
 
     try {
-    // Authenticate the user with the session
+      // Authenticate the user with the session
       const userIdResult = findUserIdFromSession(session);
-
       const userId = userIdResult.userId;
 
       // Get the quiz details to use in the prompt
@@ -412,7 +395,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
       return res.status(OK).json({ question: result.question });
     } catch (error) {
-    // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
+      // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
