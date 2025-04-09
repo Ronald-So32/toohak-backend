@@ -84,7 +84,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           'First',
           'Last'
         ).body.session;
-        
+
         const responseThumbnail = requestAdminQuizThumbnail(
           quizId,
           session,
@@ -96,25 +96,125 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     })
     
 
-    test('Testing invalid file type', () => {
-      const responseThumbnail = requestAdminQuizThumbnail(
-        quizId,
-        session,
-        "http://google.com/some/image/path.gif"
-      );
-      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+    describe('Testing invalid urls', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gif',
+          description: 'File type of .gif at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.txt',
+          description: 'File type of .txt at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gpj',
+          description: 'File type where jpg is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gnp',
+          description: 'File type where png is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gepj',
+          description: 'File type where jpeg is other way around'
+        },
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseThumbnail = requestAdminQuizThumbnail(
+          quizId + quizIdOffset,
+          session,
+          thumbnailUrl
+        );
+        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
-    });
+      })
+    })
 
-    test('Testing invalid url', () => {
-      const responseThumbnail = requestAdminQuizThumbnail(
-        quizId,
-        session,
-        "google.com/some/image/path.png"
-      );
-      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+    describe('Testing valid file types', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          description: 'File type of .jpg at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpeg',
+          description: 'File type of .jpeg at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.png',
+          description: 'File type of .png at the end'
+        }
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseThumbnail = requestAdminQuizThumbnail(
+          quizId + quizIdOffset,
+          session,
+          thumbnailUrl
+        );
+        expect(responseDeleteQuiz.body).toStrictEqual({});
+        expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+      })
+    })
+
+    describe('Testing invalid urls', () => {
+      test.each([
+        {
+          thumbnailUrl: 'google.com/some/image/path.jpg',
+          description: 'Url beginning with domain name'
+        },
+        {
+          thumbnailUrl: 'www.google.com/some/image/path.jpeg',
+          description: 'Url beginning with www.'
+        },
+        {
+          thumbnailUrl: 'gg.http://google.com/some/image/path.jpg',
+          description: 'Url where http:// is not at the beginning'
+        },
+        {
+          thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+          description: 'Url where https:// is not at the beginning'
+        },
+        {
+          thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+          description: 'Url where https:// is not at the beginning'
+        },
+        {
+          thumbnailUrl: 'ptth://google.com/some/image/path.jpg',
+          description: 'Url where http is other way around'
+        },
+        {
+          thumbnailUrl: 'sptth://google.com/some/image/path.jpg',
+          description: 'Url where https is other way around'
+        },
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseThumbnail = requestAdminQuizThumbnail(
+          quizId + quizIdOffset,
+          session,
+          thumbnailUrl
+        );
+        expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
-    });
+      })
+    })
+
+    describe('Testing valid urls', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          description: 'Url beginning with http://'
+        },
+        {
+          thumbnailUrl: 'https://google.com/some/image/path.jpeg',
+          description: 'Url beginning with https://'
+        }
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseThumbnail = requestAdminQuizThumbnail(
+          quizId + quizIdOffset,
+          session,
+          thumbnailUrl
+        );
+        expect(responseDeleteQuiz.body).toStrictEqual({});
+        expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+      })
+    })
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/thumbnail works as intended', () => {
