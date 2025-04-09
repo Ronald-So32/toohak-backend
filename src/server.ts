@@ -118,9 +118,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
     
     return res.status(OK).json({ session: result.session });
   } catch (error) {
-    if (error instanceof BetterError) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -133,9 +131,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 
     return res.status(OK).json({ session: result.session });
   } catch (error) {
-    if (error instanceof BetterError) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -146,12 +142,12 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   try {
     const userIdResult = findUserIdFromSession(session);
 
-    const userId = userIdResult.userId;
+    const userId = userIdResult.userId as number;
     const result = adminUserDetails(userId);
 
     return res.status(OK).json({ user: result.user });
   } catch (error) {
-    return res.status(UNAUTHORISED).json({ error: error.message });
+    return res.status(error.statusCode).json({ error: error.message });
   }
 });
 

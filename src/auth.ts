@@ -149,7 +149,7 @@ export function adminUserDetails(
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
   if (!userData) {
-    throw new Error(Errors.invalidUser().error);
+    throw new BetterError(Errors.invalidUser().error, ErrorCodes.UNAUTHORISED);
   }
 
   // If the variable userId exists, return user details
