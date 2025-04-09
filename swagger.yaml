@@ -15,6 +15,10 @@ tags:
     description: Iteration 2 routes that leverage work done in iteration 1
   - name: "Iteration 2 (New)"
     description: Iteration 2 routes that are new
+  - name: "Iteration 3 (Modified)"
+    description: Iteration 3 routes are a modification of iteration 1 and iteration 2 routes
+  - name: "Iteration 3 (New)"
+    description: Iteration 3 routes that are a mix of new routes as well as slightly modified routes from iteration 1 and 2
 
 components:
   prim:
@@ -23,16 +27,16 @@ components:
       example: "Specific error message here"
     Email:
       type: string
-      example: yuchao@unsw.edu.au
+      example: yuchao.jiang@unsw.edu.au
     Password:
       type: string
-      example: yuchao123
+      example: yuchaojiang123
     NameFirst:
       type: string
       example: Yuchao
     NameLast:
       type: string
-      example: Smith
+      example: Jiang
     Session:
       type: string
       example: 23748
@@ -145,10 +149,10 @@ components:
           example: 132
         name:
           type: string
-          example: Rani Jiang
+          example: Yuchao Jiang
         email:
           type: string
-          example: yuchao@unsw.edu.au
+          example: rani@unsw.edu.au
         numSuccessfulLogins:
           type: integer
           example: 5
@@ -348,7 +352,7 @@ components:
         $ref: '#/components/prim/QuestionPosition'
     QuizId:
       in: path
-      name: quizid
+      name: quizId
       required: true
       schema:
         $ref: '#/components/prim/QuizId'
@@ -598,7 +602,7 @@ components:
             example: 234234
           playerName:
             type: string
-            example: Rani Jiang
+            example: Yuchao Jiang
     PlayerQuestionAnswer:
       in: body
       name: body
@@ -958,6 +962,57 @@ paths:
           schema:
             $ref: '#/components/return/Error'
 
+  /v2/admin/quiz/{quizid}:
+    delete:
+      summary: Delete a quiz
+      description: Given a particular quiz, delete a quiz
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        400:
+          description: Any game for this quiz is not in END state
+          schema:
+            $ref: '#/components/return/Error'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+    get:
+      summary: Get info about current quiz
+      description: Get all of the relevant information about the current quiz including questions
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizSingleIter3'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
 
   /v1/admin/quiz/{quizid}/name:
     put:
@@ -1023,6 +1078,41 @@ paths:
           schema:
             $ref: '#/components/return/Error'
   
+  /v1/admin/quiz/{quizid}/thumbnail:
+    put:
+      summary: Update the quiz thumbnail
+      description: |
+        Update the thumbnail for the quiz.
+        When this route is called, the timeLastEdited is updated.
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizThumbnail'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - The thumbnailUrl does not end with one of the following filetypes (case insensitive): jpg, jpeg, png
+            - The thumbnailUrl does not begin with 'http://' or 'https://'
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
   
   /v1/admin/quiz/{quizid}/transfer:
     post:
@@ -1057,6 +1147,41 @@ paths:
           schema:
             $ref: '#/components/return/Error'
   
+  /v2/admin/quiz/{quizid}/transfer:
+    post:
+      summary: Transfer the quiz to another owner
+      description: Transfer ownership of a quiz to a different user based on their email
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizTransferIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - userEmail is not a real user
+            - userEmail is the current logged in user
+            - Quiz ID refers to a quiz that has a name that is already used by the target user
+            - Any game for this quiz is not in END state
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
   
   /v1/admin/quiz/{quizid}/question:
     post:
@@ -1098,13 +1223,57 @@ paths:
           schema:
             $ref: '#/components/return/Error'
   
-  /v1/admin/quiz/{quizId}/question/suggestion:
-    get:
-      summary: Get an LLM-generated question suggestion.
+  /v2/admin/quiz/{quizid}/question:
+    post:
+      summary: Create quiz question
       description: |
-        Get a question suggestion from the LLM API. 
-        The question suggestion should be meaningful and contextually relevant to the quiz name and description.
-        See the spec for more information. 
+        Create a new stub question for a particular quiz.
+        When this route is called, and a question is created, the timeLastEdited is set as the same as the created time, and the colours of all answers of that question are randomly generated.
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizQuestionMutateIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizQuestionNew'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Question string is less than 5 characters in length or greater than 50 characters in length
+            - The question has more than 6 answers or less than 2 answers
+            - The question timeLimit is not a positive number
+            - The sum of the question timeLimits in the quiz exceeds 3 minutes
+            - The points awarded for the question are less than 1 or greater than 10
+            - The length of any answer is shorter than 1 character long, or longer than 30 characters long
+            - Any answer strings are duplicates of one another (within the same question)
+            - There are no correct answers
+            - The thumbnailUrl is an empty string
+            - The thumbnailUrl does not end with one of the following filetypes (case insensitive): jpg, jpeg, png
+            - The thumbnailUrl does not begin with 'http://' or 'https://'
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+  
+  /v1/admin/quiz/{quizid}/question/suggestion:
+    get:
+      summary: Get an LLM-generatied question suggestion.
+      description: |
+        Get a question suggestion from the LLM API. See the spec for more information. 
+        This suggestion should be based on the quiz name and description.
       tags:
         # - "By Topic: Quiz Management"
         - "Iteration 2 (New)"
@@ -1198,6 +1367,84 @@ paths:
           schema:
             $ref: '#/components/return/Error'
   
+  /v2/admin/quiz/{quizid}/question/{questionid}:
+    put:
+      summary: Update quiz question
+      description: |
+        Update the relevant details of a particular question within a quiz.
+        When this route is called, the last edited time is updated, and the colours of all answers of that question are randomly generated.
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/path/QuestionId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizQuestionMutateIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Question Id does not refer to a valid question within this quiz
+            - Question string is less than 5 characters in length or greater than 50 characters in length
+            - The question has more than 6 answers or less than 2 answers
+            - The question timeLimit is not a positive number
+            - If this question were to be updated, the sum of the question timeLimits in the quiz exceeds 3 minutes
+            - The points awarded for the question are less than 1 or greater than 10
+            - The length of any answer is shorter than 1 character long, or longer than 30 characters long
+            - Any answer strings are duplicates of one another (within the same question)
+            - There are no correct answers
+            - The thumbnailUrl is an empty string
+            - The thumbnailUrl does not end with one of the following filetypes (case insensitive): jpg, jpeg, png
+            - The thumbnailUrl does not begin with 'http://' or 'https://'
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+    delete:
+      summary: Delete quiz question
+      description: Delete a particular question from a quiz
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (Modified)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/path/QuestionId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Question Id does not refer to a valid question within this quiz
+            - Any session for this quiz is not in END state
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
   
   /v1/admin/quiz/{quizid}/question/{questionid}/move:
     put:
@@ -1234,6 +1481,319 @@ paths:
             - NewPosition is the position of the current question
           schema:
             $ref: '#/components/return/Error'
+        
+
+
+
+
+  /v1/admin/quiz/{quizid}/games:
+    get:
+      summary: View active and inactive quiz games
+      description: |
+        Retrieves active and inactive game ids (sorted in ascending order) for a quiz
+        - Active games are games that are not in the END state.
+        - Inactive games are games in the END state.
+      tags:
+        # - "By Topic: Quiz Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/path/QuizId'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizGamesList'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+      
+  /v1/admin/quiz/{quizid}/game/start:
+    post:
+      summary: Start a new game for a quiz
+      description: This _copies_ the quiz, so that any edits whilst a game is running does not affect active game
+      tags:
+        # - "By Topic: Game Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizGameStartIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizGameStart'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - autoStartNum is a number greater than 50
+            - 10 games that are not in END state currently exist for this quiz
+            - The quiz does not have any questions in it
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+  /v1/admin/quiz/{quizid}/game/{gameid}:
+    put:
+      summary: Update a quiz game state
+      description: Update the state of a particular quiz game by sending an action command
+      tags:
+        # - "By Topic: Game Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/path/GameId'
+        - $ref: '#/components/header/Session'
+        - $ref: '#/components/body/QuizGameMutateIter3'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Game Id does not refer to a valid game within this quiz
+            - Action provided is not a valid Action enum
+            - Action enum cannot be applied in the current state (see spec and miro for details)
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+    get:
+      summary: Get quiz game status
+      description: Get the status of a particular quiz game
+      tags:
+        # - "By Topic: Game Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/path/GameId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/QuizGameStatus'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Game Id does not refer to a valid game within this quiz
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+      
+  /v1/admin/quiz/{quizid}/game/{gameid}/results:
+    get:
+      summary: Get quiz game final results
+      description: Get the final results for all players for a completed quiz game
+      tags:
+        # - "By Topic: Game Management"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/path/GameId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/ResultsFinal'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+        400:
+          description: |
+            If any of the following are true:
+            - Game Id does not refer to a valid game within this quiz
+            - Game is not in FINAL_RESULTS state
+          schema:
+            $ref: '#/components/return/Error'
+      security:
+        - Iteration 3 Session Authentication: []
+
+
+  /v1/player/join:
+    post:
+      summary: Allow a guest player to join a game
+      description: |
+        If the name entered is an empty string, a name must be randomly generated that conforms to the structure "[5 letters][3 numbers]" (e.g. valid123, ifjru483, ofijr938) where there are no repetitions of numbers or characters within the same name
+      tags:
+        - "Iteration 3 (New)"
+        # - "By Topic: Playing a game"
+      parameters:
+        - $ref: '#/components/body/PlayerJoin'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/PlayerJoin'
+        400:
+          description: |
+            If any of the following are true:
+            - Name contains invalid characters. Valid characters are alphanumeric and spaces.
+            - Name of user entered is not unique (compared to other users who have already joined)
+            - Game Id does not refer to a valid game
+            - Game is not in LOBBY state
+          schema:
+            $ref: '#/components/return/Error'
+  /v1/player/{playerid}:
+    get:
+      summary: Status of guest player in game
+      description: Get the status of a guest player that has already joined a game
+      tags:
+        # - "By Topic: Playing a game"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/PlayerStatus'
+        400:
+          description: |
+            If any of the following are true:
+            - If player ID does not exist
+          schema:
+            $ref: '#/components/return/Error'
+  /v1/player/{playerid}/question/{questionposition}:
+    get:
+      summary: Current question information for a player
+      description: Get the information about a question that the guest player is on. Question position starts at 1
+      tags:
+        # - "By Topic: Playing a game"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+        - $ref: '#/components/path/QuestionPosition'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/group/QuizQuestionPublic'
+        400:
+          description: |
+            If any of the following are true:
+            - If player ID does not exist
+            - If question position is not valid for the game this player is in
+            - If game is not currently on this question
+            - Game is in LOBBY, QUESTION_COUNTDOWN, FINAL_RESULTS or END state
+          schema:
+            $ref: '#/components/return/Error'
+  /v1/player/{playerid}/question/{questionposition}/answer:
+    put:
+      summary: Player submission of answers(s)
+      description: |
+        Allow the current player to submit answer(s) to the currently active question. Question position starts at 1
+        Note: An answer can be re-submitted once first selection is made, as long as game is in the right state
+      tags:
+        # - "By Topic: Playing a game"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/body/PlayerQuestionAnswer'
+        - $ref: '#/components/path/PlayerId'
+        - $ref: '#/components/path/QuestionPosition'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        400:
+          description: |
+            If any of the following are true:
+            - If player ID does not exist
+            - If question position is not valid for the game this player is in
+            - Game is not in QUESTION_OPEN state
+            - If game is not currently on this question
+            - Answer IDs are not valid for this particular question
+            - There are duplicate answer IDs provided
+            - Less than 1 answer ID was submitted
+          schema:
+            $ref: '#/components/return/Error'
+  /v1/player/{playerid}/question/{questionposition}/results:
+    get:
+      summary: Results for a question
+      description: Get the results for a particular question of the game a player is playing in. Question position starts at 1
+      tags:
+        # - "By Topic: Playing a game"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+        - $ref: '#/components/path/QuestionPosition'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/group/QuestionResults'
+        400:
+          description: |
+            If any of the following are true:
+            - If player ID does not exist
+            - If question position is not valid for the game this player is in
+            - Game is not in ANSWER_SHOW state
+            - If game is not currently on this question
+          schema:
+            $ref: '#/components/return/Error'
+  /v1/player/{playerid}/results:
+    get:
+      summary: Final results for a game
+      description: Get the final results for a whole game a player is playing in
+      tags:
+        # - "By Topic: Playing a game"
+        - "Iteration 3 (New)"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/ResultsFinal'
+        400:
+          description: |
+            If any of the following are true:
+            - If player ID does not exist
+            - Game is not in FINAL_RESULTS state
+          schema:
+            $ref: '#/components/return/Error'
 
   /v1/clear:
     delete:
@@ -1247,3 +1807,9 @@ paths:
           description: OK
           schema:
             $ref: '#/components/return/Empty'
+
+securityDefinitions:
+  Iteration 3 Session Authentication:
+    type: apiKey
+    name: session
+    in: header

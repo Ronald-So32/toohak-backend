@@ -4,15 +4,13 @@ import {
   requestAdminQuizTransfer,
   requestAdminQuizCreate,
   requestGetQuiz,
-  requestGetQuizList
+  requestGetQuizList,
+  OK,
+  BADREQUEST,
+  UNAUTHORISED,
+  FORBIDDEN,
+  quizIdOffset
 } from './testsHelper';
-
-const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
-
-const quizIdOffset = 727;
 
 let session: string;
 let session2: string;

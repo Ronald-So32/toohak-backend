@@ -7,6 +7,14 @@ const url = config.url;
 const serverURL = `${url}:${port}/v1`;
 const timeoutMS = 7 * 1000;
 
+export const OK: number = 200;
+export const BADREQUEST: number = 400;
+export const UNAUTHORISED: number = 401;
+export const FORBIDDEN: number = 403;
+
+export const quizIdOffset: number = 727;
+export const questionIdOffset: number = 727;
+
 /**
  * Interface representing the output of the responses
  *

@@ -4,13 +4,12 @@ import {
   responseInterface,
   requestGetQuizList,
   requestAdminQuizCreate,
-  requestDeleteQuiz
+  requestDeleteQuiz,
+  OK,
+  UNAUTHORISED
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const UNAUTHORISED = 401;
 
 let responseRegister: responseInterface;
 let session: string;

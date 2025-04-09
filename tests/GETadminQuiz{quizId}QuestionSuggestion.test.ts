@@ -3,14 +3,12 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-  requestGetQuizQuestionSuggestion
+  requestGetQuizQuestionSuggestion,
+  OK,
+  UNAUTHORISED,
+  FORBIDDEN,
+  quizIdOffset
 } from './testsHelper';
-
-const OK = 200;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
-
-const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;

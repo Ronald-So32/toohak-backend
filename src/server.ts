@@ -50,9 +50,9 @@ const app = express();
 app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
-// For logging errors (print to terminal)
+// for logging errors (print to terminal)
 app.use(morgan('dev'));
-// For producing the docs that define the API
+// for producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
 app.use('/docs', sui.serve, sui.setup(
@@ -419,7 +419,7 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error });
 });
 
-// Start server
+// start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);

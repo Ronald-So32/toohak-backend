@@ -4,16 +4,14 @@ import {
   responseInterface,
   requestGetQuizList,
   requestDeleteQuiz,
-  requestAdminQuizCreate
+  requestAdminQuizCreate,
+  OK,
+  UNAUTHORISED,
+  FORBIDDEN,
+  quizIdOffset
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const OK = 200;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
-
-const quizIdOffset = 727;
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;

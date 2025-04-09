@@ -2,7 +2,8 @@ import {
   getData,
   questionsInterface,
   answersInterface,
-  quizInterface
+  quizInterface,
+  sessionInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -413,7 +414,7 @@ export function generateSession(): string {
   let sessionNew = uuidv4();
 
   // Generates a new session string if it already exist
-  while (data.sessions.some(sessionObj => sessionObj.session === sessionNew)) {
+  while (data.sessions.some((sessionObj: sessionInterface) => sessionObj.session === sessionNew)) {
     sessionNew = uuidv4();
   }
 
@@ -430,7 +431,9 @@ export function generateSession(): string {
 export function findSessionFromUserId(userId: number): string {
   const data = getData();
   // Finds a session with the given user id
-  const theSession = data.sessions.find(sessionObj => sessionObj.userId === userId);
+  const theSession = data.sessions.find(
+    (sessionObj: sessionInterface) => sessionObj.userId === userId
+  );
 
   // Checks if the session exists
   if (!theSession) {
@@ -453,7 +456,9 @@ export function findSessionFromUserId(userId: number): string {
 export function findUserIdFromSession(session: string): userIdInterface {
   const data = getData();
   // Finds a session with the session string
-  const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
+  const theSession = data.sessions.find(
+    (sessionObj: sessionInterface) => sessionObj.session === session
+  );
 
   if (!theSession) {
     throw new BetterError(
@@ -624,7 +629,7 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
   const data = getData();
 
   // Check if quizId exist
-  const quiz = data.quizzes.find(quiz => quiz.quizId === quizId);
+  const quiz = data.quizzes.find((quiz: quizInterface) => quiz.quizId === quizId);
   if (!quiz) {
     throw new BetterError(
       Errors.invalidQuiz().error,
@@ -652,14 +657,14 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
  */
 export function getLongestQuestionLine(text: string): null | string {
   const lines = text.split('\n');
-  const questionLines = lines.filter(line => /\?/.test(line));
+  const questionLines = lines.filter((line: string) => /\?/.test(line));
 
   if (questionLines.length === 0) {
     return null;
   }
 
   // Only get the longest line with a '?' character
-  return questionLines.reduce((longest, current) =>
+  return questionLines.reduce((longest: string, current: string) =>
     current.length > longest.length ? current : longest
   );
 }
