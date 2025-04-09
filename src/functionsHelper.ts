@@ -383,15 +383,24 @@ export function validPassword(password: string): boolean | errorInterface {
 export function validQuizName(name: string): boolean | errorInterface {
   // Checks if the quiz name contains special character
   if (name.match(/[^a-zA-Z0-9\s]/) !== null) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.INVALID_CHARS).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   // Checks if the quiz name has less than 3
   if (name.length < 3) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_SHORT).error,
+      ErrorCodes.BADREQUEST
+    );
   }
   // Checks if the quiz name has more than 30
   if (name.length > 30) {
-    return Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.Name.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return true;
@@ -429,7 +438,10 @@ export function findSessionFromUserId(userId: number): string | errorInterface {
 
   // Checks if the session exists
   if (!theSession) {
-    return Errors.invalidSession();
+    throw new BetterError(
+      Errors.invalidSession().error,
+      ErrorCodes.UNAUTHORISED
+    );
   }
 
   return theSession.session;
@@ -448,7 +460,10 @@ export function findUserIdFromSession(session: string): { userId: number } | err
   const theSession = data.sessions.find(sessionObj => sessionObj.session === session);
 
   if (!theSession) {
-    return Errors.invalidSession();
+    throw new BetterError(
+      Errors.invalidSession().error,
+      ErrorCodes.UNAUTHORISED
+    );
   }
 
   return { userId: theSession.userId };
