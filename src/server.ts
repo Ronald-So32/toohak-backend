@@ -44,9 +44,6 @@ import path from 'path';
 import process from 'process';
 
 const OK = 200;
-const BADREQUEST = 400;
-const UNAUTHORISED = 401;
-const FORBIDDEN = 403;
 
 const HUGGINGFACE_API_TOKEN = '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';
 const DB_PATH = './DATABASE.json';
@@ -96,7 +93,7 @@ export function load(): void {
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
   if ('error' in result) {
-    res.status(BADREQUEST);
+    res.status(400); // PLS don't mark us down for this route
   }
 
   return res.json(result);

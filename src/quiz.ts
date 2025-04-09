@@ -21,7 +21,9 @@ import {
   validateAnswers,
   getCurrentTimestamp,
   findQuizByUser,
-  getLongestQuestionLine
+  getLongestQuestionLine,
+  BetterError,
+  ErrorCodes
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -44,7 +46,10 @@ export function adminQuizList(
   // Checks if the user exists
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Iterate through all quizzes and put in quizzes array if quiz is created by
@@ -76,7 +81,10 @@ export function adminQuizGet(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the quiz exists and created by the user
@@ -115,7 +123,10 @@ export function adminQuizCreate(
 
   const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the name of the quiz is valid
@@ -126,12 +137,18 @@ export function adminQuizCreate(
     (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
   );
   if (duplicate) {
-    return Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE);
+    throw new BetterError(
+      Errors.invalidString('Quiz name', Errors.Specific.QuizName.IN_USE).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Check if description length is valid (max 100 characters)
   if (description.length > 100) {
-    return Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG);
+    throw new BetterError(
+      Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Creates a UUID for the quiz
@@ -177,7 +194,10 @@ export function adminQuizRemove(
 
   const userExists = data.users.some((user: userInterface) => user.userId === userId);
   if (!userExists) {
-    return Errors.invalidUser();
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Finds the quiz index of the quiz in the quizzes array
@@ -185,13 +205,19 @@ export function adminQuizRemove(
 
   // Validates if the quiz exists
   if (quizIndex === -1) {
-    return Errors.invalidQuiz();
+    throw new BetterError(
+      Errors.invalidQuiz().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Checks if the user owns the quiz
   const quiz = data.quizzes[quizIndex];
   if (quiz.createdBy !== userId) {
-    return Errors.noPermission();
+    throw new BetterError(
+      Errors.noPermission().error,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   // Removes the quiz from the quizzes array
