@@ -673,9 +673,6 @@ export function adminQuizQuestionUpdate(
   }
 
   const quiz = findQuizByUser(userId, quizId);
-  if ('error' in quiz) {
-    return quiz as errorInterface;
-  }
 
   const questionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
@@ -686,16 +683,9 @@ export function adminQuizQuestionUpdate(
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
-  const questionValidation = validQuestionString(question);
-  if (questionValidation !== true) {
-    return questionValidation as errorInterface;
-  }
+  validQuestionString(question);
 
-  const answersValid = validateAnswers(answerOptions);
-  if (answersValid !== true) {
-    return answersValid as errorInterface;
-  }
-
+  validateAnswers(answerOptions);
   if (timeLimit <= 0) {
     return Errors.invalidString('Time limit', Errors.Specific.Time.POSITIVE);
   }
@@ -709,10 +699,7 @@ export function adminQuizQuestionUpdate(
     return Errors.invalidString('Total time limit', Errors.Specific.Time.TOO_LONG);
   }
 
-  const pointsValid = validatePoints(points);
-  if (pointsValid !== true) {
-    return pointsValid as errorInterface;
-  }
+  validatePoints(points);
 
   let answerId = 0;
   const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {

@@ -49,10 +49,7 @@ export function adminAuthRegister(
   validName(nameLast, false);
 
   // Checks if the password is valid
-  const validPass = validPassword(password);
-  if (validPass !== true) {
-    throw new BetterError((validPass as errorInterface).error, ErrorCodes.BADREQUEST);
-  }
+  validPassword(password);
 
   // Creates a UUID for the user
   const id = createUUID();
@@ -246,10 +243,7 @@ export function adminUserPasswordUpdate(
     return Errors.invalidString('New password', Errors.Specific.Password.OLD_SAME);
   }
 
-  const validPass = validPassword(newPassword);
-  if (validPass !== true) {
-    return validPass as errorInterface;
-  }
+  validPassword(newPassword);
 
   // The variable newPassword is meets all requirements, so replace password with newPassword
   userData.password = newPassword;
