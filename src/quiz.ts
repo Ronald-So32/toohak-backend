@@ -467,7 +467,11 @@ export function adminQuizQuestionCreate(
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
-export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
+export function adminQuizTransfer(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
   const data = getData();
 
   // Checks if the quiz exists and gets the index of the quiz
@@ -523,10 +527,16 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
-export function adminQuizTransferV2(quizId: number, userId: number, userEmail: string) {
-
+export function adminQuizTransferV2(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
+  checkActiveGames(quizId);
 
   adminQuizTransfer(quizId, userId, userEmail);  
+
+  return {};
 }
 
 /**
