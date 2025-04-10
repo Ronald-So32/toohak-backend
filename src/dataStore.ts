@@ -85,6 +85,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
+  thumbnail?: string;
 }
 
 /**
