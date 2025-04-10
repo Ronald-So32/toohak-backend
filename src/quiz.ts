@@ -22,7 +22,8 @@ import {
   findQuizByUser,
   getLongestQuestionLine,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  checkActiveGames
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -229,20 +230,7 @@ export function adminQuizRemoveV2(
   userId: number,
   quizId: number
 ): Record<string, never> {
-  const data = getData();
-
-  // This should be a helper function
-  // Check if there is a game running with this quiz that isn't END
-  const activeGameExists = data.games.some(
-    game => game.metadata.quizId === quizId && game.state !== 'END'
-  );
-
-  if (activeGameExists) {
-    throw new BetterError(
-      Errors.gameRunning().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  checkActiveGames(quizId);
 
   adminQuizRemove(userId, quizId);
 
@@ -536,7 +524,7 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
 }
 
 export function adminQuizTransferV2(quizId: number, userId: number, userEmail: string) {
-  
+
 
   adminQuizTransfer(quizId, userId, userEmail);  
 }
