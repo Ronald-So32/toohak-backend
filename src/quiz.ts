@@ -450,14 +450,6 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
-
-  const quiz = findQuizByUser(userId, quizId);
-
-  const question = quiz.questions.find(
-    (q: questionsInterface) => q.questionId === v1.questionId
-  );
-
   const { thumbnail } = questionBody;
 
   // Validate thumbnail
@@ -481,6 +473,14 @@ export function adminQuizQuestionCreateV2(
       ErrorCodes.BADREQUEST
     );
   }
+
+  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
 
   question.thumbnail = questionBody.thumbnail;
 
