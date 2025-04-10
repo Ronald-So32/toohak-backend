@@ -103,6 +103,38 @@ export function adminQuizGet(
   };
 }
 
+export function adminQuizGetV2(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // Checks if the quiz exists and created by the user
+  const quiz = findQuizByUser(userId, quizId);
+
+  return {
+    details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+      thumbnail: quiz.thumbnail
+    }
+  };
+}
+
 /**
  * Given basic details about a new quiz, create one for the logged in user.
  *

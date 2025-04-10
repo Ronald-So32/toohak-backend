@@ -133,6 +133,7 @@ export interface quizGetDetailsInterface {
     numQuestions: number;
     questions: questionsInterface[];
     timeLimit: number;
+    thumbnail?: string;
   }
 }
 
