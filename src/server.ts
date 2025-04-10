@@ -22,6 +22,7 @@ import {
   adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
+  adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';

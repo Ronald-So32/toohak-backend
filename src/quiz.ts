@@ -632,6 +632,18 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+export function adminDeleteQuizQuestionV2(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> {
+  checkActiveGames(quizId);
+
+  adminDeleteQuizQuestion(quizId, userId, questionId);
+
+  return {};
+}
+
 /**
  * Moves a question to a new position within a quiz.
  *
