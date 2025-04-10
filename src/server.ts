@@ -240,7 +240,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 });
 
 // GET /v2/admin/quiz/{quizid}
-app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
+app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
 
