@@ -5,7 +5,8 @@ import {
   Errors,
   findQuizByUser,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  quizStates
 } from './functionsHelper';
 
 export function requestAdminGetQuizGames(userId: number, quizId: number): any { // change
@@ -13,16 +14,29 @@ export function requestAdminGetQuizGames(userId: number, quizId: number): any { 
 
   const quiz = findQuizByUser(userId, quizId);
 
-  const gameToUpdate = data.games.find(game => 
+  const quizGames = data.games.filter(game => 
     game.metadata.quizId === quiz.quizId
   );
 
-  if (!gameToUpdate) {
+  if (quizGames.length === 0) {
     throw new BetterError(
       Errors.invalidQuiz().error,
-      ErrorCodes.BADREQUEST
+      ErrorCodes.FORBIDDEN
     );
   }
 
-  return {};
+  const result = {
+    activeGames: [] as number[],
+    inactiveGames: [] as number[]
+  };
+
+  data.games.forEach(game => {
+    if (game.state !== quizStates.END) {
+      result.activeGames.push(game.metadata.quizId);
+    } else {
+      result.inactiveGames.push(game.metadata.quizId);
+    }
+  });
+
+  return result;
 }
