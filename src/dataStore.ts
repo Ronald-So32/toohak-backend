@@ -100,6 +100,17 @@ export interface sessionInterface {
   session: string;
 }
 
+export interface playersInterface{
+  players: string[]
+}
+
+export interface gamesInterface{
+  state: string,
+  atQuestion: number,
+  players: playersInterface
+  metadata: quizInterface
+}
+
 /**
  * Interface representing the data store of this program.
  *
@@ -116,6 +127,7 @@ export interface Data {
 
   highestID: number;
   sessions: sessionInterface[];
+  games: gamesInterface[];
 }
 
 /**
@@ -127,7 +139,8 @@ const data: Data = {
   quizzes: [],
 
   highestID: 0,
-  sessions: []
+  sessions: [],
+  games: []
 };
 
 /**
