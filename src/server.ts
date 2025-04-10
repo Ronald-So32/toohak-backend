@@ -10,6 +10,7 @@ import {
 import {
   adminQuizList,
   adminQuizRemove,
+  adminQuizRemoveV2,
   adminQuizCreate,
   adminQuizGet,
   adminQuizQuestionCreate,
@@ -18,8 +19,10 @@ import {
   adminQuizNameUpdate,
   adminQuizTransfer,
   adminQuizQuestionUpdate,
+  adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
+  adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
@@ -223,6 +226,22 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
+// DELETE /v2/admin/quiz/{quizid}
+app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizRemoveV2(userId, quizId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // GET /v1/admin/quiz/{quizid}
 app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -358,6 +377,25 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   }
 });
 
+// PUT /v2/admin/quiz/{quizid}/question/{questionid}
+app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizQuestionUpdateV2(userId, quizId, questionId, questionBody);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // DELETE /v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -368,6 +406,23 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminDeleteQuizQuestionV2(quizId, userId, questionId);
 
     return res.status(OK).json({});
   } catch (error) {

@@ -199,6 +199,7 @@ export class Errors {
   } as const;
 
   // Error messages
+  static readonly gameRunningError = 'An active game still exists';
   static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
@@ -251,6 +252,11 @@ export class Errors {
   // Error for no correct answers
   static noCorrectAnswers(): errorInterface {
     return { error: this.noCorrectAnswersError };
+  }
+
+  // Error when a game is running
+  static gameRunning(): errorInterface {
+    return { error: this.gameRunningError };
   }
 }
 
@@ -681,4 +687,20 @@ export function hashString(password: string): string {
   const hash = shaObj.getHash('HEX');
 
   return hash;
+}
+
+export function checkActiveGames(quizId: number): void {
+  const data = getData();
+
+  // Check if there is a game running with this quiz that isn't END
+  const activeGameExists = data.games.some(
+    game => game.metadata.quizId === quizId && game.state !== 'END'
+  );
+
+  if (activeGameExists) {
+    throw new BetterError(
+      Errors.gameRunning().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 }
