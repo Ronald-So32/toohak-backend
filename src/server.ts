@@ -12,6 +12,7 @@ import {
   adminQuizRemove,
   adminQuizCreate,
   adminQuizGet,
+  adminQuizGetV2,
   adminQuizQuestionCreate,
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
@@ -231,6 +232,22 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     const result = adminQuizGet(userId, quizId);
+
+    return res.status(OK).json(result.details);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v2/admin/quiz/{quizid}
+app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    const result = adminQuizGetV2(userId, quizId);
 
     return res.status(OK).json(result.details);
   } catch (error) {
