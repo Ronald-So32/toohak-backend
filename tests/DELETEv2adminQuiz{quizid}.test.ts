@@ -8,7 +8,8 @@ import {
   OK,
   UNAUTHORISED,
   FORBIDDEN,
-  quizIdOffset
+  quizIdOffset,
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -45,17 +46,25 @@ describe('Testing DELETE /v2/admin/quiz/{quizid}', () => {
   });
 
   describe('Testing for error responses', () => {
-    test('Testing when the session is invalid', () => {
+    test('Testing when the session is invalid (401)', () => {
       const responseDeleteQuiz = requestDeleteQuiz(quizId, session + 'Invalid Session');
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(UNAUTHORISED);
     });
 
-    test('Testing when the session is valid but the quizId is not', () => {
+    test('Testing when the session is valid but the quizId is not (403)', () => {
       const responseDeleteQuiz = requestDeleteQuiz(quizId + quizIdOffset, session);
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
     });
+/*
+    test('Testing when the session is valid but the quizId is not (400)', () => {
+      // create a game
+      const responseDeleteQuiz = requestDeleteQuiz(quizId, session);
+      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+    });
+*/
   });
 
   test('Testing DELETE /v2/admin/quiz/{quizid} works as intended', () => {
