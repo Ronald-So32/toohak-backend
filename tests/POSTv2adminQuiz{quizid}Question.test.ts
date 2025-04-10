@@ -13,6 +13,8 @@ import {
 
 import { describe } from 'node:test';
 
+// TODO: VALIDATE THUMBNAIL
+
 let session: string;
 let quizId: number;
 let timeCreated: number;
@@ -50,6 +52,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question',
           timeLimit: 4,
           points: 5,
+          // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
           answerOptions: [
             {
               answer: 'Right',
@@ -116,6 +119,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
+              // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
               answerOptions: [
                 {
                   answer: 'Right',
@@ -144,6 +148,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
+              // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
               answerOptions: [
                 {
                   answer: 'Right',
@@ -186,6 +191,7 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: question,
                 timeLimit: 4,
                 points: 5,
+                // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
                 answerOptions: [
                   {
                     answer: 'Right',

@@ -445,6 +445,48 @@ export function adminQuizQuestionCreate(
   };
 }
 
+export function adminQuizQuestionCreateV2(
+  userId: number,
+  quizId: number,
+  questionBody: questionsInterface
+): questionIdInterface {
+  const { thumbnail } = questionBody;
+
+  // Validate thumbnail
+  if (thumbnail === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
+
+  question.thumbnail = thumbnail;
+
+  return v1;
+}
+
 /**
  * Transfers ownership of a quiz to another user.
  *
@@ -786,6 +828,84 @@ export function adminQuizQuestionUpdate(
 
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit = totalTime;
+
+  return {};
+}
+
+export function adminQuizQuestionUpdateV2(
+  userId: number,
+  quizId: number,
+  questionId: number,
+  questionBody: questionsInterface
+): Record<string, never> {
+  const { thumbnail } = questionBody;
+
+  // Validate thumbnail
+  if (thumbnail === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
+
+  question.thumbnail = thumbnail;
+
+  return v1;
+}
+
+export function requestAdminQuizThumbnail(
+  thumbnail: string,
+  quizId: number,
+  userId: number
+): Record<string, never> {
+  if (thumbnail === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  quiz.thumbnail = thumbnail;
+
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }

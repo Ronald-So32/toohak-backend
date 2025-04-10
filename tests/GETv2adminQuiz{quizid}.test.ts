@@ -25,6 +25,8 @@ let session: string;
 let quizId: number;
 let questionId: number;
 
+// TODO: USE THE NEW v2 ROUTES AND JUST ADD THUMBNAIL
+
 // Before each test clears the data then registers a user, creating a quiz
 // with a question, obtaining the current session, the quizId and the questionId
 beforeEach(() => {
@@ -50,6 +52,7 @@ beforeEach(() => {
         question: 'Question',
         timeLimit: 4,
         points: 5,
+        // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
         answerOptions: [
           {
             answer: 'Right',

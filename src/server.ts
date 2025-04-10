@@ -13,6 +13,7 @@ import {
   adminQuizCreate,
   adminQuizGet,
   adminQuizQuestionCreate,
+  adminQuizQuestionCreateV2,
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
   adminQuizTransfer,
@@ -256,6 +257,24 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   }
 });
 
+// POST /v2/admin/quiz/{quizid}/question
+app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    const result = adminQuizQuestionCreateV2(userId, quizId, questionBody);
+
+    return res.status(OK).json({ questionId: result.questionId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // PUT /v1/admin/quiz/{quizid}/name
 app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -395,7 +414,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
       return res.status(OK).json({ question: result.question });
     } catch (error) {
-      // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
+      // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
