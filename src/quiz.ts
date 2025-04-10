@@ -225,6 +225,19 @@ export function adminQuizRemove(
   return {};
 }
 
+export function adminQuizRemoveV2(
+  userId: number,
+  quizId: number
+): Record<string, never> {
+  // CHECKING Any game for this quiz is not in END state
+  // .find()
+  // game.metadata.quizid == quizid
+
+  adminQuizRemove(userId, quizId);
+
+  return {};
+}
+
 /**
  * Get all the relevant information about the current quiz.
  *
