@@ -13,6 +13,8 @@ import {
 
 import { describe } from 'node:test';
 
+// TODO: VALIDATE THUMBNAIL
+
 let session: string;
 let quizId: number;
 let timeCreated: number;
