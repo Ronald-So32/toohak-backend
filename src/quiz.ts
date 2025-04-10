@@ -874,3 +874,38 @@ export function adminQuizQuestionUpdateV2(
 
   return v1;
 }
+
+export function requestAdminQuizThumbnail(
+  thumbnail: string,
+  quizId: number,
+  userId: number
+): Record<string, never> {
+  if (thumbnail === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+  
+  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  quiz.thumbnail = thumbnail;
+
+  quiz.timeLastEdited = getCurrentTimestamp();
+
+  return {};
+}
