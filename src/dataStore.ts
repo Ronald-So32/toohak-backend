@@ -59,7 +59,7 @@ export interface questionsInterface {
   timeLimit: number;
   points: number;
   answerOptions: answersInterface[];
-  thumbnailUrl: string;
+  // thumbnailUrl: string;
 }
 
 /**
