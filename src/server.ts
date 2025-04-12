@@ -405,6 +405,7 @@ app.get('/v1/player/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   
   try {
+    // playerStatus does NOT exist yet
     const result = playerStatus(playerId);
     
     return res.status(OK).json(result);
