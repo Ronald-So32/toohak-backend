@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestGetQuiz,
   OK,
   BADREQUEST,
@@ -44,7 +44,7 @@ beforeEach(() => {
 describe('Testing POST /v1/admin/quiz', () => {
   test('Testing the return value', () => {
     // Creates a question in the quiz and gets it's response
-    const responseQuestionCreate = requestAdminQuizQuestionCreate(
+    const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -85,7 +85,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId,
           session,
           {
@@ -124,7 +124,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         );
         session = responseRegister.body.session;
 
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId,
           session,
           {
@@ -153,7 +153,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       });
 
       test('Quiz does not exist', () => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId + quizIdOffset,
           session,
           {
@@ -197,7 +197,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Empty string'
           }
         ])('$description', ({ question }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -241,7 +241,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Containing different types of chacters'
           }
         ])('$description', ({ question }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -371,7 +371,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Answer containing more than 30 character'
           }
         ])('$description', ({ answerOptions }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -460,7 +460,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Answer containing exactly 30 character'
           },
         ])('$description', ({ answerOptions }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -495,7 +495,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Timelimit exceeds 3 minutes'
           },
         ])('$desription', ({ timeLimit }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -541,17 +541,17 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           };
 
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
@@ -579,17 +579,17 @@ describe('Testing POST /v1/admin/quiz', () => {
               thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           };
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
@@ -609,7 +609,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               description: 'Timelimit exceeds 3 minutes'
             },
           ])('$desription', ({ timeLimit }) => {
-            const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
               quizId,
               session,
               {
@@ -654,7 +654,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Points awarded is greater then 10'
           },
         ])('$desription', ({ points }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -692,7 +692,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Point awarded is exactly 10'
           },
         ])('$desription', ({ points }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -740,11 +740,11 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'File type where png is other way around'
           },
           {
-            thumbnailUrl: 'http://google.com/some/image/path.gepj',
+            thumbnailUrl: 'http://google.fcom/some/image/path.gepj',
             description: 'File type where jpeg is other way around'
           },
         ])('$description', ({ thumbnailUrl }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -798,7 +798,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'File type of .png at the end in capital case'
           }
         ])('$description', ({ thumbnailUrl }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -860,7 +860,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Url where https is other way around'
           },
         ])('$description', ({ thumbnailUrl }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -898,7 +898,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Url beginning with https://'
           }
         ])('$description', ({ thumbnailUrl }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -930,7 +930,7 @@ describe('Testing POST /v1/admin/quiz', () => {
   
   test('Testing POST /v1/admin/quiz/{quizid}/question works as intended', () => {
     // Creates one question and gets it's question id
-    let responseQuestionCreate = requestAdminQuizQuestionCreate(
+    let responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -957,7 +957,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
     // Creates another question and gets it's id and time question was created
-    responseQuestionCreate = requestAdminQuizQuestionCreate(
+    responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -998,7 +998,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     const quizId2 = responseQuizCreate2.body.quizId;
 
     // Creates a question in the second quiz and gets it's id and time created
-    responseQuestionCreate = requestAdminQuizQuestionCreate(
+    responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId2,
       session,
       {
@@ -1044,7 +1044,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question1',
           questionId: question1Id,
           timeLimit: 4,
-          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -1065,7 +1065,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question2',
           questionId: question2Id,
           timeLimit: 4,
-          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -1107,7 +1107,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question3',
           questionId: question3Id,
           timeLimit: 4,
-          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
