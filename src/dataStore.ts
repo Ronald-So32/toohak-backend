@@ -60,7 +60,7 @@ export interface questionsInterface {
   points: number;
   thumbnail?: string;
   answerOptions: answersInterface[];
-  // thumbnailUrl: string;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -88,7 +88,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
-  thumbnail?: string;
+  thumbnailUrl?: string;
 }
 
 /**
