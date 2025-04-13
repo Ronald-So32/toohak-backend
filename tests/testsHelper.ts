@@ -470,8 +470,8 @@ export function requestAdminUserPasswordUpdate(
  * Wrapper for DELETE /v2/admin/quiz/{quizid}
  */
 export function requestDeleteQuizV2(
+  quizId: number,
   session: string,
-  quizId: number
 ): responseInterface {
   return makeRequest(
     'DELETE',
@@ -485,8 +485,8 @@ export function requestDeleteQuizV2(
  * Wrapper for GET /v2/admin/quiz/{quizid}
  */
 export function requestGetQuizV2(
+  quizId: number,
   session: string,
-  quizId: number
 ): responseInterface {
   return makeRequest(
     'GET',
@@ -500,8 +500,8 @@ export function requestGetQuizV2(
  * Wrapper for POST /v2/admin/quiz/{quizid}/transfer
  */
 export function requestAdminQuizTransferV2(
-  session: string,
   quizId: number,
+  session: string,
   userEmail: string
 ): responseInterface {
   return makeRequest(
@@ -532,9 +532,9 @@ export function requestAdminQuizQuestionCreateV2(
  * Wrapper for PUT /v2/admin/quiz/{quizid}/question/{questionid}
  */
 export function requestAdminQuizQuestionUpdateV2(
-  session: string,
   quizId: number,
   questionId: number,
+  session: string,
   questionBody: questionBodyInterface
 ): responseInterface {
   return makeRequest(
@@ -549,9 +549,9 @@ export function requestAdminQuizQuestionUpdateV2(
  * Wrapper for DELETE /v2/admin/quiz/{quizid}/question/{questionid}
  */
 export function requestDeleteQuizQuestionV2(
-  session: string,
   quizId: number,
-  questionId: number
+  questionId: number,
+  session: string
 ): responseInterface {
   return makeRequest(
     'DELETE',
