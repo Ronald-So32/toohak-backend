@@ -400,6 +400,24 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
+
+// Feature/GET/v1/player/playerid/results
+app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const playerId = parseInt(req.params.playerid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Get the results for game player is in
+    const result = getPlayerGameResults(userId, playerId);
+    return res.status(OK).json({ result });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
