@@ -52,7 +52,6 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question',
           timeLimit: 4,
           points: 5,
-          // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
           answerOptions: [
             {
               answer: 'Right',
@@ -62,7 +61,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -91,7 +91,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                 answer: 'Wrong',
                 correct: false
               }
-            ]
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
           }
         }
       );
@@ -119,7 +120,6 @@ describe('Testing POST /v1/admin/quiz', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
-              // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
               answerOptions: [
                 {
                   answer: 'Right',
@@ -129,7 +129,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -158,7 +159,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -191,7 +193,6 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: question,
                 timeLimit: 4,
                 points: 5,
-                // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
                 answerOptions: [
                   {
                     answer: 'Right',
@@ -201,7 +202,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -244,7 +246,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -364,7 +367,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: 'Question',
                 timeLimit: 4,
                 points: 5,
-                answerOptions
+                answerOptions,
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -452,7 +456,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: 'Question',
                 timeLimit: 4,
                 points: 5,
-                answerOptions
+                answerOptions,
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -495,7 +500,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -518,7 +524,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           };
 
@@ -556,7 +563,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           };
           requestAdminQuizQuestionCreate(
@@ -606,7 +614,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                       answer: 'Wrong',
                       correct: false
                     }
-                  ]
+                  ],
+                  thumbnailUrl: 'http://google.com/some/image/path.jpg'
                 }
               }
             );
@@ -650,7 +659,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -687,7 +697,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -717,7 +728,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -747,7 +759,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Maybe',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -787,7 +800,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Maybe',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -811,6 +825,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question1',
           questionId: question1Id,
           timeLimit: 4,
+          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -831,6 +846,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question2',
           questionId: question2Id,
           timeLimit: 4,
+          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -872,6 +888,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question3',
           questionId: question3Id,
           timeLimit: 4,
+          // thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -892,7 +909,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               correct: false,
               id: expect.any(Number)
             }
-          ]
+          ],
         }
       ],
       timeLimit: expect.any(Number)
