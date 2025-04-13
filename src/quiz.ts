@@ -257,6 +257,29 @@ export function adminQuizRemove(
   return {};
 }
 
+export function adminQuizRemoveV2(
+  userId: number,
+  quizId: number
+): Record<string, never> {
+  const data = getData();
+
+  // Check if there is a game running with this quiz that isn't END
+  const activeGameExists = data.games.some(
+    game => game.metadata.quizId === quizId && game.state !== 'END'
+  );
+
+  if (activeGameExists) {
+    throw new BetterError(
+      Errors.gameRunning().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  adminQuizRemove(userId, quizId);
+
+  return {};
+}
+
 /**
  * Get all the relevant information about the current quiz.
  *
@@ -475,6 +498,50 @@ export function adminQuizQuestionCreate(
   return {
     questionId: id
   };
+}
+
+export function adminQuizQuestionCreateV2(
+  userId: number,
+  quizId: number,
+  questionBody: questionsInterface
+): questionIdInterface {
+  let thumbnailUrl = questionBody.thumbnailUrl;
+  thumbnailUrl = thumbnailUrl.toLowerCase();
+  // Validate thumbnail
+  if (thumbnailUrl === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
+
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+
+  return v1;
 }
 
 /**
