@@ -540,7 +540,7 @@ export function adminQuizQuestionCreateV2(
   );
 
   question.thumbnailUrl = questionBody.thumbnailUrl;
-  
+
   return v1;
 }
 
@@ -904,14 +904,14 @@ export function adminQuizQuestionUpdateV2(
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,

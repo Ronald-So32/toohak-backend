@@ -471,7 +471,7 @@ export function requestAdminUserPasswordUpdate(
  */
 export function requestDeleteQuizV2(
   quizId: number,
-  session: string,
+  session: string
 ): responseInterface {
   return makeRequest(
     'DELETE',
@@ -486,7 +486,7 @@ export function requestDeleteQuizV2(
  */
 export function requestGetQuizV2(
   quizId: number,
-  session: string,
+  session: string
 ): responseInterface {
   return makeRequest(
     'GET',

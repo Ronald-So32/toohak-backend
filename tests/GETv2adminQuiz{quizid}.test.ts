@@ -62,7 +62,7 @@ beforeEach(() => {
             correct: false
           }
         ],
-        thumbnailUrl: "http://google.com/some/image/path.jpg"
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -87,7 +87,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
           question: 'Question',
           questionId: questionId,
           timeLimit: 4,
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -165,7 +165,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
           question: 'Question',
           questionId: questionId,
           timeLimit: 4,
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -195,7 +195,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
         questionBody: {
           question: 'Question2',
           timeLimit: 4,
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -249,7 +249,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               correct: false
             }
           ],
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
         }
       }
     );
@@ -270,7 +270,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
           question: 'Question1',
           questionId: questionId,
           timeLimit: 45,
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 6,
           answerOptions: [
             {
@@ -297,7 +297,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
           question: 'Question2',
           questionId: questionId2,
           timeLimit: 4,
-          thumbnailUrl: "http://google.com/some/image/path.jpg",
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
