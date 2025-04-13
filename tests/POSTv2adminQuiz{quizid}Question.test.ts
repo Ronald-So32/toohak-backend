@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestGetQuiz,
   OK,
   BADREQUEST,
@@ -44,7 +44,7 @@ beforeEach(() => {
 describe('Testing POST /v1/admin/quiz', () => {
   test('Testing the return value', () => {
     // Creates a question in the quiz and gets it's response
-    const responseQuestionCreate = requestAdminQuizQuestionCreate(
+    const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -52,7 +52,6 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question',
           timeLimit: 4,
           points: 5,
-          // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
           answerOptions: [
             {
               answer: 'Right',
@@ -62,7 +61,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -73,32 +73,44 @@ describe('Testing POST /v1/admin/quiz', () => {
   });
 
   describe('Testing for error responses', () => {
-    test('Testing invalid session', () => {
-      const responseQuestionCreate = requestAdminQuizQuestionCreate(
-        quizId,
-        session + 'Invalid Session',
+    describe('Testing status code of 401 return values', () => {
+      test.each([
         {
-          questionBody: {
-            question: 'Question',
-            timeLimit: 4,
-            points: 5,
-            answerOptions: [
-              {
-                answer: 'Right',
-                correct: true
-              },
-              {
-                answer: 'Wrong',
-                correct: false
-              }
-            ]
-          }
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
         }
-      );
-      // Checks that an unauthorised call to create question returns an error object and
-      // a status code of 401
-      expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionCreate.statusCode).toStrictEqual(UNAUTHORISED);
+      ])('$description', ({ session }) => {
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+          quizId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
+            }
+          }
+        );
+        // Checks that an unauthorised call to create question returns an error object and
+        // a status code of 401
+        expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionCreate.statusCode).toStrictEqual(UNAUTHORISED);
+      });
     });
 
     describe('Testing the 403 errors', () => {
@@ -111,7 +123,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         );
         session = responseRegister.body.session;
 
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId,
           session,
           {
@@ -119,7 +131,6 @@ describe('Testing POST /v1/admin/quiz', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
-              // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
               answerOptions: [
                 {
                   answer: 'Right',
@@ -129,7 +140,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -140,7 +152,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       });
 
       test('Quiz does not exist', () => {
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId + quizIdOffset,
           session,
           {
@@ -158,7 +170,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -183,7 +196,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Empty string'
           }
         ])('$description', ({ question }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -191,7 +204,6 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: question,
                 timeLimit: 4,
                 points: 5,
-                // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
                 answerOptions: [
                   {
                     answer: 'Right',
@@ -201,7 +213,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -227,7 +240,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Containing different types of chacters'
           }
         ])('$description', ({ question }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -244,7 +257,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -356,7 +370,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Answer containing more than 30 character'
           }
         ])('$description', ({ answerOptions }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -364,7 +378,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: 'Question',
                 timeLimit: 4,
                 points: 5,
-                answerOptions
+                answerOptions,
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -444,7 +459,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Answer containing exactly 30 character'
           },
         ])('$description', ({ answerOptions }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -452,7 +467,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                 question: 'Question',
                 timeLimit: 4,
                 points: 5,
-                answerOptions
+                answerOptions,
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -478,7 +494,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Timelimit exceeds 3 minutes'
           },
         ])('$desription', ({ timeLimit }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -495,7 +511,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -518,21 +535,22 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           };
 
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
@@ -556,20 +574,21 @@ describe('Testing POST /v1/admin/quiz', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           };
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          requestAdminQuizQuestionCreate(
+          requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
           );
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             questionBody
@@ -589,7 +608,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               description: 'Timelimit exceeds 3 minutes'
             },
           ])('$desription', ({ timeLimit }) => {
-            const responseQuestionCreate = requestAdminQuizQuestionCreate(
+            const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
               quizId,
               session,
               {
@@ -606,7 +625,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                       answer: 'Wrong',
                       correct: false
                     }
-                  ]
+                  ],
+                  thumbnailUrl: 'http://google.com/some/image/path.jpg'
                 }
               }
             );
@@ -633,7 +653,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Points awarded is greater then 10'
           },
         ])('$desription', ({ points }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -650,7 +670,8 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
               }
             }
           );
@@ -670,7 +691,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             description: 'Point awarded is exactly 10'
           },
         ])('$desription', ({ points }) => {
-          const responseQuestionCreate = requestAdminQuizQuestionCreate(
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
             quizId,
             session,
             {
@@ -687,7 +708,214 @@ describe('Testing POST /v1/admin/quiz', () => {
                     answer: 'Wrong',
                     correct: false
                   }
-                ]
+                ],
+                thumbnailUrl: 'http://google.com/some/image/path.jpg'
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+        });
+      });
+    });
+
+    describe('Testing thumbnailUrl', () => {
+      describe('Testing invalid file types', () => {
+        test.each([
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.gif',
+            description: 'File type of .gif at the end'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.txt',
+            description: 'File type of .txt at the end'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.gpj',
+            description: 'File type where jpg is other way around'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.gnp',
+            description: 'File type where png is other way around'
+          },
+          {
+            thumbnailUrl: 'http://google.fcom/some/image/path.gepj',
+            description: 'File type where jpeg is other way around'
+          },
+        ])('$description', ({ thumbnailUrl }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ],
+                thumbnailUrl
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing valid file types', () => {
+        test.each([
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.jpg',
+            description: 'File type of .jpg at the end'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.jpeg',
+            description: 'File type of .jpeg at the end'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.png',
+            description: 'File type of .png at the end'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.JPG',
+            description: 'File type of .jpg at the end in capital case'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.JPEG',
+            description: 'File type of .jpeg at the end in capital case'
+          },
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.PNG',
+            description: 'File type of .png at the end in capital case'
+          }
+        ])('$description', ({ thumbnailUrl }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ],
+                thumbnailUrl
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+        });
+      });
+
+      describe('Testing invalid urls', () => {
+        test.each([
+          {
+            thumbnailUrl: '',
+            description: 'Url is empty'
+          },
+          {
+            thumbnailUrl: 'google.com/some/image/path.jpg',
+            description: 'Url beginning with domain name'
+          },
+          {
+            thumbnailUrl: 'www.google.com/some/image/path.jpeg',
+            description: 'Url beginning with www.'
+          },
+          {
+            thumbnailUrl: 'gg.http://google.com/some/image/path.jpg',
+            description: 'Url where http:// is not at the beginning'
+          },
+          {
+            thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+            description: 'Url where https:// is not at the beginning'
+          },
+          {
+            thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+            description: 'Url where https:// is not at the beginning'
+          },
+          {
+            thumbnailUrl: 'ptth://google.com/some/image/path.jpg',
+            description: 'Url where http is other way around'
+          },
+          {
+            thumbnailUrl: 'sptth://google.com/some/image/path.jpg',
+            description: 'Url where https is other way around'
+          },
+        ])('$description', ({ thumbnailUrl }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ],
+                thumbnailUrl
+              }
+            }
+          );
+          expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing valid urls', () => {
+        test.each([
+          {
+            thumbnailUrl: 'http://google.com/some/image/path.jpg',
+            description: 'Url beginning with http://'
+          },
+          {
+            thumbnailUrl: 'https://google.com/some/image/path.jpeg',
+            description: 'Url beginning with https://'
+          }
+        ])('$description', ({ thumbnailUrl }) => {
+          const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+            quizId,
+            session,
+            {
+              questionBody: {
+                question: 'Question',
+                timeLimit: 4,
+                points: 5,
+                answerOptions: [
+                  {
+                    answer: 'Right',
+                    correct: true
+                  },
+                  {
+                    answer: 'Wrong',
+                    correct: false
+                  }
+                ],
+                thumbnailUrl
               }
             }
           );
@@ -700,7 +928,7 @@ describe('Testing POST /v1/admin/quiz', () => {
 
   test('Testing POST /v1/admin/quiz/{quizid}/question works as intended', () => {
     // Creates one question and gets it's question id
-    let responseQuestionCreate = requestAdminQuizQuestionCreate(
+    let responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -717,7 +945,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -726,7 +955,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
 
     // Creates another question and gets it's id and time question was created
-    responseQuestionCreate = requestAdminQuizQuestionCreate(
+    responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId,
       session,
       {
@@ -747,7 +976,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Maybe',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -766,7 +996,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     const quizId2 = responseQuizCreate2.body.quizId;
 
     // Creates a question in the second quiz and gets it's id and time created
-    responseQuestionCreate = requestAdminQuizQuestionCreate(
+    responseQuestionCreate = requestAdminQuizQuestionCreateV2(
       quizId2,
       session,
       {
@@ -787,7 +1017,8 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Maybe',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -811,6 +1042,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question1',
           questionId: question1Id,
           timeLimit: 4,
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -831,6 +1063,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question2',
           questionId: question2Id,
           timeLimit: 4,
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -872,6 +1105,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           question: 'Question3',
           questionId: question3Id,
           timeLimit: 4,
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
           points: 5,
           answerOptions: [
             {
@@ -892,7 +1126,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               correct: false,
               id: expect.any(Number)
             }
-          ]
+          ],
         }
       ],
       timeLimit: expect.any(Number)

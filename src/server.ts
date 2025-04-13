@@ -10,6 +10,7 @@ import {
 import {
   adminQuizList,
   adminQuizRemove,
+  adminQuizRemoveV2,
   adminQuizCreate,
   adminQuizGet,
   adminQuizQuestionCreate,
@@ -217,6 +218,22 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizRemove(userId, quizId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// DELETE /v2/admin/quiz/{quizid}
+app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizRemoveV2(userId, quizId);
 
     return res.status(OK).json({});
   } catch (error) {

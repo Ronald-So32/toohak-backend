@@ -225,6 +225,29 @@ export function adminQuizRemove(
   return {};
 }
 
+export function adminQuizRemoveV2(
+  userId: number,
+  quizId: number
+): Record<string, never> {
+  const data = getData();
+
+  // Check if there is a game running with this quiz that isn't END
+  const activeGameExists = data.games.some(
+    game => game.metadata.quizId === quizId && game.state !== 'END'
+  );
+
+  if (activeGameExists) {
+    throw new BetterError(
+      Errors.gameRunning().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  adminQuizRemove(userId, quizId);
+
+  return {};
+}
+
 /**
  * Get all the relevant information about the current quiz.
  *
@@ -450,24 +473,26 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const { thumbnail } = questionBody;
-
+  let thumbnailUrl = questionBody.thumbnailUrl;
+  thumbnailUrl = thumbnailUrl.toLowerCase();
   // Validate thumbnail
-  if (thumbnail === '') {
+  if (thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
       ErrorCodes.BADREQUEST
@@ -482,8 +507,8 @@ export function adminQuizQuestionCreateV2(
     (q: questionsInterface) => q.questionId === v1.questionId
   );
 
-  question.thumbnail = thumbnail;
-
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+  
   return v1;
 }
 
