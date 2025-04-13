@@ -73,7 +73,6 @@ describe('Testing POST /v1/admin/quiz', () => {
   });
 
   describe('Testing for error responses', () => {
-
     describe('Testing status code of 401 return values', () => {
       test.each([
         {
@@ -768,9 +767,9 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
-        })
-      })
-  
+        });
+      });
+
       describe('Testing valid file types', () => {
         test.each([
           {
@@ -822,9 +821,9 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-        })
-      })
-  
+        });
+      });
+
       describe('Testing invalid urls', () => {
         test.each([
           {
@@ -884,9 +883,9 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
-        })
-      })
-  
+        });
+      });
+
       describe('Testing valid urls', () => {
         test.each([
           {
@@ -922,12 +921,11 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
           expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
-        })
-      })
-    })
-
+        });
+      });
+    });
   });
-  
+
   test('Testing POST /v1/admin/quiz/{quizid}/question works as intended', () => {
     // Creates one question and gets it's question id
     let responseQuestionCreate = requestAdminQuizQuestionCreateV2(

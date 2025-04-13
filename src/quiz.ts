@@ -482,15 +482,17 @@ export function adminQuizQuestionCreateV2(
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (!thumbnailUrl.endsWith('jpg') && !thumbnailUrl.endsWith('jpeg') && !thumbnailUrl.endsWith('png')) {
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
       ErrorCodes.BADREQUEST
