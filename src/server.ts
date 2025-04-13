@@ -20,6 +20,7 @@ import {
   adminQuizNameUpdate,
   adminQuizTransfer,
   adminQuizQuestionUpdate,
+  adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
   adminQuizQuestionSuggestion
@@ -385,6 +386,25 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
     adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v2/admin/quiz/{quizid}/question/{questionid}
+app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizQuestionUpdateV2(userId, quizId, questionId, questionBody);
 
     return res.status(OK).json({});
   } catch (error) {
