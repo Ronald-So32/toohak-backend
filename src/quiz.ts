@@ -895,9 +895,8 @@ export function adminQuizQuestionUpdateV2(
   questionId: number,
   questionBody: questionsInterface
 ): Record<string, never> {
-
   const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
-  
+
   // Validate thumbnail
   if (thumbnailUrl === '') {
     throw new BetterError(
@@ -929,7 +928,7 @@ export function adminQuizQuestionUpdateV2(
   const question = quiz.questions.find(
     (q: questionsInterface) => q.questionId === questionId
   );
-  
+
   question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;

@@ -689,7 +689,7 @@ describe('Testing PUT /v2/admin/quiz/{quizid}/qusetion/{questionid}', () => {
       });
     });
   });
-  
+
   describe('Valid question strings', () => {
     test.each([
       {
@@ -865,57 +865,57 @@ describe('Testing PUT /v2/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     });
   });
 
-    describe('Testing thumbnailUrl', () => {
-      describe('Testing invalid file types', () => {
-        test.each([
+  describe('Testing thumbnailUrl', () => {
+    describe('Testing invalid file types', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gif',
+          description: 'File type of .gif at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.txt',
+          description: 'File type of .txt at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gpj',
+          description: 'File type where jpg is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gnp',
+          description: 'File type where png is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.fcom/some/image/path.gepj',
+          description: 'File type where jpeg is other way around'
+        },
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+          quizId,
+          questionId,
+          session,
           {
-            thumbnailUrl: 'http://google.com/some/image/path.gif',
-            description: 'File type of .gif at the end'
-          },
-          {
-            thumbnailUrl: 'http://google.com/some/image/path.txt',
-            description: 'File type of .txt at the end'
-          },
-          {
-            thumbnailUrl: 'http://google.com/some/image/path.gpj',
-            description: 'File type where jpg is other way around'
-          },
-          {
-            thumbnailUrl: 'http://google.com/some/image/path.gnp',
-            description: 'File type where png is other way around'
-          },
-          {
-            thumbnailUrl: 'http://google.fcom/some/image/path.gepj',
-            description: 'File type where jpeg is other way around'
-          },
-        ])('$description', ({ thumbnailUrl }) => {
-          const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
-            quizId,
-            questionId,
-            session,
-            {
-              questionBody: {
-                question: 'Question',
-                timeLimit: 4,
-                points: 5,
-                answerOptions: [
-                  {
-                    answer: 'Right',
-                    correct: true
-                  },
-                  {
-                    answer: 'Wrong',
-                    correct: false
-                  }
-                ],
-                thumbnailUrl
-              }
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ],
+              thumbnailUrl
             }
-          );
-          expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
-        });
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
       });
+    });
 
     describe('Testing valid file types', () => {
       test.each([
@@ -971,7 +971,7 @@ describe('Testing PUT /v2/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
       });
     });
-});
+  });
 
   describe('Testing invalid urls', () => {
     test.each([
@@ -1075,7 +1075,6 @@ describe('Testing PUT /v2/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     });
   });
 });
-
 
 test('Testing PUT/v2/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
   // Creates a second question and gets the question id
