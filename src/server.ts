@@ -419,6 +419,28 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
+// PUT /v1/admin/quiz/{quizid}/thumbnail
+app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { thumbnailUrl } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    
+    // Verify user owns the quiz by calling adminQuizGet
+    adminQuizGet(userId, quizId);
+    
+    // Call function to update the quiz's thumbnail
+    adminQuizThumbnailUpdate(userId, quizId, thumbnailUrl);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+  
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
