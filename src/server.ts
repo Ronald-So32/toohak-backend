@@ -19,6 +19,7 @@ import {
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
   adminQuizTransfer,
+  adminQuizTransferV2,
   adminQuizQuestionUpdate,
   adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
@@ -368,6 +369,23 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizTransfer(quizId, userId, userEmail);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v2/admin/quiz/{quizid}/transfer
+app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { userEmail } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizTransferV2(quizId, userId, userEmail);
 
     return res.status(OK).json({});
   } catch (error) {
