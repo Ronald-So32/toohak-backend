@@ -474,6 +474,27 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
+// GET /v1/admin/quiz/{quizid}/games
+app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Verify that the user owns the quiz
+    adminQuizGet(userId, quizId);
+
+    // Retrieve games associated with the quiz
+    const games = adminQuizGamesGet(userId, quizId);
+
+    return res.status(OK).json({ games });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});  
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
