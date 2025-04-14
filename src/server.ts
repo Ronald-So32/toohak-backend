@@ -400,7 +400,6 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
-
 // Feature/GET/v1/player/playerid/results
 app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
