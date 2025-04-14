@@ -4,7 +4,7 @@ import { questionsInterface } from '../src/dataStore';
 
 const port = config.port;
 const url = config.url;
-const serverURL = `${url}:${port}/v1`;
+const serverURL = `${url}:${port}`;
 const timeoutMS = 7 * 1000;
 
 export const OK: number = 200;
@@ -50,6 +50,27 @@ export interface questionBodyInterface {
  * @returns {responseInterface} - The response of the route call
  */
 function makeRequest(
+  method: HttpVerb,
+  endpoint: string,
+  body?: any,
+  headers?: any
+): responseInterface {
+  const res = request(
+    method,
+    `${serverURL}/v1${endpoint}`,
+    {
+      json: body,
+      headers,
+      timeout: timeoutMS,
+    }
+  );
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+function makeRequestV2(
   method: HttpVerb,
   endpoint: string,
   body?: any,
@@ -470,12 +491,12 @@ export function requestAdminUserPasswordUpdate(
  * Wrapper for DELETE /v2/admin/quiz/{quizid}
  */
 export function requestDeleteQuizV2(
-  session: string,
-  quizId: number
+  quizId: number,
+  session: string
 ): responseInterface {
-  return makeRequest(
+  return makeRequestV2(
     'DELETE',
-    `/admin/quiz/${quizId}`,
+    `/v2/admin/quiz/${quizId}`,
     null,
     { session }
   );
