@@ -417,6 +417,20 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
+
+// POST /v1/player/join
+app.post('/v1/player/join', (req: Request, res: Response) => {
+  const { gameId, playerName } = req.body;
+
+  try {
+    const result = playerJoin(gameId, playerName);
+
+    return res.status(OK).json({ playerId: result.playerId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
 // ====================================================================
