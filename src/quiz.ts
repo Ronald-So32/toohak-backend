@@ -104,6 +104,38 @@ export function adminQuizGet(
   };
 }
 
+export function adminQuizGetV2(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // Checks if the quiz exists and created by the user
+  const quiz = findQuizByUser(userId, quizId);
+
+  return {
+    details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+      thumbnailUrl: quiz.thumbnailUrl
+    }
+  };
+}
+
 /**
  * Given basic details about a new quiz, create one for the logged in user.
  *
@@ -462,24 +494,26 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const { thumbnail } = questionBody;
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
   // Validate thumbnail
-  if (thumbnail === '') {
+  if (thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
       ErrorCodes.BADREQUEST
@@ -494,7 +528,7 @@ export function adminQuizQuestionCreateV2(
     (q: questionsInterface) => q.questionId === v1.questionId
   );
 
-  question.thumbnail = thumbnail;
+  question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
 }
@@ -878,24 +912,26 @@ export function adminQuizQuestionUpdateV2(
   questionId: number,
   questionBody: questionsInterface
 ): Record<string, never> {
-  const { thumbnail } = questionBody;
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
   // Validate thumbnail
-  if (thumbnail === '') {
+  if (thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
       ErrorCodes.BADREQUEST
     );
   }
-  
-  if (thumbnail.endsWith('jpg') || thumbnail.endsWith('jpeg') || thumbnail.endsWith('png')) {
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
       ErrorCodes.BADREQUEST
@@ -907,10 +943,10 @@ export function adminQuizQuestionUpdateV2(
   const quiz = findQuizByUser(userId, quizId);
 
   const question = quiz.questions.find(
-    (q: questionsInterface) => q.questionId === v1.questionId
+    (q: questionsInterface) => q.questionId === questionId
   );
 
-  question.thumbnail = thumbnail;
+  question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
 }

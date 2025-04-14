@@ -51,6 +51,7 @@ export interface answersInterface {
  * @property {number} timeLimit - Time limit to answer in seconds
  * @property {number} points - Points awarded for correct answer
  * @property {answersInterface[]} answerOptions - Available answer options
+ * @property {string} thumbnailUrl - The url of the thumbnail
  */
 export interface questionsInterface {
   questionId?: number;
@@ -59,6 +60,7 @@ export interface questionsInterface {
   points: number;
   thumbnail?: string;
   answerOptions: answersInterface[];
+  thumbnailUrl?: string;
 }
 
 /**
@@ -86,7 +88,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
-  thumbnail?: string;
+  thumbnailUrl?: string;
 }
 
 /**
