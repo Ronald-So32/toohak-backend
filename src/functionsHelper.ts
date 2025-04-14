@@ -133,6 +133,7 @@ export interface quizGetDetailsInterface {
     numQuestions: number;
     questions: questionsInterface[];
     timeLimit: number;
+    thumbnail?: string;
   }
 }
 
@@ -190,6 +191,11 @@ export class Errors {
     Points: {
       TOO_SHORT: 'must be at least 1',
       TOO_LONG: 'must be at most 10',
+    },
+    Thumbnail: {
+      EMPTY: 'cannot be an empty string',
+      END: 'has to end with jpg, jpeg or png',
+      START: 'has to begin with \'http://\' or \'https://\''
     }
   } as const;
 

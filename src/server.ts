@@ -13,13 +13,17 @@ import {
   adminQuizRemoveV2,
   adminQuizCreate,
   adminQuizGet,
+  adminQuizGetV2,
   adminQuizQuestionCreate,
+  adminQuizQuestionCreateV2,
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
   adminQuizTransfer,
   adminQuizQuestionUpdate,
+  adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
+  adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
@@ -255,6 +259,22 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
+// GET /v2/admin/quiz/{quizid}
+app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    const result = adminQuizGetV2(userId, quizId);
+
+    return res.status(OK).json(result.details);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // POST /v1/admin/quiz/{quizid}/question
 app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -266,6 +286,24 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
     const result = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+    return res.status(OK).json({ questionId: result.questionId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v2/admin/quiz/{quizid}/question
+app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    const result = adminQuizQuestionCreateV2(userId, quizId, questionBody);
 
     return res.status(OK).json({ questionId: result.questionId });
   } catch (error) {
@@ -356,6 +394,25 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   }
 });
 
+// PUT /v2/admin/quiz/{quizid}/question/{questionid}
+app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizQuestionUpdateV2(userId, quizId, questionId, questionBody);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // DELETE /v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -366,6 +423,23 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminDeleteQuizQuestionV2(quizId, userId, questionId);
 
     return res.status(OK).json({});
   } catch (error) {
@@ -412,7 +486,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
       return res.status(OK).json({ question: result.question });
     } catch (error) {
-      // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
+      // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
