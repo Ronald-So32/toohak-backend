@@ -131,7 +131,7 @@ export function adminQuizGetV2(
       numQuestions: quiz.numQuestions,
       questions: quiz.questions,
       timeLimit: quiz.timeLimit,
-      thumbnailUrl?: quiz.thumbnailUrl
+      thumbnailUrl: quiz.thumbnailUrl
     }
   };
 }
