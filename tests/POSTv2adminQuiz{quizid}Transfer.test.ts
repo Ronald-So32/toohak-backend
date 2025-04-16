@@ -58,7 +58,7 @@ beforeEach(() => {
   );
   quizId2 = responseCreate2.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
