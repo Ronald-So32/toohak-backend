@@ -57,6 +57,27 @@ function makeRequest(
 ): responseInterface {
   const res = request(
     method,
+    `${serverURL}/v1${endpoint}`,
+    {
+      json: body,
+      headers,
+      timeout: timeoutMS,
+    }
+  );
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+function makeRequestV2(
+  method: HttpVerb,
+  endpoint: string,
+  body?: any,
+  headers?: any
+): responseInterface {
+  const res = request(
+    method,
     `${serverURL}${endpoint}`,
     {
       json: body,
@@ -473,7 +494,7 @@ export function requestDeleteQuizV2(
   quizId: number,
   session: string
 ): responseInterface {
-  return makeRequest(
+  return makeRequestV2(
     'DELETE',
     `/v2/admin/quiz/${quizId}`,
     null,
