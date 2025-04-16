@@ -610,7 +610,7 @@ export function adminQuizTransferV2(
 ): Record<string, never> {
   checkActiveGames(quizId);
 
-  adminQuizTransfer(quizId, userId, userEmail);  
+  adminQuizTransfer(quizId, userId, userEmail);
 
   return {};
 }
