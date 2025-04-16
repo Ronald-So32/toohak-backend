@@ -179,3 +179,44 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * Do we need to add defaults to the question create?
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 8                                                  |
+| --------- | -------------------------------------------------- |
+| Date/time | 11/04 15:00                                        |
+|   Week    | 8                                                  |
+| Attendees | Brian, Justin, Ronald, Weiming                     |
+
+### Agenda
+| Item                       | Discussion/decision            |
+| -------------------------- | ------------------------------ |
+| Assigning task             | Allocated tasks to each person |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* Final presentation booking
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 9                                     |
+| --------- | ------------------------------------- |
+| Date/time | 14/04 14:30                           |
+|   Week    | 9                                     |
+| Attendees | Brian, Justin, Ronald, Weiming, Sagar |
+
+### Agenda
+| Item                       | Discussion/decision            |
+| -------------------------- | ------------------------------ |
+| Keeping Track              | Discussed our plans as a group | 
+| Assigning task             | Allocated tasks to each person |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
