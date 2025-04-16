@@ -79,7 +79,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
   });
 
   test('Testing GET /v1/admin/quiz/{quizid}/question/suggestion works as intended', () => {
-    ///Create a second quiz with different name/description to test
+    // Create a second quiz with different name/description to test
     // that suggestions are contextually relevant
     const responseCreate2 = requestAdminQuizCreate(
       session,
