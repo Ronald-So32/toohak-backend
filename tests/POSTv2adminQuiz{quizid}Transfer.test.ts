@@ -163,59 +163,59 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
       });
 
-    describe('Error 403: Forbidden', () => {
-      test('User does not own the quiz', () => {
+      describe('Error 403: Forbidden', () => {
+        test('User does not own the quiz', () => {
         // Create third user who will be the target
-        const responseRegister3 = requestAdminAuthRegister(
-          'z69420@ad.unsw.edu.au',
-          'Password3',
-          'Firsttt',
-          'Lasttt'
-        );
-        const session3 = responseRegister3.body.session;
+          const responseRegister3 = requestAdminAuthRegister(
+            'z69420@ad.unsw.edu.au',
+            'Password3',
+            'Firsttt',
+            'Lasttt'
+          );
+          const session3 = responseRegister3.body.session;
 
-        // User3 tries to transfer User1's quiz to User2
-        const responseTransfer = requestAdminQuizTransferV2(
-          quizId,
-          session3,
-          'z6969@ad.unsw.edu.au'
-        );
-        // Checks that a forbidden transfer returns an error object and a
-        // status code of 403
-        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+          // User3 tries to transfer User1's quiz to User2
+          const responseTransfer = requestAdminQuizTransferV2(
+            quizId,
+            session3,
+            'z6969@ad.unsw.edu.au'
+          );
+          // Checks that a forbidden transfer returns an error object and a
+          // status code of 403
+          expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        });
+
+        test('Quiz does not exist', () => {
+        // Try to transfer non-existent quiz
+          const responseTransfer = requestAdminQuizTransferV2(
+            quizId + quizIdOffset,
+            session,
+            'z6969@ad.unsw.edu.au'
+          );
+          expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+          expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        });
       });
 
-      test('Quiz does not exist', () => {
-        // Try to transfer non-existent quiz
-        const responseTransfer = requestAdminQuizTransferV2(
-          quizId + quizIdOffset,
+      test('Quiz can no longer be transferred after first transfer', () => {
+      // First transfer (user1 -> user2)
+        const transfer1Result = requestAdminQuizTransferV2(
+          quizId,
           session,
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
-        expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
+        expect(transfer1Result.statusCode).toStrictEqual(OK);
+
+        // Second transfer attempt (user1 -> user3)
+        const transfer2Result = requestAdminQuizTransferV2(
+          quizId,
+          session,
+          'z69420@ad.unsw.edu.au'
+        );
+        expect(transfer2Result.statusCode).toStrictEqual(FORBIDDEN);
+        expect(transfer2Result.body).toStrictEqual({ error: expect.any(String) });
       });
-    });
-
-    test('Quiz can no longer be transferred after first transfer', () => {
-      // First transfer (user1 -> user2)
-      const transfer1Result = requestAdminQuizTransferV2(
-        quizId,
-        session,
-        'z6969@ad.unsw.edu.au'
-      );
-      expect(transfer1Result.statusCode).toStrictEqual(OK);
-
-      // Second transfer attempt (user1 -> user3)
-      const transfer2Result = requestAdminQuizTransferV2(
-        quizId,
-        session,
-        'z69420@ad.unsw.edu.au'
-      );
-      expect(transfer2Result.statusCode).toStrictEqual(FORBIDDEN);
-      expect(transfer2Result.body).toStrictEqual({ error: expect.any(String) });
-    });
 
     /*
     test('Testing when any game for this quiz is not in END state', () => {
@@ -285,8 +285,8 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       expect(responseTransfer.statusCode).toStrictEqual(OK);
     });
     */
+    });
   });
-});
 
   test('Testing POST /v1/admin/quiz/{quizid}/transfer works as intended', () => {
     // Check user1 has the quiz
@@ -347,4 +347,4 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     expect(responseQuizGet4.body).toStrictEqual({ quizzes: [] });
     expect(responseQuizGet3.statusCode).toStrictEqual(OK);
   });
-})
+});
