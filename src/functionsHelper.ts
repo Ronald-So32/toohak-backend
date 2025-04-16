@@ -194,6 +194,7 @@ export class Errors {
   } as const;
 
   // Error messages
+  static readonly gameRunningError = 'An active game still exists';
   static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
   static readonly invalidSessionError = 'Invalid Session';
@@ -246,6 +247,11 @@ export class Errors {
   // Error for no correct answers
   static noCorrectAnswers(): errorInterface {
     return { error: this.noCorrectAnswersError };
+  }
+
+  // Error when a game is running
+  static gameRunning(): errorInterface {
+    return { error: this.gameRunningError };
   }
 }
 
