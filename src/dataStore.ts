@@ -58,8 +58,9 @@ export interface questionsInterface {
   question: string;
   timeLimit: number;
   points: number;
+  thumbnail?: string;
   answerOptions: answersInterface[];
-  // thumbnailUrl: string;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -87,6 +88,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
+  thumbnailUrl?: string;
 }
 
 /**

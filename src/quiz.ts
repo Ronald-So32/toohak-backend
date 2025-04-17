@@ -103,6 +103,38 @@ export function adminQuizGet(
   };
 }
 
+export function adminQuizGetV2(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // Checks if the quiz exists and created by the user
+  const quiz = findQuizByUser(userId, quizId);
+
+  return {
+    details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+      thumbnailUrl: quiz.thumbnailUrl
+    }
+  };
+}
+
 /**
  * Given basic details about a new quiz, create one for the logged in user.
  *
@@ -468,6 +500,50 @@ export function adminQuizQuestionCreate(
   };
 }
 
+export function adminQuizQuestionCreateV2(
+  userId: number,
+  quizId: number,
+  questionBody: questionsInterface
+): questionIdInterface {
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
+
+  // Validate thumbnail
+  if (thumbnailUrl === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
+
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+
+  return v1;
+}
+
 /**
  * Transfers ownership of a quiz to another user.
  *
@@ -811,4 +887,49 @@ export function adminQuizQuestionUpdate(
   quiz.timeLimit = totalTime;
 
   return {};
+}
+
+export function adminQuizQuestionUpdateV2(
+  userId: number,
+  quizId: number,
+  questionId: number,
+  questionBody: questionsInterface
+): Record<string, never> {
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
+
+  // Validate thumbnail
+  if (thumbnailUrl === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === questionId
+  );
+
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+
+  return v1;
 }

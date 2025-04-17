@@ -3,10 +3,10 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
-  requestAdminQuizQuestionUpdate,
+  requestAdminQuizQuestionCreateV2,
+  requestAdminQuizQuestionUpdateV2,
   requestAdminAuthLogout,
-  requestGetQuiz,
+  requestGetQuizV2,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -43,7 +43,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -60,17 +60,18 @@ beforeEach(() => {
             answer: 'Wrong',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
   questionId = responseQuestionCreate.body.questionId;
 });
 
-describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
+describe('Testing PUT /v2/admin/quiz/{quizid}/qusetion/{questionid}', () => {
   test('Testing correct return value', () => {
     // Updates the question and gets the response
-    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
       quizId,
       questionId,
       session,
@@ -88,7 +89,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
@@ -102,7 +104,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     describe('Test cases for error 401', () => {
       test('Logged out session', () => {
         requestAdminAuthLogout(session);
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -120,7 +122,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -132,7 +135,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
 
       test('Invalid user session', () => {
         requestAdminAuthLogout(session);
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session + 'Invalid Session',
@@ -150,7 +153,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -161,7 +165,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
 
     describe('Test cases for error 403', () => {
       test('Invalid questionId', () => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId + questionIdOffset,
           session,
@@ -179,7 +183,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -204,7 +209,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
 
         const quizId2 = responseQuizCreate.body.quizId;
 
-        requestAdminQuizQuestionCreate(
+        requestAdminQuizQuestionCreateV2(
           quizId,
           session,
           {
@@ -221,12 +226,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
 
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId2,
           questionId,
           session,
@@ -244,7 +250,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -255,7 +262,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
       });
 
       test('Quiz does not exist', () => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId + quizIdOffset,
           questionId,
           session,
@@ -273,7 +280,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -297,7 +305,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           description: 'Empty string'
         }
       ])('$description', ({ question }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -315,7 +323,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
 
@@ -426,7 +435,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           description: 'Answer containing more than 30 character'
         }
       ])('$description', ({ answerOptions }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -435,7 +444,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
-              answerOptions
+              answerOptions,
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -515,7 +525,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           description: 'Answer containing exactly 30 character'
         },
       ])('$description', ({ answerOptions }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -524,7 +534,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
-              answerOptions
+              answerOptions,
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -548,7 +559,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           description: 'Timelimit exceeds 3 minutes'
         },
       ])('$description', ({ timeLimit }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -566,7 +577,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -589,23 +601,24 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                 answer: 'Wrong',
                 correct: false
               }
-            ]
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
           }
         };
         // Creates 3 questions that has a summed time limit of under 3 minutes
-        const responseQuestionCreate = requestAdminQuizQuestionCreate(
+        const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
           quizId,
           session,
           questionBody
         );
         questionId = responseQuestionCreate.body.questionId;
 
-        requestAdminQuizQuestionCreate(quizId, session, questionBody);
-        requestAdminQuizQuestionCreate(quizId, session, questionBody);
+        requestAdminQuizQuestionCreateV2(quizId, session, questionBody);
+        requestAdminQuizQuestionCreateV2(quizId, session, questionBody);
 
         // Update the first question so that the time limit summed with
         // the other two question will exceed 3 minutes
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -623,7 +636,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -647,7 +661,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           description: 'Points awarded is greater then 10'
         },
       ])('$description', ({ points }) => {
-        const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
           quizId,
           questionId,
           session,
@@ -665,7 +679,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
                   answer: 'Wrong',
                   correct: false
                 }
-              ]
+              ],
+              thumbnailUrl: 'http://google.com/some/image/path.jpg'
             }
           }
         );
@@ -674,9 +689,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
       });
     });
   });
-});
 
-describe('Test valid cases', () => {
   describe('Valid question strings', () => {
     test.each([
       {
@@ -692,7 +705,7 @@ describe('Test valid cases', () => {
         description: 'Containing different types of chacters'
       }
     ])('$description', ({ question }) => {
-      const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
         quizId,
         questionId,
         session,
@@ -710,7 +723,8 @@ describe('Test valid cases', () => {
                 answer: 'Wrong',
                 correct: false
               }
-            ]
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
           }
         }
       );
@@ -734,19 +748,20 @@ describe('Test valid cases', () => {
             answer: 'Wrong',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     };
     // Creates 3 question with summed time limit of under 3 minute
-    const responseQuestionCreate = requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    const responseQuestionCreate = requestAdminQuizQuestionCreateV2(quizId, session, questionBody);
     questionId = responseQuestionCreate.body.questionId;
 
-    requestAdminQuizQuestionCreate(quizId, session, questionBody);
-    requestAdminQuizQuestionCreate(quizId, session, questionBody);
+    requestAdminQuizQuestionCreateV2(quizId, session, questionBody);
+    requestAdminQuizQuestionCreateV2(quizId, session, questionBody);
 
     // Change time limit of first question so that the sum with other two
     // question is exactly 3 minutes
-    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(quizId,
+    const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(quizId,
       questionId,
       session,
       {
@@ -763,94 +778,307 @@ describe('Test valid cases', () => {
               answer: 'Wrong',
               correct: false
             }
-          ]
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
         }
       }
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
   });
-});
 
-describe('Valid timelimit', () => {
-  test.each([
-    {
-      timeLimit: 1,
-      description: 'Is a positive number'
-    },
-    {
-      timeLimit: 180,
-      description: 'Timelimit exceeds 3 minutes'
-    },
-  ])('$desription', ({ timeLimit }) => {
-    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-      quizId,
-      questionId,
-      session,
+  describe('Valid timelimit', () => {
+    test.each([
       {
-        questionBody: {
-          question: 'Question',
-          timeLimit,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Right',
-              correct: true
-            },
-            {
-              answer: 'Wrong',
-              correct: false
-            }
-          ]
-        }
-      }
-    );
-    expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-  });
-});
-
-describe('Valid points awarded', () => {
-  test.each([
-    {
-      points: 1,
-      description: 'Point awarded is exactly 1'
-    },
-    {
-      points: 10,
-      description: 'Point awarded is exactly 10'
-    },
-  ])('$desription', ({ points }) => {
-    const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
-      quizId,
-      questionId,
-      session,
+        timeLimit: 1,
+        description: 'Is a positive number'
+      },
       {
-        questionBody: {
-          question: 'Question',
-          timeLimit: 4,
-          points,
-          answerOptions: [
-            {
-              answer: 'Right',
-              correct: true
-            },
-            {
-              answer: 'Wrong',
-              correct: false
-            }
-          ]
+        timeLimit: 180,
+        description: 'Timelimit exceeds 3 minutes'
+      },
+    ])('$desription', ({ timeLimit }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
+          }
         }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
+  });
+
+  describe('Valid points awarded', () => {
+    test.each([
+      {
+        points: 1,
+        description: 'Point awarded is exactly 1'
+      },
+      {
+        points: 10,
+        description: 'Point awarded is exactly 10'
+      },
+    ])('$desription', ({ points }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
+  });
+
+  describe('Testing thumbnailUrl', () => {
+    describe('Testing invalid file types', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gif',
+          description: 'File type of .gif at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.txt',
+          description: 'File type of .txt at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gpj',
+          description: 'File type where jpg is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.gnp',
+          description: 'File type where png is other way around'
+        },
+        {
+          thumbnailUrl: 'http://google.fcom/some/image/path.gepj',
+          description: 'File type where jpeg is other way around'
+        },
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ],
+              thumbnailUrl
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
+
+    describe('Testing valid file types', () => {
+      test.each([
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpg',
+          description: 'File type of .jpg at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpeg',
+          description: 'File type of .jpeg at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.png',
+          description: 'File type of .png at the end'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.JPG',
+          description: 'File type of .jpg at the end in capital case'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.JPEG',
+          description: 'File type of .jpeg at the end in capital case'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.PNG',
+          description: 'File type of .png at the end in capital case'
+        }
+      ])('$description', ({ thumbnailUrl }) => {
+        const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+          quizId,
+          questionId,
+          session,
+          {
+            questionBody: {
+              question: 'Question',
+              timeLimit: 4,
+              points: 5,
+              answerOptions: [
+                {
+                  answer: 'Right',
+                  correct: true
+                },
+                {
+                  answer: 'Wrong',
+                  correct: false
+                }
+              ],
+              thumbnailUrl
+            }
+          }
+        );
+        expect(responseQuestionUpdate.body).toStrictEqual({});
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      });
+    });
+  });
+
+  describe('Testing invalid urls', () => {
+    test.each([
+      {
+        thumbnailUrl: '',
+        description: 'Url is empty'
+      },
+      {
+        thumbnailUrl: 'google.com/some/image/path.jpg',
+        description: 'Url beginning with domain name'
+      },
+      {
+        thumbnailUrl: 'www.google.com/some/image/path.jpeg',
+        description: 'Url beginning with www.'
+      },
+      {
+        thumbnailUrl: 'gg.http://google.com/some/image/path.jpg',
+        description: 'Url where http:// is not at the beginning'
+      },
+      {
+        thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+        description: 'Url where https:// is not at the beginning'
+      },
+      {
+        thumbnailUrl: 'gg.https://google.com/some/image/path.jpg',
+        description: 'Url where https:// is not at the beginning'
+      },
+      {
+        thumbnailUrl: 'ptth://google.com/some/image/path.jpg',
+        description: 'Url where http is other way around'
+      },
+      {
+        thumbnailUrl: 'sptth://google.com/some/image/path.jpg',
+        description: 'Url where https is other way around'
+      },
+    ])('$description', ({ thumbnailUrl }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ],
+            thumbnailUrl
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+    });
+  });
+
+  describe('Testing valid urls', () => {
+    test.each([
+      {
+        thumbnailUrl: 'http://google.com/some/image/path.jpg',
+        description: 'Url beginning with http://'
+      },
+      {
+        thumbnailUrl: 'https://google.com/some/image/path.jpeg',
+        description: 'Url beginning with https://'
       }
-    );
-    expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    ])('$description', ({ thumbnailUrl }) => {
+      const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
+        quizId,
+        questionId,
+        session,
+        {
+          questionBody: {
+            question: 'Question',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Right',
+                correct: true
+              },
+              {
+                answer: 'Wrong',
+                correct: false
+              }
+            ],
+            thumbnailUrl
+          }
+        }
+      );
+      expect(responseQuestionUpdate.body).toStrictEqual({});
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    });
   });
 });
 
-test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
+test('Testing PUT/v2/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
   // Creates a second question and gets the question id
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -867,14 +1095,15 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
             answer: 'Wrong',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
   const question2Id = responseQuestionCreate.body.questionId;
 
   // Updates the question created before the test
-  const responseQuestionUpdate = requestAdminQuizQuestionUpdate(
+  const responseQuestionUpdate = requestAdminQuizQuestionUpdateV2(
     quizId,
     questionId,
     session,
@@ -896,7 +1125,8 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
             answer: 'Extra',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.png'
       }
     }
   );
@@ -905,7 +1135,7 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
   expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
 
   // Gets the latest details of the quiz with the first and second question
-  const responseQuizDetails = requestGetQuiz(quizId, session);
+  const responseQuizDetails = requestGetQuizV2(quizId, session);
   // Checks that the details of the quiz is correct and that the question
   // was successfully updated
   expect(responseQuizDetails.body).toStrictEqual({
@@ -940,7 +1170,8 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
             correct: false,
             id: expect.any(Number)
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.png'
       },
       {
         question: 'Question2',
@@ -960,7 +1191,8 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
             correct: false,
             id: expect.any(Number)
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     ],
     timeLimit: expect.any(Number)
