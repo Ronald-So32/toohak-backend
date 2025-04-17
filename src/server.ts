@@ -24,7 +24,7 @@ import {
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
-  adminQuizQuestionSuggestion
+  adminQuizQuestionSuggestion,
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -491,14 +491,14 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
-// Feature/GET/v1/player/playerid/results
+// GET/v1/player/playerid/results
 app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
   try {
     // Get the results for game player is in
-    const result = getPlayerGameResults(userId, playerId);
-    return res.status(OK).json({ usersRankedByScore: result.playerId });
+    const result = requestPlayerFinalResults(playerId);
+    return res.status(OK).json({ result });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }
