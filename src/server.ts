@@ -23,6 +23,7 @@ import {
   adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
+  adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
@@ -422,6 +423,23 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminDeleteQuizQuestionV2(quizId, userId, questionId);
 
     return res.status(OK).json({});
   } catch (error) {

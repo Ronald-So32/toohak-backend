@@ -22,7 +22,8 @@ import {
   findQuizByUser,
   getLongestQuestionLine,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  checkActiveGames
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -261,19 +262,7 @@ export function adminQuizRemoveV2(
   userId: number,
   quizId: number
 ): Record<string, never> {
-  const data = getData();
-
-  // Check if there is a game running with this quiz that isn't END
-  const activeGameExists = data.games.some(
-    game => game.metadata.quizId === quizId && game.state !== 'END'
-  );
-
-  if (activeGameExists) {
-    throw new BetterError(
-      Errors.gameRunning().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  checkActiveGames(quizId);
 
   adminQuizRemove(userId, quizId);
 
@@ -554,7 +543,11 @@ export function adminQuizQuestionCreateV2(
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
-export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
+export function adminQuizTransfer(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
   const data = getData();
 
   // Checks if the quiz exists and gets the index of the quiz
@@ -610,6 +603,18 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
+export function adminQuizTransferV2(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
+  checkActiveGames(quizId);
+
+  adminQuizTransfer(quizId, userId, userEmail);
+
+  return {};
+}
+
 /**
  * Deletes a question from a quiz.
  *
@@ -657,6 +662,18 @@ export function adminDeleteQuizQuestion(
 
   // Delete question from its questionId
   quiz.questions.splice(validQuestionIndex, 1);
+
+  return {};
+}
+
+export function adminDeleteQuizQuestionV2(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> {
+  checkActiveGames(quizId);
+
+  adminDeleteQuizQuestion(quizId, userId, questionId);
 
   return {};
 }
