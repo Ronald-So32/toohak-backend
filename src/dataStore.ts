@@ -58,7 +58,6 @@ export interface questionsInterface {
   question: string;
   timeLimit: number;
   points: number;
-  thumbnail?: string;
   answerOptions: answersInterface[];
   thumbnailUrl?: string;
 }
