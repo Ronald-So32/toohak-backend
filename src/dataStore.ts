@@ -51,13 +51,16 @@ export interface answersInterface {
  * @property {number} timeLimit - Time limit to answer in seconds
  * @property {number} points - Points awarded for correct answer
  * @property {answersInterface[]} answerOptions - Available answer options
+ * @property {string} thumbnailUrl - The url of the thumbnail
  */
 export interface questionsInterface {
   questionId?: number;
   question: string;
   timeLimit: number;
   points: number;
+  thumbnail?: string;
   answerOptions: answersInterface[];
+  thumbnailUrl?: string;
 }
 
 /**
@@ -85,6 +88,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -98,6 +102,17 @@ export interface quizInterface {
 export interface sessionInterface {
   userId: number;
   session: string;
+}
+
+export interface playersInterface{
+  players: string[]
+}
+
+export interface gamesInterface{
+  state: string,
+  atQuestion: number,
+  players: playersInterface
+  metadata: quizInterface
 }
 
 /**
@@ -116,6 +131,7 @@ export interface Data {
 
   highestID: number;
   sessions: sessionInterface[];
+  games: gamesInterface[];
 }
 
 /**
@@ -127,7 +143,8 @@ const data: Data = {
   quizzes: [],
 
   highestID: 0,
-  sessions: []
+  sessions: [],
+  games: []
 };
 
 /**
