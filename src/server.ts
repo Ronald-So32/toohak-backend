@@ -514,14 +514,14 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { autoStartNum } = req.body;
-  
+
   try {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-    //adminQuizGameStart does not exist yet
+    // adminQuizGameStart does not exist yet
     const result = adminQuizGameStart(userId, quizId, autoStartNum);
-    
+
     return res.status(OK).json({ gameId: result.gameId });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });

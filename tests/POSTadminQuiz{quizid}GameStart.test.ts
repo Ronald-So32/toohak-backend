@@ -1,12 +1,9 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
-  requestGetQuizList,
-  requestDeleteQuiz,
   requestAdminQuizCreate,
   requestAdminStartGame,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -35,7 +32,7 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -61,7 +58,7 @@ beforeEach(() => {
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
     const responseStartGame = requestAdminStartGame(session, quizId, 3);
-    expect(responseStartGame.body).toStrictEqual({ gameId: expect.any(Number)});
+    expect(responseStartGame.body).toStrictEqual({ gameId: expect.any(Number) });
     expect(responseStartGame.statusCode).toStrictEqual(OK);
   });
 
@@ -81,7 +78,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseStartGame.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
+    });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
@@ -102,10 +99,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseStartGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
 
     test('Testing when autoStartNum is a number greater than 50', () => {
-      const responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
+      const responseStartGame = requestAdminGetQuizGames(session, quizId, 51);
       expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
       expect(responseStartGame.statusCode).toStrictEqual(BADREQUEST);
     });
@@ -137,10 +134,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
       expect(responseStartGame.statusCode).toStrictEqual(BADREQUEST);
     });
-    
   });
 
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
-
   });
 });
