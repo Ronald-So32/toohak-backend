@@ -4,7 +4,8 @@ import {
   answersInterface,
   userInterface,
   quizInterface,
-  gameInterface
+  gameInterface,
+  playersInterface
 } from './dataStore';
 import {
   createUUID,
@@ -972,14 +973,14 @@ export function adminQuizGameStart(
 
   if (quiz.questions.length === 0) {
     throw new BetterError(
-      Errors.noQuestion.error,
+      Errors.noQuestion().error,
       ErrorCodes.BADREQUEST
     );
   }
 
   if (autoStartNum > 50) {
     throw new BetterError(
-      Errors.invalidString('AutoStartNum', Errors.Specific.Thumbnail.TOO_LONG).error,
+      Errors.invalidString('AutoStartNum', Errors.Specific.AutoStartNum.TOO_LONG).error,
       ErrorCodes.BADREQUEST
     );
   }
@@ -993,13 +994,14 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
+  const playersArray: playersInterface[] = [];
 
   data.games.push({
     gameId: id,
     quizId: quizId,
     state: 'LOBBY',
     atQuestion: 1,
-    players: [],
+    players: playersArray,
     metadata: quiz,
     autoStartNum: autoStartNum
   });
