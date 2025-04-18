@@ -4,7 +4,7 @@ import { questionsInterface } from '../src/dataStore';
 
 const port = config.port;
 const url = config.url;
-const serverURL = `${url}:${port}/v1`;
+const serverURL = `${url}:${port}`;
 const timeoutMS = 7 * 1000;
 
 export const OK: number = 200;
@@ -78,7 +78,7 @@ function makeRequest(
 export function requestClear(): responseInterface {
   return makeRequest(
     'DELETE',
-    '/clear',
+    '/v1/clear',
     null,
     null
   );
@@ -98,7 +98,7 @@ export function requestDeleteQuiz(
 ): responseInterface {
   return makeRequest(
     'DELETE',
-    `/admin/quiz/${quizId}`,
+    `/v1/admin/quiz/${quizId}`,
     null,
     { session }
   );
@@ -120,7 +120,7 @@ export function requestDeleteQuizQuestion(
 ): responseInterface {
   return makeRequest(
     'DELETE',
-    `/admin/quiz/${quizId}/question/${questionId}`,
+    `/v1/admin/quiz/${quizId}/question/${questionId}`,
     null,
     { session }
   );
@@ -140,7 +140,7 @@ export function requestGetQuiz(
 ): responseInterface {
   return makeRequest(
     'GET',
-    `/admin/quiz/${quizId}`,
+    `/v1/admin/quiz/${quizId}`,
     null,
     { session }
   );
@@ -160,7 +160,7 @@ export function requestGetQuizQuestionSuggestion(
 ): responseInterface {
   return makeRequest(
     'GET',
-    `/admin/quiz/${quizId}/question/suggestion`,
+    `/v1/admin/quiz/${quizId}/question/suggestion`,
     null,
     { session }
   );
@@ -178,7 +178,7 @@ export function requestGetQuizList(
 ): responseInterface {
   return makeRequest(
     'GET',
-    '/admin/quiz/list',
+    '/v1/admin/quiz/list',
     null,
     { session }
   );
@@ -196,7 +196,7 @@ export function requestGetUserDetails(
 ): responseInterface {
   return makeRequest(
     'GET',
-    '/admin/user/details',
+    '/v1/admin/user/details',
     null,
     { session }
   );
@@ -216,7 +216,7 @@ export function requestAdminAuthLogin(
 ): responseInterface {
   return makeRequest(
     'POST',
-    '/admin/auth/login',
+    '/v1/admin/auth/login',
     { email, password }
   );
 }
@@ -233,7 +233,7 @@ export function requestAdminAuthLogout(
 ): responseInterface {
   return makeRequest(
     'POST',
-    '/admin/auth/logout',
+    '/v1/admin/auth/logout',
     null,
     { session }
   );
@@ -257,7 +257,7 @@ export function requestAdminAuthRegister(
 ): responseInterface {
   return makeRequest(
     'POST',
-    '/admin/auth/register',
+    '/v1/admin/auth/register',
     { email, password, nameFirst, nameLast }
   );
 }
@@ -278,7 +278,7 @@ export function requestAdminQuizCreate(
 ): responseInterface {
   return makeRequest(
     'POST',
-    '/admin/quiz',
+    '/v1/admin/quiz',
     { name, description },
     { session }
   );
@@ -300,7 +300,7 @@ export function requestAdminQuizQuestionCreate(
 ): responseInterface {
   return makeRequest(
     'POST',
-    `/admin/quiz/${quizId}/question`,
+    `/v1/admin/quiz/${quizId}/question`,
     questionBody,
     { session }
   );
@@ -322,7 +322,7 @@ export function requestAdminQuizTransfer(
 ): responseInterface {
   return makeRequest(
     'POST',
-    `/admin/quiz/${quizId}/transfer`,
+    `/v1/admin/quiz/${quizId}/transfer`,
     { userEmail },
     { session }
   );
@@ -344,7 +344,7 @@ export function requestAdminQuizUpdateDescription(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    `/admin/quiz/${quizId}/description`,
+    `/v1/admin/quiz/${quizId}/description`,
     { description },
     { session }
   );
@@ -366,7 +366,7 @@ export function requestAdminQuizUpdateName(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    `/admin/quiz/${quizId}/name`,
+    `/v1/admin/quiz/${quizId}/name`,
     { name },
     { session }
   );
@@ -390,7 +390,7 @@ export function requestAdminQuizQuestionUpdate(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    `/admin/quiz/${quizId}/question/${questionId}`,
+    `/v1/admin/quiz/${quizId}/question/${questionId}`,
     questionBody,
     { session }
   );
@@ -414,7 +414,7 @@ export function requestAdminQuizQuestionMove(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    `/admin/quiz/${quizId}/question/${questionId}/move`,
+    `/v1/admin/quiz/${quizId}/question/${questionId}/move`,
     { newPosition },
     { session }
   );
@@ -438,7 +438,7 @@ export function requestAdminUserDetailsUpdate(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    '/admin/user/details',
+    '/v1/admin/user/details',
     { email, nameFirst, nameLast },
     { session }
   );
@@ -460,8 +460,278 @@ export function requestAdminUserPasswordUpdate(
 ): responseInterface {
   return makeRequest(
     'PUT',
-    '/admin/user/password',
+    '/v1/admin/user/password',
     { oldPassword, newPassword },
     { session }
+  );
+}
+
+/**
+ * Wrapper for DELETE /v2/admin/quiz/{quizid}
+ */
+export function requestDeleteQuizV2(
+  quizId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'DELETE',
+    `/v2/admin/quiz/${quizId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v2/admin/quiz/{quizid}
+ */
+export function requestGetQuizV2(
+  quizId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v2/admin/quiz/${quizId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v2/admin/quiz/{quizid}/transfer
+ */
+export function requestAdminQuizTransferV2(
+  quizId: number,
+  session: string,
+  userEmail: string
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/v2/admin/quiz/${quizId}/transfer`,
+    { userEmail },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v2/admin/quiz/{quizid}/question
+ */
+export function requestAdminQuizQuestionCreateV2(
+  quizId: number,
+  session: string,
+  questionBody: questionBodyInterface
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/v2/admin/quiz/${quizId}/question`,
+    questionBody,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v2/admin/quiz/{quizid}/question/{questionid}
+ */
+export function requestAdminQuizQuestionUpdateV2(
+  quizId: number,
+  questionId: number,
+  session: string,
+  questionBody: questionBodyInterface
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v2/admin/quiz/${quizId}/question/${questionId}`,
+    questionBody,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+ */
+export function requestDeleteQuizQuestionV2(
+  quizId: number,
+  questionId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'DELETE',
+    `/v2/admin/quiz/${quizId}/question/${questionId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/thumbnail
+ */
+export function requestAdminQuizThumbnailUpdate(
+  quizId: number,
+  session: string,
+  thumbnailUrl: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v1/admin/quiz/${quizId}/thumbnail`,
+    { thumbnailUrl },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/games
+ */
+export function requestAdminQuizGamesList(
+  session: string,
+  quizId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/admin/quiz/${quizId}/games`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v1/admin/quiz/{quizid}/game/start
+ */
+export function requestAdminQuizGameStart(
+  session: string,
+  quizId: number,
+  autoStartNum: number
+): responseInterface {
+  return makeRequest(
+    'POST',
+    `/v1/admin/quiz/${quizId}/game/start`,
+    { autoStartNum },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/admin/quiz/{quizid}/game/{gameid}
+ */
+export function requestAdminQuizGameStateUpdate(
+  session: string,
+  quizId: number,
+  gameId: number,
+  action: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v1/admin/quiz/${quizId}/game/${gameId}`,
+    { action },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/game/{gameid}
+ */
+export function requestAdminQuizGameStatus(
+  session: string,
+  quizId: number,
+  gameId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/admin/quiz/${quizId}/game/${gameId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/admin/quiz/{quizid}/game/{gameid}/results
+ */
+export function requestAdminQuizGameResults(
+  session: string,
+  quizId: number,
+  gameId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/admin/quiz/${quizId}/game/${gameId}/results`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for POST /v1/player/join
+ */
+export function requestPlayerJoin(
+  gameId: number,
+  playerName: string
+): responseInterface {
+  return makeRequest(
+    'POST',
+    '/v1/player/join',
+    { gameId, playerName }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}
+ */
+export function requestPlayerStatus(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/player/${playerId}`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/question/{questionposition}
+ */
+export function requestPlayerQuestionInfo(
+  playerId: number,
+  questionPosition: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/player/${playerId}/question/${questionPosition}`
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/player/{playerid}/question/{questionposition}/answer
+ */
+export function requestPlayerAnswerSubmit(
+  playerId: number,
+  questionPosition: number,
+  answerIds: number[]
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v1/player/${playerId}/question/${questionPosition}/answer`,
+    { answerIds }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/question/{questionposition}/results
+ */
+export function requestPlayerQuestionResults(
+  playerId: number,
+  questionPosition: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/player/${playerId}/question/${questionPosition}/results`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/player/{playerid}/results
+ */
+export function requestPlayerFinalResults(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/player/${playerId}/results`
   );
 }
