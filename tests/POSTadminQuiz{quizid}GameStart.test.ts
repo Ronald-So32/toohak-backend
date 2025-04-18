@@ -128,7 +128,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
     test('Testing when autoStartNum is a number is exactly 50', () => {
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 50);
       expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
-      expect(responseGameStart.statusCode).toStrictEqual(OK);;
+      expect(responseGameStart.statusCode).toStrictEqual(OK);
     });
 
     test('Testing when there are 10 games active', () => {

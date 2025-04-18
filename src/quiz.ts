@@ -3,7 +3,8 @@ import {
   questionsInterface,
   answersInterface,
   userInterface,
-  quizInterface
+  quizInterface,
+  gameInterface
 } from './dataStore';
 import {
   createUUID,
@@ -959,14 +960,14 @@ export function adminQuizGameStart(
 ): gameIdInterface {
   const data = getData();
 
-  const userFound = data.users.some((user: userInterface) =>user.userId === userId);
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
   if (!userFound) {
     throw new BetterError(
       Errors.invalidUser().error,
       ErrorCodes.BADREQUEST
     );
   }
- 
+
   const quiz = findQuizByUser(userId, quizId);
 
   if (quiz.questions.length === 0) {
@@ -982,7 +983,7 @@ export function adminQuizGameStart(
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   if (data.games.filter((game: gameInterface) =>
     game.quizId === quizId && game.state !== 'END').length >= 10) {
     throw new BetterError(
@@ -992,7 +993,7 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
-  
+
   data.games.push({
     gameId: id,
     quizId: quizId,
