@@ -114,6 +114,7 @@ export interface gameInterface{
   atQuestion: number;
   players: playersInterface;
   metadata: quizInterface;
+  autoStartNum: number;
 }
 
 /**
