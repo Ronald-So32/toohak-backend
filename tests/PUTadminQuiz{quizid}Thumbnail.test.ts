@@ -3,7 +3,7 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-  requestAdminQuizThumbnail,
+  requestAdminQuizThumbnailUpdate,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -35,7 +35,7 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   test('Testing the code 200 return value', () => {
-    const responseThumbnail = requestAdminQuizThumbnail(
+    const responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
       "http://google.com/some/image/path.jpg"
@@ -56,7 +56,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
           "http://google.com/some/image/path.jpg"
@@ -68,7 +68,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           "http://google.com/some/image/path.jpg"
@@ -85,7 +85,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           'Last'
         ).body.session;
 
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
           "http://google.com/some/image/path.jpg"
@@ -119,7 +119,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'File type where jpeg is other way around'
         },
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           thumbnailUrl
@@ -144,7 +144,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'File type of .png at the end'
         }
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           thumbnailUrl
@@ -185,7 +185,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'Url where https is other way around'
         },
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           thumbnailUrl
@@ -206,7 +206,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'Url beginning with https://'
         }
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           thumbnailUrl
