@@ -26,7 +26,8 @@ import {
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion,
-  adminQuizGameStart
+  adminQuizGameStart,
+  adminQuizThumbnailUpdate
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -543,7 +544,7 @@ app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
     adminQuizGet(userId, quizId);
     
     // Call function to update the quiz's thumbnail
-    adminQuizThumbnailUpdate(userId, quizId, thumbnailUrl);
+    adminQuizThumbnailUpdate(thumbnailUrl, quizId, userId);
 
     return res.status(OK).json({});
   } catch (error) {

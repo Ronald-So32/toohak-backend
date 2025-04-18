@@ -1009,7 +1009,7 @@ export function adminQuizGameStart(
   return { gameId: id };
 }
 
-export function requestAdminQuizThumbnail(
+export function adminQuizThumbnailUpdate(
   thumbnail: string,
   quizId: number,
   userId: number
@@ -1037,7 +1037,7 @@ export function requestAdminQuizThumbnail(
 
   const quiz = findQuizByUser(userId, quizId);
 
-  quiz.thumbnail = thumbnail;
+  quiz.thumbnailUrl = thumbnail;
 
   quiz.timeLastEdited = getCurrentTimestamp();
 
