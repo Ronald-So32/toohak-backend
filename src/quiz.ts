@@ -994,14 +994,14 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
-  const playersArray: playersInterface[] = [];
+  const players: playersInterface;
 
   data.games.push({
     gameId: id,
     quizId: quizId,
     state: 'LOBBY',
     atQuestion: 1,
-    players: playersArray,
+    players: players,
     metadata: quiz,
     autoStartNum: autoStartNum
   });
