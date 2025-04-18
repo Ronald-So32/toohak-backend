@@ -2,8 +2,12 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminStartGame,
+  requestAdminQuizGameStart,
+  requestAdminQuizGamesList,
+  requestAdminQuizGameStatus,
+  requestAdminQuizGameStateUpdate,
   requestAdminQuizQuestionCreateV2,
+  requestPlayerJoin,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -15,6 +19,7 @@ import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
+let questionId: number;
 
 beforeEach(() => {
   requestClear();
@@ -57,9 +62,9 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
-    const responseStartGame = requestAdminStartGame(session, quizId, 3);
-    expect(responseStartGame.body).toStrictEqual({ gameId: expect.any(Number) });
-    expect(responseStartGame.statusCode).toStrictEqual(OK);
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+    expect(responseGameStart.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
@@ -74,17 +79,17 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseStartGame = requestAdminStartGame(session, quizId, 3);
-        expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseStartGame.statusCode).toStrictEqual(UNAUTHORISED);
+        const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+        expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseGameStart.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    });
+    })
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseStartGame = requestAdminGetQuizGames(session, quizId + quizIdOffset, 3);
-        expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseStartGame.statusCode).toStrictEqual(FORBIDDEN);
+        const responseGameStart = requestAdminQuizGameStart(session, quizId + quizIdOffset, 3);
+        expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseGameStart.statusCode).toStrictEqual(FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -95,32 +100,55 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           'Last'
         ).body.session;
 
-        const responseStartGame = requestAdminStartGame(session, quizId, 3);
-        expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseStartGame.statusCode).toStrictEqual(FORBIDDEN);
+        const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+        expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseGameStart.statusCode).toStrictEqual(FORBIDDEN);
       });
-    });
+    })
 
     test('Testing when autoStartNum is a number greater than 50', () => {
-      const responseStartGame = requestAdminGetQuizGames(session, quizId, 51);
-      expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseStartGame.statusCode).toStrictEqual(BADREQUEST);
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 51);
+      expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+    });
+
+    test('Testing when autoStartNum is a number is exactly 50', () => {
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 50);
+      expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when there are 10 games active', () => {
-      let responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseStartGame.statusCode).toStrictEqual(BADREQUEST);
+      let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+    });
+    
+    test('Testing when there are 10 games and one is in END state', () => {
+      let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      requestAdminQuizGameStateUpdate(session, quizId, responseGameStart.gameId, END);
+      responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+      expect(responseGameStart.statusCode).toStrictEqual(OK);
     });
 
     test('Testing when a quiz has no questions', () => {
@@ -130,12 +158,73 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'Description'
       ).body.quizId;
 
-      const responseStartGame = requestAdminGetQuizGames(session, quizId, 3);
-      expect(responseStartGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseStartGame.statusCode).toStrictEqual(BADREQUEST);
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
     });
+    
   });
 
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
+    let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    const gameId1 = responseGameStart.body.gameId;
+    requestPlayerJoin(gameId1, 'Name');
+    const responseGameStatus = requestAdminQuizGameStatus(session, gameId1);
+    expect(responseGetGame.body).toStrictEqual({
+      state: LOBBY,
+      atQuestion: 3,
+      players: [
+        'Name'
+      ],
+      metadata: {
+        quizId: quizId,
+        name: 'Name',
+        timeCreated: timeCreated,
+        timeLastEdited: timeLastEdited,
+        description: 'Description',
+        numQuestions: 1,
+        questions: [
+          {
+            questionId: questionId,
+            question: 'Who is the Monarch of England?',
+            timeLimit: 4,
+            thumbnailUrl: 'http://google.com/some/image/path.jpg',
+            points: 5,
+            answerOptions: [
+              {
+                answerId: expect.any(number),
+                answer: 'Prince Charles',
+                colour: red,
+                correct: true
+              },
+              {
+                answerId: expect.any(number),
+                answer: 'Queen Elizibeth',
+                colour: red,
+                correct: false
+              }
+            ]
+          }
+        ],
+        timeLimit: 4,
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
+      }
+    });
+    responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    requestAdminQuizGameStateUpdate(session, quizId, responseGameStart.gameId, END);
+
+    const gameId2 = responseGameStart.body.gameId;
+    const responseGamesList = requestAdminQuizGamesList(session, quizId);
+    expect(responseGamesList.body).toStrictEqual({
+      activeGames: [
+        gameId1
+      ],
+      inactiveGames: [
+        gameId2
+      ]
+    });
+
   });
 });
