@@ -56,7 +56,8 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -126,8 +127,8 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
 
     test('Testing when autoStartNum is a number is exactly 50', () => {
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 50);
-      expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
+      expect(responseGameStart.statusCode).toStrictEqual(OK);;
     });
 
     test('Testing when there are 10 games active', () => {
@@ -226,8 +227,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
             ]
           }
         ],
-        timeLimit: 4,
-        thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        timeLimit: 4
       }
     });
     // Checks that it can starts a second game and gets the gameId of it
