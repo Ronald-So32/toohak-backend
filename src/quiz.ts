@@ -994,7 +994,7 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
-  const players: playersInterface;
+  const players: playersInterface = { players: [] };
 
   data.games.push({
     gameId: id,
