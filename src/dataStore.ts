@@ -107,11 +107,13 @@ export interface playersInterface{
   players: string[]
 }
 
-export interface gamesInterface{
-  state: string,
-  atQuestion: number,
-  players: playersInterface
-  metadata: quizInterface
+export interface gameInterface{
+  gameId:number;
+  quizId: number;
+  state: string;
+  atQuestion: number;
+  players: playersInterface;
+  metadata: quizInterface;
 }
 
 /**
@@ -130,7 +132,7 @@ export interface Data {
 
   highestID: number;
   sessions: sessionInterface[];
-  games: gamesInterface[];
+  games: gameInterface[];
 }
 
 /**
