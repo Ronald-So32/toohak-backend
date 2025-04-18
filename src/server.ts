@@ -25,7 +25,8 @@ import {
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
-  adminQuizQuestionSuggestion
+  adminQuizQuestionSuggestion,
+  adminQuizGameStart
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
