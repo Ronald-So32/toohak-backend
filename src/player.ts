@@ -136,6 +136,9 @@ export function adminQuizGameUpdate(
         );
       }
       game.state = quizStates.QUESTION_COUNTDOWN;
+
+      timeout
+
       break;
 
     case actions.SKIP_COUNTDOWN:
@@ -152,6 +155,9 @@ export function adminQuizGameUpdate(
         );
       }
       game.state = quizStates.QUESTION_OPEN;
+
+      timeout
+
       break;
 
     case actions.GO_TO_ANSWER:

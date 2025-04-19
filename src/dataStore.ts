@@ -136,6 +136,8 @@ export interface Data {
   highestID: number;
   sessions: sessionInterface[];
   games: gameInterface[];
+
+  activeTimers: Record<number, ReturnType<typeof setTimeout>>;
 }
 
 /**
@@ -148,7 +150,9 @@ const data: Data = {
 
   highestID: 0,
   sessions: [],
-  games: []
+  games: [],
+
+  activeTimers: {}
 };
 
 /**

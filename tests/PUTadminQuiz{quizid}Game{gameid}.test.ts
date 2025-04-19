@@ -306,8 +306,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             );
             expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
             expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-          }, 180000);
-          jest.advanceTimersByTime(180000);
+          }, 180727);
+          jest.advanceTimersByTime(180727);
         });
       });
 
@@ -590,8 +590,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             );
             expect(responseUpdateGame.body).toStrictEqual({});
             expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-          }, 180000);
-          jest.advanceTimersByTime(180000);
+          }, 180727);
+          jest.advanceTimersByTime(180727);
         });
       });
 
@@ -752,9 +752,9 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     );
     expect(responseUpdateGame.body).toStrictEqual({});
     expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-  }, 180000);
+  }, 180727);
 
-  jest.advanceTimersByTime(180000);
+  jest.advanceTimersByTime(180727);
 
   responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
   expect(responseGameStatus.body.state).toStrictEqual('ANSWER_SHOW');
