@@ -9,10 +9,13 @@ import {
   requestAdminQuizGameStatus,
   requestAdminQuizGamesList,
   quizIdOffset,
+} from './testsHelper';
+
+import {
   quizStates,
   actions,
   ErrorCodes
-} from './testsHelper';
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
