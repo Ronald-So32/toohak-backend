@@ -1,7 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizThumbnailUpdate,
   OK,
