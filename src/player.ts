@@ -121,6 +121,11 @@ export function adminQuizGameUpdate(
     );
   }
 
+  if (data.activeTimers[gameId]) {
+    clearTimeout(data.activeTimers[gameId]);
+    delete data.activeTimers[gameId];
+  }
+
   const actionValue = actions[action as keyof typeof actions];
 
   switch (actionValue) {
@@ -136,6 +141,20 @@ export function adminQuizGameUpdate(
         );
       }
       game.state = quizStates.QUESTION_COUNTDOWN;
+
+      game.atQuestion += 1;
+      
+      data.activeTimers[gameId] = setTimeout(() => {
+        game.state = quizStates.QUESTION_OPEN;
+        
+        const currentQuestion = game.metadata.questions[game.atQuestion];
+        data.activeTimers[gameId] = setTimeout(() => {
+          if (game.state === quizStates.QUESTION_OPEN) {
+            game.state = quizStates.QUESTION_CLOSE;
+          }
+        }, currentQuestion.timeLimit * 1000);
+      }, 3000);
+
       break;
 
     case actions.SKIP_COUNTDOWN:
@@ -152,6 +171,14 @@ export function adminQuizGameUpdate(
         );
       }
       game.state = quizStates.QUESTION_OPEN;
+
+      const currentQuestion = game.metadata.questions[game.atQuestion - 1];
+      data.activeTimers[gameId] = setTimeout(() => {
+        if (game.state === quizStates.QUESTION_OPEN) {
+          game.state = quizStates.QUESTION_CLOSE;
+        }
+      }, currentQuestion.timeLimit * 1000);
+
       break;
 
     case actions.GO_TO_ANSWER:
