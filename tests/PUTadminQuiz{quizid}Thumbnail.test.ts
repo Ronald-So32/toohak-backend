@@ -78,7 +78,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
 
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
-          'z7277272@ad.unsw.edu.au',
+          'z727697272@ad.unsw.edu.au',
           'Password1',
           'First',
           'Last'
@@ -86,7 +86,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
 
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
-          session + "Invalid Session",
+          session,
           "http://google.com/some/image/path.jpg"
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
