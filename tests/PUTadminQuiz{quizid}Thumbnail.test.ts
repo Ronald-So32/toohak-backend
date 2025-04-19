@@ -37,7 +37,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     const responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
-      "http://google.com/some/image/path.jpg"
+      'http://google.com/some/image/path.jpg'
     );
     expect(responseThumbnail.body).toStrictEqual({});
     expect(responseThumbnail.statusCode).toStrictEqual(OK);
@@ -58,19 +58,19 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
-          "http://google.com/some/image/path.jpg"
+          'http://google.com/some/image/path.jpg'
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
-    
+    });
+
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
-          "http://google.com/some/image/path.jpg"
+          'http://google.com/some/image/path.jpg'
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
@@ -87,13 +87,12 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
-          "http://google.com/some/image/path.jpg"
+          'http://google.com/some/image/path.jpg'
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
-    
+    });
 
     describe('Testing invalid urls', () => {
       test.each([
@@ -124,9 +123,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           thumbnailUrl
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
-      })
-    })
+        expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
 
     describe('Testing valid file types', () => {
       test.each([
@@ -150,8 +149,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         );
         expect(responseThumbnail.body).toStrictEqual({});
         expect(responseThumbnail.statusCode).toStrictEqual(OK);
-      })
-    })
+      });
+    });
 
     describe('Testing More invalid urls', () => {
       test.each([
@@ -190,9 +189,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           thumbnailUrl
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
-      })
-    })
+        expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
+      });
+    });
 
     describe('Testing valid urls', () => {
       test.each([
@@ -228,8 +227,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         );
         expect(responseThumbnail.body).toStrictEqual({});
         expect(responseThumbnail.statusCode).toStrictEqual(OK);
-      })
-    })
+      });
+    });
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/thumbnail works as intended', () => {

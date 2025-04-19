@@ -31,7 +31,7 @@ import {
 import {
   adminQuizGameStart,
   adminGetQuizGames
-} from './player'
+} from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -491,28 +491,28 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 // GET /v1/admin/quiz/{quizId}/question/suggestion
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
+    const session = req.headers.session as string;
+    const quizId = parseInt(req.params.quizid);
 
-  try {
+    try {
     // Authenticate the user with the session
-    const userIdResult = findUserIdFromSession(session);
-    const userId = userIdResult.userId;
+      const userIdResult = findUserIdFromSession(session);
+      const userId = userIdResult.userId;
 
-    // Get the quiz details to use in the prompt
-    const quizDetailsResult = adminQuizGet(userId, quizId);
-    const result = adminQuizQuestionSuggestion(
-      quizDetailsResult.details.name,
-      quizDetailsResult.details.description,
-      HUGGINGFACE_API_TOKEN
-    );
+      // Get the quiz details to use in the prompt
+      const quizDetailsResult = adminQuizGet(userId, quizId);
+      const result = adminQuizQuestionSuggestion(
+        quizDetailsResult.details.name,
+        quizDetailsResult.details.description,
+        HUGGINGFACE_API_TOKEN
+      );
 
-    return res.status(OK).json({ question: result.question });
-  } catch (error) {
+      return res.status(OK).json({ question: result.question });
+    } catch (error) {
     // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-});
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
 
 // GET /v1/admin/quiz/{quizid}/games
 app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
@@ -564,10 +564,10 @@ app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
   try {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
-    
+
     // Verify user owns the quiz by calling adminQuizGet
     adminQuizGet(userId, quizId);
-    
+
     // Call function to update the quiz's thumbnail
     adminQuizThumbnailUpdate(thumbnailUrl, quizId, userId);
 
@@ -576,7 +576,6 @@ app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
-
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

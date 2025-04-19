@@ -1,4 +1,4 @@
-import { quizStates } from "./functionsHelper";
+import { quizStates } from './functionsHelper';
 
 /**
  * Interface representing the users.

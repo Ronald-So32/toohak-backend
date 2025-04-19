@@ -1,12 +1,12 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  //responseInterface,
+  // responseInterface,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizCreate,
   requestAdminQuizGameStart,
   requestAdminQuizGamesList,
-  //requestAdminUpdateGame,
+  // requestAdminUpdateGame,
   OK,
   UNAUTHORISED,
   FORBIDDEN,
@@ -84,7 +84,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
+    });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
@@ -105,7 +105,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
   });
 
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
@@ -119,13 +119,12 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
     expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
     expect(responseGameStart.statusCode).toStrictEqual(OK);
-    
+
     const responseGetQuizGames2 = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames2.body).toStrictEqual({
       activeGames: [quizId],
       inactiveGames: []
     });
     expect(responseGetQuizGames2.statusCode).toStrictEqual(OK);
-
   });
 });

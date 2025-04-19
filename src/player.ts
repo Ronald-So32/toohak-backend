@@ -19,16 +19,16 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
 
   const quiz = findQuizByUser(userId, quizId);
 
-  const quizGames = data.games.filter(game => 
+  /* const quizGames = */data.games.filter(game =>
     game.metadata.quizId === quiz.quizId
   );
 
-  /*if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
+  /* if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
     throw new BetterError(
       Errors.invalidQuiz().error,
       ErrorCodes.FORBIDDEN
     );
-  }*/
+  } */
 
   const result = {
     activeGames: [] as number[],
