@@ -11,7 +11,8 @@ import {
   ErrorCodes,
   quizStates,
   gameIdInterface,
-  createUUID
+  createUUID,
+  actions
 } from './functionsHelper';
 
 // change types for all
@@ -106,12 +107,34 @@ export function adminQuizGameUpdate(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
 
-  if (!Object.values(quizStates).includes(action)) {
+  if (!Object.values(actions).includes(action)) {
     throw new BetterError(
       Errors.invalidAction().error,
       ErrorCodes.BADREQUEST
     );
   }
 
-  game.state = quizStates[action as keyof typeof quizStates];
+  const actionValue = actions[action as keyof typeof actions];
+
+  switch (actionValue) {
+    case actions.NEXT_QUESTION:
+      
+      break;
+    case actions.SKIP_COUNTDOWN:
+      
+      break;
+    case actions.GO_TO_ANSWER:
+      
+      break;
+    case actions.GO_TO_FINAL_RESULTS:
+      
+      break;
+    case actions.END:
+      
+      break;
+  }
+
+  if (game.state === quizStates.)
+
+  game.state = quizStates.END;
 }
