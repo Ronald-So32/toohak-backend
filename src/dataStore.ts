@@ -105,18 +105,14 @@ export interface sessionInterface {
   session: string;
 }
 
-export interface playersInterface{
-  players: string[]
-}
-
 export interface gameInterface{
-  gameId:number;
-  quizId: number;
+  gameId?:number;
+  quizId?: number;
   state: quizStates;
   atQuestion: number;
-  players: playersInterface;
+  players: string[];
   metadata: quizInterface;
-  autoStartNum: number;
+  autoStartNum?: number;
 }
 
 /**
@@ -136,6 +132,8 @@ export interface Data {
   highestID: number;
   sessions: sessionInterface[];
   games: gameInterface[];
+
+  activeTimers: Record<number, ReturnType<typeof setTimeout>>;
 }
 
 /**
@@ -148,7 +146,9 @@ const data: Data = {
 
   highestID: 0,
   sessions: [],
-  games: []
+  games: [],
+
+  activeTimers: {}
 };
 
 /**

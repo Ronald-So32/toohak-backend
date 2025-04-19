@@ -243,6 +243,8 @@ export class Errors {
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
   static readonly invalidQuestionError = 'Invalid question ID';
+  static readonly invalidActionError = 'Invalid action';
+  static readonly invalidGameError = 'Invalid game';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -303,9 +305,19 @@ export class Errors {
   static tooMuchGames(): errorInterface {
     return { error: this.tooMuchGamesError };
   }
+
+  // Error when action is invalid
+  static invalidAction(): errorInterface {
+    return { error: this.invalidActionError };
+  }
+
+  static invalidGame(): errorInterface {
+    return { error: this.invalidGameError };
+  }
 }
 
 export enum ErrorCodes {
+  OK = 200,
   BADREQUEST = 400,
   UNAUTHORISED = 401,
   FORBIDDEN = 403

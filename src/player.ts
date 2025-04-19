@@ -1,8 +1,7 @@
 import {
   getData,
   userInterface,
-  gameInterface,
-  playersInterface
+  gameInterface
 } from './dataStore';
 import {
   Errors,
@@ -11,24 +10,16 @@ import {
   ErrorCodes,
   quizStates,
   gameIdInterface,
-  createUUID
+  createUUID,
+  actions
 } from './functionsHelper';
+
+// change types for all
 
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
 
-  const quiz = findQuizByUser(userId, quizId);
-
-  /* const quizGames = */data.games.filter(game =>
-    game.metadata.quizId === quiz.quizId
-  );
-
-  /* if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
-    throw new BetterError(
-      Errors.invalidQuiz().error,
-      ErrorCodes.FORBIDDEN
-    );
-  } */
+  findQuizByUser(userId, quizId);
 
   const result = {
     activeGames: [] as number[],
@@ -36,10 +27,12 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
   };
 
   data.games.forEach(game => {
-    if (game.state !== quizStates.END) {
-      result.activeGames.push(game.metadata.quizId);
-    } else {
-      result.inactiveGames.push(game.metadata.quizId);
+    if (game.metadata.quizId === quizId) {
+      if (game.state !== quizStates.END) {
+        result.activeGames.push(game.gameId);
+      } else {
+        result.inactiveGames.push(game.gameId);
+      }
     }
   });
 
@@ -86,17 +79,188 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
-  const players: playersInterface = { players: [] };
 
   data.games.push({
     gameId: id,
     quizId: quizId,
     state: quizStates.LOBBY,
     atQuestion: 1,
-    players: players,
+    players: [],
     metadata: quiz,
     autoStartNum: autoStartNum
   });
 
   return { gameId: id };
+}
+
+export function adminQuizGameUpdate(
+  userId: number,
+  quizId: number,
+  gameId: number,
+  action: string
+) {
+  const data = getData();
+
+  findQuizByUser(userId, quizId);
+
+  const game = data.games.find(
+    g => g.gameId === gameId && g.metadata.quizId === quizId
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!Object.values(actions).includes(action)) {
+    throw new BetterError(
+      Errors.invalidAction().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (data.activeTimers[gameId]) {
+    clearTimeout(data.activeTimers[gameId]);
+    delete data.activeTimers[gameId];
+  }
+
+  const actionValue = actions[action as keyof typeof actions];
+
+  switch (actionValue) {
+    case actions.NEXT_QUESTION:{
+      if (game.state === quizStates.QUESTION_COUNTDOWN ||
+        game.state === quizStates.QUESTION_OPEN ||
+        game.state === quizStates.FINAL_RESULTS ||
+        game.state === quizStates.END
+      ) {
+        throw new BetterError(
+          Errors.invalidAction().error,
+          ErrorCodes.BADREQUEST
+        );
+      }
+      game.state = quizStates.QUESTION_COUNTDOWN;
+
+      game.atQuestion += 1;
+
+      data.activeTimers[gameId] = setTimeout(() => {
+        game.state = quizStates.QUESTION_OPEN;
+
+        const currentQuestion = game.metadata.questions[game.atQuestion];
+        data.activeTimers[gameId] = setTimeout(() => {
+          if (game.state === quizStates.QUESTION_OPEN) {
+            game.state = quizStates.QUESTION_CLOSE;
+          }
+        }, currentQuestion.timeLimit * 1000);
+      }, 3000);
+
+      break; }
+
+    case actions.SKIP_COUNTDOWN: {
+      if (game.state === quizStates.LOBBY ||
+        game.state === quizStates.QUESTION_OPEN ||
+        game.state === quizStates.QUESTION_CLOSE ||
+        game.state === quizStates.ANSWER_SHOW ||
+        game.state === quizStates.FINAL_RESULTS ||
+        game.state === quizStates.END
+      ) {
+        throw new BetterError(
+          Errors.invalidAction().error,
+          ErrorCodes.BADREQUEST
+        );
+      }
+      game.state = quizStates.QUESTION_OPEN;
+
+      const currentQuestion = game.metadata.questions[game.atQuestion - 1];
+      data.activeTimers[gameId] = setTimeout(() => {
+        if (game.state === quizStates.QUESTION_OPEN) {
+          game.state = quizStates.QUESTION_CLOSE;
+        }
+      }, currentQuestion.timeLimit * 1000);
+
+      break;
+    }
+    case actions.GO_TO_ANSWER:{
+      if (game.state === quizStates.LOBBY ||
+        game.state === quizStates.QUESTION_COUNTDOWN ||
+        game.state === quizStates.ANSWER_SHOW ||
+        game.state === quizStates.FINAL_RESULTS ||
+        game.state === quizStates.END
+      ) {
+        throw new BetterError(
+          Errors.invalidAction().error,
+          ErrorCodes.BADREQUEST
+        );
+      }
+      game.state = quizStates.ANSWER_SHOW;
+      break;
+    }
+    case actions.GO_TO_FINAL_RESULTS:{
+      if (game.state === quizStates.LOBBY ||
+        game.state === quizStates.QUESTION_COUNTDOWN ||
+        game.state === quizStates.QUESTION_OPEN ||
+        game.state === quizStates.FINAL_RESULTS ||
+        game.state === quizStates.END
+      ) {
+        throw new BetterError(
+          Errors.invalidAction().error,
+          ErrorCodes.BADREQUEST
+        );
+      }
+      game.state = quizStates.FINAL_RESULTS;
+      break;
+    }
+    case actions.END:{
+      if (game.state === quizStates.END) {
+        throw new BetterError(
+          Errors.invalidAction().error,
+          ErrorCodes.BADREQUEST
+        );
+      }
+      game.state = quizStates.END;
+      break;
+    }
+  }
+
+  return {};
+}
+
+export function adminQuizGameStatus(
+  userId: number,
+  quizId: number,
+  gameId: number
+) {
+  const data = getData();
+
+  findQuizByUser(userId, quizId);
+
+  const game = data.games.find(
+    g => g.gameId === gameId && g.metadata.quizId === quizId
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return {
+    state: game.state,
+    atQuestion: game.atQuestion,
+    players: game.players,
+    metadata: {
+      quizId: game.metadata.quizId,
+      name: game.metadata.name,
+      timeCreated: game.metadata.timeCreated,
+      timeLastEdited: game.metadata.timeLastEdited,
+      description: game.metadata.description,
+      numQuestions: game.metadata.numQuestions,
+      questions: game.metadata.questions,
+      timeLimit: game.metadata.timeLimit,
+      thumbnailUrl: game.metadata.thumbnailUrl
+    }
+
+  };
 }
