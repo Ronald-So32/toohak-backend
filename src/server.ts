@@ -30,7 +30,8 @@ import {
 } from './quiz';
 import {
   adminQuizGameStart,
-  adminGetQuizGames
+  adminGetQuizGames,
+  adminQuizGameUpdate
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -546,7 +547,6 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-    // adminQuizGameStart does not exist yet
     const result = adminQuizGameStart(userId, quizId, autoStartNum);
 
     return res.status(OK).json({ gameId: result.gameId });
@@ -591,6 +591,25 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
     const result = adminQuizGameStatus(userId, quizId, gameId);
     
     return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v1/admin/quiz/{quizid}/game/{gameid}
+app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+  const { action } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizGameUpdate(userId, quizId, gameId, action);
+
+    return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }
