@@ -1,12 +1,17 @@
 import {
   getData,
+  userInterface,
+  gameInterface,
+  playersInterface
 } from './dataStore';
 import {
   Errors,
   findQuizByUser,
   BetterError,
   ErrorCodes,
-  quizStates
+  quizStates,
+  gameIdInterface,
+  createUUID
 } from './functionsHelper';
 
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
@@ -39,4 +44,59 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
   });
 
   return result;
+}
+
+export function adminQuizGameStart(
+  userId: number,
+  quizId: number,
+  autoStartNum: number
+): gameIdInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  if (quiz.questions.length === 0) {
+    throw new BetterError(
+      Errors.noQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (autoStartNum > 50) {
+    throw new BetterError(
+      Errors.invalidString('AutoStartNum', Errors.Specific.AutoStartNum.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (data.games.filter((game: gameInterface) =>
+    game.quizId === quizId && game.state !== quizStates.END).length >= 10) {
+    throw new BetterError(
+      Errors.tooMuchGames().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const id = createUUID();
+  const players: playersInterface = { players: [] };
+
+  data.games.push({
+    gameId: id,
+    quizId: quizId,
+    state: quizStates.LOBBY,
+    atQuestion: 1,
+    players: players,
+    metadata: quiz,
+    autoStartNum: autoStartNum
+  });
+
+  return { gameId: id };
 }

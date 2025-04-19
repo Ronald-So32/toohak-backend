@@ -3,7 +3,7 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-  //requestAdminGameStart,
+  requestAdminQuizGameStart,
   requestAdminQuizGamesList,
   //requestAdminUpdateGame,
   OK,
@@ -32,13 +32,14 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
+  requestAdminQuizGameStart(session, quizId, 3);
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
     const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
-      activeGames: [],
+      activeGames: [quizId],
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(OK);
