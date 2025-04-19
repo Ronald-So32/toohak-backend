@@ -118,11 +118,8 @@ export function adminQuizGameUpdate(
 
   switch (actionValue) {
     case actions.NEXT_QUESTION:
-      if (game.state === quizStates.LOBBY ||
-        game.state === quizStates.QUESTION_COUNTDOWN ||
+      if (game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
-        game.state === quizStates.QUESTION_CLOSE ||
-        game.state === quizStates.ANSWER_SHOW ||
         game.state === quizStates.FINAL_RESULTS ||
         game.state === quizStates.END
       ) {
@@ -131,12 +128,11 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
-      game.state = quizStates.END;
+      game.state = quizStates.QUESTION_COUNTDOWN;
       break;
 
     case actions.SKIP_COUNTDOWN:
       if (game.state === quizStates.LOBBY ||
-        game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
         game.state === quizStates.QUESTION_CLOSE ||
         game.state === quizStates.ANSWER_SHOW ||
@@ -148,14 +144,12 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
-      game.state = quizStates.END;
+      game.state = quizStates.QUESTION_OPEN;
       break;
 
     case actions.GO_TO_ANSWER:
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
-        game.state === quizStates.QUESTION_OPEN ||
-        game.state === quizStates.QUESTION_CLOSE ||
         game.state === quizStates.ANSWER_SHOW ||
         game.state === quizStates.FINAL_RESULTS ||
         game.state === quizStates.END
@@ -165,15 +159,13 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
-      game.state = quizStates.END;
+      game.state = quizStates.ANSWER_SHOW;
       break;
 
     case actions.GO_TO_FINAL_RESULTS:
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
-        game.state === quizStates.QUESTION_CLOSE ||
-        game.state === quizStates.ANSWER_SHOW ||
         game.state === quizStates.FINAL_RESULTS ||
         game.state === quizStates.END
       ) {
@@ -182,18 +174,11 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
-      game.state = quizStates.END;
+      game.state = quizStates.FINAL_RESULTS;
       break;
 
     case actions.END:
-      if (game.state === quizStates.LOBBY ||
-        game.state === quizStates.QUESTION_COUNTDOWN ||
-        game.state === quizStates.QUESTION_OPEN ||
-        game.state === quizStates.QUESTION_CLOSE ||
-        game.state === quizStates.ANSWER_SHOW ||
-        game.state === quizStates.FINAL_RESULTS ||
-        game.state === quizStates.END
-      ) {
+      if (game.state === quizStates.END) {
         throw new BetterError(
           Errors.invalidAction().error,
           ErrorCodes.BADREQUEST
