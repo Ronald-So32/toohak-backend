@@ -98,13 +98,20 @@ export function adminQuizGameUpdate(
   gameId: number,
   action: string
 ) {
+  const data = getData();
+
+  findQuizByUser(userId, quizId);
   
+  const game = data.games.find(
+    g => g.gameId === gameId && g.metadata.quizId === quizId
+  );
 
-
-  if (Object.values(quizStates).includes(action)) {
+  if (!Object.values(quizStates).includes(action)) {
     throw new BetterError(
       Errors.invalidAction().error,
       ErrorCodes.BADREQUEST
     );
   }
+
+  game.state = quizStates[action as keyof typeof quizStates];
 }
