@@ -95,7 +95,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
     const responseUpdateGame = requestAdminUpdateGame(
       quizId,
       gameId,
-      session, 
+      session,
       NEXT_QUESTION
     );
     expect(responseUpdateGame.body).toStrictEqual({});
@@ -117,14 +117,14 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         const responseUpdateGame = requestAdminUpdateGame(
           quizId,
           gameId,
-          session, 
+          session,
           'NEXT_QUESTION'
         );
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
-  
+    });
+
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseUpdateGame = requestAdminUpdateGame(
@@ -136,7 +136,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
           'z7277271@ad.unsw.edu.au',
@@ -144,23 +144,23 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           'First',
           'Last'
         ).body.session;
-  
+
         const responseUpdateGame = requestAdminUpdateGame(
           quizId,
           gameId,
-          session, 
+          session,
           'NEXT_QUESTION'
         );
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
 
     test('Testing invalid game within quiz', () => {
       const responseUpdateGame = requestAdminUpdateGame(
         quizId,
         gameId + gameIdOffset,
-        session, 
+        session,
         'NEXT_QUESTION'
       );
       expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -171,7 +171,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       const responseUpdateGame = requestAdminUpdateGame(
         quizId,
         gameId,
-        session, 
+        session,
         'GGEZ'
       );
       expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -194,14 +194,14 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           const responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
           expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
         });
       });
-      
+
       describe('Testing invalid actions in QUESTION_COUNTDOWN state', () => {
         test.each([
           {
@@ -217,16 +217,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-  
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -249,16 +249,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -267,7 +267,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -280,7 +280,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -289,7 +289,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -300,7 +300,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             responseUpdateGame = requestAdminUpdateGame(
               quizId,
               gameId,
-              session, 
+              session,
               'SKIP_COUNTDOWN'
             );
             expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -328,25 +328,25 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -366,16 +366,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -384,17 +384,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'GO_TO_ANSWER'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -423,16 +422,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -441,17 +440,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'GO_TO_ANSWER'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
@@ -473,14 +471,14 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           const responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
         });
       });
-      
+
       describe('Testing valid actions in QUESTION_COUNTDOWN state', () => {
         test.each([
           {
@@ -493,16 +491,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-  
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -522,16 +520,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -540,7 +538,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -566,7 +564,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -575,7 +573,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -586,7 +584,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             responseUpdateGame = requestAdminUpdateGame(
               quizId,
               gameId,
-              session, 
+              session,
               state
             );
             expect(responseUpdateGame.body).toStrictEqual({});
@@ -601,25 +599,25 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'END'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -642,16 +640,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           let responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'NEXT_QUESTION'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'SKIP_COUNTDOWN'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -660,17 +658,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             'GO_TO_ANSWER'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(OK);
-          
-          
+
           responseUpdateGame = requestAdminUpdateGame(
             quizId,
             gameId,
-            session, 
+            session,
             state
           );
           expect(responseUpdateGame.body).toStrictEqual({});
@@ -678,14 +675,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         });
       });
     });
-
   });
 });
 
 test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
   let responseGameStatus = requestAdminQuizGameStatus(session, gameId);
   expect(responseGameStatus.body.state).toStrictEqual('LOBBY');
-  
+
   let responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
     activeGames: [
@@ -697,7 +693,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   let responseUpdateGame = requestAdminUpdateGame(
     quizId,
     gameId,
-    session, 
+    session,
     'NEXT_QUESTION'
   );
   expect(responseUpdateGame.body).toStrictEqual({});
@@ -717,7 +713,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   let responseUpdateGame = requestAdminUpdateGame(
     quizId,
     gameId,
-    session, 
+    session,
     'SKIP_COUNTDOWN'
   );
   expect(responseUpdateGame.body).toStrictEqual({});
@@ -733,7 +729,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     ],
     inactiveGames: []
   });
-  
+
   jest.useFakeTimers();
   setTimeout(() => {
     responseGameStatus = requestAdminQuizGameStatus(session, gameId);
@@ -750,7 +746,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     responseUpdateGame = requestAdminUpdateGame(
       quizId,
       gameId,
-      session, 
+      session,
       'GO_TO_ANSWER'
     );
     expect(responseUpdateGame.body).toStrictEqual({});
@@ -773,7 +769,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   responseUpdateGame = requestAdminUpdateGame(
     quizId,
     gameId,
-    session, 
+    session,
     'GO_TO_FINAL_RESULTS'
   );
   expect(responseUpdateGame.body).toStrictEqual({});
@@ -793,7 +789,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   responseUpdateGame = requestAdminUpdateGame(
     quizId,
     gameId,
-    session, 
+    session,
     'END'
   );
   expect(responseUpdateGame.body).toStrictEqual({});
@@ -809,5 +805,4 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
       gameId
     ]
   });
-
 });
