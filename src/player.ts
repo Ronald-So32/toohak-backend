@@ -131,6 +131,7 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
+      game.state = quizStates.END;
       break;
 
     case actions.SKIP_COUNTDOWN:
@@ -147,6 +148,7 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
+      game.state = quizStates.END;
       break;
 
     case actions.GO_TO_ANSWER:
@@ -163,6 +165,7 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
+      game.state = quizStates.END;
       break;
 
     case actions.GO_TO_FINAL_RESULTS:
@@ -179,6 +182,7 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
+      game.state = quizStates.END;
       break;
 
     case actions.END:
@@ -195,8 +199,9 @@ export function adminQuizGameUpdate(
           ErrorCodes.BADREQUEST
         );
       }
+      game.state = quizStates.END;
       break;
   }
 
-  game.state = quizStates.END;
+  return {};
 }
