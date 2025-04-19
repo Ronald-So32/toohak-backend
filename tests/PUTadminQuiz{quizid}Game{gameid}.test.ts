@@ -17,7 +17,6 @@ import {
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-import slync from 'slync';
 
 const gameIdOffset = 727;
 
