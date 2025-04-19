@@ -297,17 +297,15 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
           jest.useFakeTimers({});
-          setTimeout(() => {
-            responseUpdateGame = requestAdminQuizGameStateUpdate(
-              quizId,
-              gameId,
-              session,
-              'SKIP_COUNTDOWN'
-            );
-            expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
-            expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-          }, 180727);
-          jest.advanceTimersByTime(180727);
+          jest.advanceTimersByTime(7000);
+          responseUpdateGame = requestAdminQuizGameStateUpdate(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -580,18 +578,18 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-          jest.useFakeTimers();
-          setTimeout(() => {
-            responseUpdateGame = requestAdminQuizGameStateUpdate(
-              quizId,
-              gameId,
-              session,
-              state
-            );
-            expect(responseUpdateGame.body).toStrictEqual({});
-            expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-          }, 180727);
-          jest.advanceTimersByTime(180727);
+          jest.useFakeTimers({});
+          jest.advanceTimersByTime(7000);
+          responseUpdateGame = requestAdminQuizGameStateUpdate(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+          // TODO CHECK WITH GET GAMES (check state and question num)
         });
       });
 
