@@ -8,16 +8,15 @@ import {
   requestAdminQuizGameStateUpdate,
   requestAdminQuizGameStatus,
   requestAdminQuizGamesList,
-  quizIdOffset
-} from './testsHelper';
-
-import {
+  quizIdOffset,
   quizStates,
   actions,
   ErrorCodes
-} from '../src/functionsHelper';
+} from './testsHelper';
 
 import { describe } from 'node:test';
+
+import slync from 'slync';
 
 const gameIdOffset = 727;
 
@@ -70,7 +69,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Question 2',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -296,8 +295,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-          jest.useFakeTimers({});
-          jest.advanceTimersByTime(7000);
+          slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -577,9 +575,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
-          jest.useFakeTimers({});
-          jest.advanceTimersByTime(7000);
+          slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -588,7 +584,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
+          
           // TODO CHECK WITH GET GAMES (check state and question num)
         });
       });
@@ -676,10 +672,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
     });
   });
 });
-/*
+
 test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
-  let responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('LOBBY');
+  let responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.LOBBY);
 
   let responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -698,8 +694,8 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-  responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('QUESTION_COUNTDOWN');
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_COUNTDOWN);
 
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -718,8 +714,8 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-  responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('QUESTION_OPEN');
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_OPEN);
 
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -729,33 +725,30 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     inactiveGames: []
   });
 
-  jest.useFakeTimers();
-  setTimeout(() => {
-    responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-    expect(responseGameStatus.body.state).toStrictEqual('QUESTION_CLOSE');
+  slync(1000);
 
-    responseGamesList = requestAdminQuizGamesList(session, quizId);
-    expect(responseGamesList.body).toStrictEqual({
-      activeGames: [
-        gameId
-      ],
-      inactiveGames: []
-    });
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_CLOSE);
 
-    responseUpdateGame = requestAdminQuizGameStateUpdate(
-      quizId,
-      gameId,
-      session,
-      'GO_TO_ANSWER'
-    );
-    expect(responseUpdateGame.body).toStrictEqual({});
-    expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-  }, 180727);
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
 
-  jest.advanceTimersByTime(180727);
-
-  responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('ANSWER_SHOW');
+  responseUpdateGame = requestAdminQuizGameStateUpdate(
+    quizId,
+    gameId,
+    session,
+    'GO_TO_ANSWER'
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+  
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.ANSWER_SHOW);
 
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -774,8 +767,8 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-  responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('FINAL_RESULTS');
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.FINAL_RESULTS);
 
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -794,8 +787,8 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-  responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
-  expect(responseGameStatus.body.state).toStrictEqual('END');
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.END);
 
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
@@ -805,4 +798,4 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     ]
   });
 });
-*/
+
