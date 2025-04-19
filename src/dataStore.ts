@@ -105,16 +105,13 @@ export interface sessionInterface {
   session: string;
 }
 
-export interface playersInterface{
-  players: string[]
-}
 
 export interface gameInterface{
   gameId?:number;
   quizId?: number;
   state: quizStates;
   atQuestion: number;
-  players: playersInterface;
+  players: string[];
   metadata: quizInterface;
   autoStartNum?: number;
 }

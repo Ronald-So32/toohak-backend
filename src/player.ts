@@ -78,14 +78,13 @@ export function adminQuizGameStart(
   }
 
   const id = createUUID();
-  const players: playersInterface = { players: [] };
 
   data.games.push({
     gameId: id,
     quizId: quizId,
     state: quizStates.LOBBY,
     atQuestion: 1,
-    players: players,
+    players: [],
     metadata: quiz,
     autoStartNum: autoStartNum
   });
@@ -217,7 +216,7 @@ export function adminQuizGameStatus(
       ErrorCodes.BADREQUEST
     );
   }
-
+  delete game.metadata.createdBy;
   return {
     state: game.state,
     atQuestion: game.atQuestion,
