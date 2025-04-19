@@ -3,9 +3,9 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
-  requestAdminGetGame,
+  requestAdminQuizQuestionCreateV2,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStatus,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -40,7 +40,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -61,22 +61,22 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
   timeLastEdited = Math.floor(Date.now() / 1000);
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 });
 
-describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
+describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseGetGame = requestAdminGetGame(
+    const responseGetGame = requestAdminQuizGameStatus(
       quizId,
       gameId,
       session
     );
     expect(responseGetGame.body).toStrictEqual({
-      state: LOBBY,
+      state: 'LOBBY',
       atQuestion: 3,
       players: [],
       metadata: {
@@ -95,39 +95,27 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
             points: 5,
             answerOptions: [
               {
-                answerId: expect.any(number),
+                answerId: expect.any(Number),
                 answer: 'Prince Charles',
-                colour: red,
+                colour: expect.any(String),
                 correct: true
               },
               {
-                answerId: expect.any(number),
+                answerId: expect.any(Number),
                 answer: 'Queen Elizibeth',
-                colour: red,
+                colour: expect.any(String),
                 correct: false
               }
             ]
           }
         ],
         timeLimit: 4,
-        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     });
     expect(responseGetGame.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
-
-    test('Testing invalid game within quiz', () => {
-      const responseGetGame = requestAdminGetGame(
-        quizId,
-        gameId + gameIdOffset,
-        session
-      );
-      expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGame.statusCode).toStrictEqual(BADREQUEST);
-    });
-
     describe('Testing status code of 401 return values', () => {
       test.each([
         {
@@ -139,7 +127,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseGetGame = requestAdminGetGame(
+        const responseGetGame = requestAdminQuizGameStatus(
           quizId,
           gameId,
           session
@@ -151,7 +139,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseGetGame = requestAdminGetGame(
+        const responseGetGame = requestAdminQuizGameStatus(
           quizId + quizIdOffset,
           gameId,
           session
@@ -168,7 +156,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           'Last'
         ).body.session;
   
-        const responseGetGame = requestAdminGetGame(
+        const responseGetGame = requestAdminQuizGameStatus(
           quizId,
           gameId,
           session
@@ -177,5 +165,21 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         expect(responseGetGame.statusCode).toStrictEqual(FORBIDDEN);
       });
     })
+
+    test('Testing invalid game within quiz', () => {
+      const responseGetGame = requestAdminQuizGameStatus(
+        quizId,
+        gameId + gameIdOffset,
+        session
+      );
+      expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGame.statusCode).toStrictEqual(BADREQUEST);
+    });
+    
   });
+});
+
+
+test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}  works as intended', () => {
+  
 });
