@@ -306,6 +306,7 @@ export class Errors {
 }
 
 export enum ErrorCodes {
+  OK =
   BADREQUEST = 400,
   UNAUTHORISED = 401,
   FORBIDDEN = 403
