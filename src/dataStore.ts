@@ -1,3 +1,5 @@
+import { quizStates } from './functionsHelper';
+
 /**
  * Interface representing the users.
  *
@@ -110,7 +112,7 @@ export interface playersInterface{
 export interface gameInterface{
   gameId:number;
   quizId: number;
-  state: string;
+  state: quizStates;
   atQuestion: number;
   players: playersInterface;
   metadata: quizInterface;
