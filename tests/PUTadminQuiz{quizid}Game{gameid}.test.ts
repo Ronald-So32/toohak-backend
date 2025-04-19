@@ -3,8 +3,12 @@ import {
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminStartGame,
   requestAdminUpdateGame,
+  requestAdminQuizGameStatus,
+  requestAdminQuizGameStart,
+  requestAdminQuizGamesList,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -36,7 +40,7 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -53,7 +57,31 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
+      }
+    }
+  );
+
+  requestAdminQuizQuestionCreateV2(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Question 2',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -62,12 +90,12 @@ beforeEach(() => {
   gameId = responseGameStart.body.gameId;
 });
 
-describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
+describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
   test('Testing the code 200 return value', () => {
     const responseUpdateGame = requestAdminUpdateGame(
       quizId,
       gameId,
-      session, 
+      session,
       NEXT_QUESTION
     );
     expect(responseUpdateGame.body).toStrictEqual({});
@@ -75,40 +103,6 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   });
 
   describe('Testing for error responses', () => {
-
-    test('Testing invalid game within quiz', () => {
-      const responseUpdateGame = requestAdminUpdateGame(
-        quizId,
-        gameId + gameIdOffset,
-        session, 
-        NEXT_QUESTION
-      );
-      expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
-    });
-
-    test('Testing invalid action', () => {
-      const responseUpdateGame = requestAdminUpdateGame(
-        quizId,
-        gameId,
-        session, 
-        GGEZ
-      );
-      expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
-    });
-
-    test('Testing action cannot be applied to current state', () => {
-      const responseUpdateGame = requestAdminUpdateGame(
-        quizId,
-        gameId,
-        session, 
-        GO_TO_FINAL_RESULTS
-      );
-      expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
-    });
-
     describe('Testing status code of 401 return values', () => {
       test.each([
         {
@@ -123,26 +117,26 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         const responseUpdateGame = requestAdminUpdateGame(
           quizId,
           gameId,
-          session, 
-          NEXT_QUESTION
+          session,
+          'NEXT_QUESTION'
         );
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
-  
+    });
+
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseUpdateGame = requestAdminUpdateGame(
           quizId + quizIdOffset,
           gameId,
           session,
-          NEXT_QUESTION
+          'NEXT_QUESTION'
         );
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
           'z7277271@ad.unsw.edu.au',
@@ -150,16 +144,665 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           'First',
           'Last'
         ).body.session;
-  
+
         const responseUpdateGame = requestAdminUpdateGame(
           quizId,
           gameId,
-          session, 
-          NEXT_QUESTION
+          session,
+          'NEXT_QUESTION'
         );
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
+
+    test('Testing invalid game within quiz', () => {
+      const responseUpdateGame = requestAdminUpdateGame(
+        quizId,
+        gameId + gameIdOffset,
+        session,
+        'NEXT_QUESTION'
+      );
+      expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+    });
+
+    test('Testing invalid action', () => {
+      const responseUpdateGame = requestAdminUpdateGame(
+        quizId,
+        gameId,
+        session,
+        'GGEZ'
+      );
+      expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+    });
+
+    describe('Testing action cannot be applied to current state', () => {
+      describe('Testing invalid actions in LOBBY state', () => {
+        test.each([
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          }
+        ])('$state', ({ state }) => {
+          const responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing invalid actions in QUESTION_COUNTDOWN state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing invalid actions in QUSETION_OPEN state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing invalid actions in QUSETION_CLOSE state', () => {
+        test('SKIP_COUNTDOWN', ({}) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          jest.useFakeTimers();
+          setTimeout(() => {
+            responseUpdateGame = requestAdminUpdateGame(
+              quizId,
+              gameId,
+              session,
+              'SKIP_COUNTDOWN'
+            );
+            expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+            expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+          }, 180000);
+          jest.advanceTimersByTime(180000);
+        });
+      });
+
+      describe('Testing invalid actions in FINAL_RESULTS state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing invalid actions in ANSWER_SHOW state', () => {
+        test.each([
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'GO_TO_ANSWER'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+
+      describe('Testing invalid actions in END state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          },
+          {
+            state: 'END'
+          },
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'GO_TO_ANSWER'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseUpdateGame.statusCode).toStrictEqual(BADREQUEST);
+        });
+      });
+    });
+
+    describe('Testing action can be applied to current state', () => {
+      describe('Testing valid actions in LOBBY state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'END'
+          }
+        ])('$state', ({ state }) => {
+          const responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+        });
+      });
+
+      describe('Testing valid actions in QUESTION_COUNTDOWN state', () => {
+        test.each([
+          {
+            state: 'SKIP_COUNTDOWN'
+          },
+          {
+            state: 'END'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+        });
+      });
+
+      describe('Testing valid actions in QUSETION_OPEN state', () => {
+        test.each([
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'END'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+        });
+      });
+
+      describe('Testing valid actions in QUSETION_CLOSE state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'GO_TO_ANSWER'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          },
+          {
+            state: 'END'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          jest.useFakeTimers();
+          setTimeout(() => {
+            responseUpdateGame = requestAdminUpdateGame(
+              quizId,
+              gameId,
+              session,
+              state
+            );
+            expect(responseUpdateGame.body).toStrictEqual({});
+            expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+          }, 180000);
+          jest.advanceTimersByTime(180000);
+        });
+      });
+
+      describe('Testing valid actions in FINAL_RESULTS state', () => {
+        test('END', ({}) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'END'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+        });
+      });
+
+      describe('Testing valid actions in ANSWER_SHOW state', () => {
+        test.each([
+          {
+            state: 'NEXT_QUESTION'
+          },
+          {
+            state: 'GO_TO_FINAL_RESULTS'
+          },
+          {
+            state: 'END'
+          }
+        ])('$state', ({ state }) => {
+          let responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'NEXT_QUESTION'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            'GO_TO_ANSWER'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+          responseUpdateGame = requestAdminUpdateGame(
+            quizId,
+            gameId,
+            session,
+            state
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+        });
+      });
+    });
+  });
+});
+
+test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
+  let responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('LOBBY');
+
+  let responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  let responseUpdateGame = requestAdminUpdateGame(
+    quizId,
+    gameId,
+    session,
+    'NEXT_QUESTION'
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('QUESTION_COUNTDOWN');
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  let responseUpdateGame = requestAdminUpdateGame(
+    quizId,
+    gameId,
+    session,
+    'SKIP_COUNTDOWN'
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('QUESTION_OPEN');
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  jest.useFakeTimers();
+  setTimeout(() => {
+    responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+    expect(responseGameStatus.body.state).toStrictEqual('QUESTION_CLOSE');
+
+    responseGamesList = requestAdminQuizGamesList(session, quizId);
+    expect(responseGamesList.body).toStrictEqual({
+      activeGames: [
+        gameId
+      ],
+      inactiveGames: []
+    });
+
+    responseUpdateGame = requestAdminUpdateGame(
+      quizId,
+      gameId,
+      session,
+      'GO_TO_ANSWER'
+    );
+    expect(responseUpdateGame.body).toStrictEqual({});
+    expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+  }, 180000);
+
+  jest.advanceTimersByTime(180000);
+
+  responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('ANSWER_SHOW');
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  responseUpdateGame = requestAdminUpdateGame(
+    quizId,
+    gameId,
+    session,
+    'GO_TO_FINAL_RESULTS'
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('FINAL_RESULTS');
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  responseUpdateGame = requestAdminUpdateGame(
+    quizId,
+    gameId,
+    session,
+    'END'
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(session, gameId);
+  expect(responseGameStatus.body.state).toStrictEqual('END');
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [],
+    inactiveGames: [
+      gameId
+    ]
   });
 });
