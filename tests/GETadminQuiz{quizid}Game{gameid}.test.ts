@@ -4,14 +4,23 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
+  requestAdminQuizThumbnailUpdate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStatus,
+  requestPlayerJoin,
   OK,
   BADREQUEST,
   UNAUTHORISED,
   FORBIDDEN,
   quizIdOffset
 } from './testsHelper';
+
+import {
+  quizStates,
+  actions,
+  ErrorCodes
+} from '../src/functionsHelper';
+
 import { describe } from 'node:test';
 
 const gameIdOffset = 727;
@@ -57,15 +66,23 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
   questionId = responseQuestionCreate.body.questionId
+  requestAdminQuizThumbnailUpdate(
+    quizId,
+    session,
+    'http://google.com/some/image/path.jpg'
+  )
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
+
+  // requestPlayerJoin(gameId, 'Name');
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
@@ -76,9 +93,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       session
     );
     expect(responseGetGame.body).toStrictEqual({
-      state: 'LOBBY',
-      atQuestion: 3,
-      players: [],
+      state: quizStates.LOBBY,
+      atQuestion: 1,
+      players: [
+        // 'Name'
+      ],
       metadata: {
         quizId: quizId,
         name: 'Name',
@@ -95,13 +114,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             points: 5,
             answerOptions: [
               {
-                answerId: expect.any(Number),
+                id: expect.any(Number),
                 answer: 'Prince Charles',
                 colour: expect.any(String),
                 correct: true
               },
               {
-                answerId: expect.any(Number),
+                id: expect.any(Number),
                 answer: 'Queen Elizibeth',
                 colour: expect.any(String),
                 correct: false
@@ -110,6 +129,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           }
         ],
         timeLimit: 4,
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     });
     expect(responseGetGame.statusCode).toStrictEqual(OK);
@@ -181,5 +201,5 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
 
 
 test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}  works as intended', () => {
-  
+
 });

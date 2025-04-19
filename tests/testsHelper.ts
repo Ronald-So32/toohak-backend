@@ -629,9 +629,9 @@ export function requestAdminQuizGameStateUpdate(
  * Wrapper for GET /v1/admin/quiz/{quizid}/game/{gameid}
  */
 export function requestAdminQuizGameStatus(
-  session: string,
   quizId: number,
-  gameId: number
+  gameId: number,
+  session: string
 ): responseInterface {
   return makeRequest(
     'GET',
