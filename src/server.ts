@@ -30,7 +30,8 @@ import {
 } from './quiz';
 import {
   adminQuizGameStart,
-  adminGetQuizGames
+  adminGetQuizGames,
+  adminQuizGameUpdate
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';

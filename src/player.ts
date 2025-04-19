@@ -14,6 +14,8 @@ import {
   createUUID
 } from './functionsHelper';
 
+// change types for all
+
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
 
@@ -99,4 +101,13 @@ export function adminQuizGameStart(
   });
 
   return { gameId: id };
+}
+
+export function adminQuizGameUpdate(
+  userId: number,
+  quizId: number,
+  gameId: number,
+  action: string
+) {
+
 }
