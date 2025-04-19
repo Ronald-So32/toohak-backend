@@ -17,8 +17,7 @@ import {
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-
-const slync = require('slync');
+import slync from 'slync';
 
 const gameIdOffset = 727;
 
@@ -296,7 +295,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
+          const slync = require('slync');
           slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
@@ -577,6 +576,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+          const slync = require('slync');
           slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
@@ -726,7 +726,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     ],
     inactiveGames: []
   });
-
+  const slync = require('slync');
   slync(1000);
 
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
