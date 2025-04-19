@@ -110,13 +110,13 @@ export interface playersInterface{
 }
 
 export interface gameInterface{
-  gameId:number;
-  quizId: number;
+  gameId?:number;
+  quizId?: number;
   state: quizStates;
   atQuestion: number;
   players: playersInterface;
   metadata: quizInterface;
-  autoStartNum: number;
+  autoStartNum?: number;
 }
 
 /**

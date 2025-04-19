@@ -31,7 +31,8 @@ import {
 import {
   adminQuizGameStart,
   adminGetQuizGames,
-  adminQuizGameUpdate
+  adminQuizGameUpdate,
+  adminQuizGameStatus
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -587,7 +588,6 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
-    // adminQuizGameStatus does NOT exist yet 
     const result = adminQuizGameStatus(userId, quizId, gameId);
     
     return res.status(OK).json(result);

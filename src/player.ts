@@ -197,3 +197,31 @@ export function adminQuizGameUpdate(
 
   return {};
 }
+
+export function adminQuizGameStatus(
+  userId: number,
+  quizId: number,
+  gameId: number
+) {
+  const data = getData();
+
+  findQuizByUser(userId, quizId);
+
+  const game = data.games.find(
+    g => g.gameId === gameId && g.metadata.quizId === quizId
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return {
+    state: game.state,
+    atQuestion: game.atQuestion,
+    players: game.players,
+    metadata: game.metadata
+  };
+}
