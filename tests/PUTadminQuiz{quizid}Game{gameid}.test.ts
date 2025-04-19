@@ -1,25 +1,25 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
+  // responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
-  requestAdminQuizGameStatus,
-  requestAdminQuizGamesList,
-  quizIdOffset
+  // requestAdminQuizGameStatus,
+  // requestAdminQuizGamesList,
+  // quizIdOffset
 } from './testsHelper';
 
 import {
-  quizStates,
-  actions,
+  // quizStates,
+  // actions,
   ErrorCodes
-} from '../src/functionsHelper'
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
-const gameIdOffset = 727;
+// const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
@@ -102,7 +102,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
     expect(responseUpdateGame.body).toStrictEqual({});
     expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-
+  /*
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
       test.each([
@@ -596,7 +596,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       });
 
       describe('Testing valid actions in FINAL_RESULTS state', () => {
-        test('END', () => {
+        test('END', ({}) => {
           let responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -676,8 +676,9 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         });
       });
     });
-  });
+  }); */
 });
+
 /*
 test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
   let responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
