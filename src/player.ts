@@ -19,18 +19,7 @@ import {
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
 
-  const quiz = findQuizByUser(userId, quizId);
-
-  /* const quizGames = */data.games.filter(game =>
-    game.metadata.quizId === quiz.quizId
-  );
-
-  /* if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
-    throw new BetterError(
-      Errors.invalidQuiz().error,
-      ErrorCodes.FORBIDDEN
-    );
-  } */
+  findQuizByUser(userId, quizId);
 
   const result = {
     activeGames: [] as number[],
@@ -109,5 +98,13 @@ export function adminQuizGameUpdate(
   gameId: number,
   action: string
 ) {
+  
 
+
+  if (Object.values(quizStates).includes(action)) {
+    throw new BetterError(
+      Errors.invalidAction().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 }
