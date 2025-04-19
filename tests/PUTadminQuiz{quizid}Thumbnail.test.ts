@@ -1,9 +1,8 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
-  requestAdminQuizThumbnail,
+  requestAdminQuizThumbnailUpdate,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -35,7 +34,7 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   test('Testing the code 200 return value', () => {
-    const responseThumbnail = requestAdminQuizThumbnail(
+    const responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
       "http://google.com/some/image/path.jpg"
@@ -56,7 +55,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
           "http://google.com/some/image/path.jpg"
@@ -68,7 +67,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId + quizIdOffset,
           session,
           "http://google.com/some/image/path.jpg"
@@ -79,13 +78,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
 
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
-          'z7277272@ad.unsw.edu.au',
+          'z727697272@ad.unsw.edu.au',
           'Password1',
           'First',
           'Last'
         ).body.session;
 
-        const responseThumbnail = requestAdminQuizThumbnail(
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
           session,
           "http://google.com/some/image/path.jpg"
@@ -119,8 +118,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'File type where jpeg is other way around'
         },
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
-          quizId + quizIdOffset,
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
+          quizId,
           session,
           thumbnailUrl
         );
@@ -144,8 +143,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'File type of .png at the end'
         }
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
-          quizId + quizIdOffset,
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
+          quizId,
           session,
           thumbnailUrl
         );
@@ -154,7 +153,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       })
     })
 
-    describe('Testing invalid urls', () => {
+    describe('Testing More invalid urls', () => {
       test.each([
         {
           thumbnailUrl: 'google.com/some/image/path.jpg',
@@ -185,8 +184,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           description: 'Url where https is other way around'
         },
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
-          quizId + quizIdOffset,
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
+          quizId,
           session,
           thumbnailUrl
         );
@@ -199,15 +198,31 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       test.each([
         {
           thumbnailUrl: 'http://google.com/some/image/path.jpg',
-          description: 'Url beginning with http://'
+          description: 'Url beginning with http:// and ending with jpg'
+        },
+        {
+          thumbnailUrl: 'https://google.com/some/image/path.jpg',
+          description: 'Url beginning with https:// and ending with jpg'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpeg',
+          description: 'Url beginning with http:// and ending with jpeg'
         },
         {
           thumbnailUrl: 'https://google.com/some/image/path.jpeg',
-          description: 'Url beginning with https://'
+          description: 'Url beginning with https:// and ending with jpeg'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.png',
+          description: 'Url beginning with http:// and ending with png'
+        },
+        {
+          thumbnailUrl: 'https://google.com/some/image/path.png',
+          description: 'Url beginning with https:// and ending with png'
         }
       ])('$description', ({ thumbnailUrl }) => {
-        const responseThumbnail = requestAdminQuizThumbnail(
-          quizId + quizIdOffset,
+        const responseThumbnail = requestAdminQuizThumbnailUpdate(
+          quizId,
           session,
           thumbnailUrl
         );

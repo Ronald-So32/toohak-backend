@@ -56,6 +56,17 @@ export interface questionIdInterface {
 }
 
 /**
+ * Interface representing a game ID.
+ *
+ * @typedef {object} gameIdInterface
+ *
+ * @property {number} gameId - Id of the game
+ */
+export interface gameIdInterface {
+  gameId: number;
+}
+
+/**
  * Interface representing basic quiz summary information.
  *
  * @typedef {object} quizSummariesInterface
@@ -133,6 +144,7 @@ export interface quizGetDetailsInterface {
     numQuestions: number;
     questions: questionsInterface[];
     timeLimit: number;
+    thumbnailUrl?: string;
   }
 }
 
@@ -213,13 +225,18 @@ export class Errors {
       EMPTY: 'cannot be an empty string',
       END: 'has to end with jpg, jpeg or png',
       START: 'has to begin with \'http://\' or \'https://\''
+    },
+    AutoStartNum: {
+      TOO_LONG: 'must be at most 50'
     }
   } as const;
 
   // Error messages
+  static readonly tooMuchGamesError = 'This quiz has 10 or more active game';
   static readonly gameRunningError = 'An active game still exists';
   static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
+  static readonly noQuestionError = 'This quiz has no question';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
   static readonly invalidEmailError = 'Invalid Email';
@@ -275,6 +292,16 @@ export class Errors {
   // Error when a game is running
   static gameRunning(): errorInterface {
     return { error: this.gameRunningError };
+  }
+
+  // Error when quiz has no question
+  static noQuestion(): errorInterface {
+    return { error: this.noQuestionError };
+  }
+
+  // Error when there is 10 or more games
+  static tooMuchGames(): errorInterface {
+    return { error: this.tooMuchGamesError };
   }
 }
 
