@@ -9,7 +9,7 @@ import {
   quizStates
 } from './functionsHelper';
 
-export function requestAdminGetQuizGames(userId: number, quizId: number): any { // change
+export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
 
   const quiz = findQuizByUser(userId, quizId);

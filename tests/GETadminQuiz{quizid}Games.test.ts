@@ -4,8 +4,8 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   //requestAdminGameStart,
-  //requestAdminGetQuizGames,
-  requestAdminUpdateGame,
+  requestAdminQuizGamesList,
+  //requestAdminUpdateGame,
   OK,
   UNAUTHORISED,
   FORBIDDEN,
@@ -36,7 +36,7 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
-    const responseGetQuizGames = requestAdminGetQuizGames(session, quizId);
+    const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [],
       inactiveGames: []
@@ -56,7 +56,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-        const responseGetQuizGames = requestAdminGetQuizGames(session, quizId);
+        const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(UNAUTHORISED);
       });
@@ -64,7 +64,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseGetQuizGames = requestAdminGetQuizGames(session, quizId + quizIdOffset);
+        const responseGetQuizGames = requestAdminQuizGamesList(session, quizId + quizIdOffset);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(FORBIDDEN);
       });
@@ -77,7 +77,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
           'Last'
         ).body.session;
 
-        const responseGetQuizGames = requestAdminGetQuizGames(session, quizId);
+        const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(FORBIDDEN);
       });
