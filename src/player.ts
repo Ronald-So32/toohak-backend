@@ -28,10 +28,12 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
   };
 
   data.games.forEach(game => {
-    if (game.state !== quizStates.END) {
-      result.activeGames.push(game.metadata.quizId);
-    } else {
-      result.inactiveGames.push(game.metadata.quizId);
+    if (game.metadata.quizId === quizId) {
+      if (game.state !== quizStates.END) {
+        result.activeGames.push(game.gameId);
+      } else {
+        result.inactiveGames.push(game.gameId);
+      }
     }
   });
 
@@ -243,11 +245,22 @@ export function adminQuizGameStatus(
       ErrorCodes.BADREQUEST
     );
   }
-  delete game.metadata.createdBy;
+
   return {
     state: game.state,
     atQuestion: game.atQuestion,
     players: game.players,
-    metadata: game.metadata
+    metadata: {
+      quizId: game.metadata.quizId,
+      name: game.metadata.name,
+      timeCreated: game.metadata.timeCreated,
+      timeLastEdited: game.metadata.timeLastEdited,
+      description: game.metadata.description,
+      numQuestions: game.metadata.numQuestions,
+      questions: game.metadata.questions,
+      timeLimit: game.metadata.timeLimit,
+      thumbnailUrl?: game.metadata.thumbnailUrl
+    }
+    
   };
 }
