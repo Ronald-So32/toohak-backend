@@ -12,7 +12,6 @@ import {
   FORBIDDEN,
   quizIdOffset
 } from './testsHelper';
-
 import { describe } from 'node:test';
 
 const gameIdOffset = 727;
