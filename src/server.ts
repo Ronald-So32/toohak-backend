@@ -26,7 +26,8 @@ import {
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion,
-  adminQuizGameStart
+  adminQuizGameStart,
+  adminQuizThumbnailUpdate
 } from './quiz';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -528,6 +529,29 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
+
+// PUT /v1/admin/quiz/{quizid}/thumbnail
+app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { thumbnailUrl } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    
+    // Verify user owns the quiz by calling adminQuizGet
+    adminQuizGet(userId, quizId);
+    
+    // Call function to update the quiz's thumbnail
+    adminQuizThumbnailUpdate(thumbnailUrl, quizId, userId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
