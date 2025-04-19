@@ -612,9 +612,9 @@ export function requestAdminQuizGameStart(
  * Wrapper for PUT /v1/admin/quiz/{quizid}/game/{gameid}
  */
 export function requestAdminQuizGameStateUpdate(
-  session: string,
   quizId: number,
   gameId: number,
+  session: string,
   action: string
 ): responseInterface {
   return makeRequest(
