@@ -198,11 +198,27 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       test.each([
         {
           thumbnailUrl: 'http://google.com/some/image/path.jpg',
-          description: 'Url beginning with http://'
+          description: 'Url beginning with http:// and ending with jpg'
+        },
+        {
+          thumbnailUrl: 'https://google.com/some/image/path.jpg',
+          description: 'Url beginning with https:// and ending with jpg'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.jpeg',
+          description: 'Url beginning with http:// and ending with jpeg'
         },
         {
           thumbnailUrl: 'https://google.com/some/image/path.jpeg',
-          description: 'Url beginning with https://'
+          description: 'Url beginning with https:// and ending with jpeg'
+        },
+        {
+          thumbnailUrl: 'http://google.com/some/image/path.png',
+          description: 'Url beginning with http:// and ending with png'
+        },
+        {
+          thumbnailUrl: 'https://google.com/some/image/path.png',
+          description: 'Url beginning with https:// and ending with png'
         }
       ])('$description', ({ thumbnailUrl }) => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
