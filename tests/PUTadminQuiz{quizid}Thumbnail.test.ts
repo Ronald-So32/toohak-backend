@@ -86,7 +86,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
 
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
           quizId,
-          session,
+          session + "Invalid Session",
           "http://google.com/some/image/path.jpg"
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
@@ -119,7 +119,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         },
       ])('$description', ({ thumbnailUrl }) => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
-          quizId + quizIdOffset,
+          quizId,
           session,
           thumbnailUrl
         );
@@ -144,7 +144,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         }
       ])('$description', ({ thumbnailUrl }) => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
-          quizId + quizIdOffset,
+          quizId,
           session,
           thumbnailUrl
         );
@@ -153,7 +153,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       })
     })
 
-    describe('Testing invalid urls', () => {
+    describe('Testing More invalid urls', () => {
       test.each([
         {
           thumbnailUrl: 'google.com/some/image/path.jpg',
@@ -185,7 +185,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         },
       ])('$description', ({ thumbnailUrl }) => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
-          quizId + quizIdOffset,
+          quizId,
           session,
           thumbnailUrl
         );
@@ -206,7 +206,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
         }
       ])('$description', ({ thumbnailUrl }) => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
-          quizId + quizIdOffset,
+          quizId,
           session,
           thumbnailUrl
         );
