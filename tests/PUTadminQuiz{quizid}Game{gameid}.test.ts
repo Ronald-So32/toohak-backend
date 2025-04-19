@@ -18,7 +18,7 @@ import {
 
 import { describe } from 'node:test';
 
-import slync from 'slync';
+const slync = require('slync');
 
 const gameIdOffset = 727;
 
