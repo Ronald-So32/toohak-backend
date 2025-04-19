@@ -1,0 +1,102 @@
+import {
+  getData,
+  userInterface,
+  gameInterface,
+  playersInterface
+} from './dataStore';
+import {
+  Errors,
+  findQuizByUser,
+  BetterError,
+  ErrorCodes,
+  quizStates,
+  gameIdInterface,
+  createUUID
+} from './functionsHelper';
+
+export function adminGetQuizGames(userId: number, quizId: number): any { // change type
+  const data = getData();
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  /* const quizGames = */data.games.filter(game =>
+    game.metadata.quizId === quiz.quizId
+  );
+
+  /* if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
+    throw new BetterError(
+      Errors.invalidQuiz().error,
+      ErrorCodes.FORBIDDEN
+    );
+  } */
+
+  const result = {
+    activeGames: [] as number[],
+    inactiveGames: [] as number[]
+  };
+
+  data.games.forEach(game => {
+    if (game.state !== quizStates.END) {
+      result.activeGames.push(game.metadata.quizId);
+    } else {
+      result.inactiveGames.push(game.metadata.quizId);
+    }
+  });
+
+  return result;
+}
+
+export function adminQuizGameStart(
+  userId: number,
+  quizId: number,
+  autoStartNum: number
+): gameIdInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  if (quiz.questions.length === 0) {
+    throw new BetterError(
+      Errors.noQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (autoStartNum > 50) {
+    throw new BetterError(
+      Errors.invalidString('AutoStartNum', Errors.Specific.AutoStartNum.TOO_LONG).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (data.games.filter((game: gameInterface) =>
+    game.quizId === quizId && game.state !== quizStates.END).length >= 10) {
+    throw new BetterError(
+      Errors.tooMuchGames().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const id = createUUID();
+  const players: playersInterface = { players: [] };
+
+  data.games.push({
+    gameId: id,
+    quizId: quizId,
+    state: quizStates.LOBBY,
+    atQuestion: 1,
+    players: players,
+    metadata: quiz,
+    autoStartNum: autoStartNum
+  });
+
+  return { gameId: id };
+}

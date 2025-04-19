@@ -4,8 +4,6 @@ import {
   answersInterface,
   userInterface,
   quizInterface,
-  gameInterface,
-  playersInterface
 } from './dataStore';
 import {
   createUUID,
@@ -26,7 +24,6 @@ import {
   BetterError,
   ErrorCodes,
   checkActiveGames,
-  gameIdInterface
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -954,57 +951,39 @@ export function adminQuizQuestionUpdateV2(
   return v1;
 }
 
-export function adminQuizGameStart(
-  userId: number,
+export function adminQuizThumbnailUpdate(
+  thumbnail: string,
   quizId: number,
-  autoStartNum: number
-): gameIdInterface {
-  const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
+  userId: number
+): Record<string, never> {
+  if (thumbnail === '') {
     throw new BetterError(
-      Errors.invalidUser().error,
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnail.startsWith('http://') && !thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnail.endsWith('jpg') &&
+    !thumbnail.endsWith('jpeg') &&
+    !thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
       ErrorCodes.BADREQUEST
     );
   }
 
   const quiz = findQuizByUser(userId, quizId);
 
-  if (quiz.questions.length === 0) {
-    throw new BetterError(
-      Errors.noQuestion().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  quiz.thumbnailUrl = thumbnail;
 
-  if (autoStartNum > 50) {
-    throw new BetterError(
-      Errors.invalidString('AutoStartNum', Errors.Specific.AutoStartNum.TOO_LONG).error,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  quiz.timeLastEdited = getCurrentTimestamp();
 
-  if (data.games.filter((game: gameInterface) =>
-    game.quizId === quizId && game.state !== 'END').length >= 10) {
-    throw new BetterError(
-      Errors.tooMuchGames().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
-  const id = createUUID();
-  const players: playersInterface = { players: [] };
-
-  data.games.push({
-    gameId: id,
-    quizId: quizId,
-    state: 'LOBBY',
-    atQuestion: 1,
-    players: players,
-    metadata: quiz,
-    autoStartNum: autoStartNum
-  });
-
-  return { gameId: id };
+  return {};
 }

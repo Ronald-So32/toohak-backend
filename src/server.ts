@@ -26,8 +26,12 @@ import {
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion,
-  adminQuizGameStart
+  adminQuizThumbnailUpdate
 } from './quiz';
+import {
+  adminQuizGameStart,
+  adminGetQuizGames
+} from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -491,7 +495,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     const quizId = parseInt(req.params.quizid);
 
     try {
-      // Authenticate the user with the session
+    // Authenticate the user with the session
       const userIdResult = findUserIdFromSession(session);
       const userId = userIdResult.userId;
 
@@ -505,10 +509,32 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
       return res.status(OK).json({ question: result.question });
     } catch (error) {
-      // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
+    // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
+
+// GET /v1/admin/quiz/{quizid}/games
+app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Verify that the user owns the quiz
+    adminQuizGet(userId, quizId);
+
+    // Retrieve games associated with the quiz
+    const games = adminGetQuizGames(userId, quizId);
+
+    return res.status(OK).json(games);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 // POST /v1/admin/quiz/{quizid}/game/start
 app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
@@ -523,6 +549,28 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
     const result = adminQuizGameStart(userId, quizId, autoStartNum);
 
     return res.status(OK).json({ gameId: result.gameId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v1/admin/quiz/{quizid}/thumbnail
+app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { thumbnailUrl } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Verify user owns the quiz by calling adminQuizGet
+    adminQuizGet(userId, quizId);
+
+    // Call function to update the quiz's thumbnail
+    adminQuizThumbnailUpdate(thumbnailUrl, quizId, userId);
+
+    return res.status(OK).json({});
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }
@@ -546,6 +594,7 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
+
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
