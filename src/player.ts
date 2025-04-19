@@ -102,10 +102,17 @@ export function adminQuizGameUpdate(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-  
+
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 
   if (!Object.values(actions).includes(action)) {
     throw new BetterError(
