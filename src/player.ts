@@ -1,8 +1,7 @@
 import {
   getData,
   userInterface,
-  gameInterface,
-  playersInterface
+  gameInterface
 } from './dataStore';
 import {
   Errors,
@@ -130,7 +129,7 @@ export function adminQuizGameUpdate(
   const actionValue = actions[action as keyof typeof actions];
 
   switch (actionValue) {
-    case actions.NEXT_QUESTION:
+    case actions.NEXT_QUESTION:{
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
         game.state === quizStates.FINAL_RESULTS ||
@@ -144,10 +143,10 @@ export function adminQuizGameUpdate(
       game.state = quizStates.QUESTION_COUNTDOWN;
 
       game.atQuestion += 1;
-      
+
       data.activeTimers[gameId] = setTimeout(() => {
         game.state = quizStates.QUESTION_OPEN;
-        
+
         const currentQuestion = game.metadata.questions[game.atQuestion];
         data.activeTimers[gameId] = setTimeout(() => {
           if (game.state === quizStates.QUESTION_OPEN) {
@@ -156,9 +155,9 @@ export function adminQuizGameUpdate(
         }, currentQuestion.timeLimit * 1000);
       }, 3000);
 
-      break;
+      break; }
 
-    case actions.SKIP_COUNTDOWN:
+    case actions.SKIP_COUNTDOWN: {
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_OPEN ||
         game.state === quizStates.QUESTION_CLOSE ||
@@ -181,8 +180,8 @@ export function adminQuizGameUpdate(
       }, currentQuestion.timeLimit * 1000);
 
       break;
-
-    case actions.GO_TO_ANSWER:
+    }
+    case actions.GO_TO_ANSWER:{
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.ANSWER_SHOW ||
@@ -196,8 +195,8 @@ export function adminQuizGameUpdate(
       }
       game.state = quizStates.ANSWER_SHOW;
       break;
-
-    case actions.GO_TO_FINAL_RESULTS:
+    }
+    case actions.GO_TO_FINAL_RESULTS:{
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
@@ -211,8 +210,8 @@ export function adminQuizGameUpdate(
       }
       game.state = quizStates.FINAL_RESULTS;
       break;
-
-    case actions.END:
+    }
+    case actions.END:{
       if (game.state === quizStates.END) {
         throw new BetterError(
           Errors.invalidAction().error,
@@ -221,6 +220,7 @@ export function adminQuizGameUpdate(
       }
       game.state = quizStates.END;
       break;
+    }
   }
 
   return {};
@@ -259,8 +259,8 @@ export function adminQuizGameStatus(
       numQuestions: game.metadata.numQuestions,
       questions: game.metadata.questions,
       timeLimit: game.metadata.timeLimit,
-      thumbnailUrl?: game.metadata.thumbnailUrl
+      thumbnailUrl: game.metadata.thumbnailUrl
     }
-    
+
   };
 }

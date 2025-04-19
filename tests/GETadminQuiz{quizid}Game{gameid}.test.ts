@@ -1,13 +1,12 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizThumbnailUpdate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStatus,
-  requestPlayerJoin,
+  // requestPlayerJoin,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -17,8 +16,8 @@ import {
 
 import {
   quizStates,
-  actions,
-  ErrorCodes
+  // actions,
+  // ErrorCodes
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
@@ -71,12 +70,12 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
   requestAdminQuizThumbnailUpdate(
     quizId,
     session,
     'http://google.com/some/image/path.jpg'
-  )
+  );
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -155,8 +154,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
-  
+    });
+
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseGetGame = requestAdminQuizGameStatus(
@@ -167,7 +166,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
           'z7277271@ad.unsw.edu.au',
@@ -175,7 +174,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           'First',
           'Last'
         ).body.session;
-  
+
         const responseGetGame = requestAdminQuizGameStatus(
           quizId,
           gameId,
@@ -184,7 +183,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
 
     test('Testing invalid game within quiz', () => {
       const responseGetGame = requestAdminQuizGameStatus(
@@ -195,10 +194,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGame.statusCode).toStrictEqual(BADREQUEST);
     });
-    
   });
 });
-
 
 test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}  works as intended', () => {
 

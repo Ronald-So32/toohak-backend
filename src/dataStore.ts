@@ -105,7 +105,6 @@ export interface sessionInterface {
   session: string;
 }
 
-
 export interface gameInterface{
   gameId?:number;
   quizId?: number;

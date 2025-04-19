@@ -583,13 +583,13 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const gameId = parseInt(req.params.gameid);
-  
+
   try {
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
     const result = adminQuizGameStatus(userId, quizId, gameId);
-    
+
     return res.status(OK).json(result);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });

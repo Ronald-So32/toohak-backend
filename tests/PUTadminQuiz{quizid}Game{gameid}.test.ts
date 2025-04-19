@@ -1,7 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
@@ -13,7 +12,7 @@ import {
 
 import {
   quizStates,
-  actions,
+  // actions,
   ErrorCodes
 } from '../src/functionsHelper';
 
@@ -587,7 +586,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-          
+
           // TODO CHECK WITH GET GAMES (check state and question num)
         });
       });
@@ -749,7 +748,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   );
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-  
+
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.ANSWER_SHOW);
 
@@ -801,4 +800,3 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     ]
   });
 });
-
