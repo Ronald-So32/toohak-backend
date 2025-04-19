@@ -1,25 +1,25 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  // responseInterface,
+  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
-  // requestAdminQuizGameStatus,
-  // requestAdminQuizGamesList,
-  // quizIdOffset
+  requestAdminQuizGameStatus,
+  requestAdminQuizGamesList,
+  quizIdOffset
 } from './testsHelper';
 
 import {
-  // quizStates,
-  // actions,
+  quizStates,
+  actions,
   ErrorCodes
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
-// const gameIdOffset = 727;
+const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
@@ -102,7 +102,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
     expect(responseUpdateGame.body).toStrictEqual({});
     expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-  /*
+
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
       test.each([
@@ -277,7 +277,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       });
 
       describe('Testing invalid actions in QUSETION_CLOSE state', () => {
-        test('SKIP_COUNTDOWN', ({}) => {
+        test('SKIP_COUNTDOWN', () => {
           let responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -296,7 +296,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-          jest.useFakeTimers();
+          jest.useFakeTimers({});
           setTimeout(() => {
             responseUpdateGame = requestAdminQuizGameStateUpdate(
               quizId,
@@ -340,6 +340,24 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             gameId,
             session,
             'SKIP_COUNTDOWN'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+          responseUpdateGame = requestAdminQuizGameStateUpdate(
+            quizId,
+            gameId,
+            session,
+            'GO_TO_ANSWER'
+          );
+          expect(responseUpdateGame.body).toStrictEqual({});
+          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+          responseUpdateGame = requestAdminQuizGameStateUpdate(
+            quizId,
+            gameId,
+            session,
+            'GO_TO_FINAL_RESULTS'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
@@ -424,25 +442,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             quizId,
             gameId,
             session,
-            'NEXT_QUESTION'
-          );
-          expect(responseUpdateGame.body).toStrictEqual({});
-          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
-          responseUpdateGame = requestAdminQuizGameStateUpdate(
-            quizId,
-            gameId,
-            session,
-            'SKIP_COUNTDOWN'
-          );
-          expect(responseUpdateGame.body).toStrictEqual({});
-          expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
-          responseUpdateGame = requestAdminQuizGameStateUpdate(
-            quizId,
-            gameId,
-            session,
-            'GO_TO_ANSWER'
+            'END'
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
@@ -596,7 +596,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       });
 
       describe('Testing valid actions in FINAL_RESULTS state', () => {
-        test('END', ({}) => {
+        test('END', () => {
           let responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -676,9 +676,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         });
       });
     });
-  }); */
+  });
 });
-
 /*
 test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
   let responseGameStatus = requestAdminQuizGameStatus(session, quizId, gameId);
