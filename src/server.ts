@@ -26,10 +26,10 @@ import {
   adminDeleteQuizQuestion,
   adminDeleteQuizQuestionV2,
   adminQuizQuestionSuggestion,
-  adminQuizGameStart,
   adminQuizThumbnailUpdate
 } from './quiz';
 import {
+  adminQuizGameStart,
   adminGetQuizGames
 } from './player'
 import { findUserIdFromSession } from './functionsHelper';
@@ -530,7 +530,7 @@ app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
     // Retrieve games associated with the quiz
     const games = adminGetQuizGames(userId, quizId);
 
-    return res.status(OK).json({ games });
+    return res.status(OK).json(games);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }

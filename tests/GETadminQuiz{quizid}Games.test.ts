@@ -1,7 +1,8 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
+  //responseInterface,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizCreate,
   requestAdminQuizGameStart,
   requestAdminQuizGamesList,
@@ -32,14 +33,36 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  requestAdminQuizGameStart(session, quizId, 3);
+
+  requestAdminQuizQuestionCreateV2(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
+      }
+    }
+  );
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
     const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
-      activeGames: [quizId],
+      activeGames: [],
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(OK);
@@ -86,6 +109,23 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   });
 
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
+    const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(OK);
+
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
+    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    
+    const responseGetQuizGames2 = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames2.body).toStrictEqual({
+      activeGames: [quizId],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames2.statusCode).toStrictEqual(OK);
 
   });
 });

@@ -23,12 +23,12 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
     game.metadata.quizId === quiz.quizId
   );
 
-  if (quizGames.length === 0) {
+  /*if (quizGames.length === 0) { DON"T THINK THIS IS NEEDED (show empty)
     throw new BetterError(
       Errors.invalidQuiz().error,
       ErrorCodes.FORBIDDEN
     );
-  }
+  }*/
 
   const result = {
     activeGames: [] as number[],

@@ -739,7 +739,7 @@ export function checkActiveGames(quizId: number): void {
 
   // Check if there is a game running with this quiz that isn't END
   const activeGameExists = data.games.some(
-    game => game.metadata.quizId === quizId && game.state !== 'END'
+    game => game.metadata.quizId === quizId && game.state !== quizStates.END
   );
 
   if (activeGameExists) {
