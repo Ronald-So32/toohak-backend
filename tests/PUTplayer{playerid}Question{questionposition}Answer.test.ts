@@ -1,7 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizGameStart,
@@ -10,10 +9,7 @@ import {
   requestPlayerQuestionInfo,
   requestPlayerAnswerSubmit,
   OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -23,11 +19,11 @@ const answerIdOffset = 727727;
 
 let session: string;
 let quizId: number;
-let questionId: number;
+// let questionId: number;
 let gameId: number;
 let playerId: number;
-let timeCreated: number;
-let timeLastEdited: number;
+// let timeCreated: number;
+// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -43,10 +39,10 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now() / 1000);
+  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -67,9 +63,9 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId;
+  // questionId = responseQuestionCreate.body.questionId;
 
-  const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
+  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -90,7 +86,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate2.body.questionId;
+  // questionId = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -204,7 +200,6 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
 
     test('Testing when less then 1 answer was submitted', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: []
