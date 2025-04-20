@@ -497,5 +497,19 @@ export function playerQuestion(
     );
   }
 
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return
 }
