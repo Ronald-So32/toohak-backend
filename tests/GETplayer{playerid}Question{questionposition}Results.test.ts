@@ -100,9 +100,9 @@ beforeEach(() => {
   
   playerId = requestGetPlayer.body.playerId;
 
-  requestAdminUpdateGame(quizId, gameId, session, NEXT_QUESTION);
-  requestAdminUpdateGame(quizId, gameId, session, SKIP_COUNTDOWN);
-  requestAdminUpdateGame(quizId, gameId, session, GO_TO_ANSWER);
+  requestAdminUpdateGame(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminUpdateGame(quizId, gameId, session, "SKIP_COUNTDOWN");
+  requestAdminUpdateGame(quizId, gameId, session, "GO_TO_ANSWER");
 });
 
 describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results', () => {
@@ -111,8 +111,8 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
     expect(requestGetQuestionResult.body).toStrictEqual({
       questionId: questionId,
       playersCorrect: [],
-      averageAnswerTime: expect.any(number),
-      percentCorrect: expect.any(number)
+      averageAnswerTime: expect.any(Number),
+      percentCorrect: expect.any(Number)
     });
     expect(requestGetQuestionResult.statusCode).toStrictEqual(OK);
   });
