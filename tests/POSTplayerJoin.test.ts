@@ -1,17 +1,13 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
   OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -76,17 +72,17 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       gameId,
       'Name'
     );
-    expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(number)});
+    expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
     expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
-    test('Testing invalid palyer name', () => {
+    test('Testing invalid player name', () => {
       const responsePlayerJoin = requestPlayerJoin(
         gameId,
         'name!@#$%^&*()_+'
       );
-      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(number)});
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
       expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
     });
 
@@ -95,7 +91,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         gameId,
         'Name'
       );
-      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(number)});
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
       expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
 
       responsePlayerJoin = requestPlayerJoin(
