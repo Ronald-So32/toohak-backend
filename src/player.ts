@@ -291,5 +291,4 @@ export function adminQuizGameResults(
       ErrorCodes.BADREQUEST
     );
   }
-  
 }
