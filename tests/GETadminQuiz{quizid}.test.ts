@@ -90,13 +90,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ]
         }
@@ -144,13 +144,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ]
         }
@@ -246,19 +246,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Changed Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Extra',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
           ]
         },
@@ -272,13 +272,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ]
         }

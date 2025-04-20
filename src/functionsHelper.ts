@@ -56,6 +56,17 @@ export interface questionIdInterface {
 }
 
 /**
+ * Interface representing a game ID.
+ *
+ * @typedef {object} gameIdInterface
+ *
+ * @property {number} gameId - Id of the game
+ */
+export interface gameIdInterface {
+  gameId: number;
+}
+
+/**
  * Interface representing basic quiz summary information.
  *
  * @typedef {object} quizSummariesInterface
@@ -137,6 +148,24 @@ export interface quizGetDetailsInterface {
   }
 }
 
+export enum quizStates {
+  LOBBY = 'LOBBY',
+  QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
+  QUESTION_OPEN = 'QUESTION_OPEN',
+  QUESTION_CLOSE = 'QUESTION_CLOSE',
+  ANSWER_SHOW = 'ANSWER_SHOW',
+  FINAL_RESULTS = 'FINAL_RESULTS',
+  END = 'END'
+}
+
+export enum actions {
+  NEXT_QUESTION,
+  SKIP_COUNTDOWN,
+  GO_TO_ANSWER,
+  GO_TO_FINAL_RESULTS,
+  END
+}
+
 export class Errors {
   // Specific validation reasons
   static readonly Specific = {
@@ -196,19 +225,29 @@ export class Errors {
       EMPTY: 'cannot be an empty string',
       END: 'has to end with jpg, jpeg or png',
       START: 'has to begin with \'http://\' or \'https://\''
+    },
+    AutoStartNum: {
+      TOO_LONG: 'must be at most 50'
     }
   } as const;
 
   // Error messages
+  static readonly tooMuchGamesError = 'This quiz has 10 or more active game';
   static readonly gameRunningError = 'An active game still exists';
   static readonly noCorrectAnswersError = 'This Question has no correct answers';
   static readonly noPermissionError = 'User has no permissions to do this';
+  static readonly noQuestionError = 'This quiz has no question';
   static readonly invalidSessionError = 'Invalid Session';
   static readonly invalidPasswordError = 'Invalid Password';
   static readonly invalidEmailError = 'Invalid Email';
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
   static readonly invalidQuestionError = 'Invalid question ID';
+  static readonly invalidActionError = 'Invalid action';
+  static readonly invalidGameError = 'Invalid game';
+  static readonly invalidPlayerNameError = 'Invalid player name';
+  static readonly invalidPlayerError = 'Invalid player ID';
+  static readonly invalidQuestionPositionError = 'Invalid question position';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -259,9 +298,45 @@ export class Errors {
   static gameRunning(): errorInterface {
     return { error: this.gameRunningError };
   }
+
+  // Error when quiz has no question
+  static noQuestion(): errorInterface {
+    return { error: this.noQuestionError };
+  }
+
+  // Error when there is 10 or more games
+  static tooMuchGames(): errorInterface {
+    return { error: this.tooMuchGamesError };
+  }
+
+  // Error when action is invalid
+  static invalidAction(): errorInterface {
+    return { error: this.invalidActionError };
+  }
+
+  // Error when game is invalid
+  static invalidGame(): errorInterface {
+    return { error: this.invalidGameError };
+  }
+
+  // Error when player name is invalid
+  static invalidPlayerName(): errorInterface {
+    return { error: this.invalidPlayerNameError };
+  }
+
+  // Error when player ID is invalid
+  static invalidPlayer(): errorInterface {
+    return { error: this.invalidPlayerError };
+  }
+
+  // Error when question position is invalid
+  static invalidQuestionPosition(): errorInterface {
+    return { error: this.invalidQuestionPositionError };
+  }
 }
 
 export enum ErrorCodes {
+  OK = 200,
   BADREQUEST = 400,
   UNAUTHORISED = 401,
   FORBIDDEN = 403
@@ -695,7 +770,7 @@ export function checkActiveGames(quizId: number): void {
 
   // Check if there is a game running with this quiz that isn't END
   const activeGameExists = data.games.some(
-    game => game.metadata.quizId === quizId && game.state !== 'END'
+    game => game.metadata.quizId === quizId && game.state !== quizStates.END
   );
 
   if (activeGameExists) {

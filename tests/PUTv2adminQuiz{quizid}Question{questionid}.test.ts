@@ -1156,19 +1156,19 @@ test('Testing PUT/v2/admin/quiz/{quizid}/question/{questionid} works as intended
             answer: 'Changed Right',
             colour: expect.any(String),
             correct: true,
-            id: expect.any(Number)
+            answerId: expect.any(Number)
           },
           {
             answer: 'Wrong',
             colour: expect.any(String),
             correct: false,
-            id: expect.any(Number)
+            answerId: expect.any(Number)
           },
           {
             answer: 'Extra',
             colour: expect.any(String),
             correct: false,
-            id: expect.any(Number)
+            answerId: expect.any(Number)
           }
         ],
         thumbnailUrl: 'http://google.com/some/image/path.png'
@@ -1183,13 +1183,13 @@ test('Testing PUT/v2/admin/quiz/{quizid}/question/{questionid} works as intended
             answer: 'Right',
             colour: expect.any(String),
             correct: true,
-            id: expect.any(Number)
+            answerId: expect.any(Number)
           },
           {
             answer: 'Wrong',
             colour: expect.any(String),
             correct: false,
-            id: expect.any(Number)
+            answerId: expect.any(Number)
           }
         ],
         thumbnailUrl: 'http://google.com/some/image/path.jpg'
