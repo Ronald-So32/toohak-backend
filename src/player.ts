@@ -2,7 +2,9 @@ import {
   getData,
   userInterface,
   gameInterface,
-  resultsInterface
+  resultsInterface,
+  usersRankedByScoreInterface,
+  questionResultsInterface
 } from './dataStore';
 import {
   Errors,
@@ -299,5 +301,38 @@ export function adminQuizGameResults(
     );
   }
 
-  
+  const results: {
+    usersRankedByScore: usersRankedByScoreInterface[];
+    questionResults: questionResultsInterface[];
+  } = {
+    usersRankedByScore: [],
+    questionResults: []
+  };
+
+  for (const question of game.metadata.questions) {
+    const questionId = question.questionId;
+    const questionResult: questionResultsInterface = {
+      questionId,
+      playersCorrect: [],
+      playersIncorrect: [],
+      percentCorrect: 0
+    };
+
+    if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
+      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime / 
+      (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
+    }
+
+    if (questionResult.playersCorrect.length > 0) {
+      questionResult.percentCorrect = Math.round(
+        (questionResult.playersCorrect.length / game.players.length) * 100
+      );
+    }
+
+    results.questionResults.push(questionResult);
+  }
+
+
+
+  return results;
 }

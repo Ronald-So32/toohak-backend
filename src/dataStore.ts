@@ -109,10 +109,12 @@ export interface usersRankedByScoreInterface {
   playerName: string,
   score: number
 }
+
 export interface questionResultsInterface {
   questionId: number,
   playersCorrect: string[],
-  averageAnswerTime: number,
+  playersIncorrect: string[],
+  averageAnswerTime?: number,
   totalAnswerTime?: number,
   percentCorrect: number
 }
