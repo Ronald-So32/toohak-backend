@@ -22,6 +22,7 @@ const playerIdOffset = 727;
 let session: string;
 let quizId: number;
 let questionId: number;
+let questionId2: number;
 let gameId: number;
 let playerId: number;
 let timeCreated: number;
@@ -44,7 +45,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  let responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -67,7 +68,7 @@ beforeEach(() => {
   );
   questionId = responseQuestionCreate.body.questionId
 
-  let responseQuestionCreate2 = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -88,7 +89,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate2.body.questionId;
+  questionId2 = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -114,14 +115,14 @@ describe('Testing GET /v1/player/{playerid}', () => {
       points: 5,
       answerOptions: [
         {
-          answerId: expect.any(number),
+          answerId: expect.any(Number),
           answer: 'Prince Charles',
-          colour: expect.any(string)
+          colour: expect.any(String)
         },
         {
-          answerId: expect.any(number),
+          answerId: expect.any(Number),
           answer: 'Queen Elizibeth',
-          colour: expect.any(string)
+          colour: expect.any(String)
         }
       ]
     });
