@@ -462,7 +462,7 @@ export function adminQuizQuestionCreate(
     answerId++;
     return {
       ...option,
-      id: answerId,
+      answerId: answerId,
       colour: randomColour(),
     };
   });
@@ -886,7 +886,7 @@ export function adminQuizQuestionUpdate(
     answerId++;
     return {
       ...option,
-      id: answerId,
+      answerId: answerId,
       colour: randomColour(),
     };
   });

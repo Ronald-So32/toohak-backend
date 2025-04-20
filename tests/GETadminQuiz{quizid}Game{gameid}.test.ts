@@ -113,13 +113,13 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
             points: 5,
             answerOptions: [
               {
-                id: expect.any(Number),
+                answerId: expect.any(Number),
                 answer: 'Prince Charles',
                 colour: expect.any(String),
                 correct: true
               },
               {
-                id: expect.any(Number),
+                answerId: expect.any(Number),
                 answer: 'Queen Elizibeth',
                 colour: expect.any(String),
                 correct: false
