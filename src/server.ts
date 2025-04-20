@@ -35,7 +35,9 @@ import {
   adminQuizGameStatus,
   adminQuizGameResults,
   playerJoin,
-  playerStatus
+  playerStatus,
+  playerQuestion,
+  playerQuestionResults
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -659,6 +661,34 @@ app.get('/v1/player/:playerid', (req: Request, res: Response) => {
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
+
+// GET /v1/player/{playerid}/question/{questionposition}
+app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+  const questionPosition = parseInt(req.params.questionposition);
+
+  try {
+    const result = playerQuestion(playerId, questionPosition);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET/v1/player/playerid/question/questionposition/results
+app.get('/v1/player/:playerid/question/:questionposition/results',
+  (req: Request, res: Response) => {
+    const playerId = parseInt(req.params.playerid);
+    const questionPosition = parseInt(req.params.questionposition);
+
+    try {
+      const result = playerQuestionResults(playerId, questionPosition);
+      return res.status(OK).json(result);
+    } catch (error) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
 
 app.use((req: Request, res: Response) => {
   const error = `

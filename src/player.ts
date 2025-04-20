@@ -465,3 +465,112 @@ export function playerStatus(playerid: number) {
     atQuestion: game.atQuestion
   };
 }
+
+export function playerQuestion(
+  playerId: number,
+  questionPosition: number
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const invalidStates = [
+    'LOBBY',
+    'QUESTION_COUNTDOWN',
+    'FINAL_RESULTS',
+    'END'
+  ];
+
+  if (invalidStates.includes(game.state)) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const question = game.metadata.questions[questionPosition - 1];
+
+  return {
+    questionId: question.questionId,
+    question: question.question,
+    timeLimit: question.timeLimit,
+    thumbnailUrl: question.thumbnailUrl || '',
+    points: question.points,
+    answerOptions: question.answerOptions.map(option => ({
+      answerId: option.answerId,
+      answer: option.answer,
+      colour: option.colour
+    }))
+  };
+}
+
+export function playerQuestionResults(
+  playerId: number,
+  questionPosition: number
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.ANSWER_SHOW) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const question = game.results.questionResults[questionPosition - 1];
+
+  return {
+    questionId: question.questionId,
+    playersCorrect: question.playersCorrect,
+    averageAnswerTime: question.averageAnswerTime,
+    percentCorrect: question.percentCorrect,
+  };
+}

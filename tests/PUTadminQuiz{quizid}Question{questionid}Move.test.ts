@@ -235,13 +235,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               answer: 'Prince Charles',
               colour: expect.any(String),
               correct: true,
-              id: 1,
+              answerId: 1,
             },
             {
               answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
-              id: 2,
+              answerId: 2,
             },
           ],
           points: 5,
@@ -257,13 +257,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'Right',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'Wrong',
               correct: false
             }
@@ -277,13 +277,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'True',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'False',
               correct: false
             }
@@ -321,13 +321,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               answer: 'Prince Charles',
               colour: expect.any(String),
               correct: true,
-              id: 1,
+              answerId: 1,
             },
             {
               answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
-              id: 2,
+              answerId: 2,
             },
           ],
           points: 5,
@@ -343,13 +343,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'True',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'False',
               correct: false
             }
@@ -363,13 +363,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'Right',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'Wrong',
               correct: false
             }
@@ -409,13 +409,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'True',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'False',
               correct: false
             }
@@ -427,13 +427,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
               answer: 'Prince Charles',
               colour: expect.any(String),
               correct: true,
-              id: 1,
+              answerId: 1,
             },
             {
               answer: 'Queen Elizebeth',
               colour: expect.any(String),
               correct: false,
-              id: 2,
+              answerId: 2,
             },
           ],
           points: 5,
@@ -449,13 +449,13 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           answerOptions: [
             {
               colour: expect.any(String),
-              id: 1,
+              answerId: 1,
               answer: 'Right',
               correct: true
             },
             {
               colour: expect.any(String),
-              id: 2,
+              answerId: 2,
               answer: 'Wrong',
               correct: false
             }
