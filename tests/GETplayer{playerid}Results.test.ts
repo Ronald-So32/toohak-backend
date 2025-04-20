@@ -15,7 +15,6 @@ import {
   quizIdOffset
 } from './testsHelper';
 
-<<<<<<< HEAD
 import { describe } from 'node:test';
 
 const gameIdOffset = 727727;
@@ -130,6 +129,3 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
   });
 });
-=======
-});
->>>>>>> f264ef966fd75a97f165c20d0ae608c5adea5618
