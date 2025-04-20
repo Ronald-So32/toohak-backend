@@ -1049,13 +1049,13 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ]
         },
@@ -1070,19 +1070,19 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Maybe',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ]
         }
@@ -1112,19 +1112,19 @@ describe('Testing POST /v1/admin/quiz', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             },
             {
               answer: 'Maybe',
               colour: expect.any(String),
               correct: false,
-              id: expect.any(Number)
+              answerId: expect.any(Number)
             }
           ],
         }

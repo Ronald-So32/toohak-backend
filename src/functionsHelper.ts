@@ -149,13 +149,13 @@ export interface quizGetDetailsInterface {
 }
 
 export enum quizStates {
-  LOBBY,
-  QUESTION_COUNTDOWN,
-  QUESTION_OPEN,
-  QUESTION_CLOSE,
-  ANSWER_SHOW,
-  FINAL_RESULTS,
-  END
+  LOBBY = 'LOBBY',
+  QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
+  QUESTION_OPEN = 'QUESTION_OPEN',
+  QUESTION_CLOSE = 'QUESTION_CLOSE',
+  ANSWER_SHOW = 'ANSWER_SHOW',
+  FINAL_RESULTS = 'FINAL_RESULTS',
+  END = 'END'
 }
 
 export enum actions {
@@ -243,6 +243,11 @@ export class Errors {
   static readonly invalidQuizError = 'Invalid quiz ID';
   static readonly invalidUserError = 'Invalid user ID';
   static readonly invalidQuestionError = 'Invalid question ID';
+  static readonly invalidActionError = 'Invalid action';
+  static readonly invalidGameError = 'Invalid game';
+  static readonly invalidPlayerNameError = 'Invalid player name';
+  static readonly invalidPlayerError = 'Invalid player ID';
+  static readonly invalidQuestionPositionError = 'Invalid question position';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -303,9 +308,35 @@ export class Errors {
   static tooMuchGames(): errorInterface {
     return { error: this.tooMuchGamesError };
   }
+
+  // Error when action is invalid
+  static invalidAction(): errorInterface {
+    return { error: this.invalidActionError };
+  }
+
+  // Error when game is invalid
+  static invalidGame(): errorInterface {
+    return { error: this.invalidGameError };
+  }
+
+  // Error when player name is invalid
+  static invalidPlayerName(): errorInterface {
+    return { error: this.invalidPlayerNameError };
+  }
+
+  // Error when player ID is invalid
+  static invalidPlayer(): errorInterface {
+    return { error: this.invalidPlayerError };
+  }
+
+  // Error when question position is invalid
+  static invalidQuestionPosition(): errorInterface {
+    return { error: this.invalidQuestionPositionError };
+  }
 }
 
 export enum ErrorCodes {
+  OK = 200,
   BADREQUEST = 400,
   UNAUTHORISED = 401,
   FORBIDDEN = 403
