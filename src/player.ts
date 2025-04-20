@@ -511,5 +511,18 @@ export function playerQuestion(
     );
   }
 
-  return
+  const question = game.metadata.questions[questionPosition - 1];
+
+  return {
+    questionId: question.questionId,
+    question: question.question,
+    timeLimit: question.timeLimit,
+    thumbnailUrl: question.thumbnailUrl || '',
+    points: question.points,
+    answerOptions: question.answerOptions.map(option => ({
+      answerId: option.answerId,
+      answer: option.answer,
+      colour: option.colour
+    }))
+  };
 }
