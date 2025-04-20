@@ -64,6 +64,7 @@ function makeRequest(
       timeout: timeoutMS,
     }
   );
+  console.log(res.body.toString())
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())

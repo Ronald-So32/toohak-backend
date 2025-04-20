@@ -99,6 +99,20 @@ export function adminQuizGameStart(
     results: initialiseResults
   });
 
+  for (const question of data.games[data.games.length - 1].metadata.questions) {
+    const questionId = question.questionId;
+    data.games[data.games.length - 1].results.questionResults.push(
+      {
+        questionId,
+        playersCorrect: [],
+        playersIncorrect: [],
+        averageAnswerTime: 0,
+        totalAnswerTime: 0,
+        percentCorrect: 0
+      }
+    );
+  }
+
   return { gameId: id };
 }
 
@@ -317,12 +331,7 @@ export function adminQuizGameResults(
 
   for (const question of game.metadata.questions) {
     const questionId = question.questionId;
-    const questionResult: questionResultsInterface = {
-      questionId,
-      playersCorrect: [],
-      playersIncorrect: [],
-      percentCorrect: 0
-    };
+    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
 
     if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
       questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime / 
@@ -351,7 +360,7 @@ export function adminQuizGameResults(
   .map(([playerName, score]) => ({ playerName, score }))
   .sort((a, b) => b.score - a.score);
 
-  game.results = results
+  game.results.usersRankedByScore = results.usersRankedByScore;
   // To Here
   // Should be moved into a helper that updates the results every state
   // Could be optimised to not overwrite and recalcate if possible

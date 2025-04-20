@@ -67,7 +67,11 @@ beforeEach(() => {
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "END");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
+  const slync = require('slync');
+  slync(4727);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
 
 });
 
