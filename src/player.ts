@@ -444,3 +444,24 @@ export function playerJoin(
 
   return { playerId };
 }
+
+export function playerStatus(playerid: number) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerid)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return {
+    state: game.state,
+    numQuestions: game.metadata.numQuestions,
+    atQuestion: game.atQuestion
+  };
+}
