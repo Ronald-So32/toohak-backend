@@ -662,7 +662,39 @@ export function playerAnswerSubmit(
   questionPosition: number,
   answerIds: number[]
 ) {
-  
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 
   return {}
 }
