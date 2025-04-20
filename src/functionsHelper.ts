@@ -247,6 +247,7 @@ export class Errors {
   static readonly invalidGameError = 'Invalid game';
   static readonly invalidPlayerNameError = 'Invalid player name';
   static readonly invalidPlayerError = 'Invalid player ID';
+  static readonly invalidAnswerError = 'Invalid answer ID';
   static readonly invalidQuestionPositionError = 'Invalid question position';
 
   // Error for invalid name
@@ -332,6 +333,11 @@ export class Errors {
   // Error when question position is invalid
   static invalidQuestionPosition(): errorInterface {
     return { error: this.invalidQuestionPositionError };
+  }
+
+  // Error when answer ID is invalid
+  static invalidAnswer(): errorInterface {
+    return { error: this.invalidAnswerError };
   }
 }
 

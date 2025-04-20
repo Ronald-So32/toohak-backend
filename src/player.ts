@@ -696,5 +696,12 @@ export function playerAnswerSubmit(
     );
   }
 
+  if (answerIds.length < 1) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
   return {}
 }
