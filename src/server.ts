@@ -33,7 +33,8 @@ import {
   adminGetQuizGames,
   adminQuizGameUpdate,
   adminQuizGameStatus,
-  adminQuizGameResults
+  adminQuizGameResults,
+  playerJoin
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
