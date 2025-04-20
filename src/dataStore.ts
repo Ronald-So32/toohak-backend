@@ -130,7 +130,7 @@ export interface gameInterface {
   players: string[];
   metadata: quizInterface;
   autoStartNum?: number;
-  results?: resultsInterface;
+  results: resultsInterface;
 }
 
 /**

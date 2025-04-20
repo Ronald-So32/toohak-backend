@@ -1,7 +1,8 @@
 import {
   getData,
   userInterface,
-  gameInterface
+  gameInterface,
+  resultsInterface
 } from './dataStore';
 import {
   Errors,
@@ -80,6 +81,11 @@ export function adminQuizGameStart(
 
   const id = createUUID();
 
+  const initialiseResults: resultsInterface = {
+    usersRankedByScore: [],
+    questionResults: []
+  }
+
   data.games.push({
     gameId: id,
     quizId: quizId,
@@ -87,7 +93,8 @@ export function adminQuizGameStart(
     atQuestion: 1,
     players: [],
     metadata: quiz,
-    autoStartNum: autoStartNum
+    autoStartNum: autoStartNum,
+    results: initialiseResults
   });
 
   return { gameId: id };
@@ -291,4 +298,6 @@ export function adminQuizGameResults(
       ErrorCodes.BADREQUEST
     );
   }
+
+
 }
