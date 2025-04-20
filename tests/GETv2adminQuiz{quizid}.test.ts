@@ -11,8 +11,6 @@ import {
   requestAdminQuizQuestionUpdateV2,
   requestDeleteQuizQuestion,
   requestAdminQuizThumbnailUpdate,
-  requestAdminQuizGameStart,
-  requestAdminQuizGameStateUpdate,
   OK,
   UNAUTHORISED,
   FORBIDDEN,
@@ -27,8 +25,6 @@ let responseQuestionCreate: responseInterface;
 let session: string;
 let quizId: number;
 let questionId: number;
-
-// TODO: USE THE NEW v2 ROUTES AND JUST ADD THUMBNAIL
 
 // Before each test clears the data then registers a user, creating a quiz
 // with a question, obtaining the current session, the quizId and the questionId
@@ -72,7 +68,7 @@ beforeEach(() => {
   questionId = responseQuestionCreate.body.questionId;
 });
 
-describe('Testing GET /v1/admin/quiz/{quizid}', () => {
+describe('Testing GET /v2/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
     // Gets the latest details of the quiz
     const responseQuizDetails = requestGetQuizV2(quizId, session);
@@ -97,18 +93,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             }
           ]
         }
       ],
-      timeLimit: expect.any(Number)
+      timeLimit: expect.any(Number),
+      thumbnailUrl: expect.any(String)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
   });
@@ -154,7 +151,24 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     });
   });
 
-  test('Testing GET /v1/admin/quiz/{quizid} works as intended', () => {
+  test('Testing GET /v2/admin/quiz/{quizid} with quiz thumbnail update', () => {
+    // Update the quiz thumbnail
+    const thumbnailUrl = 'https://example.com/thumbnail.jpg';
+    const responseThumbnailUpdate = requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      thumbnailUrl
+    );
+    expect(responseThumbnailUpdate.body).toStrictEqual({});
+    expect(responseThumbnailUpdate.statusCode).toStrictEqual(OK);
+
+    // Check that the thumbnail is updated in the quiz details
+    const responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body.thumbnailUrl).toStrictEqual(thumbnailUrl);
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+  });
+
+  test('Testing GET /v2/admin/quiz/{quizid} works as intended', () => {
     let responseQuizDetails = requestGetQuizV2(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
@@ -175,18 +189,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             }
           ]
         }
       ],
-      timeLimit: expect.any(Number)
+      timeLimit: expect.any(Number),
+      thumbnailUrl: expect.any(String)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
@@ -226,6 +241,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       quizId,
       session,
       'New Description'
+    );
+    
+    // Update the quiz's thumbnail
+    const newThumbnailUrl = 'https://example.com/updated-thumbnail.png';
+    requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      newThumbnailUrl
     );
 
     // Updates the first question in the quiz
@@ -280,19 +303,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Changed Right',
               colour: expect.any(String),
               correct: true,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
             {
               answer: 'Extra',
               colour: expect.any(String),
               correct: false,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
           ]
         },
@@ -307,18 +330,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
               answer: 'Right',
               colour: expect.any(String),
               correct: true,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             },
             {
               answer: 'Wrong',
               colour: expect.any(String),
               correct: false,
-              answerId: expect.any(Number)
+              id: expect.any(Number)
             }
           ]
         }
       ],
-      timeLimit: expect.any(Number)
+      timeLimit: expect.any(Number),
+      thumbnailUrl: newThumbnailUrl
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
@@ -337,7 +361,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       description: 'New Description',
       numQuestions: 0,
       questions: [],
-      timeLimit: expect.any(Number)
+      timeLimit: expect.any(Number),
+      thumbnailUrl: newThumbnailUrl
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
