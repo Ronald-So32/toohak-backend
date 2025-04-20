@@ -124,12 +124,18 @@ export interface resultsInterface {
   questionResults: questionResultsInterface[];
 }
 
+export interface playersInterface{
+  playerName: string;
+  playerId: number;
+}
+
 export interface gameInterface {
   gameId?:number;
   quizId?: number;
   state: quizStates;
   atQuestion: number;
   players: string[];
+  playersWithId?: playersInterface[];
   metadata: quizInterface;
   autoStartNum?: number;
   results: resultsInterface;

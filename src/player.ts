@@ -94,6 +94,7 @@ export function adminQuizGameStart(
     state: quizStates.LOBBY,
     atQuestion: 0,
     players: [],
+    playersWithId: [],
     metadata: quiz,
     autoStartNum: autoStartNum,
     results: initialiseResults
@@ -429,7 +430,17 @@ export function playerJoin(
     );
   }
 
-  game.players.push(playerName);
+  if (game.state != quizStates.LOBBY) {
+    throw new BetterError(
+      Errors.invalidPlayerName().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
 
-  return {playerId: createUUID()}
+  const playerId = createUUID();
+
+  game.players.push(playerName);
+  game.playersWithId.push({playerName, playerId});
+
+  return {playerId}
 }
