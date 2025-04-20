@@ -4,10 +4,10 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
-  requestAdminUpdateGame,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestPlayerQuestionResult,
+  requestPlayerQuestionResults,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -98,7 +98,7 @@ beforeEach(() => {
     'Name'
   );
 
-  playerId = requestGetPlayer.body.playerId;
+  playerId = responsePlayerJoin.body.playerId;
 
   requestAdminUpdateGame(quizId, gameId, session, 'NEXT_QUESTION');
   requestAdminUpdateGame(quizId, gameId, session, 'SKIP_COUNTDOWN');
