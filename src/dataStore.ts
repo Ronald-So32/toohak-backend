@@ -105,7 +105,26 @@ export interface sessionInterface {
   session: string;
 }
 
-export interface gameInterface{
+export interface usersRankedByScoreInterface {
+  playerName: string,
+  score: number
+}
+
+export interface questionResultsInterface {
+  questionId: number,
+  playersCorrect: string[],
+  playersIncorrect: string[],
+  averageAnswerTime?: number,
+  totalAnswerTime?: number,
+  percentCorrect: number
+}
+
+export interface resultsInterface {
+  usersRankedByScore: usersRankedByScoreInterface[];
+  questionResults: questionResultsInterface[];
+}
+
+export interface gameInterface {
   gameId?:number;
   quizId?: number;
   state: quizStates;
@@ -113,6 +132,7 @@ export interface gameInterface{
   players: string[];
   metadata: quizInterface;
   autoStartNum?: number;
+  results: resultsInterface;
 }
 
 /**

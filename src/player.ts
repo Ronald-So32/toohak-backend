@@ -1,7 +1,10 @@
 import {
   getData,
   userInterface,
-  gameInterface
+  gameInterface,
+  resultsInterface,
+  usersRankedByScoreInterface,
+  questionResultsInterface
 } from './dataStore';
 import {
   Errors,
@@ -80,15 +83,35 @@ export function adminQuizGameStart(
 
   const id = createUUID();
 
+  const initialiseResults: resultsInterface = {
+    usersRankedByScore: [],
+    questionResults: []
+  };
+
   data.games.push({
     gameId: id,
     quizId: quizId,
     state: quizStates.LOBBY,
-    atQuestion: 1,
+    atQuestion: 0,
     players: [],
     metadata: quiz,
-    autoStartNum: autoStartNum
+    autoStartNum: autoStartNum,
+    results: initialiseResults
   });
+
+  for (const question of data.games[data.games.length - 1].metadata.questions) {
+    const questionId = question.questionId;
+    data.games[data.games.length - 1].results.questionResults.push(
+      {
+        questionId,
+        playersCorrect: [],
+        playersIncorrect: [],
+        averageAnswerTime: 0,
+        totalAnswerTime: 0,
+        percentCorrect: 0
+      }
+    );
+  }
 
   return { gameId: id };
 }
@@ -262,5 +285,93 @@ export function adminQuizGameStatus(
       thumbnailUrl: game.metadata.thumbnailUrl
     }
 
+  };
+}
+
+export function adminQuizGameResults(
+  userId: number,
+  quizId: number,
+  gameId: number
+) {
+  const data = getData();
+
+  findQuizByUser(userId, quizId);
+
+  const game = data.games.find(
+    g => g.gameId === gameId && g.metadata.quizId === quizId
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.FINAL_RESULTS) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // From here
+  const results: {
+    usersRankedByScore: usersRankedByScoreInterface[];
+    questionResults: questionResultsInterface[];
+  } = {
+    usersRankedByScore: [],
+    questionResults: []
+  };
+
+  const playerScores: Record<string, number> = {};
+  game.players.forEach(player => {
+    playerScores[player] = 0;
+  });
+
+  for (const question of game.metadata.questions) {
+    const questionId = question.questionId;
+    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
+
+    if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
+      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
+      (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
+    }
+
+    if (questionResult.playersCorrect.length > 0) {
+      questionResult.percentCorrect = Math.round(
+        (questionResult.playersCorrect.length / game.players.length) * 100
+      );
+    }
+
+    questionResult.playersCorrect.forEach((player, index) => {
+      const position = index + 1;
+      const scalingFactor = 1 / position;
+      const points = question.points;
+      const questionScore = points * scalingFactor;
+
+      playerScores[player] += questionScore;
+    });
+
+    results.questionResults.push(questionResult);
+  }
+
+  results.usersRankedByScore = Object.entries(playerScores)
+    .map(([playerName, score]) => ({ playerName, score }))
+    .sort((a, b) => b.score - a.score);
+
+  game.results.usersRankedByScore = results.usersRankedByScore;
+  // To Here
+  // Should be moved into a helper that updates the results every state
+  // Could be optimised to not overwrite and recalcate if possible
+
+  return {
+    usersRankedByScore: results.usersRankedByScore,
+    questionResults: results.questionResults.map(qr => ({
+      questionId: qr.questionId,
+      playersCorrect: qr.playersCorrect,
+      averageAnswerTime: qr.averageAnswerTime,
+      percentCorrect: qr.percentCorrect
+    }))
   };
 }

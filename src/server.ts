@@ -32,7 +32,8 @@ import {
   adminQuizGameStart,
   adminGetQuizGames,
   adminQuizGameUpdate,
-  adminQuizGameStatus
+  adminQuizGameStatus,
+  adminQuizGameResults
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -63,9 +64,9 @@ const app = express();
 app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
-// for logging errors (print to terminal)
+// For logging errors (print to terminal)
 app.use(morgan('dev'));
-// for producing the docs that define the API
+// For producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
 app.use('/docs', sui.serve, sui.setup(
@@ -75,10 +76,6 @@ app.use('/docs', sui.serve, sui.setup(
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
-
-// ====================================================================
-//  ================= WORK IS DONE BELOW THIS LINE ===================
-// ====================================================================
 
 // Save the current state of the data into the json file
 export function save(): void {
@@ -615,9 +612,25 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   }
 });
 
-// ====================================================================
-//  ================= WORK IS DONE ABOVE THIS LINE ===================
-// ====================================================================
+// GET/v1/admin/quiz/quizid/game/gameid/results
+app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const result = adminQuizGameResults(userId, quizId, gameId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 app.use((req: Request, res: Response) => {
   const error = `
