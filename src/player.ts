@@ -86,7 +86,7 @@ export function adminQuizGameStart(
   const initialiseResults: resultsInterface = {
     usersRankedByScore: [],
     questionResults: []
-  }
+  };
 
   data.games.push({
     gameId: id,
@@ -125,7 +125,7 @@ export function adminQuizGameUpdate(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-  
+
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -334,7 +334,7 @@ export function adminQuizGameResults(
     const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
 
     if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
-      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime / 
+      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
       (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
     }
 
@@ -357,14 +357,14 @@ export function adminQuizGameResults(
   }
 
   results.usersRankedByScore = Object.entries(playerScores)
-  .map(([playerName, score]) => ({ playerName, score }))
-  .sort((a, b) => b.score - a.score);
+    .map(([playerName, score]) => ({ playerName, score }))
+    .sort((a, b) => b.score - a.score);
 
   game.results.usersRankedByScore = results.usersRankedByScore;
   // To Here
   // Should be moved into a helper that updates the results every state
   // Could be optimised to not overwrite and recalcate if possible
-  
+
   return {
     usersRankedByScore: results.usersRankedByScore,
     questionResults: results.questionResults.map(qr => ({

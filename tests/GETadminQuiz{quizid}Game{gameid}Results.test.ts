@@ -22,8 +22,8 @@ let session: string;
 let quizId: number;
 let questionId: number;
 let gameId: number;
-let timeCreated: number;
-let timeLastEdited: number;
+// let timeCreated: number;
+// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -39,7 +39,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now() / 1000);
+  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
   const reponseQuestionCreate = requestAdminQuizQuestionCreate(
@@ -63,26 +63,25 @@ beforeEach(() => {
       }
     }
   );
-  questionId = reponseQuestionCreate.body.questionId
-  timeLastEdited = Math.floor(Date.now() / 1000);
+  questionId = reponseQuestionCreate.body.questionId;
+  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
   const responseStatus1 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus1.body.state).toStrictEqual("LOBBY");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  expect(responseStatus1.body.state).toStrictEqual('LOBBY');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
   const responseStatus2 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus2.body.state).toStrictEqual("QUESTION_COUNTDOWN");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
+  expect(responseStatus2.body.state).toStrictEqual('QUESTION_COUNTDOWN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
   const responseStatus3 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus3.body.state).toStrictEqual("QUESTION_OPEN");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_ANSWER");
+  expect(responseStatus3.body.state).toStrictEqual('QUESTION_OPEN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
   const responseStatus4 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus4.body.state).toStrictEqual("ANSWER_SHOW");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
+  expect(responseStatus4.body.state).toStrictEqual('ANSWER_SHOW');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
   const responseStatus5 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus5.body.state).toStrictEqual("FINAL_RESULTS");
-
+  expect(responseStatus5.body.state).toStrictEqual('FINAL_RESULTS');
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
@@ -90,7 +89,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
     const responseGetGameResult = requestAdminQuizGameResults(
       session,
       quizId,
-      gameId,
+      gameId
     );
     expect(responseGetGameResult.body).toStrictEqual({
       usersRankedByScore: [],
@@ -107,12 +106,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
   });
 
   describe('Testing for error responses', () => {
-
     test('Testing invalid game within quiz', () => {
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
-        gameId + gameIdOffset,
+        gameId + gameIdOffset
       );
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
@@ -124,12 +122,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
-        gameId,
+        gameId
       );
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
-
 
     describe('Testing status code of 401 return values', () => {
       test.each([
@@ -145,24 +142,24 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId,
-          gameId,
+          gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(UNAUTHORISED);
       });
-    })
-  
+    });
+
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId + quizIdOffset,
-          gameId,
+          gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
       });
-  
+
       test('Testing when quiz is not owned by user', () => {
         session = requestAdminAuthRegister(
           'z7277271@ad.unsw.edu.au',
@@ -170,15 +167,15 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           'First',
           'Last'
         ).body.session;
-  
+
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId,
-          gameId,
+          gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
       });
-    })
+    });
   });
 });

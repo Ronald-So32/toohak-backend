@@ -613,7 +613,7 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
 });
 
 // GET/v1/admin/quiz/quizid/game/gameid/results
-app.get('/v1/admin/quiz/:quizid/game/:gameid/results',(req: Request, res: Response) => {
+app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const gameId = parseInt(req.params.gameid);
