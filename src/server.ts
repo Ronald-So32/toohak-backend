@@ -38,7 +38,8 @@ import {
   playerStatus,
   playerQuestion,
   playerQuestionResults,
-  playerFinalResults
+  playerFinalResults,
+  playerAnswerSubmit
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';

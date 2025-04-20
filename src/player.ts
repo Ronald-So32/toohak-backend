@@ -656,3 +656,13 @@ export function playerFinalResults(playerId: number) {
     }))
   };
 }
+
+export function playerAnswerSubmit(
+  playerId: number,
+  questionPosition: number,
+  answerIds: number[]
+) {
+  
+
+  return {}
+}
