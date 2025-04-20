@@ -45,7 +45,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -66,7 +66,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -76,7 +76,7 @@ beforeEach(() => {
     gameId,
     'Name'
   );
-  playerId = requestGetPlayer.body.playerId;
+  playerId = responsePlayerJoin.body.playerId;
 
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
@@ -121,7 +121,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         gameId,
         'Name'
       );
-      playerId = requestGetPlayer.body.playerId;
+      playerId = responsePlayerJoin.body.playerId;
       const responseGetGameResult = requestPlayerFinalResults(playerId);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
