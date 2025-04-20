@@ -79,8 +79,8 @@ describe('Testing GET /v1/player/{playerid}', () => {
     const responsePlayerJoin = requestPlayerStatus(playerId);
     expect(responsePlayerJoin.body).toStrictEqual({
       state: "LOBBY",
-      numQuestions: expect.any(number),
-      atQuestion: expect.any(number)
+      numQuestions: expect.any(Number),
+      atQuestion: expect.any(Number)
     });
     expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
   });
