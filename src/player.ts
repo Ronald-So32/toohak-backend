@@ -589,6 +589,13 @@ export function playerFinalResults(playerId: number) {
     );
   }
 
+  if (game.state !== quizStates.FINAL_RESULTS) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
   // From here
   const results: {
     usersRankedByScore: usersRankedByScoreInterface[];
