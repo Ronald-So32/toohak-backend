@@ -32,7 +32,8 @@ import {
   adminQuizGameStart,
   adminGetQuizGames,
   adminQuizGameUpdate,
-  adminQuizGameStatus
+  adminQuizGameStatus,
+  adminQuizGameResults
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -614,6 +615,27 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
+
+// GET/v1/admin/quiz/quizid/game/gameid/results
+app.get('/v1/admin/quiz/:quizid/game/:gameid/results',(req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const result = adminQuizGameResults(userId, quizId, gameId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

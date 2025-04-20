@@ -264,3 +264,11 @@ export function adminQuizGameStatus(
 
   };
 }
+
+export function adminQuizGameResults(
+  userId: number,
+  quizId: number,
+  gameId: number
+) {
+
+}
