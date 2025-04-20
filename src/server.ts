@@ -684,7 +684,7 @@ app.get('/v1/player/:playerid/question/:questionposition/results',
 
     try {
       const result = playerQuestionResults(playerId, questionPosition);
-      return res.status(OK).json({ result });
+      return res.status(OK).json(result);
     } catch (error) {
       return res.status(error.statusCode).json({ error: error.message });
     }

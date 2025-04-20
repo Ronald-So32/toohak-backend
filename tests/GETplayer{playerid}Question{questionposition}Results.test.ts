@@ -22,6 +22,7 @@ const playerIdOffset = 727;
 let session: string;
 let quizId: number;
 let questionId: number;
+let questionId2: number;
 let gameId: number;
 let playerId: number;
 let timeCreated: number;
@@ -88,7 +89,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate2.body.questionId;
+  questionId2 = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
