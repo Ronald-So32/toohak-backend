@@ -704,6 +704,23 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   }
 });
 
+// PUT/v1/player/{playerid}/question/{questionposition}/answer
+app.put('/v1/player/:playerid/question/:questionposition/answer',
+  (req: Request, res: Response) => {
+    const playerId = parseInt(req.params.playerid);
+    const questionPosition = parseInt(req.params.questionposition);
+    const answerIds = req.body.answerIds;
+  
+    try {
+      const answer = playerAnswerSubmit(playerId, questionPosition, answerIds);
+
+      return res.status(OK).json({ answer });
+    } catch (error) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
+  
+
 app.use((req: Request, res: Response) => {
   const error = `
     Route not found - This could be because:
