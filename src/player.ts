@@ -403,7 +403,7 @@ export function playerJoin(
         randomLetters += randomChar;
       }
     }
-  
+
     const numbers = '0123456789';
     let randomNumbers = '';
     while (randomNumbers.length < 3) {
@@ -412,7 +412,7 @@ export function playerJoin(
         randomNumbers += randomNum;
       }
     }
-  
+
     playerName = randomLetters + randomNumbers;
   }
 
@@ -440,7 +440,7 @@ export function playerJoin(
   const playerId = createUUID();
 
   game.players.push(playerName);
-  game.playersWithId.push({playerName, playerId});
+  game.playersWithId.push({ playerName, playerId });
 
-  return {playerId}
+  return { playerId };
 }

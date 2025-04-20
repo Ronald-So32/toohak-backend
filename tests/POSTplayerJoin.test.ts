@@ -59,7 +59,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -112,7 +112,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     });
 
     test('Testing when game state is not in LOBBY', () => {
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, "END");
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
       const responsePlayerJoin = requestPlayerJoin(
         gameId,
         'Name'
@@ -120,6 +120,5 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
     });
-  
   });
 });
