@@ -67,7 +67,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
 
   const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
@@ -99,11 +99,11 @@ beforeEach(() => {
     gameId,
     'Name'
   );
-  
+
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
@@ -149,7 +149,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
 
     test('Testing when game is not in QUESTION_OPEN state', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, "END");
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -160,7 +160,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
     });
-    
+
     test('Testing when game is not currently on the question', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(

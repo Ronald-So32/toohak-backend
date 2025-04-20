@@ -722,5 +722,5 @@ export function playerAnswerSubmit(
     );
   }
 
-  return {}
+  return {};
 }

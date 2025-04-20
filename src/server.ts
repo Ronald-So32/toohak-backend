@@ -711,7 +711,7 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
     const playerId = parseInt(req.params.playerid);
     const questionPosition = parseInt(req.params.questionposition);
     const answerIds = req.body.answerIds;
-  
+
     try {
       const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
 
@@ -720,7 +720,6 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
-  
 
 app.use((req: Request, res: Response) => {
   const error = `
