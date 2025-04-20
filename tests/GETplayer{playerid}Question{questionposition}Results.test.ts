@@ -44,7 +44,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  let reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -65,9 +65,9 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
 
-  reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -88,7 +88,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId;
+  questionId = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminStartGame(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
