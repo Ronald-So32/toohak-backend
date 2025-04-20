@@ -135,7 +135,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
 
     test('Testing when question position given is not valid for the game', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 3).body.answerOptions;
+      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -162,7 +162,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
     
     test('Testing when game is not currently on the question', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 2).body.answerOptions;
+      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -175,7 +175,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
 
     test('Testing when answer is not valid for this particular question', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 2).body.answerOptions;
+      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId + answerIdOffset]
