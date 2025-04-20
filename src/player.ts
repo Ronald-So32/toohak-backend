@@ -703,5 +703,24 @@ export function playerAnswerSubmit(
     );
   }
 
+  const uniqueAnswerIds = new Set(answerIds);
+  if (uniqueAnswerIds.size !== answerIds.length) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.metadata.questions[questionPosition - 1];
+  const validAnswerIds = currentQuestion.answerOptions.map(answer => answer.answerId);
+  const allAnswersValid = answerIds.every(id => validAnswerIds.includes(id));
+
+  if (!allAnswersValid) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
   return {}
 }
