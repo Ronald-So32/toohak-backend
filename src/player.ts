@@ -465,3 +465,37 @@ export function playerStatus(playerid: number) {
     atQuestion: game.atQuestion
   };
 }
+
+export function playerQuestion(
+  playerId: number,
+  questionPosition: number
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const invalidStates = [
+    'LOBBY',
+    'QUESTION_COUNTDOWN',
+    'FINAL_RESULTS',
+    'END'
+  ];
+
+  if (invalidStates.includes(game.state)) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+
+}

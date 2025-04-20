@@ -246,6 +246,7 @@ export class Errors {
   static readonly invalidActionError = 'Invalid action';
   static readonly invalidGameError = 'Invalid game';
   static readonly invalidPlayerNameError = 'Invalid player name';
+  static readonly invalidPlayerError = 'Invalid player ID';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -320,6 +321,11 @@ export class Errors {
   // Error when player name is invalid
   static invalidPlayerName(): errorInterface {
     return { error: this.invalidPlayerNameError };
+  }
+
+  // Error when player ID is invalid
+  static invalidPlayer(): errorInterface {
+    return { error: this.invalidPlayerError };
   }
 }
 

@@ -35,7 +35,8 @@ import {
   adminQuizGameStatus,
   adminQuizGameResults,
   playerJoin,
-  playerStatus
+  playerStatus,
+  playerQuestion
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -668,7 +669,7 @@ app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: R
   try {
     const result = playerQuestion(playerId, questionPosition);
     
-    return res.status(OK).json(result.details);
+    return res.status(OK).json(result);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }
