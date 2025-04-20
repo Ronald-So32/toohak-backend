@@ -576,6 +576,76 @@ export function playerQuestionResults(
 }
 
 export function playerFinalResults(playerId: number) {
+  const data = getData();
 
-  return {}
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // From here
+  const results: {
+    usersRankedByScore: usersRankedByScoreInterface[];
+    questionResults: questionResultsInterface[];
+  } = {
+    usersRankedByScore: [],
+    questionResults: []
+  };
+
+  const playerScores: Record<string, number> = {};
+  game.players.forEach(player => {
+    playerScores[player] = 0;
+  });
+
+  for (const question of game.metadata.questions) {
+    const questionId = question.questionId;
+    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
+
+    if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
+      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
+      (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
+    }
+
+    if (questionResult.playersCorrect.length > 0) {
+      questionResult.percentCorrect = Math.round(
+        (questionResult.playersCorrect.length / game.players.length) * 100
+      );
+    }
+
+    questionResult.playersCorrect.forEach((player, index) => {
+      const position = index + 1;
+      const scalingFactor = 1 / position;
+      const points = question.points;
+      const questionScore = points * scalingFactor;
+
+      playerScores[player] += questionScore;
+    });
+
+    results.questionResults.push(questionResult);
+  }
+
+  results.usersRankedByScore = Object.entries(playerScores)
+    .map(([playerName, score]) => ({ playerName, score }))
+    .sort((a, b) => b.score - a.score);
+
+  game.results.usersRankedByScore = results.usersRankedByScore;
+  // To Here
+  // Should be moved into a helper that updates the results every state
+  // Could be optimised to not overwrite and recalcate if possible
+
+  return {
+    usersRankedByScore: results.usersRankedByScore,
+    questionResults: results.questionResults.map(qr => ({
+      questionId: qr.questionId,
+      playersCorrect: qr.playersCorrect,
+      averageAnswerTime: qr.averageAnswerTime,
+      percentCorrect: qr.percentCorrect
+    }))
+  };
 }
