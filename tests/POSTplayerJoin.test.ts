@@ -4,8 +4,8 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
-  requestAdminUpdateGame,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
   OK,
   BADREQUEST,
@@ -42,7 +42,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -63,10 +63,10 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
   timeLastEdited = Math.floor(Date.now() / 1000);
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 });
 
@@ -116,7 +116,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     });
 
     test('Testing when game state is not in LOBBY', () => {
-      requestAdminUpdateGame(quizId, gameId, session, END);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, "END");
       const responsePlayerJoin = requestPlayerJoin(
         gameId,
         'Name'
