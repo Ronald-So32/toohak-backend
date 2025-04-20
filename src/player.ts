@@ -444,3 +444,9 @@ export function playerJoin(
 
   return { playerId };
 }
+
+export function playerStatus(playerid: number) {
+  const data = getData();
+
+  return
+}
