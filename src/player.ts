@@ -531,5 +531,46 @@ export function playerQuestionResults(
   playerId: number,
   questionPosition: number
 ) {
+  const data = getData();
 
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.ANSWER_SHOW) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const question = game.results.questionResults[questionPosition - 1];
+
+  return {
+    questionId: question.questionId,
+    playersCorrect: question.playersCorrect,
+    averageAnswerTime: question.averageAnswerTime,
+    percentCorrect: question.percentCorrect,
+  };
 }
