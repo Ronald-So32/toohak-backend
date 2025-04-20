@@ -14,6 +14,7 @@ export function clear(): Record<string, never> {
 
   data.highestID = 0;
   data.sessions = [];
+  data.games = [];
 
   return {};
 }
