@@ -650,10 +650,10 @@ app.post('/v1/player/join', (req: Request, res: Response) => {
 // GET /v1/player/{playerid}
 app.get('/v1/player/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
-  
+
   try {
     const result = playerStatus(playerId);
-    
+
     return res.status(OK).json(result);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });

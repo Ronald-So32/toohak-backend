@@ -448,10 +448,10 @@ export function playerJoin(
 export function playerStatus(playerid: number) {
   const data = getData();
 
-  const game = data.games.find(g => 
+  const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerid)
   );
-  
+
   if (!game) {
     throw new BetterError(
       Errors.invalidGame().error,

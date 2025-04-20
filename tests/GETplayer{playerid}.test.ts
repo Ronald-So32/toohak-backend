@@ -60,7 +60,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -70,15 +70,15 @@ beforeEach(() => {
     gameId,
     'Name'
   );
-  
-  playerId = responsePlayerJoin.body.playerId
+
+  playerId = responsePlayerJoin.body.playerId;
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
     const responsePlayerJoin = requestPlayerStatus(playerId);
     expect(responsePlayerJoin.body).toStrictEqual({
-      state: "LOBBY",
+      state: 'LOBBY',
       numQuestions: expect.any(Number),
       atQuestion: expect.any(Number)
     });
