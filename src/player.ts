@@ -299,5 +299,5 @@ export function adminQuizGameResults(
     );
   }
 
-
+  
 }
