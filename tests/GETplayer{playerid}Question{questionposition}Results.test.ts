@@ -90,7 +90,7 @@ beforeEach(() => {
   );
   questionId = responseQuestionCreate2.body.questionId;
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
   const responsePlayerJoin = requestPlayerJoin(
@@ -100,14 +100,14 @@ beforeEach(() => {
 
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminUpdateGame(quizId, gameId, session, 'NEXT_QUESTION');
-  requestAdminUpdateGame(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  requestAdminUpdateGame(quizId, gameId, session, 'GO_TO_ANSWER');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
 });
 
 describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results', () => {
   test('Testing the code 200 return value', () => {
-    const requestGetQuestionResult = requestPlayerQuestionResult(playerId, 1);
+    const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 1);
     expect(requestGetQuestionResult.body).toStrictEqual({
       questionId: questionId,
       playersCorrect: [],
@@ -119,19 +119,19 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const requestGetQuestionResult = requestPlayerQuestionResult(playerId + playerIdOffset);
+      const requestGetQuestionResult = requestPlayerQuestionResults(playerId + playerIdOffset, 1);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when question position given is not valid for the game', () => {
-      const requestGetQuestionResult = requestPlayerQuestionResult(playerId, 3);
+      const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 3);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when game is not currently on the question', () => {
-      const requestGetQuestionResult = requestPlayerQuestionResult(playerId, 2);
+      const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 2);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
     });
