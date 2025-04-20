@@ -3,7 +3,7 @@ import {
   questionsInterface,
   answersInterface,
   userInterface,
-  quizInterface
+  quizInterface,
 } from './dataStore';
 import {
   createUUID,
@@ -22,7 +22,8 @@ import {
   findQuizByUser,
   getLongestQuestionLine,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  checkActiveGames,
 } from './functionsHelper';
 
 import request from 'sync-request-curl';
@@ -99,6 +100,38 @@ export function adminQuizGet(
       numQuestions: quiz.numQuestions,
       questions: quiz.questions,
       timeLimit: quiz.timeLimit,
+    }
+  };
+}
+
+export function adminQuizGetV2(
+  userId: number,
+  quizId: number
+): quizGetDetailsInterface {
+  const data = getData();
+
+  const userFound = data.users.some((user: userInterface) => user.userId === userId);
+  if (!userFound) {
+    throw new BetterError(
+      Errors.invalidUser().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // Checks if the quiz exists and created by the user
+  const quiz = findQuizByUser(userId, quizId);
+
+  return {
+    details: {
+      quizId: quiz.quizId,
+      name: quiz.name,
+      timeCreated: quiz.timeCreated,
+      timeLastEdited: quiz.timeLastEdited,
+      description: quiz.description,
+      numQuestions: quiz.numQuestions,
+      questions: quiz.questions,
+      timeLimit: quiz.timeLimit,
+      thumbnailUrl: quiz.thumbnailUrl
     }
   };
 }
@@ -229,19 +262,7 @@ export function adminQuizRemoveV2(
   userId: number,
   quizId: number
 ): Record<string, never> {
-  const data = getData();
-
-  // Check if there is a game running with this quiz that isn't END
-  const activeGameExists = data.games.some(
-    game => game.metadata.quizId === quizId && game.state !== 'END'
-  );
-
-  if (activeGameExists) {
-    throw new BetterError(
-      Errors.gameRunning().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  checkActiveGames(quizId);
 
   adminQuizRemove(userId, quizId);
 
@@ -468,6 +489,50 @@ export function adminQuizQuestionCreate(
   };
 }
 
+export function adminQuizQuestionCreateV2(
+  userId: number,
+  quizId: number,
+  questionBody: questionsInterface
+): questionIdInterface {
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
+
+  // Validate thumbnail
+  if (thumbnailUrl === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === v1.questionId
+  );
+
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+
+  return v1;
+}
+
 /**
  * Transfers ownership of a quiz to another user.
  *
@@ -478,7 +543,11 @@ export function adminQuizQuestionCreate(
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
  * object on success or an error object
  */
-export function adminQuizTransfer(quizId: number, userId: number, userEmail: string) {
+export function adminQuizTransfer(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
   const data = getData();
 
   // Checks if the quiz exists and gets the index of the quiz
@@ -534,6 +603,18 @@ export function adminQuizTransfer(quizId: number, userId: number, userEmail: str
   return {};
 }
 
+export function adminQuizTransferV2(
+  quizId: number,
+  userId: number,
+  userEmail: string
+): Record<string, never> {
+  checkActiveGames(quizId);
+
+  adminQuizTransfer(quizId, userId, userEmail);
+
+  return {};
+}
+
 /**
  * Deletes a question from a quiz.
  *
@@ -581,6 +662,18 @@ export function adminDeleteQuizQuestion(
 
   // Delete question from its questionId
   quiz.questions.splice(validQuestionIndex, 1);
+
+  return {};
+}
+
+export function adminDeleteQuizQuestionV2(
+  quizId: number,
+  userId: number,
+  questionId: number
+): Record<string, never> {
+  checkActiveGames(quizId);
+
+  adminDeleteQuizQuestion(quizId, userId, questionId);
 
   return {};
 }
@@ -809,6 +902,88 @@ export function adminQuizQuestionUpdate(
 
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit = totalTime;
+
+  return {};
+}
+
+export function adminQuizQuestionUpdateV2(
+  userId: number,
+  quizId: number,
+  questionId: number,
+  questionBody: questionsInterface
+): Record<string, never> {
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
+
+  // Validate thumbnail
+  if (thumbnailUrl === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnailUrl.endsWith('jpg') &&
+    !thumbnailUrl.endsWith('jpeg') &&
+    !thumbnailUrl.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const v1 = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  const question = quiz.questions.find(
+    (q: questionsInterface) => q.questionId === questionId
+  );
+
+  question.thumbnailUrl = questionBody.thumbnailUrl;
+
+  return v1;
+}
+
+export function adminQuizThumbnailUpdate(
+  thumbnail: string,
+  quizId: number,
+  userId: number
+): Record<string, never> {
+  if (thumbnail === '') {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnail.startsWith('http://') && !thumbnail.startsWith('https://')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (!thumbnail.endsWith('jpg') &&
+    !thumbnail.endsWith('jpeg') &&
+    !thumbnail.endsWith('png')) {
+    throw new BetterError(
+      Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.END).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const quiz = findQuizByUser(userId, quizId);
+
+  quiz.thumbnailUrl = thumbnail;
+
+  quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
 }

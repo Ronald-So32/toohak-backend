@@ -13,15 +13,28 @@ import {
   adminQuizRemoveV2,
   adminQuizCreate,
   adminQuizGet,
+  adminQuizGetV2,
   adminQuizQuestionCreate,
+  adminQuizQuestionCreateV2,
   adminQuizDescriptionUpdate,
   adminQuizNameUpdate,
   adminQuizTransfer,
+  adminQuizTransferV2,
   adminQuizQuestionUpdate,
+  adminQuizQuestionUpdateV2,
   adminQuizQuestionMove,
   adminDeleteQuizQuestion,
-  adminQuizQuestionSuggestion
+  adminDeleteQuizQuestionV2,
+  adminQuizQuestionSuggestion,
+  adminQuizThumbnailUpdate
 } from './quiz';
+import {
+  adminQuizGameStart,
+  adminGetQuizGames,
+  adminQuizGameUpdate,
+  adminQuizGameStatus,
+  adminQuizGameResults
+} from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -51,9 +64,9 @@ const app = express();
 app.use(json());
 // Use middleware that allows for access from other domains
 app.use(cors());
-// for logging errors (print to terminal)
+// For logging errors (print to terminal)
 app.use(morgan('dev'));
-// for producing the docs that define the API
+// For producing the docs that define the API
 const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 app.get('/', (req: Request, res: Response) => res.redirect('/docs'));
 app.use('/docs', sui.serve, sui.setup(
@@ -63,10 +76,6 @@ app.use('/docs', sui.serve, sui.setup(
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
-
-// ====================================================================
-//  ================= WORK IS DONE BELOW THIS LINE ===================
-// ====================================================================
 
 // Save the current state of the data into the json file
 export function save(): void {
@@ -255,6 +264,22 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
+// GET /v2/admin/quiz/{quizid}
+app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    const result = adminQuizGetV2(userId, quizId);
+
+    return res.status(OK).json(result.details);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // POST /v1/admin/quiz/{quizid}/question
 app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -266,6 +291,24 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
     const userId = userIdResult.userId;
     adminQuizGet(userId, quizId);
     const result = adminQuizQuestionCreate(userId, quizId, questionBody);
+
+    return res.status(OK).json({ questionId: result.questionId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v2/admin/quiz/{quizid}/question
+app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    const result = adminQuizQuestionCreateV2(userId, quizId, questionBody);
 
     return res.status(OK).json({ questionId: result.questionId });
   } catch (error) {
@@ -337,6 +380,23 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   }
 });
 
+// POST /v2/admin/quiz/{quizid}/transfer
+app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { userEmail } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizTransferV2(quizId, userId, userEmail);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // PUT /v1/admin/quiz/{quizid}/question/{questionid}
 app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -356,6 +416,25 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   }
 });
 
+// PUT /v2/admin/quiz/{quizid}/question/{questionid}
+app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+  const { questionBody } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizQuestionUpdateV2(userId, quizId, questionId, questionBody);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 // DELETE /v1/admin/quiz/{quizid}/question/{questionid}
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
@@ -366,6 +445,23 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
     const userIdResult = findUserIdFromSession(session);
     const userId = userIdResult.userId;
     adminDeleteQuizQuestion(quizId, userId, questionId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const questionId = parseInt(req.params.questionid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminDeleteQuizQuestionV2(quizId, userId, questionId);
 
     return res.status(OK).json({});
   } catch (error) {
@@ -398,7 +494,7 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     const quizId = parseInt(req.params.quizid);
 
     try {
-      // Authenticate the user with the session
+    // Authenticate the user with the session
       const userIdResult = findUserIdFromSession(session);
       const userId = userIdResult.userId;
 
@@ -412,11 +508,129 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
       return res.status(OK).json({ question: result.question });
     } catch (error) {
-      // There is a BADREQUEST error (not in specsbut good for debugging when llm api not working)
+    // This is a BADREQUEST error (not in specs but good for debugging when llm api not working)
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
 
+// GET /v1/admin/quiz/{quizid}/games
+app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Verify that the user owns the quiz
+    adminQuizGet(userId, quizId);
+
+    // Retrieve games associated with the quiz
+    const games = adminGetQuizGames(userId, quizId);
+
+    return res.status(OK).json(games);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v1/admin/quiz/{quizid}/game/start
+app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { autoStartNum } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    const result = adminQuizGameStart(userId, quizId, autoStartNum);
+
+    return res.status(OK).json({ gameId: result.gameId });
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v1/admin/quiz/{quizid}/thumbnail
+app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { thumbnailUrl } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Verify user owns the quiz by calling adminQuizGet
+    adminQuizGet(userId, quizId);
+
+    // Call function to update the quiz's thumbnail
+    adminQuizThumbnailUpdate(thumbnailUrl, quizId, userId);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/admin/quiz/{quizid}/game/{gameid}
+app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    const result = adminQuizGameStatus(userId, quizId, gameId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v1/admin/quiz/{quizid}/game/{gameid}
+app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+  const { action } = req.body;
+
+  try {
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+    adminQuizGet(userId, quizId);
+    adminQuizGameUpdate(userId, quizId, gameId, action);
+
+    return res.status(OK).json({});
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET/v1/admin/quiz/quizid/game/gameid/results
+app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const gameId = parseInt(req.params.gameid);
+
+  try {
+    // Authenticate the user with the session
+    const userIdResult = findUserIdFromSession(session);
+    const userId = userIdResult.userId;
+
+    // Get the quiz details to use in the prompt
+    const result = adminQuizGameResults(userId, quizId, gameId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 // POST /v1/player/join
 app.post('/v1/player/join', (req: Request, res: Response) => {
@@ -430,10 +644,6 @@ app.post('/v1/player/join', (req: Request, res: Response) => {
     return res.status(error.statusCode).json({ error: error.message });
   }
 });
-
-// ====================================================================
-//  ================= WORK IS DONE ABOVE THIS LINE ===================
-// ====================================================================
 
 app.use((req: Request, res: Response) => {
   const error = `

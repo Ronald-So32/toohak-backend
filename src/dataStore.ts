@@ -1,3 +1,5 @@
+import { quizStates } from './functionsHelper';
+
 /**
  * Interface representing the users.
  *
@@ -59,7 +61,7 @@ export interface questionsInterface {
   timeLimit: number;
   points: number;
   answerOptions: answersInterface[];
-  // thumbnailUrl: string;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -87,6 +89,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -102,15 +105,34 @@ export interface sessionInterface {
   session: string;
 }
 
-export interface playersInterface{
-  players: string[]
+export interface usersRankedByScoreInterface {
+  playerName: string,
+  score: number
 }
 
-export interface gamesInterface{
-  state: string,
-  atQuestion: number,
-  players: playersInterface
-  metadata: quizInterface
+export interface questionResultsInterface {
+  questionId: number,
+  playersCorrect: string[],
+  playersIncorrect: string[],
+  averageAnswerTime?: number,
+  totalAnswerTime?: number,
+  percentCorrect: number
+}
+
+export interface resultsInterface {
+  usersRankedByScore: usersRankedByScoreInterface[];
+  questionResults: questionResultsInterface[];
+}
+
+export interface gameInterface {
+  gameId?:number;
+  quizId?: number;
+  state: quizStates;
+  atQuestion: number;
+  players: string[];
+  metadata: quizInterface;
+  autoStartNum?: number;
+  results: resultsInterface;
 }
 
 /**
@@ -129,7 +151,9 @@ export interface Data {
 
   highestID: number;
   sessions: sessionInterface[];
-  games: gamesInterface[];
+  games: gameInterface[];
+
+  activeTimers: Record<number, ReturnType<typeof setTimeout>>;
 }
 
 /**
@@ -142,7 +166,9 @@ const data: Data = {
 
   highestID: 0,
   sessions: [],
-  games: []
+  games: [],
+
+  activeTimers: {}
 };
 
 /**
