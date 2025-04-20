@@ -103,13 +103,16 @@ beforeEach(() => {
   playerId = responsePlayerJoin.body.playerId;
 
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
     const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
     const responsePlayerSubmit = requestPlayerAnswerSubmit(
-      currentAnswerOptions[0].answerId,
+      {
+        answerIds: [currentAnswerOptions[0].answerId]
+      },
       playerId,
       1
     );

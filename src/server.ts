@@ -713,9 +713,9 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
     const answerIds = req.body.answerIds;
   
     try {
-      const answer = playerAnswerSubmit(playerId, questionPosition, answerIds);
+      const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
 
-      return res.status(OK).json({ answer });
+      return res.status(OK).json(result);
     } catch (error) {
       return res.status(error.statusCode).json({ error: error.message });
     }
