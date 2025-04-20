@@ -301,6 +301,7 @@ export function adminQuizGameResults(
     );
   }
 
+  // From here
   const results: {
     usersRankedByScore: usersRankedByScoreInterface[];
     questionResults: questionResultsInterface[];
@@ -308,6 +309,11 @@ export function adminQuizGameResults(
     usersRankedByScore: [],
     questionResults: []
   };
+
+  const playerScores: Record<string, number> = {};
+  game.players.forEach(player => {
+    playerScores[player] = 0;
+  });
 
   for (const question of game.metadata.questions) {
     const questionId = question.questionId;
@@ -329,10 +335,26 @@ export function adminQuizGameResults(
       );
     }
 
+    questionResult.playersCorrect.forEach((player, index) => {
+      const position = index + 1;
+      const scalingFactor = 1 / position;
+      const points = question.points;
+      const questionScore = points * scalingFactor;
+
+      playerScores[player] += questionScore;
+    });
+
     results.questionResults.push(questionResult);
   }
 
+  results.usersRankedByScore = Object.entries(playerScores)
+  .map(([playerName, score]) => ({ playerName, score }))
+  .sort((a, b) => b.score - a.score);
 
-
+  game.results = results
+  // To Here
+  // Should be moved into a helper that updates the results every state
+  // Could be optimised to not overwrite and recalcate if possible
+  
   return results;
 }
