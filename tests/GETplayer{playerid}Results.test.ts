@@ -4,10 +4,10 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
-  requestAdminUpdateGame,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestPlayerResults,
+  requestPlayerFinalResults,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -69,7 +69,7 @@ beforeEach(() => {
   questionId = responseQuestionCreat.body.questionId
   timeLastEdited = Math.floor(Date.now() / 1000);
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
   const responsePlayerJoin = requestPlayerJoin(
@@ -78,15 +78,15 @@ beforeEach(() => {
   );
   playerId = requestGetPlayer.body.playerId;
 
-  requestAdminUpdateGame(quizId, gameId, session, "NEXT_QUESTION");
-  requestAdminUpdateGame(quizId, gameId, session, "SKIP_COUNTDOWN");
-  requestAdminUpdateGame(quizId, gameId, session, "GO_TO_ANSWER");
-  requestAdminUpdateGame(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_ANSWER");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
-    const responseGetGameResult = requestPlayerResults(playerId);
+    const responseGetGameResult = requestPlayerFinalResults(playerId);
     expect(responseGetGameResult.body).toStrictEqual({
       usersRankedByScore: [
         {
@@ -109,20 +109,20 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   describe('Testing for error responses', () => {
 
     test('Testing when player does not exist in game', () => {
-      const responseGetGameResult = requestPlayerResults(playerId + playerIdOffset);
+      const responseGetGameResult = requestPlayerFinalResults(playerId + playerIdOffset);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when game player is in hasn\'t ended', () => {
-      const responseGameStart = requestAdminStartGame(session, quizId, 3);
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
       const responsePlayerJoin = requestPlayerJoin(
         gameId,
         'Name'
       );
       playerId = requestGetPlayer.body.playerId;
-      const responseGetGameResult = requestPlayerResults(playerId);
+      const responseGetGameResult = requestPlayerFinalResults(playerId);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
