@@ -1,17 +1,13 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
+  requestAdminQuizGameStart,
   requestPlayerJoin,
-  requestGetPlayer,
+  requestPlayerStatus,
   OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  BADREQUEST
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -43,7 +39,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -64,10 +60,10 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
   timeLastEdited = Math.floor(Date.now() / 1000);
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
   const responsePlayerJoin = requestPlayerJoin(
@@ -75,25 +71,25 @@ beforeEach(() => {
     'Name'
   );
   
-  playerId = requestGetPlayer.body.playerId
+  playerId = responsePlayerJoin.body.playerId
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const requestGetPlayer = requestGetPlayer(playerId);
-    expect(requestGetPlayer.body).toStrictEqual({
-      state: LOBBY,
+    const responsePlayerJoin = requestPlayerStatus(playerId);
+    expect(responsePlayerJoin.body).toStrictEqual({
+      state: "LOBBY",
       numQuestions: expect.any(number),
       atQuestion: expect.any(number)
     });
-    expect(requestGetPlayer.statusCode).toStrictEqual(OK);
+    expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const requestGetPlayer = requestGetPlayer(playerId + playerIdOffset);
-      expect(requestGetPlayer.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetPlayer.statusCode).toStrictEqual(BADREQUEST);
+      const responsePlayerJoin = requestPlayerStatus(playerId + playerIdOffset);
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
     });
   });
 
