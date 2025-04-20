@@ -66,7 +66,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
   timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -78,10 +78,10 @@ beforeEach(() => {
   );
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_ANSWER");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
@@ -107,7 +107,6 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   });
 
   describe('Testing for error responses', () => {
-
     test('Testing when player does not exist in game', () => {
       const responseGetGameResult = requestPlayerFinalResults(playerId + playerIdOffset);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
@@ -126,6 +125,5 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
-
   });
 });

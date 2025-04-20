@@ -698,7 +698,7 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   try {
     const result = playerFinalResults(playerId);
 
-    return res.status(OK).json({ result });
+    return res.status(OK).json(result);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }
