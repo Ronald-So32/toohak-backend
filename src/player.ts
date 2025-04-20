@@ -92,7 +92,7 @@ export function adminQuizGameStart(
     gameId: id,
     quizId: quizId,
     state: quizStates.LOBBY,
-    atQuestion: 1,
+    atQuestion: 0,
     players: [],
     metadata: quiz,
     autoStartNum: autoStartNum,
@@ -125,7 +125,7 @@ export function adminQuizGameUpdate(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-
+  
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -365,5 +365,13 @@ export function adminQuizGameResults(
   // Should be moved into a helper that updates the results every state
   // Could be optimised to not overwrite and recalcate if possible
   
-  return results;
+  return {
+    usersRankedByScore: results.usersRankedByScore,
+    questionResults: results.questionResults.map(qr => ({
+      questionId: qr.questionId,
+      playersCorrect: qr.playersCorrect,
+      averageAnswerTime: qr.averageAnswerTime,
+      percentCorrect: qr.percentCorrect
+    }))
+  };
 }

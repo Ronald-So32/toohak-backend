@@ -10,7 +10,8 @@ import {
   BADREQUEST,
   UNAUTHORISED,
   FORBIDDEN,
-  quizIdOffset
+  quizIdOffset,
+  requestAdminQuizGameStatus
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -67,11 +68,20 @@ beforeEach(() => {
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
+  const responseStatus1 = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseStatus1.body.state).toStrictEqual("LOBBY");
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  const responseStatus2 = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseStatus2.body.state).toStrictEqual("QUESTION_COUNTDOWN");
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
-  const slync = require('slync');
-  slync(4727);
+  const responseStatus3 = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseStatus3.body.state).toStrictEqual("QUESTION_OPEN");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_ANSWER");
+  const responseStatus4 = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseStatus4.body.state).toStrictEqual("ANSWER_SHOW");
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
+  const responseStatus5 = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseStatus5.body.state).toStrictEqual("FINAL_RESULTS");
 
 });
 
