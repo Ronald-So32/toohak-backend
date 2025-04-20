@@ -430,7 +430,7 @@ export function playerJoin(
     );
   }
 
-  if (game.state != quizStates.LOBBY) {
+  if (game.state !== quizStates.LOBBY) {
     throw new BetterError(
       Errors.invalidPlayerName().error,
       ErrorCodes.BADREQUEST

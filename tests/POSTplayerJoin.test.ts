@@ -16,10 +16,10 @@ const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
-let questionId: number;
+// let questionId: number;
 let gameId: number;
-let timeCreated: number;
-let timeLastEdited: number;
+// let timeCreated: number;
+// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -35,10 +35,10 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now() / 1000);
+  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -59,8 +59,8 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId;
-  timeLastEdited = Math.floor(Date.now() / 1000);
+  // questionId = responseQuestionCreate.body.questionId;
+  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
