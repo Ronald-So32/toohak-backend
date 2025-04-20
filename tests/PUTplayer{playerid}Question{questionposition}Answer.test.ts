@@ -46,7 +46,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  let reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -67,9 +67,9 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
 
-  reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -90,7 +90,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId;
+  questionId = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -100,9 +100,9 @@ beforeEach(() => {
     'Name'
   );
   
-  playerId = requestGetPlayer.body.playerId;
+  playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
