@@ -33,7 +33,8 @@ import {
   adminGetQuizGames,
   adminQuizGameUpdate,
   adminQuizGameStatus,
-  adminQuizGameResults
+  adminQuizGameResults,
+  playerJoin
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -627,6 +628,19 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Respo
     const result = adminQuizGameResults(userId, quizId, gameId);
 
     return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v1/player/join
+app.post('/v1/player/join', (req: Request, res: Response) => {
+  const { gameId, playerName } = req.body;
+
+  try {
+    const result = playerJoin(gameId, playerName);
+
+    return res.status(OK).json({ playerId: result.playerId });
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
   }

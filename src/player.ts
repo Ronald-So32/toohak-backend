@@ -94,6 +94,7 @@ export function adminQuizGameStart(
     state: quizStates.LOBBY,
     atQuestion: 0,
     players: [],
+    playersWithId: [],
     metadata: quiz,
     autoStartNum: autoStartNum,
     results: initialiseResults
@@ -374,4 +375,72 @@ export function adminQuizGameResults(
       percentCorrect: qr.percentCorrect
     }))
   };
+}
+
+export function playerJoin(
+  gameId: number,
+  playerName: string
+) {
+  const data = getData();
+
+  const game = data.games.find(
+    g => g.gameId === gameId
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (playerName === '') {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    let randomLetters = '';
+    while (randomLetters.length < 5) {
+      const randomChar = letters[Math.floor(Math.random() * letters.length)];
+      if (!randomLetters.includes(randomChar)) {
+        randomLetters += randomChar;
+      }
+    }
+
+    const numbers = '0123456789';
+    let randomNumbers = '';
+    while (randomNumbers.length < 3) {
+      const randomNum = numbers[Math.floor(Math.random() * numbers.length)];
+      if (!randomNumbers.includes(randomNum)) {
+        randomNumbers += randomNum;
+      }
+    }
+
+    playerName = randomLetters + randomNumbers;
+  }
+
+  if (!/^[a-zA-Z0-9]+$/.test(playerName)) {
+    throw new BetterError(
+      Errors.invalidPlayerName().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.players.some(p => p === playerName)) {
+    throw new BetterError(
+      Errors.invalidPlayerName().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.LOBBY) {
+    throw new BetterError(
+      Errors.invalidPlayerName().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const playerId = createUUID();
+
+  game.players.push(playerName);
+  game.playersWithId.push({ playerName, playerId });
+
+  return { playerId };
 }
