@@ -102,6 +102,7 @@ beforeEach(() => {
   playerId = responsePlayerJoin.body.playerId;
 
   requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
@@ -111,7 +112,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       questionId: questionId,
       question: 'Who is the Monarch of England?',
       timeLimit: 4,
-      thumbnailUrl: 'http://google.com/some/image/path.jpg',
+      thumbnailUrl: '',
       points: 5,
       answerOptions: [
         {
