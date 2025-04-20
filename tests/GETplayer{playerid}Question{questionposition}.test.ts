@@ -4,10 +4,10 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAdminStartGame,
-  requestAdminUpdateGame,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestGetPlayerQuestion,
+  requestPlayerQuestionInfo,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -44,7 +44,7 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  let reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  let responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -65,9 +65,9 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId
+  questionId = responseQuestionCreate.body.questionId
 
-  reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  let responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -88,9 +88,9 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreat.body.questionId;
+  questionId = responseQuestionCreate2.body.questionId;
 
-  const responseGameStart = requestAdminStartGame(session, quizId, 3);
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
   const responsePlayerJoin = requestPlayerJoin(
@@ -98,14 +98,14 @@ beforeEach(() => {
     'Name'
   );
   
-  playerId = requestGetPlayer.body.playerId;
+  playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminUpdateGame(quizId, gameId, session, NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const requestGetPlayerQuestion = requestGetPlayerQuestion(playerId, 1);
+    const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
     expect(requestGetPlayerQuestion.body).toStrictEqual({
       questionId: questionId,
       question: 'Who is the Monarch of England?',
@@ -130,19 +130,19 @@ describe('Testing GET /v1/player/{playerid}', () => {
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const requestGetPlayerQuestion = requestGetPlayerQuestion(playerId + playerIdOffset);
+      const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId + playerIdOffset, 1);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when question position given is not valid for the game', () => {
-      const requestGetPlayerQuestion = requestGetPlayerQuestion(playerId, 3);
+      const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 3);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing when game is not currently on the question', () => {
-      const requestGetPlayerQuestion = requestGetPlayerQuestion(playerId, 2);
+      const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 2);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
     });
