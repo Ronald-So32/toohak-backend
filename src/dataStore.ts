@@ -1,3 +1,5 @@
+import { quizStates } from './functionsHelper';
+
 /**
  * Interface representing the users.
  *
@@ -51,6 +53,7 @@ export interface answersInterface {
  * @property {number} timeLimit - Time limit to answer in seconds
  * @property {number} points - Points awarded for correct answer
  * @property {answersInterface[]} answerOptions - Available answer options
+ * @property {string} thumbnailUrl - The url of the thumbnail
  */
 export interface questionsInterface {
   questionId?: number;
@@ -58,6 +61,7 @@ export interface questionsInterface {
   timeLimit: number;
   points: number;
   answerOptions: answersInterface[];
+  thumbnailUrl?: string;
 }
 
 /**
@@ -85,6 +89,7 @@ export interface quizInterface {
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
+  thumbnailUrl?: string;
 }
 
 /**
@@ -98,6 +103,42 @@ export interface quizInterface {
 export interface sessionInterface {
   userId: number;
   session: string;
+}
+
+export interface usersRankedByScoreInterface {
+  playerName: string,
+  score: number
+}
+
+export interface questionResultsInterface {
+  questionId: number,
+  playersCorrect: string[],
+  playersIncorrect: string[],
+  averageAnswerTime?: number,
+  totalAnswerTime?: number,
+  percentCorrect: number
+}
+
+export interface resultsInterface {
+  usersRankedByScore: usersRankedByScoreInterface[];
+  questionResults: questionResultsInterface[];
+}
+
+export interface playersInterface{
+  playerName: string;
+  playerId: number;
+}
+
+export interface gameInterface {
+  gameId?:number;
+  quizId?: number;
+  state: quizStates;
+  atQuestion: number;
+  players: string[];
+  playersWithId?: playersInterface[];
+  metadata: quizInterface;
+  autoStartNum?: number;
+  results: resultsInterface;
 }
 
 /**
@@ -116,6 +157,9 @@ export interface Data {
 
   highestID: number;
   sessions: sessionInterface[];
+  games: gameInterface[];
+
+  activeTimers: Record<number, ReturnType<typeof setTimeout>>;
 }
 
 /**
@@ -127,7 +171,10 @@ const data: Data = {
   quizzes: [],
 
   highestID: 0,
-  sessions: []
+  sessions: [],
+  games: [],
+
+  activeTimers: {}
 };
 
 /**
