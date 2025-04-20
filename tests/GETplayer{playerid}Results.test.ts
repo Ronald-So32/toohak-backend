@@ -78,10 +78,10 @@ beforeEach(() => {
   );
   playerId = requestGetPlayer.body.playerId;
 
-  requestAdminUpdateGame(quizId, gameId, session, NEXT_QUESTION);
-  requestAdminUpdateGame(quizId, gameId, session, SKIP_COUNTDOWN);
-  requestAdminUpdateGame(quizId, gameId, session, GO_TO_ANSWER);
-  requestAdminUpdateGame(quizId, gameId, session, GO_TO_FINAL_RESULTS);
+  requestAdminUpdateGame(quizId, gameId, session, "NEXT_QUESTION");
+  requestAdminUpdateGame(quizId, gameId, session, "SKIP_COUNTDOWN");
+  requestAdminUpdateGame(quizId, gameId, session, "GO_TO_ANSWER");
+  requestAdminUpdateGame(quizId, gameId, session, "GO_TO_FINAL_RESULTS");
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
@@ -98,8 +98,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         {
           questionId: questionId,
           playersCorrect: [],
-          averageAnswerTime: expect.any(number),
-          percentCorrect: expect.any(number)
+          averageAnswerTime: expect.any(Number),
+          percentCorrect: expect.any(Number)
         }
       ]
     });
