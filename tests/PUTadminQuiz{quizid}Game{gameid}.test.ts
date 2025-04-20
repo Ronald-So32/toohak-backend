@@ -576,7 +576,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
           const slync = require('slync');
-          slync(1000);
+          slync(4727);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -726,7 +726,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     inactiveGames: []
   });
   const slync = require('slync');
-  slync(1000);
+  slync(4727);
 
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_CLOSE);

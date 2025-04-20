@@ -93,7 +93,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
     );
     expect(responseGetGame.body).toStrictEqual({
       state: quizStates.LOBBY,
-      atQuestion: 1,
+      atQuestion: 0,
       players: [
         // 'Name'
       ],
