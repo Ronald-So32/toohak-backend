@@ -72,7 +72,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       gameId,
       'Name'
     );
-    expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
+    expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
     expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
   });
 
@@ -82,8 +82,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         gameId,
         'name!@#$%^&*()_+'
       );
-      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
-      expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
     });
 
     test('Testing player name entered is not unique', () => {
@@ -91,7 +91,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         gameId,
         'Name'
       );
-      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number)});
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
       expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
 
       responsePlayerJoin = requestPlayerJoin(
