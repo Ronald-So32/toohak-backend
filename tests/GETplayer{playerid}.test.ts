@@ -39,7 +39,7 @@ beforeEach(() => {
   // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  /*const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
     quizId,
     session,
     {

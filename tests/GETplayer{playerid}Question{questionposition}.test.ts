@@ -66,7 +66,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId
+  questionId = responseQuestionCreate.body.questionId;
 
   const responseQuestionCreate2 = requestAdminQuizQuestionCreate(
     quizId,
@@ -98,11 +98,11 @@ beforeEach(() => {
     gameId,
     'Name'
   );
-  
+
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "NEXT_QUESTION");
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, "SKIP_COUNTDOWN");
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {

@@ -664,11 +664,11 @@ app.get('/v1/player/:playerid', (req: Request, res: Response) => {
 // GET /v1/player/{playerid}/question/{questionposition}
 app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
-  const questionPosition  = parseInt(req.params.questionposition);
-  
+  const questionPosition = parseInt(req.params.questionposition);
+
   try {
     const result = playerQuestion(playerId, questionPosition);
-    
+
     return res.status(OK).json(result);
   } catch (error) {
     return res.status(error.statusCode).json({ error: error.message });
