@@ -526,3 +526,10 @@ export function playerQuestion(
     }))
   };
 }
+
+export function playerQuestionResults(
+  playerId: number,
+  questionPosition: number
+) {
+
+}
