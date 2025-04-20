@@ -121,7 +121,9 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing player Id does not exist', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [currentAnswerOptions[0].answerId],
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
         playerId + playerIdOffset,
         1
       );
@@ -132,7 +134,9 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when question position given is not valid for the game', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 3).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [currentAnswerOptions[0].answerId],
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
         playerId,
         3
       );
@@ -142,9 +146,11 @@ describe('Testing GET /v1/player/{playerid}', () => {
 
     test('Testing when game is not in QUESTION_OPEN state', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, END);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, "END");
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [currentAnswerOptions[0].answerId],
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
         playerId,
         1
       );
@@ -155,7 +161,9 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when game is not currently on the question', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 2).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [currentAnswerOptions[0].answerId],
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
         playerId,
         2
       );
@@ -166,7 +174,9 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when answer is not valid for this particular question', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 2).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [currentAnswerOptions[0].answerId + answerIdOffset],
+        {
+          answerIds: [currentAnswerOptions[0].answerId + answerIdOffset]
+        },
         playerId,
         1
       );
@@ -177,10 +187,12 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when duplicate answerId provdied', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [
-          currentAnswerOptions[0].answerId,
-          currentAnswerOptions[0].answerId
-        ],
+        {
+          answerIds: [
+            currentAnswerOptions[0].answerId,
+            currentAnswerOptions[0].answerId
+          ]
+        },
         playerId,
         1
       );
@@ -191,7 +203,9 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when less then 1 answer was submitted', () => {
       const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
-        [],
+        {
+          answerIds: []
+        },
         playerId,
         1
       );
