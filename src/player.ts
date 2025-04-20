@@ -574,3 +574,8 @@ export function playerQuestionResults(
     percentCorrect: question.percentCorrect,
   };
 }
+
+export function playerFinalResults(playerId: number) {
+
+  return {}
+}
