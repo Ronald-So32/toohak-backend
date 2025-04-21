@@ -111,3 +111,11 @@ export function importJSON(
 
   return { quizId };
 }
+
+export function attachments(
+  session: string,
+  quizId: number,
+  attachment: string
+) {
+  
+}

@@ -956,7 +956,7 @@ export function adminQuizThumbnailUpdate(
   quizId: number,
   userId: number
 ): Record<string, never> {
-  if (thumbnail === '') {
+  if (!thumbnail || thumbnail === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
