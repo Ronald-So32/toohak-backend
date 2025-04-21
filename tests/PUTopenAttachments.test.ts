@@ -68,13 +68,21 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
   test('Testing correct return value', () => {
-    const responseQuestionUpdate = requestAttachment();
+    const responseQuestionUpdate = requestAttachment(
+      session,
+      quizId,
+      'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
+    );
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
   });
 
   test('Intended', () => {
-    const responseQuestionUpdate = requestAttachment();
+    const responseQuestionUpdate = requestAttachment(
+      session,
+      quizId,
+      'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
+    );
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
 

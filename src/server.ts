@@ -773,8 +773,8 @@ app.get('/v1/open/import', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/open/attachments/{quizid}
-app.put('/v1/open/attachments/:quizid', (req: Request, res: Response) => {
+// PUT /v1/open/attachment/{quizid}
+app.put('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
   const { attachment } = req.body;

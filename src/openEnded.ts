@@ -4,7 +4,8 @@ import {
   findQuizByUser,
   BetterError,
   ErrorCodes,
-  createUUID
+  createUUID,
+  Errors
 } from './functionsHelper';
 import {
   adminQuizCreate,

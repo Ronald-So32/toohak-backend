@@ -249,6 +249,7 @@ export class Errors {
   static readonly invalidPlayerError = 'Invalid player ID';
   static readonly invalidAnswerError = 'Invalid answer ID';
   static readonly invalidQuestionPositionError = 'Invalid question position';
+  static readonly invalidAttachmentNumberError = 'Invalid attachment number';
 
   // Error for invalid name
   static invalidString(type: string, specific: string): errorInterface {
@@ -338,6 +339,11 @@ export class Errors {
   // Error when answer ID is invalid
   static invalidAnswer(): errorInterface {
     return { error: this.invalidAnswerError };
+  }
+
+  // Error when attachment number is invalid
+  static invalidAttachmentNumber(): errorInterface {
+    return { error: this.invalidAttachmentNumberError };
   }
 }
 

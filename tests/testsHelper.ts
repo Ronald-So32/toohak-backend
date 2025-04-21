@@ -787,16 +787,16 @@ export function requestQuizImport(
 }
 
 /**
- * Wrapper for PUT /v1/open/attachments/{quizid}
+ * Wrapper for PUT /v1/open/attachment/{quizid}
  */
-export function requestAttachments(
+export function requestAttachment(
   session: string,
   quizId: number,
   attachment: string
 ): responseInterface {
   return makeRequest(
     'PUT',
-    `/v1/open/attachments/${quizId}`,
+    `/v1/open/attachment/${quizId}`,
     { attachment },
     { session }
   );
