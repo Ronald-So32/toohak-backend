@@ -18,6 +18,8 @@ let session: string;
 let quizId: number;
 let timeCreated: number;
 
+// Before each test clears existing data and registers an user, creating a quiz 
+// then gets the session, time the quiz was created an the quizId.
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -38,11 +40,14 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the thumbnail of the quiz
     const responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
       'http://google.com/some/image/path.jpg'
     );
+    // Checks that a valid request to update thumbnail returns an empty object
+    // and a status code of 200
     expect(responseThumbnail.body).toStrictEqual({});
     expect(responseThumbnail.statusCode).toStrictEqual(OK);
   });
@@ -64,6 +69,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           'http://google.com/some/image/path.jpg'
         );
+        // Checks that a unauthorised request to update thumbnail returns an empty object
+        // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(UNAUTHORISED);
       });
@@ -76,6 +83,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           'http://google.com/some/image/path.jpg'
         );
+        // Checks that a forbidden request to update thumbnail returns an empty object
+        // and a status code of 403
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
       });
@@ -130,6 +139,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
+        // Checks that a invalid request to update thumbnail returns an empty object
+        // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
       });
@@ -240,6 +251,21 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/thumbnail works as intended', () => {
+    // Gets the details of the quiz to checks that there's no thumbnail
+    let responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeCreated,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    
+    // Adds a thumbnail for the quiz
     let responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
@@ -247,9 +273,11 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     );
     expect(responseThumbnail.body).toStrictEqual({});
     expect(responseThumbnail.statusCode).toStrictEqual(OK);
+    // Gets the current time
     let timeLastEdited = Math.floor(Date.now()/1000);
 
-    let responseQuizDetails = requestGetQuizV2(quizId, session);
+    // Gets the latest details of the quiz to checks that the thumbnail is there
+    responseQuizDetails = requestGetQuizV2(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
       name: 'Name',
@@ -263,6 +291,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(OK);
 
+    // Updates the thumbnail of the quiz
     responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
@@ -272,6 +301,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     expect(responseThumbnail.statusCode).toStrictEqual(OK);
     timeLastEdited = Math.floor(Date.now()/1000);
 
+    // Checks that the thumbnail is updated
     responseQuizDetails = requestGetQuizV2(quizId, session);
     expect(responseQuizDetails.body).toStrictEqual({
       quizId: quizId,
