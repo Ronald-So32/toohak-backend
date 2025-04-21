@@ -22,7 +22,9 @@ let session: string;
 let quizId: number;
 let gameId: number;
 
-//
+// Before each test clears the existing data and registers an user and
+// then creates a quiz with 2 questions in it getting the session and quiz id
+// and also starts a game and gets it game id
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -45,7 +47,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -91,12 +93,15 @@ beforeEach(() => {
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the state of the game
     const responseUpdateGame = requestAdminQuizGameStateUpdate(
       quizId,
       gameId,
       session,
       actions.NEXT_QUESTION
     );
+    // Checks that a valid request to update the state returns an empty object
+    // and a status code of 200
     expect(responseUpdateGame.body).toStrictEqual({});
     expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
   });
@@ -119,6 +124,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           session,
           actions.NEXT_QUESTION
         );
+        // Checks that a unauthorised request to update the state returns an error object
+        // and a status code of 401
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
@@ -132,6 +139,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           session,
           actions.NEXT_QUESTION
         );
+        // Checks that a forbidden request to update the state returns an error object
+        // and a status code of 403
         expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
@@ -162,6 +171,8 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         session,
         actions.NEXT_QUESTION
       );
+      // Checks that a invalid request to update the state returns an error object
+        // and a status code of 400
       expect(responseUpdateGame.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
@@ -293,6 +304,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+          // Imports slync and then waits for 1 second to get to QUSETION_CLOSE state
           const slync = require('slync');
           slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
@@ -575,7 +587,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
           const slync = require('slync');
-          slync(4727);
+          slync(1000);
           responseUpdateGame = requestAdminQuizGameStateUpdate(
             quizId,
             gameId,
@@ -585,7 +597,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
-          // TODO CHECK WITH GET GAMES (check state and question num)
         });
       });
 
@@ -674,9 +685,11 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
 });
 
 test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () => {
+  // Gets the latest status of the current game and checks the state of the game
   let responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.LOBBY);
-
+  
+  // Gets the list of games for the quiz and checks that it's in the correct list.
   let responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
     activeGames: [
@@ -694,9 +707,11 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
+  // Checks that that game is in QUESTION_COUNTDOWN
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_COUNTDOWN);
 
+  // Checks that that game is still active
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
     activeGames: [
@@ -714,6 +729,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
+  // Checks that that game is in QUESTION_OPEN
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_OPEN);
 
@@ -725,8 +741,9 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     inactiveGames: []
   });
   const slync = require('slync');
-  slync(4727);
+  slync(1000);
 
+  // Checks that that game is in QUESTION_CLOSE
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_CLOSE);
 
@@ -747,6 +764,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
+  // Checks that that game is in ANSWER_SHOW
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.ANSWER_SHOW);
 
@@ -819,6 +837,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
+  // Checks that that game is in FINAL_RESULTS
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.FINAL_RESULTS);
 
@@ -839,9 +858,11 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   expect(responseUpdateGame.body).toStrictEqual({});
   expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
 
+  // Checks that that game is in END
   responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.END);
 
+  // Checks that the game is inactive
   responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({
     activeGames: [],

@@ -69,7 +69,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           'http://google.com/some/image/path.jpg'
         );
-        // Checks that a unauthorised request to update thumbnail returns an empty object
+        // Checks that a unauthorised request to update thumbnail returns an error object
         // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
@@ -83,7 +83,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           'http://google.com/some/image/path.jpg'
         );
-        // Checks that a forbidden request to update thumbnail returns an empty object
+        // Checks that a forbidden request to update thumbnail returns an error object
         // and a status code of 403
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -139,7 +139,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
-        // Checks that a invalid request to update thumbnail returns an empty object
+        // Checks that a invalid request to update thumbnail returns an error object
         // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
         expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
