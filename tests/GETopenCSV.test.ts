@@ -83,22 +83,14 @@ beforeEach(() => {
 describe('Testing GET /v1/open/CSV', () => {
   test('Testing the code 200 return value', () => {
     const responseGetGameResult = requestCSV(playerId);
-    expect(responseGetGameResult.body).toStrictEqual({
-      usersRankedByScore: [
-        {
-          playerName: 'Name',
-          score: 0
-        }
-      ],
-      questionResults: [
-        {
-          questionId: questionId,
-          playersCorrect: [],
-          averageAnswerTime: expect.any(Number),
-          percentCorrect: expect.any(Number)
-        }
-      ]
-    });
+    expect(responseGetGameResult.body).toStrictEqual(
+      "usersRankedByScore\n" +
+      "playerName,score\n" +
+      "Name,0\n\n" +
+      "questionResults\n" +
+      "questionId,playersCorrect,averageAnswerTime,percentCorrect\n" +
+      "3,,0,0"
+    );
     expect(responseGetGameResult.statusCode).toStrictEqual(OK);
   });
 
