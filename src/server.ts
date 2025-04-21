@@ -724,8 +724,8 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
   }
 });
 
-// GET /v1/open/csv
-app.get('/v1/open/csv',
+// GET /v1/open/csv/{playerid}
+app.get('/v1/open/csv/:playerid',
   (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 

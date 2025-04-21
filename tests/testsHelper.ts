@@ -739,3 +739,15 @@ export function requestPlayerFinalResults(
     `/v1/player/${playerId}/results`
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/csv
+ */
+export function requestCSV(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/csv/${playerId}`
+  );
+}
