@@ -45,7 +45,8 @@ import {
   createCSV,
   exportJSON,
   importJSON,
-  attachments
+  attachments,
+  seeAttachments
 } from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -782,6 +783,22 @@ app.put('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   try {
     const userId = findUserIdFromSession(session).userId;
     const result = attachments(userId, quizId, attachment);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/attachment/{quizid}
+app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { attachmentNumber } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = seeAttachments(userId, quizId, attachmentNumber);
 
     return res.status(OK).json(result);
   } catch (error) {
