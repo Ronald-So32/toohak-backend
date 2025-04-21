@@ -1886,6 +1886,34 @@ paths:
           schema:
             $ref: '#/components/return/Error'
 
+  /v1/open/import:
+    get:
+      summary: Generate a CSV file of the game's final results
+      description: Convert the final results into a CSV and display it
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/header/Session'
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            example:
+              fileName: "examplefile.json"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        400:
+          description: The directory ./jsonFiles does not exist
+          schema:
+            $ref: '#/components/return/Error'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
 
 securityDefinitions:
   Iteration 3 Session Authentication:

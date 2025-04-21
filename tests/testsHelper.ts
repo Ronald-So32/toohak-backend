@@ -757,16 +757,15 @@ export function requestCSV(
 }
 
 /**
- * Wrapper for GET /v1/open/
+ * Wrapper for GET /v1/open/export/{quizid}
  */
-export function requestCSV(
-  playerId: number,
+export function requestExport(
   quizId: number,
   session: string
 ): responseInterface {
   return makeRequest(
     'GET',
-    `/v1/open/csv/${quizId}/${playerId}`,
+    `/v1/open/export/${quizId}`,
     null,
     { session }
   );
