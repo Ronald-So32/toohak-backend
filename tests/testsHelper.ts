@@ -759,7 +759,7 @@ export function requestCSV(
 /**
  * Wrapper for GET /v1/open/export/{quizid}
  */
-export function requestExport(
+export function requestQuizExport(
   quizId: number,
   session: string
 ): responseInterface {
@@ -774,7 +774,7 @@ export function requestExport(
 /**
  * Wrapper for GET /v1/open/import
  */
-export function requestImport(
+export function requestQuizImport(
   fileName: string,
   session: string
 ): responseInterface {

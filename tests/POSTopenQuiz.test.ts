@@ -3,23 +3,27 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
+  requestQuizExport,
   requestQuizImport,
   OK,
   BADREQUEST,
   FORBIDDEN,
-  UNAUTHORISED
+  UNAUTHORISED,
+  requestGetQuizList
 } from './testsHelper';
 
 import { describe } from 'node:test';
 
 
 let session: string;
+let session2: string;
 let quizId: number;
 // let questionId: number;
 let gameId: number;
 let playerId: number;
 // let timeCreated: number;
 // let timeLastEdited: number;
+let fileName: string;
 
 beforeEach(() => {
   requestClear();
@@ -60,24 +64,51 @@ beforeEach(() => {
     }
   );
   // questionId = responseQuestionCreate.body.questionId;
+  fileName = requestQuizExport(quizId, session).body.file;
+  const responseRegister2 = requestAdminAuthRegister(
+    'z727f7272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session2 = responseRegister2.body.session;
 });
 
 describe('Testing GET /v1/open/CSV', () => {
   test('Testing the code 200 return value', () => {
-    const responseQuizExport = requestQuizImport(quizId, session);
-    expect(responseQuizExport.body).toStrictEqual(
-      'usersRankedByScore\n' +
-      'playerName,score\n' +
-      'Name,0\n\n' +
-      'questionResults\n' +
-      'questionId,playersCorrect,averageAnswerTime,percentCorrect\n' +
-      '3,,0,0'
-    );
+    const responseQuizExport = requestQuizImport(fileName, session2);
+    expect(responseQuizExport.body).toStrictEqual({ quizId: responseQuizExport.body.quizId });
     expect(responseQuizExport.statusCode).toStrictEqual(OK);
   });
 
+  test('Intended', () => {
+    const responseQuizExport = requestQuizImport(fileName, session2);
+    expect(responseQuizExport.body).toStrictEqual({ quizId: responseQuizExport.body.quizId });
+    expect(responseQuizExport.statusCode).toStrictEqual(OK);
 
+    // See that they both have it
 
+    const responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({
+      quizzes: [
+        {
+          name: "Name",
+          quizId,
+        },
+      ],
+    });
+    expect(responseList.statusCode).toStrictEqual(OK);
 
+    const responseList2 = requestGetQuizList(session2);
+    expect(responseList2.body).toStrictEqual({
+      quizzes: [
+        {
+          name: "Name",
+          quizId: responseQuizExport.body.quizId,
+        },
+      ],
+    });
+    expect(responseList2.statusCode).toStrictEqual(OK);
+  });
 
 });

@@ -65,14 +65,38 @@ beforeEach(() => {
 describe('Testing GET /v1/open/CSV', () => {
   test('Testing the code 200 return value', () => {
     const responseQuizExport = requestQuizExport(quizId, session);
-    expect(responseQuizExport.body).toStrictEqual(
-      'usersRankedByScore\n' +
-      'playerName,score\n' +
-      'Name,0\n\n' +
-      'questionResults\n' +
-      'questionId,playersCorrect,averageAnswerTime,percentCorrect\n' +
-      '3,,0,0'
-    );
+    expect(responseQuizExport.body).toStrictEqual({
+      file: responseQuizExport.body.file,
+      newJSON: {
+        name: 'Name',
+        description: 'Description',
+        numQuestions: 1,
+        questions: [
+          {
+            questionId: expect.any(Number),
+            question: 'Who is the Monarch of England?',
+            timeLimit: 4,
+            points: 5,
+            answerOptions: [
+              {
+                answer: 'Prince Charles',
+                correct: true,
+                answerId: expect.any(Number),
+                colour: expect.any(String)
+              },
+              {
+                answer: 'Queen Elizibeth',
+                correct: false,
+                answerId: expect.any(Number),
+                colour: expect.any(String)
+              }
+            ]
+          }
+        ],
+        timeLimit: 4,
+        thumbnailUrl: ''
+      }
+    });
     expect(responseQuizExport.statusCode).toStrictEqual(OK);
   });
 

@@ -1844,8 +1844,8 @@ paths:
 
   /v1/open/export/{quizid}:
     get:
-      summary: Generate a CSV file of the game's final results
-      description: Convert the final results into a CSV and display it
+      summary: Generate a JSON file of the quiz
+      description:
       tags:
         - "Open Ended"
       parameters:
@@ -1857,22 +1857,28 @@ paths:
           schema:
             type: object
             properties:
-              name:
+              file:
                 type: string
-                example: This is the name of the quiz
-              description:
-                type: string
-                example: This quiz is so we can have a lot of fun
-              numQuestions:
-                $ref: '#/components/prim/NumQuestions'
-              questions:
-                type: array
-                items:
-                  $ref: '#/components/group/QuizQuestion'
-              timeLimit:
-                $ref: '#/components/prim/Duration'
-              thumbnailUrl:
-                $ref: '#/components/prim/Url'
+                example: "./jsonFiles/Name_1745242766.json"
+              newJSON:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: This is the name of the quiz
+                  description:
+                    type: string
+                    example: This quiz is so we can have a lot of fun
+                  numQuestions:
+                    $ref: '#/components/prim/NumQuestions'
+                  questions:
+                    type: array
+                    items:
+                      $ref: '#/components/group/QuizQuestion'
+                  timeLimit:
+                    $ref: '#/components/prim/Duration'
+                  thumbnailUrl:
+                    $ref: '#/components/prim/Url'
         400:
           description: The directory ./jsonFiles does not exist
           schema:
@@ -1888,8 +1894,8 @@ paths:
 
   /v1/open/import:
     post:
-      summary: Generate a CSV file of the game's final results
-      description: Convert the final results into a CSV and display it
+      summary: Create a quiz from a JSON file
+      description:
       tags:
         - "Open Ended"
       parameters:

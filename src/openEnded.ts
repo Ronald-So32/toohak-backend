@@ -9,6 +9,7 @@ import {
 import {
   adminQuizCreate,
   adminQuizQuestionCreateV2,
+  adminQuizQuestionCreate,
   adminQuizThumbnailUpdate
 } from './quiz'
 import { playerFinalResults } from './player';
@@ -74,23 +75,33 @@ export function exportJSON(
     );
   }
 
-  return JSON.stringify(newJSON, null, 2);
+  return { newJSON, file: `${quiz.name}_${time}.json` };
 }
 
 export function importJSON(
   file: string,
   userId: number
 ) {
-  const jsonData = JSON.parse(fs.readFileSync(`${JSON_PATH}/${file}`).toString()) as quizInterface;
-
   let quizId = createUUID();
 
   try {
+    const jsonData = JSON.parse(fs.readFileSync(`${JSON_PATH}/${file}`).toString()) as quizInterface;
+
     quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
   
-    adminQuizQuestionCreateV2(userId, quizId, { questionBody: jsonData.questions });
-  
-    adminQuizThumbnailUpdate(jsonData.thumbnailUrl, quizId, userId);
+    try {
+      adminQuizQuestionCreateV2(userId, quizId, { questionBody: jsonData.questions });
+    } catch (error) {
+      try {
+        adminQuizQuestionCreate(userId, quizId, { questionBody: jsonData.questions });
+      } catch (error) {
+        
+      }
+    }
+
+    if (jsonData.thumbnailUrl) {
+      adminQuizThumbnailUpdate(jsonData.thumbnailUrl, quizId, userId);
+    }
   } catch (error) {
     throw new BetterError(
       error.message,

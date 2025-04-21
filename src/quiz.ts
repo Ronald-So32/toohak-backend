@@ -494,15 +494,15 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
-
   // Validate thumbnail
-  if (thumbnailUrl === '') {
+  if (!questionBody.thumbnailUrl || questionBody.thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
     );
   }
+
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
