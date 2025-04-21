@@ -1887,7 +1887,7 @@ paths:
             $ref: '#/components/return/Error'
 
   /v1/open/import:
-    get:
+    post:
       summary: Generate a CSV file of the game's final results
       description: Convert the final results into a CSV and display it
       tags:
@@ -1905,7 +1905,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/components/return/Empty'
+            $ref: '#/components/return/QuizNew'
         400:
           description: The directory ./jsonFiles does not exist
           schema:

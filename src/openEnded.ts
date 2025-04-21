@@ -3,7 +3,8 @@ import {
   getCurrentTimestamp,
   findQuizByUser,
   BetterError,
-  ErrorCodes
+  ErrorCodes,
+  createUUID
 } from './functionsHelper';
 import {
   adminQuizCreate,
@@ -64,7 +65,14 @@ export function exportJSON(
   
   const time = getCurrentTimestamp();
 
-  fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
+  try {
+    fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
+  } catch (error) {
+    throw new BetterError(
+      error.message,
+      ErrorCodes.BADREQUEST
+    );
+  }
 
   return JSON.stringify(newJSON, null, 2);
 }
@@ -75,10 +83,12 @@ export function importJSON(
 ) {
   const jsonData = JSON.parse(fs.readFileSync(`${JSON_PATH}/${file}`).toString()) as quizInterface;
 
+  let quizId = createUUID();
+
   try {
-    const quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
+    quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
   
-    adminQuizQuestionCreateV2(userId, quizId, { questionBody: jsonData.questions});
+    adminQuizQuestionCreateV2(userId, quizId, { questionBody: jsonData.questions });
   
     adminQuizThumbnailUpdate(jsonData.thumbnailUrl, quizId, userId);
   } catch (error) {
@@ -87,4 +97,6 @@ export function importJSON(
       ErrorCodes.BADREQUEST
     );
   }
+
+  return { quizId };
 }

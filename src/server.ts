@@ -42,7 +42,9 @@ import {
   playerAnswerSubmit
 } from './player';
 import {
-  createCSV
+  createCSV,
+  exportJSON,
+  importJSON
 } from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -733,6 +735,36 @@ app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
   try {
     const userId = findUserIdFromSession(session).userId;
     const result = createCSV(playerId, quizId, userId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/export/{quizid}
+app.get('/v1/open/export/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = exportJSON(quizId, userId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v1/open/import
+app.get('/v1/open/import', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { fileName } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = importJSON(fileName, userId);
 
     return res.status(OK).json(result);
   } catch (error) {
