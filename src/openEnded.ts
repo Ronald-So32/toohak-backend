@@ -113,9 +113,13 @@ export function importJSON(
 }
 
 export function attachments(
-  session: string,
+  userId: number,
   quizId: number,
   attachment: string
 ) {
-  
+  const quiz = findQuizByUser(userId, quizId);
+
+  quiz.attachments.push(attachment);
+
+  return {};
 }

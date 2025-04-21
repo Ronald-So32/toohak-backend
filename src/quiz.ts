@@ -202,6 +202,7 @@ export function adminQuizCreate(
     numQuestions: 0,
     questions: questionsArray,
     timeLimit: 0,
+    attachments: []
   });
 
   return {

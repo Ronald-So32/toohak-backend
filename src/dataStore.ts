@@ -90,6 +90,7 @@ export interface quizInterface {
   questions: questionsInterface[];
   timeLimit: number;
   thumbnailUrl?: string;
+  attachments?: string[];
 }
 
 /**
