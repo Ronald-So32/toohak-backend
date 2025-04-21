@@ -149,6 +149,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId + questionIdOffset,
         session
       );
+      // Checks that a invalid deletion returns an error object and a
+      // status code of 400
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
 
@@ -159,8 +161,10 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     });
 
     test('Testing when any game for this quiz is not in END state', () => {
+      // Starts a new game and gets the gameId
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       const gameId = responseGameStart.body.gameId;
+      // Try to delete a question not in END state
       let responseQuestionDelete = requestDeleteQuizQuestionV2(
         quizId,
         questionId,
@@ -169,6 +173,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
 
+      // Update the state of the game
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
 
       responseQuestionDelete = requestDeleteQuizQuestionV2(
@@ -285,7 +290,13 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     });
     expect(responseQuizGet.statusCode).toStrictEqual(OK);
 
-    // Delete from user 2
+    // Start a game with a player then ends it
+    const responseGameStart = requestAdminQuizGameStart(session2, quizId, 3);
+    const gameId = responseGameStart.body.gameId;
+    requestPlayerJoin(gameId, 'Name');
+    requestAdminQuizGameStateUpdate(quizId, gameId, session2, 'END');
+
+    // Delete from user 2 where there is game with a player
     const responseQuestionDelete = requestDeleteQuizQuestionV2(
       quizId,
       questionId,
