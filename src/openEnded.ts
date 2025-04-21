@@ -124,3 +124,20 @@ export function attachments(
 
   return {};
 }
+
+export function seeAttachments(
+  userId: number,
+  quizId: number,
+  attachmentNumber: number
+) {
+  const quiz = findQuizByUser(userId, quizId);
+
+  if (!quiz.attachments || attachmentNumber < 0 || attachmentNumber >= quiz.attachments.length) {
+    throw new BetterError(
+      Errors.invalidAttachmentNumber().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return quiz.attachments[attachmentNumber];
+}
