@@ -139,7 +139,7 @@ export function adminQuizGameUpdate(
     );
   }
 
-  if (!Object.values(actions).includes(action)) {
+  if (!Object(actions).includes(action)) {
     throw new BetterError(
       Errors.invalidAction().error,
       ErrorCodes.BADREQUEST
