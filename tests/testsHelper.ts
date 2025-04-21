@@ -770,3 +770,18 @@ export function requestExport(
     { session }
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/import
+ */
+export function requestImport(
+  fileName: string,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/import`,
+    { fileName },
+    { session }
+  );
+}
