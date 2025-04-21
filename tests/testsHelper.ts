@@ -785,3 +785,19 @@ export function requestQuizImport(
     { session }
   );
 }
+
+/**
+ * Wrapper for PUT /v1/open/attachments/{quizid}
+ */
+export function requestAttachments(
+  session: string,
+  quizId: number,
+  attachment: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v1/open/attachments/${quizId}`,
+    { attachment },
+    { session }
+  );
+}
