@@ -43,15 +43,6 @@ export function adminQuizList(
   // Fetches the latest data from the dataStore
   const data = getData();
 
-  // Checks if the user exists
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   // Iterate through all quizzes and put in quizzes array if quiz is created by
   // user of passed in userId
   const quizzes = data.quizzes
@@ -79,14 +70,6 @@ export function adminQuizGet(
 ): quizGetDetailsInterface {
   const data = getData();
 
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
@@ -109,14 +92,6 @@ export function adminQuizGetV2(
   quizId: number
 ): quizGetDetailsInterface {
   const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
@@ -152,14 +127,6 @@ export function adminQuizCreate(
   description: string
 ): quizIdInterface {
   const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   // Checks if the name of the quiz is valid
   validQuizName(name);
@@ -224,14 +191,6 @@ export function adminQuizRemove(
 ): Record<string, never> {
   const data = getData();
 
-  const userExists = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userExists) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   // Finds the quiz index of the quiz in the quizzes array
   const quizIndex = data.quizzes.findIndex((quiz: quizInterface) => quiz.quizId === quizId);
 
@@ -270,41 +229,6 @@ export function adminQuizRemoveV2(
 }
 
 /**
- * Get all the relevant information about the current quiz.
- *
- * @param {number} userId - Id of the user
- * @param {number} quizId - Id of the quiz
- *
- * @returns {quizDetailsInterface | errorInterface} - Always return quiz object
- * otherwise an error object with relevant error message
- */
-export function adminQuizInfo(
-  userId: number,
-  quizId: number
-): quizDetailsInterface {
-  const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
-  const quiz = findQuizByUser(userId, quizId);
-
-  // Return quiz details if found
-  return {
-    quizId: quiz.quizId,
-    name: quiz.name,
-    timeCreated: quiz.timeCreated,
-    timeLastEdited: quiz.timeLastEdited,
-    description: quiz.description
-  };
-}
-
-/**
  * Update the name of the relevant quiz.
  *
  * @param {number} userId - Id of the user
@@ -320,14 +244,6 @@ export function adminQuizNameUpdate(
   name: string
 ): Record<string, never> {
   const data = getData();
-
-  const user = data.users.find((user: userInterface) => user.userId === userId);
-  if (!user) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const quiz = findQuizByUser(userId, quizId);
 
@@ -373,14 +289,6 @@ export function adminQuizDescriptionUpdate(
 ): Record<string, never> {
   const data = getData();
 
-  const user = data.users.find((user: userInterface) => user.userId === userId);
-  if (!user) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   const quiz = findQuizByUser(userId, quizId);
 
   if (description.length > 100) {
@@ -415,14 +323,6 @@ export function adminQuizQuestionCreate(
   questionBody: questionsInterface
 ): questionIdInterface {
   const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const quiz = findQuizByUser(userId, quizId);
 
@@ -632,14 +532,6 @@ export function adminDeleteQuizQuestion(
 ): Record<string, never> {
   const data = getData();
 
-  const user = data.users.find((user: userInterface) => user.userId === userId);
-  if (!user) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   const quiz = findQuizByUser(userId, quizId);
 
   // Check if questionId is in given quiz
@@ -696,14 +588,6 @@ export function adminQuizQuestionMove(
   newPosition: number
 ): Record<string, never> {
   const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const quiz = findQuizByUser(userId, quizId);
 
@@ -834,14 +718,6 @@ export function adminQuizQuestionUpdate(
   questionBody: questionsInterface
 ): Record<string, never> {
   const data = getData();
-
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const quiz = findQuizByUser(userId, quizId);
 
