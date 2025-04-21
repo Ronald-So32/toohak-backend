@@ -161,11 +161,11 @@ export enum quizStates {
 }
 
 export enum actions {
-  NEXT_QUESTION,
-  SKIP_COUNTDOWN,
-  GO_TO_ANSWER,
-  GO_TO_FINAL_RESULTS,
-  END
+  NEXT_QUESTION = 'NEXT_QUESTION',
+  SKIP_COUNTDOWN = 'SKIP_COUNTDOWN',
+  GO_TO_ANSWER = 'GO_TO_ANSWER',
+  GO_TO_FINAL_RESULTS = 'GO_TO_FINAL_RESULTS',
+  END = 'END'
 }
 
 export class Errors {
