@@ -5,7 +5,6 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAttachment,
-  requestGetQuiz,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -75,19 +74,5 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
     expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-  });
-
-  test('Intended', () => {
-    const responseQuestionUpdate = requestAttachment(
-      session,
-      quizId,
-      'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
-    );
-    expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-
-    const responseQuiz = requestGetQuiz(quizId, session);
-    expect(responseQuiz.body).toStrictEqual({});
-    expect(responseQuiz.statusCode).toStrictEqual(OK);
   });
 });

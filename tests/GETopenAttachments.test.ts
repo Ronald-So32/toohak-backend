@@ -65,30 +65,21 @@ beforeEach(() => {
     }
   );
   questionId = responseQuestionCreate.body.questionId;
+
+  requestAttachment(
+    session,
+    quizId,
+    'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
+  );
 });
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
   test('Testing correct return value', () => {
-    const responseQuestionUpdate = requestAttachmentView(
-      session,
-      quizId,
-      0
-    );
-    expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-  });
-
-  test('Intended', () => {
-    const responseQuestionUpdate = requestAttachment(
-      session,
-      quizId,
+    const responseQuiz = requestAttachmentView(session, quizId, 0);
+    expect(responseQuiz.body).toStrictEqual(
       'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
     );
-    expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
-
-    const responseQuiz = requestAttachment(quizId, session);
-    expect(responseQuiz.body).toStrictEqual({});
     expect(responseQuiz.statusCode).toStrictEqual(OK);
   });
+
 });

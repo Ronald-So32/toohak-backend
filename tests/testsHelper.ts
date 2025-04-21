@@ -801,3 +801,19 @@ export function requestAttachment(
     { session }
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/attachment/{quizid}
+ */
+export function requestAttachmentView(
+  session: string,
+  quizId: number,
+  attachmentNumber: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/attachment/${quizId}`,
+    { attachmentNumber },
+    { session }
+  );
+}
