@@ -10,7 +10,6 @@ import {
   validQuizName,
   quizSummariesInterface,
   quizIdInterface,
-  quizDetailsInterface,
   quizGetDetailsInterface,
   questionIdInterface,
   Errors,
@@ -68,8 +67,6 @@ export function adminQuizGet(
   userId: number,
   quizId: number
 ): quizGetDetailsInterface {
-  const data = getData();
-
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
@@ -91,8 +88,6 @@ export function adminQuizGetV2(
   userId: number,
   quizId: number
 ): quizGetDetailsInterface {
-  const data = getData();
-
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
@@ -287,8 +282,6 @@ export function adminQuizDescriptionUpdate(
   quizId: number,
   description: string
 ): Record<string, never> {
-  const data = getData();
-
   const quiz = findQuizByUser(userId, quizId);
 
   if (description.length > 100) {
@@ -322,8 +315,6 @@ export function adminQuizQuestionCreate(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const data = getData();
-
   const quiz = findQuizByUser(userId, quizId);
 
   const { question, timeLimit, points, answerOptions } = questionBody;
@@ -530,8 +521,6 @@ export function adminDeleteQuizQuestion(
   userId: number,
   questionId: number
 ): Record<string, never> {
-  const data = getData();
-
   const quiz = findQuizByUser(userId, quizId);
 
   // Check if questionId is in given quiz
@@ -587,8 +576,6 @@ export function adminQuizQuestionMove(
   questionId: number,
   newPosition: number
 ): Record<string, never> {
-  const data = getData();
-
   const quiz = findQuizByUser(userId, quizId);
 
   const validQuestionIndex = quiz.questions.findIndex(
@@ -717,8 +704,6 @@ export function adminQuizQuestionUpdate(
   questionId: number,
   questionBody: questionsInterface
 ): Record<string, never> {
-  const data = getData();
-
   const quiz = findQuizByUser(userId, quizId);
 
   const questionIndex = quiz.questions.findIndex(

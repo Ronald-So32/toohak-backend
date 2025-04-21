@@ -48,11 +48,11 @@ describe('Testing GET /v1/admin/quiz/list', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
-      const responseList = requestGetQuizList(session + 'Invalid Session');
-      // Checks that the response when fetching for quiz list of invalid session
-      // returns an error object and a status code of 401
-      expect(responseList.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
+        const responseList = requestGetQuizList(session + 'Invalid Session');
+        // Checks that the response when fetching for quiz list of invalid session
+        // returns an error object and a status code of 401
+        expect(responseList.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
       });
     });
   });

@@ -150,9 +150,9 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
-  
+
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  
+
         responseTransfer = requestAdminQuizTransferV2(
           quizId,
           session,
@@ -160,9 +160,9 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
-  
+
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  
+
         responseTransfer = requestAdminQuizTransferV2(
           quizId,
           session,
@@ -170,9 +170,9 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
-  
+
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
-  
+
         responseTransfer = requestAdminQuizTransferV2(
           quizId,
           session,
@@ -180,9 +180,9 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
-  
+
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
-  
+
         responseTransfer = requestAdminQuizTransferV2(
           quizId,
           session,
@@ -190,7 +190,6 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
-  
       });
     });
 
@@ -249,7 +248,6 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
-    
 
       test('Quiz can no longer be transferred after first transfer', () => {
       // First transfer (user1 -> user2)
@@ -271,13 +269,12 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       });
     });
 
-
     test('Testing when game is in END state', () => {
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       const gameId = responseGameStart.body.gameId;
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
 
-      const  responseTransfer = requestAdminQuizTransferV2(
+      const responseTransfer = requestAdminQuizTransferV2(
         quizId,
         session,
         'z6969@ad.unsw.edu.au'
@@ -285,7 +282,6 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       expect(responseTransfer.body).toStrictEqual({});
       expect(responseTransfer.statusCode).toStrictEqual(OK);
     });
-    
   });
 
   test('Testing POST /v1/admin/quiz/{quizid}/transfer works as intended', () => {

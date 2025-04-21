@@ -208,7 +208,6 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
-
     });
 
     test('Testing when game is in END state', () => {

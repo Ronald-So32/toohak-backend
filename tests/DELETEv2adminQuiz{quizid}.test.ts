@@ -140,7 +140,6 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
       responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
       expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
-
     });
 
     test('Testing when game is in END state', () => {
@@ -148,11 +147,10 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
       const gameId = responseGameStart.body.gameId;
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
 
-      const  responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
+      const responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
       expect(responseDeleteQuiz.body).toStrictEqual({});
       expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
     });
-
   });
 
   test('Testing DELETE /v2/admin/quiz/{quizid} works as intended', () => {
