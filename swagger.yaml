@@ -1809,12 +1809,14 @@ paths:
           schema:
             $ref: '#/components/return/Empty'
   
-  /v1/csv:
+  /v1/open/csv:
     get:
       summary: Generate a CSV file of the game's final results
       description: Convert the final results into a CSV and display it
       tags:
         - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
       responses:
         200:
           description: OK
@@ -1824,7 +1826,8 @@ paths:
         400:
           description: |
             If any of the following are true:
-            - If quiz state isn't at FINAL_RESULTS
+            - If player ID does not exist
+            - Game is not in FINAL_RESULTS state
           schema:
             $ref: '#/components/return/Error'
         401:

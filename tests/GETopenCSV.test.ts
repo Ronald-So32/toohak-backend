@@ -1,0 +1,125 @@
+import {
+  requestClear,
+  requestAdminAuthRegister,
+  requestAdminQuizCreate,
+  requestAdminQuizQuestionCreate,
+  requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
+  requestPlayerJoin,
+  requestCSV,
+  OK,
+  BADREQUEST
+} from './testsHelper';
+
+import { describe } from 'node:test';
+
+// const gameIdOffset = 727727;
+const playerIdOffset = 727727;
+
+let session: string;
+let quizId: number;
+let questionId: number;
+let gameId: number;
+let playerId: number;
+// let timeCreated: number;
+// let timeLastEdited: number;
+
+beforeEach(() => {
+  requestClear();
+  const responseRegister = requestAdminAuthRegister(
+    'z7277272@ad.unsw.edu.au',
+    'Password1',
+    'First',
+    'Last'
+  );
+  session = responseRegister.body.session;
+  const responseCreate = requestAdminQuizCreate(
+    session,
+    'Name',
+    'Description'
+  );
+  // timeCreated = Math.floor(Date.now() / 1000);
+  quizId = responseCreate.body.quizId;
+
+  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  questionId = responseQuestionCreate.body.questionId;
+  // timeLastEdited = Math.floor(Date.now() / 1000);
+
+  const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+  gameId = responseGameStart.body.gameId;
+
+  const responsePlayerJoin = requestPlayerJoin(
+    gameId,
+    'Name'
+  );
+  playerId = responsePlayerJoin.body.playerId;
+
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
+});
+
+describe('Testing GET /v1/open/CSV', () => {
+  test('Testing the code 200 return value', () => {
+    const responseGetGameResult = requestCSV(playerId);
+    expect(responseGetGameResult.body).toStrictEqual({
+      usersRankedByScore: [
+        {
+          playerName: 'Name',
+          score: 0
+        }
+      ],
+      questionResults: [
+        {
+          questionId: questionId,
+          playersCorrect: [],
+          averageAnswerTime: expect.any(Number),
+          percentCorrect: expect.any(Number)
+        }
+      ]
+    });
+    expect(responseGetGameResult.statusCode).toStrictEqual(OK);
+  });
+
+  describe('Testing for error responses', () => {
+    test('Testing when player does not exist in game', () => {
+      const responseGetGameResult = requestCSV(playerId + playerIdOffset);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+    });
+
+    test('Testing when game player is in hasn\'t ended', () => {
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      gameId = responseGameStart.body.gameId;
+      const responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        'Name'
+      );
+      playerId = responsePlayerJoin.body.playerId;
+      const responseGetGameResult = requestCSV(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+    });
+  });
+});
