@@ -132,6 +132,8 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseQuizDetails = requestGetQuizV2(quizId + quizIdOffset, session);
+        // Checks that the response of an forbidden quiz deletion returns an error object
+        // and a status code of 403
         expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
       });
