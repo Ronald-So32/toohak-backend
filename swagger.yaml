@@ -1827,10 +1827,12 @@ paths:
             - If quiz state isn't at FINAL_RESULTS
           schema:
             $ref: '#/components/return/Error'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
         403:
-          description: |
-            If any of the following are true:
-              - Session doesn't own the quiz
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
           schema:
             $ref: '#/components/return/Error'
 
