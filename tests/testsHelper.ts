@@ -744,10 +744,14 @@ export function requestPlayerFinalResults(
  * Wrapper for GET /v1/open/csv
  */
 export function requestCSV(
-  playerId: number
+  playerId: number,
+  quizId: number,
+  session: string
 ): responseInterface {
   return makeRequest(
     'GET',
-    `/v1/open/csv/${playerId}`
+    `/v1/open/csv/${quizId}/${playerId}`,
+    null,
+    { session }
   );
 }

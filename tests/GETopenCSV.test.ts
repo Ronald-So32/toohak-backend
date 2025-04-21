@@ -82,7 +82,7 @@ beforeEach(() => {
 
 describe('Testing GET /v1/open/CSV', () => {
   test('Testing the code 200 return value', () => {
-    const responseGetGameResult = requestCSV(playerId);
+    const responseGetGameResult = requestCSV(playerId, quizId, session);
     expect(responseGetGameResult.body).toStrictEqual(
       'usersRankedByScore\n' +
       'playerName,score\n' +
@@ -96,7 +96,7 @@ describe('Testing GET /v1/open/CSV', () => {
 
   describe('Testing for error responses', () => {
     test('Testing when player does not exist in game', () => {
-      const responseGetGameResult = requestCSV(playerId + playerIdOffset);
+      const responseGetGameResult = requestCSV(playerId + playerIdOffset, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
@@ -109,7 +109,7 @@ describe('Testing GET /v1/open/CSV', () => {
         'Name'
       );
       playerId = responsePlayerJoin.body.playerId;
-      const responseGetGameResult = requestCSV(playerId);
+      const responseGetGameResult = requestCSV(playerId, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
     });
