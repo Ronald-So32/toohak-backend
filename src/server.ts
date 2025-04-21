@@ -724,12 +724,15 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
     }
   });
 
-// GET /v1/open/csv/{playerid}
+// GET /v1/open/csv/{quizid}/{playerid}
 app.get('/v1/open/csv/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
 
   try {
-    const result = createCSV(playerId);
+    const userId = findUserIdFromSession(session).userId;
+    const result = createCSV(playerId, quizId, userId);
 
     return res.status(OK).json(result);
   } catch (error) {

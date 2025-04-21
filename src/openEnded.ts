@@ -8,7 +8,11 @@ import fs from 'fs';
 
 const CSV_PATH = './csvResults';
 
-export function createCSV(playerId: number) {
+export function createCSV(
+  playerId: number,
+  quizId: number,
+  userId: number
+) {
   const result = playerFinalResults(playerId);
 
   const usersScore = convertToCSV(result.usersRankedByScore);
