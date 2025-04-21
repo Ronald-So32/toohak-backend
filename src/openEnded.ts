@@ -1,7 +1,7 @@
 import {
   convertToCSV
-} from './functionsHelper'
-import {playerFinalResults} from './player'
+} from './functionsHelper';
+import { playerFinalResults } from './player';
 
 export function createCSV(playerId: number) {
   const result = playerFinalResults(playerId);
@@ -9,5 +9,5 @@ export function createCSV(playerId: number) {
   const usersScore = convertToCSV(result.usersRankedByScore);
   const questionResults = convertToCSV(result.questionResults);
 
-  return `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`
+  return `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`;
 }

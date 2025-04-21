@@ -43,7 +43,7 @@ import {
 } from './player';
 import {
   createCSV
-} from './openEnded'
+} from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -711,32 +711,32 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
 // PUT /v1/player/{playerid}/question/{questionposition}/answer
 app.put('/v1/player/:playerid/question/:questionposition/answer',
   (req: Request, res: Response) => {
-  const playerId = parseInt(req.params.playerid);
-  const questionPosition = parseInt(req.params.questionposition);
-  const answerIds = req.body.answerIds;
+    const playerId = parseInt(req.params.playerid);
+    const questionPosition = parseInt(req.params.questionposition);
+    const answerIds = req.body.answerIds;
 
-  try {
-    const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
+    try {
+      const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
 
-    return res.status(OK).json(result);
-  } catch (error) {
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-});
+      return res.status(OK).json(result);
+    } catch (error) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
 
 // GET /v1/open/csv/{playerid}
 app.get('/v1/open/csv/:playerid',
   (req: Request, res: Response) => {
-  const playerId = parseInt(req.params.playerid);
+    const playerId = parseInt(req.params.playerid);
 
-  try {
-    const result = createCSV(playerId);
+    try {
+      const result = createCSV(playerId);
 
-    return res.status(OK).json(result);
-  } catch (error) {
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-});
+      return res.status(OK).json(result);
+    } catch (error) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
 
 app.use((req: Request, res: Response) => {
   const error = `
