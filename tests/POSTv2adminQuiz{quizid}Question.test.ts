@@ -160,7 +160,6 @@ describe('Testing POST /v1/admin/quiz', () => {
               question: 'Question',
               timeLimit: 4,
               points: 5,
-              // thumbnailUrl: "http://google.com/some/image/path.jpg", need to use v2 create
               answerOptions: [
                 {
                   answer: 'Right',

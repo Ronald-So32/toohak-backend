@@ -7,7 +7,6 @@ import {
   requestGetQuizV2,
   requestGetQuizList,
   requestAdminQuizGameStart,
-  requestPlayerJoin,
   requestAdminQuizGameStateUpdate,
   OK,
   BADREQUEST,
@@ -141,6 +140,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       });
 
       test('Testing when any game for this quiz is not in END state', () => {
+        // Start a new game and gets the game id
         const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
         const gameId = responseGameStart.body.gameId;
         let responseTransfer = requestAdminQuizTransferV2(
@@ -151,6 +151,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
         expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
 
+        // Update the state of the game
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
 
         responseTransfer = requestAdminQuizTransferV2(
