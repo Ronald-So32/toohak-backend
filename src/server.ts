@@ -725,7 +725,7 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
   });
 
 // GET /v1/open/csv/{quizid}/{playerid}
-app.get('/v1/open/csv/:playerid', (req: Request, res: Response) => {
+app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);

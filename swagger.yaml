@@ -1808,8 +1808,8 @@ paths:
           description: OK
           schema:
             $ref: '#/components/return/Empty'
-  
-  /v1/open/csv/{playerid}:
+
+  /v1/open/csv/{quizid}/{playerid}:
     get:
       summary: Generate a CSV file of the game's final results
       description: Convert the final results into a CSV and display it
@@ -1817,6 +1817,8 @@ paths:
         - "Open Ended"
       parameters:
         - $ref: '#/components/path/PlayerId'
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
       responses:
         200:
           description: OK

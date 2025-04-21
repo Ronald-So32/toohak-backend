@@ -1,6 +1,7 @@
 import {
   convertToCSV,
-  getCurrentTimestamp
+  getCurrentTimestamp,
+  findQuizByUser
 } from './functionsHelper';
 import { playerFinalResults } from './player';
 
@@ -13,6 +14,8 @@ export function createCSV(
   quizId: number,
   userId: number
 ) {
+  findQuizByUser(userId, quizId);
+
   const result = playerFinalResults(playerId);
 
   const usersScore = convertToCSV(result.usersRankedByScore);

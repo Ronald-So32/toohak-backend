@@ -8,7 +8,9 @@ import {
   requestPlayerJoin,
   requestCSV,
   OK,
-  BADREQUEST
+  BADREQUEST,
+  FORBIDDEN,
+  UNAUTHORISED
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -112,6 +114,26 @@ describe('Testing GET /v1/open/CSV', () => {
       const responseGetGameResult = requestCSV(playerId, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+    });
+
+    test('Testing when the session is invalid', () => {
+      const responseGetGameResult = requestCSV(playerId, quizId, session + "Session Offset");
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(UNAUTHORISED);
+    });
+
+    test('Testing when session is valid but not the owner of the quiz', () => {
+      const responseRegister = requestAdminAuthRegister(
+        'z7277f272@ad.unsw.edu.au',
+        'Password1',
+        'First',
+        'Last'
+      );
+      session = responseRegister.body.session;
+
+      const responseGetGameResult = requestCSV(playerId, quizId, session);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
     });
   });
 });
