@@ -19,6 +19,7 @@ tags:
     description: Iteration 3 routes are a modification of iteration 1 and iteration 2 routes
   - name: "Iteration 3 (New)"
     description: Iteration 3 routes that are a mix of new routes as well as slightly modified routes from iteration 1 and 2
+  - name: "Open Ended"
 
 components:
   prim:
@@ -1807,6 +1808,31 @@ paths:
           description: OK
           schema:
             $ref: '#/components/return/Empty'
+  
+  /v1/csv:
+    get:
+      summary: Generate a CSV file of the game's final results
+      description: Convert the final results into a CSV and display it
+      tags:
+        - "Open Ended"
+      responses:
+        200:
+          description: OK
+          schema:
+            "Something,Something,Another"
+        400:
+          description: |
+            If any of the following are true:
+            - If quiz state isn't at FINAL_RESULTS
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: |
+            If any of the following are true:
+              - Session doesn't own the quiz
+          schema:
+            $ref: '#/components/return/Error'
+
 
 securityDefinitions:
   Iteration 3 Session Authentication:
