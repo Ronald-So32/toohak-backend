@@ -1,8 +1,10 @@
+import { time } from 'console';
 import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizThumbnailUpdate,
+  requestGetQuizV2,
   OK,
   BADREQUEST,
   UNAUTHORISED,
@@ -14,6 +16,7 @@ import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
+let timeCreated: number;
 
 beforeEach(() => {
   requestClear();
@@ -29,6 +32,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now()/1000);
   quizId = responseCreate.body.quizId;
 });
 
@@ -96,6 +100,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
 
     describe('Testing invalid urls', () => {
       test.each([
+        {
+          thumbnailUrl: '',
+          description: 'Empty string'
+        },
         {
           thumbnailUrl: 'http://google.com/some/image/path.gif',
           description: 'File type of .gif at the end'
@@ -232,6 +240,50 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/thumbnail works as intended', () => {
+    let responseThumbnail = requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      'https://google.com/some/image/path.png'
+    );
+    expect(responseThumbnail.body).toStrictEqual({});
+    expect(responseThumbnail.statusCode).toStrictEqual(OK);
+    let timeLastEdited = Math.floor(Date.now()/1000);
 
+    let responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeLastEdited,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number),
+      thumbnailUrl: 'https://google.com/some/image/path.png'
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+
+    responseThumbnail = requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      'https://i1.sndcdn.com/artworks-000360728946-bilq7t-t500x500.jpg'
+    );
+    expect(responseThumbnail.body).toStrictEqual({});
+    expect(responseThumbnail.statusCode).toStrictEqual(OK);
+    timeLastEdited = Math.floor(Date.now()/1000);
+
+    responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeLastEdited,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number),
+      thumbnailUrl: 'https://i1.sndcdn.com/artworks-000360728946-bilq7t-t500x500.jpg'
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
   });
 });
