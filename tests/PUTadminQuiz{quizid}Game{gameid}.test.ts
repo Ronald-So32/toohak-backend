@@ -22,6 +22,7 @@ let session: string;
 let quizId: number;
 let gameId: number;
 
+//
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -736,6 +737,58 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
     ],
     inactiveGames: []
   });
+
+  responseUpdateGame = requestAdminQuizGameStateUpdate(
+    quizId,
+    gameId,
+    session,
+    actions.GO_TO_ANSWER
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.ANSWER_SHOW);
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  responseUpdateGame = requestAdminQuizGameStateUpdate(
+    quizId,
+    gameId,
+    session,
+    actions.NEXT_QUESTION
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_COUNTDOWN);
+
+  responseGamesList = requestAdminQuizGamesList(session, quizId);
+  expect(responseGamesList.body).toStrictEqual({
+    activeGames: [
+      gameId
+    ],
+    inactiveGames: []
+  });
+
+  responseUpdateGame = requestAdminQuizGameStateUpdate(
+    quizId,
+    gameId,
+    session,
+    actions.SKIP_COUNTDOWN
+  );
+  expect(responseUpdateGame.body).toStrictEqual({});
+  expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
+
+  responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+  expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_OPEN);
 
   responseUpdateGame = requestAdminQuizGameStateUpdate(
     quizId,
