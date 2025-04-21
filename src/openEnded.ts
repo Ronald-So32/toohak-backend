@@ -8,6 +8,7 @@ import { playerFinalResults } from './player';
 import fs from 'fs';
 
 const CSV_PATH = './csvResults';
+const JSON_PATH = './jsonFiles'
 
 export function createCSV(
   playerId: number,
@@ -29,4 +30,20 @@ export function createCSV(
   fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.csv`, combined);
 
   return combined;
+}
+
+export function exportJSON(
+  quizId: number,
+  userId: number
+) {
+  
+}
+
+}
+
+export function importJSON(
+  quizId: number,
+  userId: number
+) {
+
 }
