@@ -107,12 +107,23 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   });
 
   describe('Testing for error responses', () => {
-    test('Testing when the session is invalid', () => {
-      const responseQuizDetails = requestGetQuiz(quizId, session + 'Invalid Session');
-      // Checks that an unauthorised call to fetch quiz detail returns an error object
-      // and a status code of 401
-      expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizDetails.statusCode).toStrictEqual(UNAUTHORISED);
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuizDetails = requestGetQuiz(quizId, session + 'Invalid Session');
+        // Checks that an unauthorised call to fetch quiz detail returns an error object
+        // and a status code of 401
+        expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuizDetails.statusCode).toStrictEqual(UNAUTHORISED);
+      });
     });
 
     test('Testing when the session is valid but the quizId is not', () => {

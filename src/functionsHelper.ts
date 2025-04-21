@@ -358,10 +358,6 @@ export class BetterError extends Error {
   }
 }
 
-export function errorThrower(errorObj: errorInterface, code: number): never {
-  throw new BetterError(errorObj.error, code);
-}
-
 /**
  * Creates a unique user id from the current registered users.
  *
@@ -513,31 +509,6 @@ export function generateSession(): string {
   }
 
   return sessionNew;
-}
-
-/**
- * Finds a user's session token by their user ID.
- *
- * @param {number} userId - The user ID to search for
- *
- * @returns {string | errorInterface} - The session token if found, otherwise an error
- */
-export function findSessionFromUserId(userId: number): string {
-  const data = getData();
-  // Finds a session with the given user id
-  const theSession = data.sessions.find(
-    (sessionObj: sessionInterface) => sessionObj.userId === userId
-  );
-
-  // Checks if the session exists
-  if (!theSession) {
-    throw new BetterError(
-      Errors.invalidSession().error,
-      ErrorCodes.UNAUTHORISED
-    );
-  }
-
-  return theSession.session;
 }
 
 /**
@@ -749,6 +720,7 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
  *
  * @returns {null | string} - Either a null or the question string
  */
+
 export function getLongestQuestionLine(text: string): null | string {
   const lines = text.split('\n');
   const questionLines = lines.filter((line: string) => /\?/.test(line));
@@ -762,6 +734,7 @@ export function getLongestQuestionLine(text: string): null | string {
     current.length > longest.length ? current : longest
   );
 }
+
 
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
