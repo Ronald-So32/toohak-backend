@@ -240,7 +240,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       session,
       'New Description'
     );
-    
+
     // Update the quiz's thumbnail
     const newThumbnailUrl = 'https://example.com/updated-thumbnail.png';
     requestAdminQuizThumbnailUpdate(
