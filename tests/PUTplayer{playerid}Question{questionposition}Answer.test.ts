@@ -2,28 +2,29 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
   requestPlayerQuestionInfo,
   requestPlayerAnswerSubmit,
-  OK,
-  BADREQUEST
+  requestPlayerQuestionResults
 } from './testsHelper';
 
-import { describe } from 'node:test';
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
-const playerIdOffset = 727727;
-const answerIdOffset = 727727;
+import { describe } from 'node:test';
+import { answersInterface } from '../src/dataStore';
 
 let session: string;
 let quizId: number;
-// let questionId: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
+let currentAnswerOptions: answersInterface[];
 
 beforeEach(() => {
   requestClear();
@@ -39,16 +40,15 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -59,19 +59,19 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
 
-  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
       questionBody: {
         question: 'Who is the Queen of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -82,12 +82,11 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
-  // questionId = responseQuestionCreate2.body.questionId;
-
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
@@ -100,11 +99,11 @@ beforeEach(() => {
 
   requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
   requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
+  currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
     const responsePlayerSubmit = requestPlayerAnswerSubmit(
       {
         answerIds: [currentAnswerOptions[0].answerId]
@@ -113,25 +112,23 @@ describe('Testing GET /v1/player/{playerid}', () => {
       1
     );
     expect(responsePlayerSubmit.body).toStrictEqual({});
-    expect(responsePlayerSubmit.statusCode).toStrictEqual(OK);
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
         },
-        playerId + playerIdOffset,
+        playerId + idOffset,
         1
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
-    test('Testing when question position given is not valid for the game', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
+    test('Testing when question position given is not valid for the game', () => { 
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -140,13 +137,23 @@ describe('Testing GET /v1/player/{playerid}', () => {
         3
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is not in QUESTION_OPEN state', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
-      const responsePlayerSubmit = requestPlayerAnswerSubmit(
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+      
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      gameId = responseGameStart.body.gameId;
+
+      const responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        'Name'
+      );
+
+      playerId = responsePlayerJoin.body.playerId;
+
+      let responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
         },
@@ -154,11 +161,73 @@ describe('Testing GET /v1/player/{playerid}', () => {
         1
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+
+      responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+      // Imports slync and then waits for 1 second to get to QUSETION_CLOSE state
+      const slync = require('slync');
+      slync(1000);
+
+      responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+      
+      responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+      
+      responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+      responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [currentAnswerOptions[0].answerId]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is not currently on the question', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -167,24 +236,22 @@ describe('Testing GET /v1/player/{playerid}', () => {
         2
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
-    test('Testing when answer is not valid for this particular question', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
+    test('Testing when answer is not valid for this particular question', () => { 
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
-          answerIds: [currentAnswerOptions[0].answerId + answerIdOffset]
+          answerIds: [currentAnswerOptions[0].answerId + idOffset]
         },
         playerId,
         1
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when duplicate answerId provdied', () => {
-      const currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [
@@ -196,7 +263,22 @@ describe('Testing GET /v1/player/{playerid}', () => {
         1
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+    });
+
+    test('Testing when multiple non-duplicate answerId provdied', () => {
+      const responsePlayerSubmit = requestPlayerAnswerSubmit(
+        {
+          answerIds: [
+            currentAnswerOptions[0].answerId,
+            currentAnswerOptions[1].answerId
+          ]
+        },
+        playerId,
+        1
+      );
+      expect(responsePlayerSubmit.body).toStrictEqual({});
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
     });
 
     test('Testing when less then 1 answer was submitted', () => {
@@ -208,11 +290,11 @@ describe('Testing GET /v1/player/{playerid}', () => {
         1
       );
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerSubmit.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 
   test('Testing GET /v1/player/{playerid} works as intended', () => {
-
+    
   });
 });
