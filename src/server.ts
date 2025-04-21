@@ -41,6 +41,9 @@ import {
   playerFinalResults,
   playerAnswerSubmit
 } from './player';
+import {
+  createCSV
+} from './openEnded'
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -618,7 +621,7 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   }
 });
 
-// GET/v1/admin/quiz/quizid/game/gameid/results
+// GET /v1/admin/quiz/quizid/game/gameid/results
 app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -678,7 +681,7 @@ app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: R
   }
 });
 
-// GET/v1/player/playerid/question/questionposition/results
+// GET /v1/player/playerid/question/questionposition/results
 app.get('/v1/player/:playerid/question/:questionposition/results',
   (req: Request, res: Response) => {
     const playerId = parseInt(req.params.playerid);
@@ -692,7 +695,7 @@ app.get('/v1/player/:playerid/question/:questionposition/results',
     }
   });
 
-// GET/v1/player/playerid/results
+// GET /v1/player/playerid/results
 app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -705,21 +708,35 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   }
 });
 
-// PUT/v1/player/{playerid}/question/{questionposition}/answer
+// PUT /v1/player/{playerid}/question/{questionposition}/answer
 app.put('/v1/player/:playerid/question/:questionposition/answer',
   (req: Request, res: Response) => {
-    const playerId = parseInt(req.params.playerid);
-    const questionPosition = parseInt(req.params.questionposition);
-    const answerIds = req.body.answerIds;
+  const playerId = parseInt(req.params.playerid);
+  const questionPosition = parseInt(req.params.questionposition);
+  const answerIds = req.body.answerIds;
 
-    try {
-      const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
+  try {
+    const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
 
-      return res.status(OK).json(result);
-    } catch (error) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
-  });
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/csv
+app.get('/v1/open/csv',
+  (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+
+  try {
+    const result = createCSV(playerId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 app.use((req: Request, res: Response) => {
   const error = `
