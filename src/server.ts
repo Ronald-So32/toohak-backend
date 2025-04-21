@@ -37,7 +37,9 @@ import {
   playerJoin,
   playerStatus,
   playerQuestion,
-  playerQuestionResults
+  playerQuestionResults,
+  playerFinalResults,
+  playerAnswerSubmit
 } from './player';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -684,6 +686,35 @@ app.get('/v1/player/:playerid/question/:questionposition/results',
 
     try {
       const result = playerQuestionResults(playerId, questionPosition);
+      return res.status(OK).json(result);
+    } catch (error) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+  });
+
+// GET/v1/player/playerid/results
+app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+
+  try {
+    const result = playerFinalResults(playerId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT/v1/player/{playerid}/question/{questionposition}/answer
+app.put('/v1/player/:playerid/question/:questionposition/answer',
+  (req: Request, res: Response) => {
+    const playerId = parseInt(req.params.playerid);
+    const questionPosition = parseInt(req.params.questionposition);
+    const answerIds = req.body.answerIds;
+
+    try {
+      const result = playerAnswerSubmit(playerId, questionPosition, answerIds);
+
       return res.status(OK).json(result);
     } catch (error) {
       return res.status(error.statusCode).json({ error: error.message });

@@ -39,6 +39,10 @@ export interface questionBodyInterface {
   questionBody: questionsInterface;
 }
 
+interface AnswerSubmitBody {
+  answerIds: number[];
+}
+
 /**
  * Helper function to handle common request logic
  *
@@ -700,14 +704,14 @@ export function requestPlayerQuestionInfo(
  * Wrapper for PUT /v1/player/{playerid}/question/{questionposition}/answer
  */
 export function requestPlayerAnswerSubmit(
+  answerIds: AnswerSubmitBody,
   playerId: number,
-  questionPosition: number,
-  answerIds: number[]
+  questionPosition: number
 ): responseInterface {
   return makeRequest(
     'PUT',
     `/v1/player/${playerId}/question/${questionPosition}/answer`,
-    { answerIds }
+    answerIds
   );
 }
 
