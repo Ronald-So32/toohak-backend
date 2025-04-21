@@ -136,9 +136,6 @@ export function adminUserDetails(
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
-  if (!userData) {
-    throw new BetterError(Errors.invalidUser().error, ErrorCodes.UNAUTHORISED);
-  }
 
   // If the variable userId exists, return user details
   return {
@@ -173,9 +170,6 @@ export function adminUserDetailsUpdate(
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
-  if (!userData) {
-    throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
-  }
 
   // Check if new email has been used by other user
   const isEmailUsedByOtherUser = data.users.some(
@@ -219,13 +213,8 @@ export function adminUserPasswordUpdate(
   const data = getData();
 
   const userData = data.users.find((user: userInterface) => user.userId === userId);
-  if (!userData) {
-    throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
-  }
-
   // Check if password of passed in userId is correct oldPassword
-  const user = data.users.find((user: userInterface) => user.userId === userId);
-  if (!user || user.password !== hashString(oldPassword)) {
+  if (userData.password !== hashString(oldPassword)) {
     throw new BetterError(Errors.invalidUser().error, ErrorCodes.BADREQUEST);
   }
 
