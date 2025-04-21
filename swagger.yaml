@@ -1819,7 +1819,8 @@ paths:
         200:
           description: OK
           schema:
-            "Something,Something,Another"
+            type: string
+            example: "Something,Something,Another"
         400:
           description: |
             If any of the following are true:
