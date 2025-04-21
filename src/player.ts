@@ -2,6 +2,8 @@ import {
   getData,
   userInterface,
   gameInterface,
+  questionsInterface,
+  answersInterface,
   resultsInterface,
   usersRankedByScoreInterface,
   questionResultsInterface
@@ -107,6 +109,7 @@ export function adminQuizGameStart(
         questionId,
         playersCorrect: [],
         playersIncorrect: [],
+        playersAnswerTime: [],
         averageAnswerTime: 0,
         totalAnswerTime: 0,
         percentCorrect: 0
@@ -148,6 +151,7 @@ export function adminQuizGameUpdate(
   if (data.activeTimers[gameId]) {
     clearTimeout(data.activeTimers[gameId]);
     delete data.activeTimers[gameId];
+    delete data.timerTimeCreated[gameId];
   }
 
   const actionValue = actions[action as keyof typeof actions];
@@ -157,7 +161,8 @@ export function adminQuizGameUpdate(
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
         game.state === quizStates.FINAL_RESULTS ||
-        game.state === quizStates.END
+        game.state === quizStates.END ||
+        game.atQuestion === game.metadata.questions.length
       ) {
         throw new BetterError(
           Errors.invalidAction().error,
@@ -167,11 +172,12 @@ export function adminQuizGameUpdate(
       game.state = quizStates.QUESTION_COUNTDOWN;
 
       game.atQuestion += 1;
-
+      
       data.activeTimers[gameId] = setTimeout(() => {
         game.state = quizStates.QUESTION_OPEN;
 
-        const currentQuestion = game.metadata.questions[game.atQuestion];
+        const currentQuestion = game.metadata.questions[game.atQuestion - 1];
+        data.timerTimeCreated[gameId] = Math.floor(Date.now() / 1000);
         data.activeTimers[gameId] = setTimeout(() => {
           if (game.state === quizStates.QUESTION_OPEN) {
             game.state = quizStates.QUESTION_CLOSE;
@@ -197,6 +203,7 @@ export function adminQuizGameUpdate(
       game.state = quizStates.QUESTION_OPEN;
 
       const currentQuestion = game.metadata.questions[game.atQuestion - 1];
+      data.timerTimeCreated[gameId] = Math.floor(Date.now() / 1000);
       data.activeTimers[gameId] = setTimeout(() => {
         if (game.state === quizStates.QUESTION_OPEN) {
           game.state = quizStates.QUESTION_CLOSE;
@@ -441,6 +448,24 @@ export function playerJoin(
 
   game.players.push(playerName);
   game.playersWithId.push({ playerName, playerId });
+  if (game.autoStartNum === game.players.length) {
+    game.state = quizStates.QUESTION_COUNTDOWN;
+
+    game.atQuestion += 1;
+
+    data.activeTimers[gameId] = setTimeout(() => {
+      game.state = quizStates.QUESTION_OPEN;
+
+      const currentQuestion = game.metadata.questions[game.atQuestion - 1];
+      data.timerTimeCreated[gameId] = Math.floor(Date.now() / 1000);
+      data.activeTimers[gameId] = setTimeout(() => {
+        if (game.state === quizStates.QUESTION_OPEN) {
+          game.state = quizStates.QUESTION_CLOSE;
+        }
+        console.log(currentQuestion);
+      }, currentQuestion.timeLimit * 1000);
+    }, 3000);
+  }
 
   return { playerId };
 }
@@ -566,6 +591,7 @@ export function playerQuestionResults(
   }
 
   const question = game.results.questionResults[questionPosition - 1];
+  question.percentCorrect = (question.playersCorrect.length / game.players.length) * 100
 
   return {
     questionId: question.questionId,
@@ -721,6 +747,33 @@ export function playerAnswerSubmit(
       ErrorCodes.BADREQUEST
     );
   }
+  
+  const question = game.results.questionResults[questionPosition - 1];
+  const player = game.playersWithId.find(p => p.playerId === playerId);
+  
+  const correctIndex = question.playersCorrect.findIndex(p => p === player.playerName);
+  const incorrectIndex = question.playersCorrect.findIndex(p => p === player.playerName);
+  if (correctIndex !== -1) {
+    question.playersCorrect.splice(correctIndex, 1);
+  }
+  else if (incorrectIndex !== -1) {
+    question.playersIncorrect.splice(correctIndex, 1);
+  }
+
+  const correctAnswers = currentQuestion.answerOptions.filter(a => a.correct === true).map(answer => answer.answerId);
+  console.log(answerIds);
+  console.log(correctAnswers);
+  if (correctAnswers.sort().toString() === answerIds.sort().toString()) {
+    question.playersCorrect.push(player.playerName);
+  }
+  else {
+    question.playersIncorrect.push(player.playerName);
+  }
+  
+  question.playersAnswerTime[player.playerId] = Math.floor(Date.now() / 1000) - data.timerTimeCreated[game.gameId];
+  question.totalAnswerTime = question.playersAnswerTime.reduce((sum: number, time: number) => sum + time, 0);
+  question.averageAnswerTime = (question.totalAnswerTime /
+    (question.playersCorrect.length + question.playersIncorrect.length));
 
   return {};
 }
