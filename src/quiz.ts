@@ -19,7 +19,7 @@ import {
   validateAnswers,
   getCurrentTimestamp,
   findQuizByUser,
-  // getLongestQuestionLine,
+  getLongestQuestionLine,
   BetterError,
   ErrorCodes,
   checkActiveGames,
