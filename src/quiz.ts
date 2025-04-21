@@ -19,7 +19,7 @@ import {
   validateAnswers,
   getCurrentTimestamp,
   findQuizByUser,
-  // getLongestQuestionLine,
+  getLongestQuestionLine,
   BetterError,
   ErrorCodes,
   checkActiveGames,
@@ -632,7 +632,6 @@ export function adminQuizQuestionMove(
  * @returns {{ question: string } | errorInterface} - Returns either the generated
  * question or an error object
  */
-/*
 export function adminQuizQuestionSuggestion(
   quizName: string,
   quizDescription: string,
@@ -687,7 +686,6 @@ export function adminQuizQuestionSuggestion(
 
   return { question: generatedQuestion };
 }
-*/
 
 /**
  * Updates an existing question in a quiz.

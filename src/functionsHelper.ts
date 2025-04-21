@@ -720,7 +720,7 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
  *
  * @returns {null | string} - Either a null or the question string
  */
-/*
+
 export function getLongestQuestionLine(text: string): null | string {
   const lines = text.split('\n');
   const questionLines = lines.filter((line: string) => /\?/.test(line));
@@ -734,7 +734,7 @@ export function getLongestQuestionLine(text: string): null | string {
     current.length > longest.length ? current : longest
   );
 }
-*/
+
 
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
