@@ -735,7 +735,6 @@ export function getLongestQuestionLine(text: string): null | string {
   );
 }
 
-
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
   shaObj.update(password);

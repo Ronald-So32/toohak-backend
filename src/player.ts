@@ -2,8 +2,6 @@ import {
   getData,
   userInterface,
   gameInterface,
-  questionsInterface,
-  answersInterface,
   resultsInterface,
   usersRankedByScoreInterface,
   questionResultsInterface
@@ -172,7 +170,7 @@ export function adminQuizGameUpdate(
       game.state = quizStates.QUESTION_COUNTDOWN;
 
       game.atQuestion += 1;
-      
+
       data.activeTimers[gameId] = setTimeout(() => {
         game.state = quizStates.QUESTION_OPEN;
 
@@ -591,7 +589,7 @@ export function playerQuestionResults(
   }
 
   const question = game.results.questionResults[questionPosition - 1];
-  question.percentCorrect = (question.playersCorrect.length / game.players.length) * 100
+  question.percentCorrect = (question.playersCorrect.length / game.players.length) * 100;
 
   return {
     questionId: question.questionId,
@@ -737,8 +735,8 @@ export function playerAnswerSubmit(
     );
   }
 
-  const currentQuestion = game.metadata.questions[questionPosition - 1];
-  const validAnswerIds = currentQuestion.answerOptions.map(answer => answer.answerId);
+  const currentQuestionAnswers = game.metadata.questions[questionPosition - 1].answerOptions;
+  const validAnswerIds = currentQuestionAnswers.map(answer => answer.answerId);
   const allAnswersValid = answerIds.every(id => validAnswerIds.includes(id));
 
   if (!allAnswersValid) {
@@ -747,31 +745,34 @@ export function playerAnswerSubmit(
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   const question = game.results.questionResults[questionPosition - 1];
   const player = game.playersWithId.find(p => p.playerId === playerId);
-  
+
   const correctIndex = question.playersCorrect.findIndex(p => p === player.playerName);
   const incorrectIndex = question.playersCorrect.findIndex(p => p === player.playerName);
   if (correctIndex !== -1) {
     question.playersCorrect.splice(correctIndex, 1);
-  }
-  else if (incorrectIndex !== -1) {
+  } else if (incorrectIndex !== -1) {
     question.playersIncorrect.splice(correctIndex, 1);
   }
 
-  const correctAnswers = currentQuestion.answerOptions.filter(a => a.correct === true).map(answer => answer.answerId);
+  const correctAnswers = currentQuestionAnswers.filter(a =>
+    a.correct === true).map(answer => answer.answerId);
+
   console.log(answerIds);
   console.log(correctAnswers);
   if (correctAnswers.sort().toString() === answerIds.sort().toString()) {
     question.playersCorrect.push(player.playerName);
-  }
-  else {
+  } else {
     question.playersIncorrect.push(player.playerName);
   }
-  
-  question.playersAnswerTime[player.playerId] = Math.floor(Date.now() / 1000) - data.timerTimeCreated[game.gameId];
-  question.totalAnswerTime = question.playersAnswerTime.reduce((sum: number, time: number) => sum + time, 0);
+
+  question.playersAnswerTime[player.playerId] = Math.floor(Date.now() / 1000) -
+                                                data.timerTimeCreated[game.gameId];
+  question.totalAnswerTime = question.playersAnswerTime.reduce(
+    (sum: number, time: number) => sum + time, 0);
+
   question.averageAnswerTime = (question.totalAnswerTime /
     (question.playersCorrect.length + question.playersIncorrect.length));
 

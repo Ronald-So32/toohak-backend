@@ -175,10 +175,10 @@ const data: Data = {
   highestID: 0,
   sessions: [],
   games: [],
-  
+
   activeTimers: {},
   timerTimeCreated: []
-  
+
 };
 
 /**
