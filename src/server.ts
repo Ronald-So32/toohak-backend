@@ -725,18 +725,17 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
   });
 
 // GET /v1/open/csv/{playerid}
-app.get('/v1/open/csv/:playerid',
-  (req: Request, res: Response) => {
-    const playerId = parseInt(req.params.playerid);
+app.get('/v1/open/csv/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
 
-    try {
-      const result = createCSV(playerId);
+  try {
+    const result = createCSV(playerId);
 
-      return res.status(OK).json(result);
-    } catch (error) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
-  });
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 app.use((req: Request, res: Response) => {
   const error = `
