@@ -1830,6 +1830,51 @@ paths:
             If any of the following are true:
             - If player ID does not exist
             - Game is not in FINAL_RESULTS state
+            - The directory ./csvResults does not exist
+          schema:
+            $ref: '#/components/return/Error'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+
+  /v1/open/export/{quizid}:
+    get:
+      summary: Generate a CSV file of the game's final results
+      description: Convert the final results into a CSV and display it
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: This is the name of the quiz
+              description:
+                type: string
+                example: This quiz is so we can have a lot of fun
+              numQuestions:
+                $ref: '#/components/prim/NumQuestions'
+              questions:
+                type: array
+                items:
+                  $ref: '#/components/group/QuizQuestion'
+              timeLimit:
+                $ref: '#/components/prim/Duration'
+              thumbnailUrl:
+                $ref: '#/components/prim/Url'
+        400:
+          description: The directory ./jsonFiles does not exist
           schema:
             $ref: '#/components/return/Error'
         401:

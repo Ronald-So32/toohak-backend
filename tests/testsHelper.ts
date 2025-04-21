@@ -741,7 +741,23 @@ export function requestPlayerFinalResults(
 }
 
 /**
- * Wrapper for GET /v1/open/csv
+ * Wrapper for GET /v1/open/csv/{quizid}/{playerid}
+ */
+export function requestCSV(
+  playerId: number,
+  quizId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/csv/${quizId}/${playerId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/
  */
 export function requestCSV(
   playerId: number,
