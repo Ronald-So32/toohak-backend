@@ -656,3 +656,71 @@ export function playerFinalResults(playerId: number) {
     }))
   };
 }
+
+export function playerAnswerSubmit(
+  playerId: number,
+  questionPosition: number,
+  answerIds: number[]
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidGame().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.atQuestion !== questionPosition) {
+    throw new BetterError(
+      Errors.invalidQuestionPosition().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (answerIds.length < 1) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const uniqueAnswerIds = new Set(answerIds);
+  if (uniqueAnswerIds.size !== answerIds.length) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.metadata.questions[questionPosition - 1];
+  const validAnswerIds = currentQuestion.answerOptions.map(answer => answer.answerId);
+  const allAnswersValid = answerIds.every(id => validAnswerIds.includes(id));
+
+  if (!allAnswersValid) {
+    throw new BetterError(
+      Errors.invalidAnswer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return {};
+}
