@@ -148,6 +148,8 @@ export interface quizGetDetailsInterface {
   }
 }
 
+export const idOffset: number = 727727;
+
 export enum quizStates {
   LOBBY = 'LOBBY',
   QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
