@@ -36,13 +36,24 @@ export function exportJSON(
   quizId: number,
   userId: number
 ) {
-  
-}
+  const quiz = findQuizByUser(userId, quizId);
 
+  const newJSON = {
+    name: quiz.name,
+    description: quiz.description,
+    numQuestions: quiz.numQuestions,
+    questions: quiz.questions,
+    timeLimit: quiz.timeLimit,
+    thumbnailUrl: quiz.thumbnailUrl || ''
+  }
+  
+  const time = getCurrentTimestamp();
+
+  fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
 }
 
 export function importJSON(
-  quizId: number,
+  file: string,
   userId: number
 ) {
 
