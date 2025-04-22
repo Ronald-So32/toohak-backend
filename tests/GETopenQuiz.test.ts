@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestQuizExport
 } from './testsHelper';
 
@@ -35,27 +35,28 @@ beforeEach(() => {
   timeCreated = Math.floor(Date.now() / 1000)
   quizId = responseCreate.body.quizId;
   
-  questionId = requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Monarch of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
+  questionId = requestAdminQuizQuestionCreateV2(
+      quizId,
+      session,
+      {
+        questionBody: {
+          question: 'Who is the Monarch of England?',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              correct: true
+            },
+            {
+              answer: 'Queen Elizibeth',
+              correct: false
+            }
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        }
       }
-    }
-  ).body.questionId;
+    ).body.questionId;
   timeLastEdited = Math.floor(Date.now() / 1000)
 });
 
@@ -87,7 +88,8 @@ describe('Testing GET /v1/open/CSV', () => {
                 answerId: expect.any(Number),
                 colour: expect.any(String)
               }
-            ]
+            ],
+            thumbnailUrl: 'http://google.com/some/image/path.jpg'
           }
         ],
         timeLimit: 4,

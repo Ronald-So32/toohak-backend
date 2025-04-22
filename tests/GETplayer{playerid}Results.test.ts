@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
@@ -47,7 +47,7 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -64,7 +64,8 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );

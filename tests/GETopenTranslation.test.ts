@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
@@ -37,50 +37,52 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Monarch of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
+  requestAdminQuizQuestionCreateV2(
+      quizId,
+      session,
+      {
+        questionBody: {
+          question: 'Who is the Monarch of England?',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              correct: true
+            },
+            {
+              answer: 'Queen Elizibeth',
+              correct: false
+            }
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        }
       }
-    }
-  );
+    );
   
 
-  requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Queen of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
+  requestAdminQuizQuestionCreateV2(
+      quizId,
+      session,
+      {
+        questionBody: {
+          question: 'Who is the Queen of England?',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              correct: true
+            },
+            {
+              answer: 'Queen Elizibeth',
+              correct: false
+            }
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        }
       }
-    }
-  );
+    );
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;

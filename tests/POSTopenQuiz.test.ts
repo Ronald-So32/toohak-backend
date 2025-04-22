@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestQuizExport,
   requestQuizImport,
   requestGetQuizList
@@ -35,27 +35,28 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
   
-  requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Monarch of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
+  requestAdminQuizQuestionCreateV2(
+      quizId,
+      session,
+      {
+        questionBody: {
+          question: 'Who is the Monarch of England?',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              correct: true
+            },
+            {
+              answer: 'Queen Elizibeth',
+              correct: false
+            }
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        }
       }
-    }
-  );
+    );
   fileName = requestQuizExport(quizId, session).body.file;
   const responseRegister2 = requestAdminAuthRegister(
     'z727f7272@ad.unsw.edu.au',

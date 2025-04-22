@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
@@ -46,7 +46,7 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -63,33 +63,35 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
   questionId = responseQuestionCreate.body.questionId;
 
-  requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Queen of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
+  requestAdminQuizQuestionCreateV2(
+      quizId,
+      session,
+      {
+        questionBody: {
+          question: 'Who is the Queen of England?',
+          timeLimit: 4,
+          points: 5,
+          answerOptions: [
+            {
+              answer: 'Prince Charles',
+              correct: true
+            },
+            {
+              answer: 'Queen Elizibeth',
+              correct: false
+            }
+          ],
+          thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        }
       }
-    }
-  );
+    );
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;

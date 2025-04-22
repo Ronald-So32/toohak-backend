@@ -3,7 +3,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAttachment,
   requestAttachmentView
 } from './testsHelper';
@@ -40,7 +40,7 @@ beforeEach(() => {
   );
   quizId = responseQuizCreate.body.quizId;
 
-  requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -57,7 +57,8 @@ beforeEach(() => {
             answer: 'Wrong',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
