@@ -19,6 +19,7 @@ import {
   quizInterface,
   getData
 } from './dataStore';
+import {questionBodyInterface } from '../tests/testsHelper'
 
 import fs from 'fs';
 import request from 'sync-request-curl';
@@ -95,13 +96,15 @@ export function importJSON(
 
     quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
   
-    try {
-      adminQuizQuestionCreateV2(userId, quizId, { questionBody: jsonData.questions });
-    } catch (error) {
+    for (const question of jsonData.questions) {
       try {
-        adminQuizQuestionCreate(userId, quizId, { questionBody: jsonData.questions });
+        adminQuizQuestionCreateV2(userId, quizId, question);
       } catch (error) {
-        
+        try {
+          adminQuizQuestionCreate(userId, quizId, question);
+        } catch (error) {
+          
+        }
       }
     }
 
