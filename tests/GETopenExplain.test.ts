@@ -11,7 +11,8 @@ import {
 
 import {
   actions,
-  ErrorCodes
+  ErrorCodes,
+  idOffset
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
@@ -43,7 +44,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who plays league of legends?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -73,7 +74,7 @@ beforeEach(() => {
       {
         questionBody: {
           question: 'Who is the Monarch of England?',
-          timeLimit: 4,
+          timeLimit: 1,
           points: 5,
           answerOptions: [
             {
@@ -107,8 +108,62 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseHints = requestExplain(playerId);
-    expect(responseHints.body).toStrictEqual(expect.any(String));
-    expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
+    const responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual(expect.any(String));
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.OK);
+  });
+
+  test('Testing player is not found', () => {
+    const responseExplain = requestExplain(playerId + idOffset);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  });
+  
+  test('Testing when game state is invalid', () => {
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    gameId = responseGameStart.body.gameId;
+
+    const responsePlayerJoin = requestPlayerJoin(
+      gameId,
+      'Name'
+    );
+
+    playerId = responsePlayerJoin.body.playerId;
+    let responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  
+    responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+    
+    responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    const slync = require('slync');
+    slync(1000);
+  
+    responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+  
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+  
+    responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+  
+    responseExplain = requestExplain(playerId);
+    expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
 });
