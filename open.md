@@ -18,7 +18,7 @@ You can now export it into a CSV file.
 
 # JSON Exporting
 
-The route is
+The route is GET /v1/open/export/{quizid}
 
 ## How it works
 
@@ -26,7 +26,7 @@ The route is
 
 # JSON Importing
 
-The route is
+The route is POST /v1/open/import
 
 ## How it works
 
@@ -34,7 +34,7 @@ The route is
 
 # Adding Attachments
 
-The route is 
+The route is PUT /v1/open/attachment/{quizid}
 
 ## How it works
 
