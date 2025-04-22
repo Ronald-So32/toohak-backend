@@ -19,7 +19,6 @@ import {
   quizInterface,
   getData
 } from './dataStore';
-import { questionBodyInterface } from '../tests/testsHelper';
 
 import fs from 'fs';
 import request from 'sync-request-curl';
@@ -92,7 +91,9 @@ export function importJSON(
   let quizId = createUUID();
 
   try {
-    const jsonData = JSON.parse(fs.readFileSync(`${JSON_PATH}/${file}`).toString()) as quizInterface;
+    const jsonData = JSON.parse(
+      fs.readFileSync(`${JSON_PATH}/${file}`).toString()
+    ) as quizInterface;
 
     quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
 

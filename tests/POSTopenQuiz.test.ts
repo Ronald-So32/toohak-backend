@@ -6,9 +6,6 @@ import {
   requestQuizExport,
   requestQuizImport,
   OK,
-  BADREQUEST,
-  FORBIDDEN,
-  UNAUTHORISED,
   requestGetQuizList
 } from './testsHelper';
 
@@ -18,8 +15,8 @@ let session: string;
 let session2: string;
 let quizId: number;
 // let questionId: number;
-let gameId: number;
-let playerId: number;
+// let gameId: number;
+// let playerId: number;
 // let timeCreated: number;
 // let timeLastEdited: number;
 let fileName: string;

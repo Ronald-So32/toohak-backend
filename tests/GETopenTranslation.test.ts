@@ -7,16 +7,10 @@ import {
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
   requestTranslate,
-  requestPlayerQuestionInfo,
-  requestPlayerAnswerSubmit,
-  OK,
-  BADREQUEST
+  OK
 } from './testsHelper';
 
 import { describe } from 'node:test';
-
-const playerIdOffset = 727727;
-const answerIdOffset = 727727;
 
 let session: string;
 let quizId: number;

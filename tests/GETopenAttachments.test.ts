@@ -6,22 +6,15 @@ import {
   requestAdminQuizQuestionCreate,
   requestAttachment,
   requestAttachmentView,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN
+  OK
 } from './testsHelper';
 
 import { describe } from 'node:test';
 
-const quizIdOffset = 727;
-const questionIdOffset = 999;
-
 let session: string;
 let quizId: number;
-let questionId: number;
-let timeCreated: number;
+// let questionId: number;
+// let timeCreated: number;
 
 // Before each test clears the data and registers a user and creates a quiz
 // and question and gets the current session, quiz id and question id
@@ -40,10 +33,10 @@ beforeEach(() => {
     'Quiz Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now() / 1000);
+  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -64,7 +57,7 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId;
+  // questionId = responseQuestionCreate.body.questionId;
 
   requestAttachment(
     session,

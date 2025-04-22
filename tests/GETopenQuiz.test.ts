@@ -4,10 +4,7 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestQuizExport,
-  OK,
-  BADREQUEST,
-  FORBIDDEN,
-  UNAUTHORISED
+  OK
 } from './testsHelper';
 
 import { describe } from 'node:test';
@@ -15,8 +12,8 @@ import { describe } from 'node:test';
 let session: string;
 let quizId: number;
 // let questionId: number;
-let gameId: number;
-let playerId: number;
+// let gameId: number;
+// let playerId: number;
 // let timeCreated: number;
 // let timeLastEdited: number;
 
