@@ -5,10 +5,11 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminUserPasswordUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -38,7 +39,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
     // Checks that response from password update returns an empty object
     // and a status code of 200
     expect(responsePassword.body).toStrictEqual({});
-    expect(responsePassword.statusCode).toStrictEqual(OK);
+    expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -51,7 +52,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
       // Checks that the response of the invalid password update returns an error object
       // and a status code of 401
       expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePassword.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
     });
 
     test('Testing when the password is already used', () => {
@@ -66,7 +67,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
       // Checks that the response from password update returns an error object
       // and a status code of 400
       expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePassword.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     describe('Testing the new password', () => {
@@ -89,7 +90,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
             newPassword
           );
           expect(responsePassword.body).toStrictEqual({});
-          expect(responsePassword.statusCode).toStrictEqual(OK);
+          expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
 
@@ -127,7 +128,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
             newPassword
           );
           expect(responsePassword.body).toStrictEqual({ error: expect.any(String) });
-          expect(responsePassword.statusCode).toStrictEqual(BADREQUEST);
+          expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
     });
@@ -141,7 +142,7 @@ describe('Testing PUT /v1/admin/user/password', () => {
 
     const responseLogin = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
     expect(responseLogin.body).toStrictEqual({ session: responseLogin.body.session });
-    expect(responseLogin.statusCode).toStrictEqual(OK);
+    expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
 
     const responseDetails2 = requestGetUserDetails(session);
     expect(responseDetails2.body.user.numSuccessfulLogins).toStrictEqual(2);
@@ -154,11 +155,11 @@ describe('Testing PUT /v1/admin/user/password', () => {
       'NewPassword1'
     );
     expect(responsePassword.body).toStrictEqual({});
-    expect(responsePassword.statusCode).toStrictEqual(OK);
+    expect(responsePassword.statusCode).toStrictEqual(ErrorCodes.OK);
 
     const responseLogin2 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'NewPassword1');
     expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin2.statusCode).toStrictEqual(OK);
+    expect(responseLogin2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     const responseDetails3 = requestGetUserDetails(session);
     expect(responseDetails3.body.user.numSuccessfulLogins).toStrictEqual(3);
@@ -171,11 +172,11 @@ describe('Testing PUT /v1/admin/user/password', () => {
       'AnotherNewPassword1'
     );
     expect(responsePassword2.body).toStrictEqual({ error: expect.any(String) });
-    expect(responsePassword2.statusCode).toStrictEqual(BADREQUEST);
+    expect(responsePassword2.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
     const responseLogin3 = requestAdminAuthLogin('z7277272@ad.unsw.edu.au', 'Password1');
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
+    expect(responseLogin3.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
     const responseDetails4 = requestGetUserDetails(session);
     expect(responseDetails4.body.user.numSuccessfulLogins).toStrictEqual(3);
