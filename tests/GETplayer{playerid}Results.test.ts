@@ -14,7 +14,6 @@ import {
 
 import {
   actions,
-  quizStates,
   ErrorCodes,
   idOffset
 } from '../src/functionsHelper';
@@ -29,6 +28,9 @@ let gameId: number;
 let playerId: number;
 let currentAnswerOptions: answersInterface[];
 
+// Before each test clears the existing data then registers an user creating a
+// quiz with a question in it and starts a game with one player then gets the answerOptions.
+// of the first question and changes the game state to GO_TO_FINAL_RESULTS
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -77,18 +79,21 @@ beforeEach(() => {
   );
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
 
   currentAnswerOptions = requestPlayerQuestionInfo(playerId, 1).body.answerOptions;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
+    // Gets the final result of the gmae player is in
     const responseGetGameResult = requestPlayerFinalResults(playerId);
+    // Checks that a valid request to get final results returns a objet with the 
+    // result of the game and a status code of 200
     expect(responseGetGameResult.body).toStrictEqual({
       usersRankedByScore: [
         {
@@ -111,6 +116,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   describe('Testing for error responses', () => {
     test('Testing when player does not exist in game', () => {
       const responseGetGameResult = requestPlayerFinalResults(playerId + idOffset);
+      // Checks that a invalid request to get final results returns an error object
+      // and a status code of 200
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
@@ -301,10 +308,12 @@ test('Testing GET /v1/player/{playerid} works as intended', () => {
 
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
 
+    // Gets the final result of the game and checks taht the users ranks are correct
+    // and question results
     const responseGetGameResult = requestPlayerFinalResults(playerId);
     expect(responseGetGameResult.body).toStrictEqual({
       usersRankedByScore: [
-        {
+        { 
           playerName: 'Name2',
           score: 5
         },
