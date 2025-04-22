@@ -10,12 +10,13 @@ import {
   requestAdminQuizUpdateDescription,
   requestAdminQuizQuestionUpdateV2,
   requestDeleteQuizQuestion,
-  requestAdminQuizThumbnailUpdate,
-  OK,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestAdminQuizThumbnailUpdate
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -106,7 +107,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       ],
       timeLimit: expect.any(Number)
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -125,17 +126,17 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
         // Checks that the response of an unauthorised quiz deletion returns an error object
         // and a status code of 401
         expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuizDetails.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseQuizDetails = requestGetQuizV2(quizId + quizIdOffset, session);
+        const responseQuizDetails = requestGetQuizV2(quizId + idOffset, session);
         // Checks that the response of an forbidden quiz deletion returns an error object
         // and a status code of 403
         expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -147,7 +148,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
         ).body.session;
         const responseQuizDetails = requestGetQuizV2(quizId, session);
         expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
   });
@@ -161,12 +162,12 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       thumbnailUrl
     );
     expect(responseThumbnailUpdate.body).toStrictEqual({});
-    expect(responseThumbnailUpdate.statusCode).toStrictEqual(OK);
+    expect(responseThumbnailUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check that the thumbnail is updated in the quiz details
     const responseQuizDetails = requestGetQuizV2(quizId, session);
     expect(responseQuizDetails.body.thumbnailUrl).toStrictEqual(thumbnailUrl);
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   test('Testing GET /v2/admin/quiz/{quizid} works as intended', () => {
@@ -203,7 +204,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       ],
       timeLimit: expect.any(Number)
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Creates a second quiz and gets the second quiz's id
     responseQuestionCreate = requestAdminQuizQuestionCreateV2(
@@ -344,7 +345,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       timeLimit: expect.any(Number),
       thumbnailUrl: newThumbnailUrl
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Deletes all the questions
     requestDeleteQuizQuestion(quizId, questionId, session);
@@ -364,7 +365,7 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
       timeLimit: expect.any(Number),
       thumbnailUrl: newThumbnailUrl
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Deletes the quiz
     requestDeleteQuiz(quizId, session);
@@ -373,6 +374,6 @@ describe('Testing GET /v2/admin/quiz/{quizid}', () => {
     // Checks that deleted quiz's details is unavailable and returns an error object and
     // a status code of 403
     expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseQuizDetails.statusCode).toStrictEqual(FORBIDDEN);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
   });
 });
