@@ -12,12 +12,11 @@ import {
 import {
   quizStates,
   actions,
-  ErrorCodes
+  ErrorCodes,
+  idOffset
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-
-const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
@@ -111,7 +110,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
     test('Testing invalid game within quiz', () => {
       const responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+        gameId + idOffset,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
@@ -119,18 +118,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     });
 
     test('Testing when game state is not in LOBBY', () => {
-      let responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
-        'Name'
-      );
-      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-
       // Updates the game state
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
 
-      responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+      let responsePlayerJoin = requestPlayerJoin(
+        gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
@@ -142,7 +134,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       slync(1000);
 
       responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+        gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
@@ -151,7 +143,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
 
       responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+        gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
@@ -160,7 +152,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
 
       responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+        gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
@@ -169,7 +161,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
 
       responsePlayerJoin = requestPlayerJoin(
-        gameId + gameIdOffset,
+        gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
