@@ -5,7 +5,8 @@ import {
   BetterError,
   ErrorCodes,
   createUUID,
-  Errors
+  Errors,
+  quizStates
 } from './functionsHelper';
 import {
   adminQuizCreate,
@@ -14,7 +15,10 @@ import {
   adminQuizThumbnailUpdate
 } from './quiz'
 import { playerFinalResults } from './player';
-import { quizInterface } from './dataStore';
+import {
+  quizInterface,
+  getData
+} from './dataStore';
 
 import fs from 'fs';
 import request from 'sync-request-curl';
@@ -144,8 +148,29 @@ export function seeAttachments(
 }
 
 export function hint(
+  playerId: number,
   HUGGINGFACE_API_TOKEN: string
 ) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
   const question = "who is the best league of legends player"
   const answer = "faker"
   const prompt = `You are a helpful assistant that only gives hints. 

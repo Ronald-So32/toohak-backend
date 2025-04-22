@@ -807,6 +807,22 @@ app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   }
 });
 
+// GET /v1/open/hint
+app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { attachmentNumber } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = seeAttachments(userId, quizId, attachmentNumber);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
 app.use((req: Request, res: Response) => {
   const error = `
     Route not found - This could be because:
