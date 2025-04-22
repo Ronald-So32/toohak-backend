@@ -70,6 +70,8 @@ Things like base64 things can be decoded.
 The route is GET /v1/open/attachment/{quizid}
 
 ## How it works
+To view an attachment you will need the quiz and then attachment number.
+If the attachment number is not valid then it will throw an error.
 
 ## Usage
 
