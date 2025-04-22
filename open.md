@@ -74,6 +74,9 @@ To view an attachment you will need the quiz and then attachment number.
 If the attachment number is not valid then it will throw an error.
 
 ## Usage
+Currently there is no way to view the attachment.
+Once it is attached to the quiz it will never be seen again.
+Just call the route to get the specific attachment on a quiz, you will need to be an owner though.
 
 # Get Hints
 
