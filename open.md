@@ -50,6 +50,12 @@ You can then edit it afterwards.
 The route is PUT /v1/open/attachment/{quizid}
 
 ## How it works
+To add attachments to a quiz, you need to turn whatever you have into a string.
+Music links, youtube links, embeded links, pdf links, sharepoint links, mega links.
+Anything that is on the internet can be stored as a string.
+If the attachment is not in a string format, no problem.
+Files are just a bunch of ones and zeroes, just base64 encode it into a string.
+End users can decode it afterwards using the same base64 algorithm.
 
 ## Usage
 
