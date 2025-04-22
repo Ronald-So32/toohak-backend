@@ -17,7 +17,6 @@ import {
   idOffset
 } from '../src/functionsHelper';
 
-
 import { describe } from 'node:test';
 
 let session: string;
@@ -152,7 +151,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
       expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
-    
+
     test('Testing when there are 10 games and one is in END state', () => {
       let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
@@ -167,10 +166,10 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
       // Updates the status of one of games to end state then starts the 10th game
       requestAdminQuizGameStateUpdate(quizId, responseGameStart.body.gameId, session, actions.END);
       responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-      expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+      expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
       expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     });
-    
+
     test('Testing when a quiz has no questions', () => {
       // Creates a new quiz with no question
       quizId = requestAdminQuizCreate(
@@ -187,7 +186,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
 
   test('Testing PSOT /v1/admin/quiz/{quizid}/game/start  works as intended', () => {
     let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
     expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     // Gets the gameId of the game started
     const gameId1 = responseGameStart.body.gameId;
@@ -237,7 +236,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
     });
     // Checks that it can starts a second game and gets the gameId of it
     responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
+    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
     expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     const gameId2 = responseGameStart.body.gameId;
 
@@ -254,7 +253,5 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
         gameId2
       ]
     });
-
   });
-  
 });

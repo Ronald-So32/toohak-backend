@@ -37,7 +37,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  
+
   quizId = responseCreate.body.quizId;
 
   requestAdminQuizQuestionCreate(
@@ -46,7 +46,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -94,80 +94,79 @@ describe('Testing GET /v1/player/{playerid}', () => {
 
   test('Testing GET /v1/player/{playerid} works as intended', () => {
     // Gets the latest status of the current game and checks the state of the game
-      let responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: 'LOBBY',
-        numQuestions: 1,
-        atQuestion: 0
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
-      
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-    
-      // Checks that that game is in QUESTION_COUNTDOWN and atQuestion is 1
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.QUESTION_COUNTDOWN,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
-    
-      // Checks that that game is in QUESTION_OPEN
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.QUESTION_COUNTDOWN,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
-    
-      const slync = require('slync');
-      slync(1000);
-    
-      // Checks that that game is in QUESTION_CLOSE
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.QUESTION_CLOSE,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-    
-      // Checks that that game is in ANSWER_SHOW
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.ANSWER_SHOW,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+    let responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: 'LOBBY',
+      numQuestions: 1,
+      atQuestion: 0
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
 
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-    
-      // Checks that that game is in ANSWER_SHOW
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.FINAL_RESULTS,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
 
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-    
-      // Checks that that game is in ANSWER_SHOW
-      responsePlayerStatus = requestPlayerStatus(playerId);
-      expect(responsePlayerStatus.body).toStrictEqual({
-        state: quizStates.END,
-        numQuestions: 1,
-        atQuestion: 1
-      });
-      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+    // Checks that that game is in QUESTION_COUNTDOWN and atQuestion is 1
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_COUNTDOWN,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+
+    // Checks that that game is in QUESTION_OPEN
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_OPEN,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    const slync = require('slync');
+    slync(1000);
+
+    // Checks that that game is in QUESTION_CLOSE
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_CLOSE,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.ANSWER_SHOW,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.FINAL_RESULTS,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.END,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

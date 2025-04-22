@@ -53,7 +53,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
         // Checks that the response on updating invalid session returns an error
         // object and a status code of 401
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
 
       test('Email is already used by another user', () => {

@@ -1,7 +1,6 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  responseInterface,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizCreate,
   requestAdminQuizGameStart,
@@ -109,7 +108,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       });
     });
   });
-  
+
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
     let responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
@@ -120,7 +119,6 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
     const gameId1 = requestAdminQuizGameStart(session, quizId, 3).body.gameId;
     const gameId2 = requestAdminQuizGameStart(session, quizId, 3).body.gameId;
-    
 
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
@@ -131,10 +129,9 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
-    
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.NEXT_QUESTION);
-  
+
     // Checks that the game is still active
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
@@ -145,9 +142,9 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.SKIP_COUNTDOWN);
-  
+
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [
@@ -157,10 +154,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
-  
+
     const slync = require('slync');
     slync(1000);
-  
+
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [
@@ -170,9 +167,9 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       inactiveGames: []
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.GO_TO_ANSWER);
-  
+
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [
@@ -184,7 +181,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
 
     requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.GO_TO_FINAL_RESULTS);
-  
+
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [
@@ -196,7 +193,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
 
     requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.END);
-  
+
     responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [
@@ -208,5 +205,4 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     });
     expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-  
 });

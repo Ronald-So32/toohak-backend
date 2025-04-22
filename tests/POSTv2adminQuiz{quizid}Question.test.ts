@@ -11,7 +11,6 @@ import {
   idOffset
 } from '../src/functionsHelper';
 
-
 import { describe } from 'node:test';
 
 // TODO: VALIDATE THUMBNAIL

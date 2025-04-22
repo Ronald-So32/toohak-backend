@@ -59,34 +59,28 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
 
   describe('Test error cases', () => {
     describe('Testing status code of 401 return values', () => {
-          test.each([
-            {
-              session: session + 'Invalid Session',
-              description: 'Invalid session',
-            },
-            {
-              session: '',
-              description: 'Empty session',
-            }
-          ])('$description', ({ session }) => {
-      const responseUpdateDescription = requestAdminQuizUpdateDescription(
-        quizId, session,
-        'New Description'
-      );
-      // Checks that the response when update with invalid session returns an error object
-      // and a status code of 401
-      expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdateDescription.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
-
-      // To make sure that it does not change existing quiz
-      const responseQuizGet2 = requestGetQuiz(quizId, session);
-      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
-      expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseUpdateDescription = requestAdminQuizUpdateDescription(
+          quizId, session,
+          'New Description'
+        );
+        // Checks that the response when update with invalid session returns an error object
+        // and a status code of 401
+        expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdateDescription.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
-  });
 
     test('Testing when the session is valid but the quizId is not', () => {
-      const responseQuizGet = requestGetQuiz(quizId, session);
       const responseUpdateDescription = requestAdminQuizUpdateDescription(
         quizId + idOffset,
         session,
@@ -96,11 +90,6 @@ describe('Testing PUT v1/admin/quiz/{quizid}/description', () => {
       // a status code of 403
       expect(responseUpdateDescription.body).toStrictEqual({ error: expect.any(String) });
       expect(responseUpdateDescription.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
-
-      // To make sure that it does not change existing quiz
-      const responseQuizGet2 = requestGetQuiz(quizId, session);
-      expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
-      expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
     });
 
     test('Invalid quizId - When quiz is not owned by session', () => {

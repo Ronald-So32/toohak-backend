@@ -135,7 +135,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
-    test('Testing when question position given is not valid for the game', () => { 
+    test('Testing when question position given is not valid for the game', () => {
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -150,7 +150,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     test('Testing when game is not in QUESTION_OPEN state', () => {
       // Ends the game created before the test
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-      
+
       // Starts a new game with a player
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
@@ -199,7 +199,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-      
+
       responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -211,7 +211,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-      
+
       responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId]
@@ -247,7 +247,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
-    test('Testing when answer is not valid for this particular question', () => { 
+    test('Testing when answer is not valid for this particular question', () => {
       const responsePlayerSubmit = requestPlayerAnswerSubmit(
         {
           answerIds: [currentAnswerOptions[0].answerId + idOffset]
@@ -309,17 +309,17 @@ describe('Testing GET /v1/player/{playerid}', () => {
     // Creates new game and adds 3 players to it
     gameId = requestAdminQuizGameStart(session, quizId, 5).body.gameId;
 
-    playerId  = requestPlayerJoin(
+    playerId = requestPlayerJoin(
       gameId,
       'Name'
     ).body.playerId;
 
-    const playerId2  = requestPlayerJoin(
+    const playerId2 = requestPlayerJoin(
       gameId,
       'Name2'
     ).body.playerId;
 
-    const playerId3  = requestPlayerJoin(
+    const playerId3 = requestPlayerJoin(
       gameId,
       'Name3'
     ).body.playerId;
@@ -379,7 +379,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     );
     expect(responsePlayerSubmit.body).toStrictEqual({});
     expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
-    
+
     responsePlayerSubmit = requestPlayerAnswerSubmit(
       {
         answerIds: [
@@ -417,10 +417,10 @@ describe('Testing GET /v1/player/{playerid}', () => {
     );
     expect(responsePlayerSubmit.body).toStrictEqual({});
     expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
-    
+
     const slync = require('slync');
     slync(1000);
-    
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
 
     // Gets the id of the current quiz
@@ -435,8 +435,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
         'Name'
       ],
       averageAnswerTime: 0,
-      percentCorrect: 2/3 * 100,
+      percentCorrect: 2 / 3 * 100,
     });
-
   });
 });

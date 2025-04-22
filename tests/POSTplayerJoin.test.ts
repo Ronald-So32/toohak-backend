@@ -147,7 +147,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-      
+
       responsePlayerJoin = requestPlayerJoin(
         gameId + gameIdOffset,
         'Name'
@@ -156,7 +156,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-      
+
       responsePlayerJoin = requestPlayerJoin(
         gameId + gameIdOffset,
         'Name'

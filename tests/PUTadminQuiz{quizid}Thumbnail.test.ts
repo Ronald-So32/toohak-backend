@@ -1,4 +1,3 @@
-import { time } from 'console';
 import {
   requestClear,
   requestAdminAuthRegister,
@@ -18,7 +17,7 @@ let session: string;
 let quizId: number;
 let timeCreated: number;
 
-// Before each test clears existing data and registers an user, creating a quiz 
+// Before each test clears existing data and registers an user, creating a quiz
 // then gets the session, time the quiz was created an the quizId.
 beforeEach(() => {
   requestClear();
@@ -34,7 +33,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now()/1000);
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 });
 
@@ -264,7 +263,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
       timeLimit: expect.any(Number)
     });
     expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
-    
+
     // Adds a thumbnail for the quiz
     let responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
@@ -274,7 +273,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     expect(responseThumbnail.body).toStrictEqual({});
     expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
     // Gets the current time
-    let timeLastEdited = Math.floor(Date.now()/1000);
+    let timeLastEdited = Math.floor(Date.now() / 1000);
 
     // Gets the latest details of the quiz to checks that the thumbnail is there
     responseQuizDetails = requestGetQuizV2(quizId, session);
@@ -299,7 +298,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
     );
     expect(responseThumbnail.body).toStrictEqual({});
     expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
-    timeLastEdited = Math.floor(Date.now()/1000);
+    timeLastEdited = Math.floor(Date.now() / 1000);
 
     // Checks that the thumbnail is updated
     responseQuizDetails = requestGetQuizV2(quizId, session);

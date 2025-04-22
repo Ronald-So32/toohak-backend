@@ -43,31 +43,31 @@ describe('Testing POST /v1/admin/auth/logout', () => {
 
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
-          test.each([
-            {
-              session: session + 'Invalid Session',
-              description: 'Invalid session',
-            },
-            {
-              session: '',
-              description: 'Empty session',
-            }
-          ])('$description', ({ session }) => {
-      const responseLogout = requestAdminAuthLogout(session + 'Invalid Session');
-      // Checks that an unauthorised logout returns an error object and a
-      // status code of 401
-      expect(responseLogout.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseLogout.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseLogout = requestAdminAuthLogout(session + 'Invalid Session');
+        // Checks that an unauthorised logout returns an error object and a
+        // status code of 401
+        expect(responseLogout.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseLogout.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
 
-      // Confirm user can log back in
-      const responseLogin = requestAdminAuthLogin(
-        'z7277272@ad.unsw.edu.au',
-        'Password1'
-      );
-      expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-      expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
+        // Confirm user can log back in
+        const responseLogin = requestAdminAuthLogin(
+          'z7277272@ad.unsw.edu.au',
+          'Password1'
+        );
+        expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
+        expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
+      });
     });
-  });
     test('Logging out after already logging out once', () => {
       const responseLogout = requestAdminAuthLogout(session);
       expect(responseLogout.body).toStrictEqual({});

@@ -596,7 +596,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           );
           expect(responseUpdateGame.body).toStrictEqual({});
           expect(responseUpdateGame.statusCode).toStrictEqual(ErrorCodes.OK);
-
         });
       });
 
@@ -688,7 +687,7 @@ test('Testing PUT /v1/admin/quiz/{quizid}/game/{gameid} works as intended', () =
   // Gets the latest status of the current game and checks the state of the game
   let responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
   expect(responseGameStatus.body.state).toStrictEqual(quizStates.LOBBY);
-  
+
   // Gets the list of games for the quiz and checks that it's in the correct list.
   let responseGamesList = requestAdminQuizGamesList(session, quizId);
   expect(responseGamesList.body).toStrictEqual({

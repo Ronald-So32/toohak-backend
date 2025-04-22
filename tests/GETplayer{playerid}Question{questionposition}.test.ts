@@ -66,7 +66,7 @@ beforeEach(() => {
       }
     }
   ).body.questionId;
-  
+
   questionId2 = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
@@ -181,13 +181,13 @@ describe('Testing GET /v1/player/{playerid}', () => {
       slync(1000);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-      
+
       requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-      
+
       requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
@@ -229,7 +229,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-      
+
       requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
       expect(requestGetPlayerQuestion.body).toStrictEqual({
         questionId: questionId,
@@ -252,71 +252,70 @@ describe('Testing GET /v1/player/{playerid}', () => {
       });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
     });
-
   });
 
   test('Testing GET /v1/player/{playerid} works as intended', () => {
     // Starts a new game with a player
     const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-      gameId = responseGameStart.body.gameId;
-      const responsePlayerJoin = requestPlayerJoin(
-        gameId,
-        'Name'
-      );
-      playerId = responsePlayerJoin.body.playerId;
+    gameId = responseGameStart.body.gameId;
+    const responsePlayerJoin = requestPlayerJoin(
+      gameId,
+      'Name'
+    );
+    playerId = responsePlayerJoin.body.playerId;
 
-      // Updates the game state
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+    // Updates the game state
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
 
-      let requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
-      expect(requestGetPlayerQuestion.body).toStrictEqual({
-        questionId: questionId,
-        question: 'Who is the Monarch of England?',
-        timeLimit: 1,
-        thumbnailUrl: 'http://google.com/some/image/path.jpg',
-        points: 5,
-        answerOptions: [
-          {
-            answerId: expect.any(Number),
-            answer: 'Prince Charles',
-            colour: expect.any(String)
-          },
-          {
-            answerId: expect.any(Number),
-            answer: 'Queen Elizibeth',
-            colour: expect.any(String)
-          }
-        ]
-      });
-      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
-      
-      // Go to the next question answers
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+    let requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
+    expect(requestGetPlayerQuestion.body).toStrictEqual({
+      questionId: questionId,
+      question: 'Who is the Monarch of England?',
+      timeLimit: 1,
+      thumbnailUrl: 'http://google.com/some/image/path.jpg',
+      points: 5,
+      answerOptions: [
+        {
+          answerId: expect.any(Number),
+          answer: 'Prince Charles',
+          colour: expect.any(String)
+        },
+        {
+          answerId: expect.any(Number),
+          answer: 'Queen Elizibeth',
+          colour: expect.any(String)
+        }
+      ]
+    });
+    expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
 
-      requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 2);
-      expect(requestGetPlayerQuestion.body).toStrictEqual({
-        questionId: questionId2,
-        question: 'Who is the Queen of England?',
-        timeLimit: 1,
-        thumbnailUrl: 'http://google.com/some/image/path.jpg',
-        points: 5,
-        answerOptions: [
-          {
-            answerId: expect.any(Number),
-            answer: 'Prince Charles',
-            colour: expect.any(String)
-          },
-          {
-            answerId: expect.any(Number),
-            answer: 'Queen Elizibeth',
-            colour: expect.any(String)
-          }
-        ]
-      });
-      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
+    // Go to the next question answers
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+    requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 2);
+    expect(requestGetPlayerQuestion.body).toStrictEqual({
+      questionId: questionId2,
+      question: 'Who is the Queen of England?',
+      timeLimit: 1,
+      thumbnailUrl: 'http://google.com/some/image/path.jpg',
+      points: 5,
+      answerOptions: [
+        {
+          answerId: expect.any(Number),
+          answer: 'Prince Charles',
+          colour: expect.any(String)
+        },
+        {
+          answerId: expect.any(Number),
+          answer: 'Queen Elizibeth',
+          colour: expect.any(String)
+        }
+      ]
+    });
+    expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

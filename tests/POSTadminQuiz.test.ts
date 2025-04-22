@@ -43,27 +43,27 @@ describe('Testing POST /v1/admin/quiz', () => {
 
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
-          test.each([
-            {
-              session: session + 'Invalid Session',
-              description: 'Invalid session',
-            },
-            {
-              session: '',
-              description: 'Empty session',
-            }
-          ])('$description', ({ session }) => {
-      const responseQuizCreate = requestAdminQuizCreate(
-        session + 'Invalid Session',
-        'My Quiz Name',
-        'A description of my quiz'
-      );
-      // Checks that unauthorised attempt to create quiz returns an error object and a
-      // status code 401
-      expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuizCreate = requestAdminQuizCreate(
+          session + 'Invalid Session',
+          'My Quiz Name',
+          'A description of my quiz'
+        );
+        // Checks that unauthorised attempt to create quiz returns an error object and a
+        // status code 401
+        expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
-  });
     describe('Testing the names', () => {
       test('Name already used by the user', () => {
         let responseQuizCreate = requestAdminQuizCreate(
