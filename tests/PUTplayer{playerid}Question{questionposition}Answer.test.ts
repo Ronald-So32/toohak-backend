@@ -19,7 +19,6 @@ import {
 
 import { describe } from 'node:test';
 import { answersInterface } from '../src/dataStore';
-import slync from 'slync';
 
 let session: string;
 let quizId: number;
@@ -27,6 +26,9 @@ let gameId: number;
 let playerId: number;
 let currentAnswerOptions: answersInterface[];
 
+// Before each test clears the existing data then registers an user creating a
+// quiz with 2 questions in it and starts a game with one player then opens the
+// first question and gets its answerOptions.
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -104,6 +106,7 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
+    // Submits a answer for the current questions
     const responsePlayerSubmit = requestPlayerAnswerSubmit(
       {
         answerIds: [currentAnswerOptions[0].answerId]
@@ -111,6 +114,8 @@ describe('Testing GET /v1/player/{playerid}', () => {
       playerId,
       1
     );
+    // Checks that a valid submission returns an empty object and a status code
+    // of 200
     expect(responsePlayerSubmit.body).toStrictEqual({});
     expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
   });
@@ -124,6 +129,8 @@ describe('Testing GET /v1/player/{playerid}', () => {
         playerId + idOffset,
         1
       );
+      // Checks that a invalid submission returns an error object and a status code
+      // of 400
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
@@ -141,16 +148,16 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
 
     test('Testing when game is not in QUESTION_OPEN state', () => {
+      // Ends the game created before the test
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
       
+      // Starts a new game with a player
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
-
       const responsePlayerJoin = requestPlayerJoin(
         gameId,
         'Name'
       );
-
       playerId = responsePlayerJoin.body.playerId;
 
       let responsePlayerSubmit = requestPlayerAnswerSubmit(
@@ -163,6 +170,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(responsePlayerSubmit.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
+      // Updates the game state
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
 
       responsePlayerSubmit = requestPlayerAnswerSubmit(
