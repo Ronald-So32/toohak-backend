@@ -1918,7 +1918,10 @@ paths:
           schema:
             $ref: '#/components/return/QuizNew'
         400:
-          description: The directory ./jsonFiles does not exist
+          description: |
+            If any of the following are true:
+            - The directory ./jsonFiles does not exist
+            - The json file has incorrect values inside
           schema:
             $ref: '#/components/return/Error'
         401:
@@ -1969,13 +1972,17 @@ paths:
           schema:
             type: object
             example:
-              attachment: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              attachmentNumber: 0
       responses:
         200:
           description: OK
           schema:
             type: string
             example: "attachment727"
+        400:
+          description: attachmentNumber is invalid
+          schema:
+            $ref: '#/components/return/Error'
         401:
           description: Session is empty or invalid (does not refer to valid logged in user session)
           schema:
@@ -1986,7 +1993,7 @@ paths:
             $ref: '#/components/return/Error'
 
   /v1/open/hint/{playerid}:
-    post:
+    get:
       summary: Generate hints for the question
       description:
       tags:
@@ -2005,13 +2012,19 @@ paths:
             $ref: '#/components/return/Error'
 
   /v1/open/translate/{playerid}:
-    post:
+    get:
       summary: Translate the question of a quiz to another language
       description:
       tags:
         - "Open Ended"
       parameters:
         - $ref: '#/components/path/PlayerId'
+        - name: language
+          in: header
+          required: true
+          schema:
+            type: string
+            example: "Chinese"
       responses:
         200:
           description: OK
@@ -2024,7 +2037,7 @@ paths:
             $ref: '#/components/return/Error'
 
   /v1/open/explain/{playerid}:
-    post:
+    get:
       summary: Explain the answer to the question
       description:
       tags:
