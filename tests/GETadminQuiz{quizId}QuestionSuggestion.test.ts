@@ -1,8 +1,3 @@
-test('TMP test', () => {
-
-});
-
-/*
 import {
   requestClear,
   requestAdminAuthRegister,
@@ -109,4 +104,3 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
     expect(historyQuizSuggestion.body.question.length).toBeGreaterThan(0);
   });
 });
-*/
