@@ -5,10 +5,12 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
+  requestAdminQuizGameStatus,
   requestPlayerJoin
 } from './testsHelper';
 
 import {
+  quizStates,
   actions,
   ErrorCodes
 } from '../src/functionsHelper';
@@ -181,6 +183,35 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       );
       expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
       expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
+    });
+
+    test('Testing the auto start feature of a game', () => {
+      let responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+      expect(responseGameStatus.body.state).toStrictEqual(quizStates.LOBBY);
+        
+      let responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        ''
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
+
+      responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        ''
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
+
+      responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        ''
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
+
+      responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
+      expect(responseGameStatus.body.state).toStrictEqual(quizStates.QUESTION_COUNTDOWN);
     });
   });
 });
