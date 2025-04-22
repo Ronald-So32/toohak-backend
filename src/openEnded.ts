@@ -171,8 +171,12 @@ export function hint(
     );
   }
 
-  const question = "who is the best league of legends player"
-  const answer = "faker"
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+  const answer = game.metadata.questions[currentQuestion - 1].answerOptions.find(
+    option => option.correct
+  ).answer;
+
   const prompt = `You are a helpful assistant that only gives hints. 
   Please give a hint for the following question but not the answer:
   
@@ -206,7 +210,7 @@ export function hint(
     );
   }
 
-  let generatedQuestion = responseBody[0].generated_text;
+  let generatedHint = responseBody[0].generated_text.slice(prompt.length);
 
-  return generatedQuestion;
+  return generatedHint;
 }
