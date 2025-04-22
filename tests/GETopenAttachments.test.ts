@@ -9,10 +9,12 @@ import {
 } from './testsHelper';
 
 import {
-  ErrorCodes
+  ErrorCodes,
+  idOffset
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
+import { error } from 'console';
 
 let session: string;
 let quizId: number;
@@ -75,4 +77,72 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     );
     expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
   });
+  describe('Testing for error responses', () => {
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuiz = requestAttachmentView(session, quizId, 0);
+        expect(responseQuiz.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
+    });
+
+    describe('Testing status code of 403 return values', () => {
+      test('Testing when quiz is does not exist', () => {
+        const responseQuiz = requestAttachmentView(session, quizId + idOffset, 0);
+        expect(responseQuiz.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
+      });
+
+      test('Testing when quiz is not owned by user', () => {
+        session = requestAdminAuthRegister(
+          'z7277271@ad.unsw.edu.au',
+          'Password1',
+          'First',
+          'Last'
+        ).body.session;
+
+        const responseQuiz = requestAttachmentView(session, quizId + idOffset, 0);
+        expect(responseQuiz.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
+      });
+    });
+
+    describe('Testing invalid attachmentNumber', () => {
+      test.each([
+        {
+          attachmentNumber: -1,
+          description: 'attachmentNumber < 0',
+        },
+        {
+          attachmentNumber: 3,
+          description: 'attachmentNumber >= attachments length',
+        }
+      ])('$description', ({ attachmentNumber }) => {
+        const responseQuiz = requestAttachmentView(session, quizId, attachmentNumber);
+        expect(responseQuiz.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      });
+
+      test('Testing when there is no attachment', () => {
+        quizId = requestAdminQuizCreate(
+          session,
+          'Quiz',
+          'Description'
+        ).body.quizId;
+        const responseQuiz = requestAttachmentView(session, quizId, 0);
+        expect(responseQuiz.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      });
+    });
+})
+  
 });
