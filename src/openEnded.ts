@@ -279,3 +279,71 @@ export function translate(
 
   return generatedTranslate;
 }
+
+export function explain(
+  playerId: number,
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.ANSWER_SHOW) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+  const answer = game.metadata.questions[currentQuestion - 1].answerOptions.find(
+    option => option.correct
+  ).answer;
+
+  const prompt = `You are a helpful assistant that explains. 
+  Please explain the answer(s) for the following question:
+
+  Question: "${question}"
+  Answer(s): "${answer}"
+
+  The explanation should be relevant to the question and answer, clear, and concise. 
+  The explanation should be between 5 and 100 characters.
+
+  Respond with just the explanation, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  let generatedHint = responseBody[0].generated_text.slice(prompt.length);
+
+  return generatedHint;
+}
