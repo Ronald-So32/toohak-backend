@@ -6,13 +6,17 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestAdminQuizGameResults,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset,
-  requestAdminQuizGameStatus
+  requestPlayerAnswerSubmit,
+  requestPlayerQuestionInfo,
+  requestPlayerJoin
 } from './testsHelper';
+
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
+
 
 import { describe } from 'node:test';
 
@@ -22,8 +26,6 @@ let session: string;
 let quizId: number;
 let questionId: number;
 let gameId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -39,7 +41,7 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
+
   quizId = responseCreate.body.quizId;
 
   const reponseQuestionCreate = requestAdminQuizQuestionCreate(
@@ -64,24 +66,14 @@ beforeEach(() => {
     }
   );
   questionId = reponseQuestionCreate.body.questionId;
-  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
-  const responseStatus1 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus1.body.state).toStrictEqual('LOBBY');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  const responseStatus2 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus2.body.state).toStrictEqual('QUESTION_COUNTDOWN');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  const responseStatus3 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus3.body.state).toStrictEqual('QUESTION_OPEN');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
-  const responseStatus4 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus4.body.state).toStrictEqual('ANSWER_SHOW');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
-  const responseStatus5 = requestAdminQuizGameStatus(quizId, gameId, session);
-  expect(responseStatus5.body.state).toStrictEqual('FINAL_RESULTS');
+
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
@@ -102,7 +94,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
         }
       ]
     });
-    expect(responseGetGameResult.statusCode).toStrictEqual(OK);
+    expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -110,10 +102,10 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
-        gameId + gameIdOffset
+        gameId + idOffset
       );
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game hasn\'t ended', () => {
@@ -125,7 +117,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
         gameId
       );
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     describe('Testing status code of 401 return values', () => {
@@ -145,7 +137,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGameResult.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
@@ -153,11 +145,11 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
       test('Testing when quiz is does not exist', () => {
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
-          quizId + quizIdOffset,
+          quizId + idOffset,
           gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -174,8 +166,174 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           gameId
         );
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
   });
 });
+
+
+test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results works as intended', () => {
+    // Ends the game created before the teset
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+    // Creates new game and adds 3 players to it
+    gameId = requestAdminQuizGameStart(session, quizId, 5).body.gameId;
+
+    const playerId1  = requestPlayerJoin(
+      gameId,
+      'Name'
+    ).body.playerId;
+
+    const playerId2  = requestPlayerJoin(
+      gameId,
+      'Name2'
+    ).body.playerId;
+
+    const playerId3  = requestPlayerJoin(
+      gameId,
+      'Name3'
+    ).body.playerId;
+
+    // Get to the QUESTION_OPEN state
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+    
+    const currentAnswerOptions = requestPlayerQuestionInfo(playerId1, 1).body.answerOptions;
+    let responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[0].answerId
+        ]
+      },
+      playerId1,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Checks that a plater can update his answers
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[1].answerId
+        ]
+      },
+      playerId1,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Checks that a player can submit multiple answers
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[1].answerId,
+          currentAnswerOptions[0].answerId
+        ]
+      },
+      playerId1,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Check that anotehr player can submit a answer
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[0].answerId
+        ]
+      },
+      playerId2,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+    
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[1].answerId,
+          currentAnswerOptions[0].answerId
+        ]
+      },
+      playerId3,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Check that a player can submit between other players submissions
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[0].answerId
+        ]
+      },
+      playerId1,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    responsePlayerSubmit = requestPlayerAnswerSubmit(
+      {
+        answerIds: [
+          currentAnswerOptions[1].answerId
+        ]
+      },
+      playerId3,
+      1
+    );
+    expect(responsePlayerSubmit.body).toStrictEqual({});
+    expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
+    
+    const slync = require('slync');
+    slync(1000);
+    
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+    // Gets the id of the current quiz
+    const questionId = requestPlayerQuestionInfo(playerId1, 1).body.questionId;
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+
+    // Gets the final result of the game and checks taht the users ranks are correct
+    // and question results
+    const responseGetGameResult = requestAdminQuizGameResults(
+      session,
+      quizId,
+      gameId
+    );
+    expect(responseGetGameResult.body).toStrictEqual({
+      usersRankedByScore: [
+        { 
+          playerName: 'Name2',
+          score: 5
+        },
+        {
+          playerName: 'Name',
+          score: 2.5
+        },
+        {
+          playerName: 'Name3',
+          score: 0
+        }
+      ],
+      questionResults: [
+        {
+          questionId: questionId,
+          playersCorrect: [
+            'Name2',
+            'Name'
+          ],
+          averageAnswerTime: 0,
+          percentCorrect: Math.ceil(2/3 * 100),
+        }
+      ]
+    });
+    expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.OK);
+
+  });
