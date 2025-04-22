@@ -6,23 +6,22 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestPlayerQuestionResults,
-  OK,
-  BADREQUEST
+  requestPlayerQuestionResults
 } from './testsHelper';
 
-import { describe } from 'node:test';
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
-const playerIdOffset = 727;
+import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
 let questionId: number;
-// let questionId2: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -38,7 +37,6 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
   const responseQuestionCreate = requestAdminQuizQuestionCreate(
@@ -64,7 +62,7 @@ beforeEach(() => {
   );
   questionId = responseQuestionCreate.body.questionId;
 
-  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -85,7 +83,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId2 = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -97,9 +94,9 @@ beforeEach(() => {
 
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
 });
 
 describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results', () => {
@@ -111,26 +108,26 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
       averageAnswerTime: expect.any(Number),
       percentCorrect: expect.any(Number)
     });
-    expect(requestGetQuestionResult.statusCode).toStrictEqual(OK);
+    expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const requestGetQuestionResult = requestPlayerQuestionResults(playerId + playerIdOffset, 1);
+      const requestGetQuestionResult = requestPlayerQuestionResults(playerId + idOffset, 1);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when question position given is not valid for the game', () => {
       const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 3);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is not currently on the question', () => {
       const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 2);
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetQuestionResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 
