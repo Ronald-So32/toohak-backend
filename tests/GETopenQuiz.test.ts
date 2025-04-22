@@ -3,19 +3,20 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestQuizExport,
-  OK
+  requestQuizExport
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
-// let questionId: number;
-// let gameId: number;
-// let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
+let questionId: number;
+let timeCreated: number;
+let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -31,10 +32,10 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
+  timeCreated = Math.floor(Date.now() / 1000)
   quizId = responseCreate.body.quizId;
-
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  
+  questionId = requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -54,8 +55,8 @@ beforeEach(() => {
         ]
       }
     }
-  );
-  // questionId = responseQuestionCreate.body.questionId;
+  ).body.questionId;
+  timeLastEdited = Math.floor(Date.now() / 1000)
 });
 
 describe('Testing GET /v1/open/CSV', () => {
@@ -93,6 +94,6 @@ describe('Testing GET /v1/open/CSV', () => {
         thumbnailUrl: ''
       }
     });
-    expect(responseQuizExport.statusCode).toStrictEqual(OK);
+    expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
