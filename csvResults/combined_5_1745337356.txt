@@ -1,0 +1,7 @@
+usersRankedByScore
+playerName,score
+Name,0
+
+questionResults
+questionId,playersCorrect,averageAnswerTime,percentCorrect
+3,,0,0

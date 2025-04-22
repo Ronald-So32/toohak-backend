@@ -303,7 +303,7 @@ test('Testing GET /v1/player/{playerid} works as intended', () => {
       'Name'
     ],
     averageAnswerTime: 0,
-    percentCorrect: 2 / 3 * 100,
+    percentCorrect: Math.round(2 / 3 * 100),
   });
 
   requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
@@ -334,7 +334,7 @@ test('Testing GET /v1/player/{playerid} works as intended', () => {
           'Name'
         ],
         averageAnswerTime: 0,
-        percentCorrect: Math.ceil(2 / 3 * 100),
+        percentCorrect: Math.round(2 / 3 * 100),
       }
     ]
   });

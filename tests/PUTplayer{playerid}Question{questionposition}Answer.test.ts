@@ -435,7 +435,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
         'Name'
       ],
       averageAnswerTime: 0,
-      percentCorrect: 2 / 3 * 100,
+      percentCorrect: Math.round(2 / 3 * 100),
     });
   });
 });

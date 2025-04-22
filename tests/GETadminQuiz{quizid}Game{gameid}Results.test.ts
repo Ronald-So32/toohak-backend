@@ -326,7 +326,7 @@ test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results works as intende
           'Name'
         ],
         averageAnswerTime: 0,
-        percentCorrect: Math.ceil(2 / 3 * 100),
+        percentCorrect: Math.round(2 / 3 *  100),
       }
     ]
   });

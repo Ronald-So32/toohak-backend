@@ -49,14 +49,6 @@ export function adminQuizGameStart(
 ): gameIdInterface {
   const data = getData();
 
-  const userFound = data.users.some((user: userInterface) => user.userId === userId);
-  if (!userFound) {
-    throw new BetterError(
-      Errors.invalidUser().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   const quiz = findQuizByUser(userId, quizId);
 
   if (quiz.questions.length === 0) {
@@ -588,7 +580,7 @@ export function playerQuestionResults(
   }
 
   const question = game.results.questionResults[questionPosition - 1];
-  question.percentCorrect = (question.playersCorrect.length / game.players.length) * 100;
+  question.percentCorrect = Math.round((question.playersCorrect.length / game.players.length) * 100);
   question.totalAnswerTime = question.playersAnswerTime.reduce(
     (sum: number, time: number) => sum + time, 0);
   question.averageAnswerTime = (question.totalAnswerTime /
