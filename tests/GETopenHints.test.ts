@@ -71,16 +71,24 @@ beforeEach(() => {
     session,
     {
       questionBody: {
-        question: 'Who is the Queen of England?',
+        question: 'Who plays league of legends?',
         timeLimit: 4,
         points: 5,
         answerOptions: [
           {
-            answer: 'Prince Charles',
+            answer: 'Faker',
             correct: true
           },
           {
-            answer: 'Queen Elizibeth',
+            answer: 'TheShy',
+            correct: true
+          },
+          {
+            answer: 'Ruler',
+            correct: true
+          },
+          {
+            answer: 'Froxxal',
             correct: false
           }
         ]

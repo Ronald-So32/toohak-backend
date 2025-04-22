@@ -306,9 +306,10 @@ export function explain(
 
   const currentQuestion = game.atQuestion;
   const question = game.metadata.questions[currentQuestion - 1].question;
-  const answer = game.metadata.questions[currentQuestion - 1].answerOptions.find(
-    option => option.correct
-  ).answer;
+  const correctAnswers = game.metadata.questions[currentQuestion - 1].answerOptions
+    .filter(option => option.correct)
+    .map(option => option.answer);
+  const answer = correctAnswers.join(', ');
 
   const prompt = `You are a helpful assistant that explains. 
   Please explain the answer(s) for the following question:

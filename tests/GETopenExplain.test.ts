@@ -43,6 +43,37 @@ beforeEach(() => {
   // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
+  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who plays league of legends?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Faker',
+            correct: true
+          },
+          {
+            answer: 'TheShy',
+            correct: true
+          },
+          {
+            answer: 'Ruler',
+            correct: true
+          },
+          {
+            answer: 'Froxxal',
+            correct: false
+          }
+        ]
+      }
+    }
+  );
+  // questionId = responseQuestionCreate2.body.questionId;
+
   /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
     quizId,
     session,
@@ -66,29 +97,6 @@ beforeEach(() => {
   );
   // questionId = responseQuestionCreate.body.questionId;
 
-  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
-    quizId,
-    session,
-    {
-      questionBody: {
-        question: 'Who is the Queen of England?',
-        timeLimit: 4,
-        points: 5,
-        answerOptions: [
-          {
-            answer: 'Prince Charles',
-            correct: true
-          },
-          {
-            answer: 'Queen Elizibeth',
-            correct: false
-          }
-        ]
-      }
-    }
-  );
-  // questionId = responseQuestionCreate2.body.questionId;
-
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
@@ -107,7 +115,7 @@ beforeEach(() => {
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
     const responseHints = requestExplain(playerId);
-    expect(responseHints.body).toStrictEqual(expect.any(String) +"");
+    expect(responseHints.body).toStrictEqual(expect.any(String));
     expect(responseHints.statusCode).toStrictEqual(OK);
   });
 });
