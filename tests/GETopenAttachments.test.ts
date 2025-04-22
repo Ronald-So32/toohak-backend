@@ -5,9 +5,12 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAttachment,
-  requestAttachmentView,
-  OK
+  requestAttachmentView
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -33,10 +36,9 @@ beforeEach(() => {
     'Quiz Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -57,7 +59,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
 
   requestAttachment(
     session,
@@ -72,6 +73,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     expect(responseQuiz.body).toStrictEqual(
       'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
     );
-    expect(responseQuiz.statusCode).toStrictEqual(OK);
+    expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
