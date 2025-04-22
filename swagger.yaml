@@ -1928,7 +1928,7 @@ paths:
 
   /v1/open/attachment/{quizid}:
     put:
-      summary: Generate a JSON file of the quiz
+      summary: Attach an attachment to a quiz
       description:
       tags:
         - "Open Ended"
@@ -1956,7 +1956,7 @@ paths:
           schema:
             $ref: '#/components/return/Error'
     get:
-      summary: Generate a JSON file of the quiz
+      summary: View the attachments on a quiz
       description:
       tags:
         - "Open Ended"
@@ -1987,7 +1987,7 @@ paths:
 
   /v1/open/hint/{playerid}:
     post:
-      summary: Create a quiz from a JSON file
+      summary: Generate hints for the question
       description:
       tags:
         - "Open Ended"
@@ -2006,7 +2006,7 @@ paths:
 
   /v1/open/translate/{playerid}:
     post:
-      summary: Create a quiz from a JSON file
+      summary: Translate the question of a quiz to another language
       description:
       tags:
         - "Open Ended"
@@ -2025,7 +2025,7 @@ paths:
 
   /v1/open/explain/{playerid}:
     post:
-      summary: Create a quiz from a JSON file
+      summary: Explain the answer to the question
       description:
       tags:
         - "Open Ended"
