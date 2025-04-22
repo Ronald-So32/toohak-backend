@@ -6,23 +6,16 @@ import {
   requestAdminQuizThumbnailUpdate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStatus,
-  // requestPlayerJoin,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestPlayerJoin
 } from './testsHelper';
 
 import {
   quizStates,
-  // actions,
-  // ErrorCodes
+  idOffset,
+  ErrorCodes
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-
-const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
@@ -81,7 +74,7 @@ beforeEach(() => {
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
-  // requestPlayerJoin(gameId, 'Name');
+  requestPlayerJoin(gameId, 'Name');
 });
 
 describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
@@ -95,7 +88,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       state: quizStates.LOBBY,
       atQuestion: 0,
       players: [
-        // 'Name'
+        'Name'
       ],
       metadata: {
         quizId: quizId,
@@ -131,7 +124,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     });
-    expect(responseGetGame.statusCode).toStrictEqual(OK);
+    expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -152,19 +145,19 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           session
         );
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGame.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseGetGame = requestAdminQuizGameStatus(
-          quizId + quizIdOffset,
+          quizId + idOffset,
           gameId,
           session
         );
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGame.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -181,18 +174,18 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           session
         );
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetGame.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
     test('Testing invalid game within quiz', () => {
       const responseGetGame = requestAdminQuizGameStatus(
         quizId,
-        gameId + gameIdOffset,
+        gameId + idOffset,
         session
       );
       expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGame.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 });

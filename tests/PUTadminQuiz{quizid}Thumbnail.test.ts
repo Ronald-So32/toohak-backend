@@ -3,18 +3,22 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizThumbnailUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestGetQuizV2,
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
+let timeCreated: number;
 
+// Before each test clears existing data and registers an user, creating a quiz
+// then gets the session, time the quiz was created an the quizId.
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -29,18 +33,22 @@ beforeEach(() => {
     'Name',
     'Description'
   );
+  timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 });
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
   test('Testing the code 200 return value', () => {
+    // Updates the thumbnail of the quiz
     const responseThumbnail = requestAdminQuizThumbnailUpdate(
       quizId,
       session,
       'http://google.com/some/image/path.jpg'
     );
+    // Checks that a valid request to update thumbnail returns an empty object
+    // and a status code of 200
     expect(responseThumbnail.body).toStrictEqual({});
-    expect(responseThumbnail.statusCode).toStrictEqual(OK);
+    expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -60,20 +68,24 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           'http://google.com/some/image/path.jpg'
         );
+        // Checks that a unauthorised request to update thumbnail returns an error object
+        // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseThumbnail.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseThumbnail = requestAdminQuizThumbnailUpdate(
-          quizId + quizIdOffset,
+          quizId + idOffset,
           session,
           'http://google.com/some/image/path.jpg'
         );
+        // Checks that a forbidden request to update thumbnail returns an error object
+        // and a status code of 403
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -90,12 +102,16 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           'http://google.com/some/image/path.jpg'
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseThumbnail.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
     describe('Testing invalid urls', () => {
       test.each([
+        {
+          thumbnailUrl: '',
+          description: 'Empty string'
+        },
         {
           thumbnailUrl: 'http://google.com/some/image/path.gif',
           description: 'File type of .gif at the end'
@@ -122,8 +138,10 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           session,
           thumbnailUrl
         );
+        // Checks that a invalid request to update thumbnail returns an error object
+        // and a status code of 401
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -148,7 +166,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           thumbnailUrl
         );
         expect(responseThumbnail.body).toStrictEqual({});
-        expect(responseThumbnail.statusCode).toStrictEqual(OK);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
       });
     });
 
@@ -189,7 +207,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           thumbnailUrl
         );
         expect(responseThumbnail.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseThumbnail.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -226,12 +244,75 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/thumbnail', () => {
           thumbnailUrl
         );
         expect(responseThumbnail.body).toStrictEqual({});
-        expect(responseThumbnail.statusCode).toStrictEqual(OK);
+        expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
       });
     });
   });
 
   test('Testing PUT /v1/admin/quiz/{quizid}/thumbnail works as intended', () => {
+    // Gets the details of the quiz to checks that there's no thumbnail
+    let responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeCreated,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number)
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
+    // Adds a thumbnail for the quiz
+    let responseThumbnail = requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      'https://google.com/some/image/path.png'
+    );
+    expect(responseThumbnail.body).toStrictEqual({});
+    expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
+    // Gets the current time
+    let timeLastEdited = Math.floor(Date.now() / 1000);
+
+    // Gets the latest details of the quiz to checks that the thumbnail is there
+    responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeLastEdited,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number),
+      thumbnailUrl: 'https://google.com/some/image/path.png'
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Updates the thumbnail of the quiz
+    responseThumbnail = requestAdminQuizThumbnailUpdate(
+      quizId,
+      session,
+      'https://i1.sndcdn.com/artworks-000360728946-bilq7t-t500x500.jpg'
+    );
+    expect(responseThumbnail.body).toStrictEqual({});
+    expect(responseThumbnail.statusCode).toStrictEqual(ErrorCodes.OK);
+    timeLastEdited = Math.floor(Date.now() / 1000);
+
+    // Checks that the thumbnail is updated
+    responseQuizDetails = requestGetQuizV2(quizId, session);
+    expect(responseQuizDetails.body).toStrictEqual({
+      quizId: quizId,
+      name: 'Name',
+      timeCreated: timeCreated,
+      timeLastEdited: timeLastEdited,
+      description: 'Description',
+      numQuestions: 0,
+      questions: [],
+      timeLimit: expect.any(Number),
+      thumbnailUrl: 'https://i1.sndcdn.com/artworks-000360728946-bilq7t-t500x500.jpg'
+    });
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

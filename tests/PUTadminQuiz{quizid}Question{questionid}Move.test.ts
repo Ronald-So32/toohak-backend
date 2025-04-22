@@ -5,14 +5,13 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset,
-  questionIdOffset
+  requestGetQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -124,7 +123,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       // Checks that a valid call to move question returns an empty object
       // and a status code of 200
       expect(responseMove.body).toStrictEqual({});
-      expect(responseMove.statusCode).toStrictEqual(OK);
+      expect(responseMove.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
 
@@ -139,7 +138,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       // Checks that an unauthorised call to move question returns an error object and a
       // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
     });
 
     test('Session logged out', () => {
@@ -151,7 +150,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         1
       );
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
     });
 
     test('Session has no quizzes', () => {
@@ -172,36 +171,36 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       // Checks that a forbidden call to move question returns an error object and a
       // status code of 401
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
 
     test('Quiz does not exist', () => {
       const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
-        quizId + quizIdOffset,
+        quizId + idOffset,
         questionId,
         session,
         1
       );
       expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
 
     describe('Error response 400 test cases', () => {
       test.each([
         {
           description: 'Question Id does not refer to a valid question within this quiz',
-          questionId: questionId + questionIdOffset,
+          questionId: questionId + idOffset,
           newPosition: 1
         },
         {
           description: 'NewPosition is less than 0',
           questionId: questionId,
-          newPosition: -1
+          newPosition: -2
         },
         {
           description: 'NewPosition is greater than n-1 where n is the number of questions',
           questionId: questionId,
-          newPosition: 5
+          newPosition: 6
         },
         {
           description: 'NewPosition is the same as current one',
@@ -216,7 +215,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
           newPosition
         );
         expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseMoveQuizQuestion.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
   });
@@ -295,7 +294,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       timeLastEdited: timeEdited,
       timeLimit: 17,
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Move 1 to 2 (0 2 1)
     let responseMove = requestAdminQuizQuestionMove(
@@ -306,7 +305,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     );
     timeEdited = Math.floor(Date.now() / 1000);
     expect(responseMove.body).toStrictEqual({});
-    expect(responseMove.statusCode).toStrictEqual(OK);
+    expect(responseMove.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check again
     responseQuizGet = requestGetQuiz(quizId, session);
@@ -381,7 +380,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       timeLastEdited: timeEdited,
       timeLimit: 17,
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Move 2 to 0 (2 0 1)
     responseMove = requestAdminQuizQuestionMove(
@@ -392,7 +391,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     );
     timeEdited = Math.floor(Date.now() / 1000);
     expect(responseMove.body).toStrictEqual({});
-    expect(responseMove.statusCode).toStrictEqual(OK);
+    expect(responseMove.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check again
     responseQuizGet = requestGetQuiz(quizId, session);
@@ -467,6 +466,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
       timeLastEdited: timeEdited,
       timeLimit: 17,
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

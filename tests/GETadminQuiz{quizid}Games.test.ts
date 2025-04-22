@@ -1,17 +1,18 @@
 import {
   requestClear,
   requestAdminAuthRegister,
-  // responseInterface,
   requestAdminQuizQuestionCreateV2,
   requestAdminQuizCreate,
-  // requestAdminQuizGameStart,
+  requestAdminQuizGameStart,
   requestAdminQuizGamesList,
-  // requestAdminUpdateGame,
-  OK,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestAdminQuizGameStateUpdate
 } from './testsHelper';
+
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -65,7 +66,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       activeGames: [],
       inactiveGames: []
     });
-    expect(responseGetQuizGames.statusCode).toStrictEqual(OK);
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -82,15 +83,15 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       ])('$description', ({ session }) => {
         const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetQuizGames.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseGetQuizGames = requestAdminQuizGamesList(session, quizId + quizIdOffset);
+        const responseGetQuizGames = requestAdminQuizGamesList(session, quizId + idOffset);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetQuizGames.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -103,29 +104,105 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
         const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGetQuizGames.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
   });
-  /*
+
   test('Testing GET /v1/admin/quiz/{quizid}/games works as intended', () => {
-    const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    let responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [],
       inactiveGames: []
     });
-    expect(responseGetQuizGames.statusCode).toStrictEqual(OK);
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
 
-    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-    expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
-    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    const gameId1 = requestAdminQuizGameStart(session, quizId, 3).body.gameId;
+    const gameId2 = requestAdminQuizGameStart(session, quizId, 3).body.gameId;
 
-    const responseGetQuizGames2 = requestAdminQuizGamesList(session, quizId);
-    expect(responseGetQuizGames2.body).toStrictEqual({
-      activeGames: [gameId],
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
       inactiveGames: []
     });
-    expect(responseGetQuizGames2.statusCode).toStrictEqual(OK);
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.NEXT_QUESTION);
+
+    // Checks that the game is still active
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.SKIP_COUNTDOWN);
+
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    const slync = require('slync');
+    slync(1000);
+
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.GO_TO_ANSWER);
+
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.GO_TO_FINAL_RESULTS);
+
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId1,
+        gameId2
+      ],
+      inactiveGames: []
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId1, session, actions.END);
+
+    responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
+    expect(responseGetQuizGames.body).toStrictEqual({
+      activeGames: [
+        gameId2
+      ],
+      inactiveGames: [
+        gameId1
+      ]
+    });
+    expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-  */
 });

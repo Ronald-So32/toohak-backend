@@ -3,13 +3,13 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreateV2,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestGetQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -69,7 +69,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     // Checks that a valid call to create question returns a questionId object
     // and a status code 200
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -109,7 +109,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         // Checks that an unauthorised call to create question returns an error object and
         // a status code of 401
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionCreate.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
@@ -148,12 +148,12 @@ describe('Testing POST /v1/admin/quiz', () => {
         // Checks that a forbidden call to create question returns an error object and
         // a status code of 403
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionCreate.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Quiz does not exist', () => {
         const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
-          quizId + quizIdOffset,
+          quizId + idOffset,
           session,
           {
             questionBody: {
@@ -175,7 +175,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           }
         );
         expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionCreate.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
@@ -220,7 +220,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           // Checks that an invalid call to create question returns an error object and
           // a status code of 400
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -262,7 +262,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -383,7 +383,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -472,7 +472,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -516,7 +516,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
 
         test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
@@ -555,7 +555,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             questionBody
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
 
         test('Sum of question timeLimits in quiz is exactly 3 minutes', () => {
@@ -593,7 +593,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             questionBody
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
 
         describe('Valid timelimit', () => {
@@ -630,7 +630,7 @@ describe('Testing POST /v1/admin/quiz', () => {
               }
             );
             expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-            expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+            expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
           });
         });
       });
@@ -675,7 +675,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -713,7 +713,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -765,7 +765,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -819,7 +819,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
 
@@ -881,7 +881,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -919,7 +919,7 @@ describe('Testing POST /v1/admin/quiz', () => {
             }
           );
           expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-          expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -951,7 +951,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     );
     const question1Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Creates another question and gets it's id and time question was created
     responseQuestionCreate = requestAdminQuizQuestionCreateV2(
@@ -983,7 +983,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     const timeLastEdited1 = Math.floor(Date.now() / 1000);
     const question2Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Creates a second quiz and gets it's id and time created
     const responseQuizCreate2 = requestAdminQuizCreate(
@@ -1024,7 +1024,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     const timeLastEdited2 = Math.floor(Date.now() / 1000);
     const question3Id = responseQuestionCreate.body.questionId;
     expect(responseQuestionCreate.body).toStrictEqual({ questionId: expect.any(Number) });
-    expect(responseQuestionCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionCreate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check that the first quiz has the right details and that the time edited is when
     // the latest question was made in the quiz
@@ -1088,7 +1088,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       ],
       timeLimit: expect.any(Number)
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Checks again for the second quiz
     responseQuizDetails = requestGetQuiz(quizId2, session);
@@ -1130,6 +1130,6 @@ describe('Testing POST /v1/admin/quiz', () => {
       ],
       timeLimit: expect.any(Number)
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

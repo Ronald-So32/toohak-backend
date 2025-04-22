@@ -7,13 +7,13 @@ import {
   requestGetQuizV2,
   requestGetQuizList,
   requestAdminQuizGameStart,
-  requestAdminQuizGameStateUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestAdminQuizGameStateUpdate
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 let session: string;
 let session2: string;
@@ -92,7 +92,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     // Checks that a valid response returns an empty object and a
     // status code of 200
     expect(responseTransfer.body).toStrictEqual({});
-    expect(responseTransfer.statusCode).toStrictEqual(OK);
+    expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -106,7 +106,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         // Checks that an invalid transfer of quiz returns an error object
         // and a status code of 400
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       test('userEmail is the current logged in user', () => {
@@ -116,7 +116,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session,
           'z7277272@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
 
@@ -127,7 +127,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'Quiz Descriptionn'
         );
         expect(responseCreate3.body).toStrictEqual({ quizId: expect.any(Number) });
-        expect(responseCreate3.statusCode).toStrictEqual(OK);
+        expect(responseCreate3.statusCode).toStrictEqual(ErrorCodes.OK);
 
         // Try to transfer quiz with duplicate name
         const responseTransfer = requestAdminQuizTransferV2(
@@ -136,7 +136,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       test('Testing when any game for this quiz is not in END state', () => {
@@ -149,7 +149,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         // Update the state of the game
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
@@ -160,7 +160,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
 
@@ -170,7 +170,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
 
@@ -180,7 +180,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
 
@@ -190,7 +190,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           'z6969@ad.unsw.edu.au'
         );
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -213,7 +213,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         // Checks that an unauthorised call to create question returns an error object and
         // a status code of 401
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
     describe('Error 403: Forbidden', () => {
@@ -236,17 +236,17 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         // Checks that a forbidden transfer returns an error object and a
         // status code of 403
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Quiz does not exist', () => {
         // Try to transfer non-existent quiz
         const responseTransfer = requestAdminQuizTransferV2(
-          quizId + quizIdOffset,
+          quizId + idOffset,
           session,
           'z6969@ad.unsw.edu.au'
         );
-        expect(responseTransfer.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
         expect(responseTransfer.body).toStrictEqual({ error: expect.any(String) });
       });
 
@@ -257,7 +257,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session,
           'z6969@ad.unsw.edu.au'
         );
-        expect(transfer1Result.statusCode).toStrictEqual(OK);
+        expect(transfer1Result.statusCode).toStrictEqual(ErrorCodes.OK);
 
         // Second transfer attempt (user1 -> user3)
         const transfer2Result = requestAdminQuizTransferV2(
@@ -265,7 +265,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
           session,
           'z69420@ad.unsw.edu.au'
         );
-        expect(transfer2Result.statusCode).toStrictEqual(FORBIDDEN);
+        expect(transfer2Result.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
         expect(transfer2Result.body).toStrictEqual({ error: expect.any(String) });
       });
     });
@@ -281,7 +281,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         'z6969@ad.unsw.edu.au'
       );
       expect(responseTransfer.body).toStrictEqual({});
-      expect(responseTransfer.statusCode).toStrictEqual(OK);
+      expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
 
@@ -296,7 +296,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         }
       ]
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check user2 has a different quiz
     const responseQuizGet2 = requestGetQuizList(session2);
@@ -308,7 +308,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         }
       ]
     });
-    expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Transfer quiz from user1 to user2
     const responseTransfer = requestAdminQuizTransferV2(
@@ -317,7 +317,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
       'z6969@ad.unsw.edu.au'
     );
     expect(responseTransfer.body).toStrictEqual({});
-    expect(responseTransfer.statusCode).toStrictEqual(OK);
+    expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check user2 now has the quiz
     const responseQuizGet3 = requestGetQuizList(session2);
@@ -333,7 +333,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
         },
       ]
     });
-    expect(responseQuizGet3.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet3.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check that the transferred quiz has the correct timeCreated
     const responseQuizDetails = requestGetQuizV2(quizId, session2);
@@ -342,6 +342,6 @@ describe('Testing POST /v1/admin/quiz/{quizid}/transfer', () => {
     // Check user1 no longer has the quiz
     const responseQuizGet4 = requestGetQuizList(session);
     expect(responseQuizGet4.body).toStrictEqual({ quizzes: [] });
-    expect(responseQuizGet3.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet3.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

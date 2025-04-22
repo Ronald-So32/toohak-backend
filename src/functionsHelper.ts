@@ -148,6 +148,8 @@ export interface quizGetDetailsInterface {
   }
 }
 
+export const idOffset: number = 727727;
+
 export enum quizStates {
   LOBBY = 'LOBBY',
   QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
@@ -159,11 +161,11 @@ export enum quizStates {
 }
 
 export enum actions {
-  NEXT_QUESTION,
-  SKIP_COUNTDOWN,
-  GO_TO_ANSWER,
-  GO_TO_FINAL_RESULTS,
-  END
+  NEXT_QUESTION = 'NEXT_QUESTION',
+  SKIP_COUNTDOWN = 'SKIP_COUNTDOWN',
+  GO_TO_ANSWER = 'GO_TO_ANSWER',
+  GO_TO_FINAL_RESULTS = 'GO_TO_FINAL_RESULTS',
+  END = 'END'
 }
 
 export class Errors {
@@ -734,7 +736,6 @@ export function getLongestQuestionLine(text: string): null | string {
     current.length > longest.length ? current : longest
   );
 }
-
 
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
