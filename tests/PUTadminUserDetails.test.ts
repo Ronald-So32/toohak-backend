@@ -4,10 +4,11 @@ import {
   responseInterface,
   requestGetUserDetails,
   requestAdminUserDetailsUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -37,7 +38,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
     );
     // Checks that the response returns an empty object and a status code of 200
     expect(responseUpdate.body).toStrictEqual({});
-    expect(responseUpdate.statusCode).toStrictEqual(OK);
+    expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -52,7 +53,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
         // Checks that the response on updating invalid session returns an error
         // object and a status code of 401
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
       });
 
       test('Email is already used by another user', () => {
@@ -72,7 +73,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
         );
         // Checks that the response returns an error object and a status code of 400
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       describe('Invalid email formats', () => {
@@ -101,7 +102,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             'Last'
           );
           expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
           const responseUserDetails = requestGetUserDetails(session);
           expect(responseUserDetails.body).toStrictEqual({
@@ -113,7 +114,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
               numFailedPasswordsSinceLastLogin: 0
             }
           });
-          expect(responseUserDetails.statusCode).toStrictEqual(OK);
+          expect(responseUserDetails.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
 
@@ -125,7 +126,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
           'Last'
         );
         expect(responseUpdate.body).toStrictEqual({});
-        expect(responseUpdate.statusCode).toStrictEqual(OK);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
         const responseUserDetails = requestGetUserDetails(session);
         expect(responseUserDetails.body).toStrictEqual({
@@ -137,7 +138,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             numFailedPasswordsSinceLastLogin: 0
           }
         });
-        expect(responseUserDetails.statusCode).toStrictEqual(OK);
+        expect(responseUserDetails.statusCode).toStrictEqual(ErrorCodes.OK);
       });
     });
 
@@ -164,7 +165,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             'Last'
           );
           expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
       describe('Valid cases', () => {
@@ -201,7 +202,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             'Last'
           );
           expect(responseUpdate.body).toStrictEqual({});
-          expect(responseUpdate.statusCode).toStrictEqual(OK);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -229,7 +230,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             nameLast
           );
           expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -267,7 +268,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
             nameLast
           );
           expect(responseUpdate.body).toStrictEqual({});
-          expect(responseUpdate.statusCode).toStrictEqual(OK);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -332,7 +333,7 @@ describe('Testing PUT /v1/admin/user/details', () => {
       );
 
       expect(responseUpdate.body).toStrictEqual({});
-      expect(responseUpdate.statusCode).toStrictEqual(OK);
+      expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
       // Retrieves the latest user detail of this session
       const responseDetails = requestGetUserDetails(session);
