@@ -96,9 +96,12 @@ The route is GET /v1/open/translate{playerid}
 
 ## How it works
 Must be used on a running game on the question open state.
+Give the language to translate and the llm will try its best.
 It will throw out the translation of the question if all the conditions are met.
 
 ## Usage
+Just call the translate route if you don't understand a question.
+Also needs a language to translate to.
 
 # Explain Answer
 
