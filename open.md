@@ -40,6 +40,10 @@ It then tries to create a quiz with all of it's questions and thumbnail if any u
 If anything is incorrect then it will throw an error.
 
 ## Usage
+Found a good quiz online and want to edit it?
+Now you can, just ensure the JSON file is in the correct format.
+It will then create a new quiz under your name.
+You can then edit it afterwards.
 
 # Adding Attachments
 
