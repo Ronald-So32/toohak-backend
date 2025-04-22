@@ -59,7 +59,9 @@ End users can decode it afterwards using the same base64 algorithm.
 The attachment is an array of strings, allowing for multiple attachments in one quiz.
 
 ## Usage
-
+If you needed to add something that you could not in the base game now its possible.
+With attachments you can attach anything to your quiz.
+Just as long as you can make it into a string, it is possible to attach anything.
 
 # Viewing Attachments
 
