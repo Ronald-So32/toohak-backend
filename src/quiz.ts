@@ -19,7 +19,6 @@ import {
   validateAnswers,
   getCurrentTimestamp,
   findQuizByUser,
-  getLongestQuestionLine,
   BetterError,
   ErrorCodes,
   checkActiveGames,
@@ -579,16 +578,6 @@ export function adminQuizQuestionMove(
 ): Record<string, never> {
   const quiz = findQuizByUser(userId, quizId);
 
-  const validQuestionIndex = quiz.questions.findIndex(
-    (question: questionsInterface) => question.questionId === questionId
-  );
-  if (validQuestionIndex === -1) {
-    throw new BetterError(
-      Errors.invalidQuestion().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   // Position is less than 0
   if (newPosition < 0) {
     throw new BetterError(
@@ -605,10 +594,21 @@ export function adminQuizQuestionMove(
     );
   }
 
+  const validQuestionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
+    
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (validQuestionIndex === -1) {
+    throw new BetterError(
+      Errors.invalidQuestion().error,
       ErrorCodes.BADREQUEST
     );
   }
@@ -662,28 +662,16 @@ export function adminQuizQuestionSuggestion(
         inputs: prompt
       }
     });
-
+    
   const responseBody = JSON.parse(response.body.toString());
 
-  if ('error' in responseBody) {
-    throw new BetterError(
-      { error: responseBody.error }.error,
-      ErrorCodes.BADREQUEST
-    );
+  try {
+    const responseBody = JSON.parse(response.body.toString());
+  } catch (error) {
+    return responseBody.status(error.statusCode).json({ error: error.message });
   }
 
-  let generatedQuestion = responseBody[0].generated_text;
-  const questionMatch = getLongestQuestionLine(generatedQuestion);
-  if (!questionMatch) {
-    generatedQuestion = `What is ${quizName} about?`;
-  } else {
-    generatedQuestion = questionMatch;
-  }
-
-  // Ensure the question meets our requirements
-  if (generatedQuestion.length < 5) {
-    generatedQuestion = `What is ${quizName} about?`;
-  }
+  const generatedQuestion = responseBody[0].generated_text;
 
   return { question: generatedQuestion };
 }

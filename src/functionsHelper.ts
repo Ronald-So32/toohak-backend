@@ -721,28 +721,6 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
   return quiz;
 }
 
-/**
- * Gets the longest line with a question mark ('?') character
- *
- * @param {string} text - The output of the llm prompt
- *
- * @returns {null | string} - Either a null or the question string
- */
-
-export function getLongestQuestionLine(text: string): null | string {
-  const lines = text.split('\n');
-  const questionLines = lines.filter((line: string) => /\?/.test(line));
-
-  if (questionLines.length === 0) {
-    return null;
-  }
-
-  // Only get the longest line with a '?' character
-  return questionLines.reduce((longest: string, current: string) =>
-    current.length > longest.length ? current : longest
-  );
-}
-
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
   shaObj.update(password);
