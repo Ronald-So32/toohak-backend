@@ -4,13 +4,13 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestAdminQuizUpdateName,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestGetQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -48,32 +48,43 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     // Checks that the response from a name update returns an empty object
     // and a status code of 200
     expect(responseUpdate.body).toStrictEqual({});
-    expect(responseUpdate.statusCode).toStrictEqual(OK);
+    expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
-    test('Testing when the session is invalid', () => {
-      const responseUpdate = requestAdminQuizUpdateName(
-        quizId,
-        session + 'Invalid Session',
-        'New Quiz Name'
-      );
-      // Checks that an invalid session returns an error object and a status code
-      // of 401
-      expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseUpdate = requestAdminQuizUpdateName(
+          quizId,
+          session + 'Invalid Session',
+          'New Quiz Name'
+        );
+        // Checks that an invalid session returns an error object and a status code
+        // of 401
+        expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
 
     test('Testing when the quizId is invalid', () => {
       const responseUpdate = requestAdminQuizUpdateName(
-        quizId + quizIdOffset,
+        quizId + idOffset,
         session,
         'New Quiz Name'
       );
       // Checks that the non-existent quiz returns an error object and a status code
       // of 403
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
 
     test('Testing when the user is not the owner of the quiz', () => {
@@ -93,7 +104,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
         'New Quiz Name'
       );
       expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUpdate.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
 
     describe('Testing the quiz name validation', () => {
@@ -113,7 +124,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
           'Quiz Name'
         );
         expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       describe('Invalid cases', () => {
@@ -161,7 +172,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
             name
           );
           expect(responseUpdate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseUpdate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
     });
@@ -227,7 +238,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
           name
         );
         expect(responseUpdate.body).toStrictEqual({});
-        expect(responseUpdate.statusCode).toStrictEqual(OK);
+        expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
       });
     });
   });
@@ -242,11 +253,11 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
     );
     const timeEdited = Math.floor(Date.now() / 1000);
     expect(responseUpdate.body).toStrictEqual({});
-    expect(responseUpdate.statusCode).toStrictEqual(OK);
+    expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Verify the quiz name has been updated
     const responseQuizGet = requestGetQuiz(quizId, session);
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
     expect(responseQuizGet.body.name).toStrictEqual(newQuizName);
 
     // Verify timeLastEdited has been updated
