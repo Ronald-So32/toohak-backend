@@ -4,16 +4,17 @@ import {
   requestAdminAuthRegister,
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
-  requestAttachment,
-  OK
+  requestAttachment
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
-// let questionId: number;
-// let timeCreated: number;
 
 // Before each test clears the data and registers a user and creates a quiz
 // and question and gets the current session, quiz id and question id
@@ -32,10 +33,9 @@ beforeEach(() => {
     'Quiz Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseQuizCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -56,7 +56,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
 });
 
 describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
@@ -67,6 +66,6 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
       'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ=='
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
