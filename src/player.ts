@@ -1,6 +1,5 @@
 import {
   getData,
-  userInterface,
   gameInterface,
   resultsInterface,
   usersRankedByScoreInterface,
@@ -578,7 +577,8 @@ export function playerQuestionResults(
   }
 
   const question = game.results.questionResults[questionPosition - 1];
-  question.percentCorrect = Math.round((question.playersCorrect.length / game.players.length) * 100);
+  question.percentCorrect = Math.round(
+    (question.playersCorrect.length / game.players.length) * 100);
   question.totalAnswerTime = question.playersAnswerTime.reduce(
     (sum: number, time: number) => sum + time, 0);
   question.averageAnswerTime = (question.totalAnswerTime /

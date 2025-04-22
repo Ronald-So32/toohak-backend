@@ -14,7 +14,6 @@ import {
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-import { error } from 'console';
 
 let session: string;
 let quizId: number;
@@ -144,6 +143,5 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         expect(responseQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
-})
-  
+  });
 });

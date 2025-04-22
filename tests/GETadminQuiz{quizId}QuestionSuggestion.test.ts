@@ -52,26 +52,26 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
 
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
-          test.each([
-            {
-              session: session + 'Invalid Session',
-              description: 'Invalid session',
-            },
-            {
-              session: '',
-              description: 'Empty session',
-            }
-          ])('$description', ({ session }) => {
-      const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
-        quizId,
-        session
-      );
-      // Checks that an ErrorCodes.UNAUTHORISED call to suggest question returns an error object
-      // and a status code of 401
-      expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
+          quizId,
+          session
+        );
+        // Checks that an ErrorCodes.UNAUTHORISED call to suggest question returns an error object
+        // and a status code of 401
+        expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
-  });
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
         quizId + idOffset,

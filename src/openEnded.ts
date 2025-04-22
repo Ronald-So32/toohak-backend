@@ -11,7 +11,6 @@ import {
 import {
   adminQuizCreate,
   adminQuizQuestionCreateV2,
-  adminQuizQuestionCreate,
   adminQuizThumbnailUpdate
 } from './quiz';
 import { playerFinalResults } from './player';
@@ -26,11 +25,11 @@ import request from 'sync-request-curl';
 const CSV_PATH = './csvResults';
 const JSON_PATH = './jsonFiles';
 
-if (!fs.existsSync(CSV_PATH)){
+if (!fs.existsSync(CSV_PATH)) {
   fs.mkdirSync(CSV_PATH);
 }
 
-if (!fs.existsSync(JSON_PATH)){
+if (!fs.existsSync(JSON_PATH)) {
   fs.mkdirSync(JSON_PATH);
 }
 
@@ -48,7 +47,7 @@ export function createCSV(
   const combined = `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`;
 
   const time = getCurrentTimestamp();
-  
+
   fs.writeFileSync(`${CSV_PATH}/usersRankedByScore_${playerId}_${time}.csv`, usersScore);
   fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
   fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);

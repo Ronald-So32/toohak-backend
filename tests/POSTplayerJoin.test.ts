@@ -180,7 +180,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     test('Testing the auto start feature of a game', () => {
       let responseGameStatus = requestAdminQuizGameStatus(quizId, gameId, session);
       expect(responseGameStatus.body.state).toStrictEqual(quizStates.LOBBY);
-        
+
       let responsePlayerJoin = requestPlayerJoin(
         gameId,
         ''

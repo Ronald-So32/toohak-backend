@@ -71,27 +71,27 @@ beforeEach(() => {
   questionId = responseQuestionCreate.body.questionId;
 
   requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Queen of England?',
-          timeLimit: 4,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Queen of England?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    );
+    }
+  );
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -326,7 +326,7 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
           'Name'
         ],
         averageAnswerTime: 0,
-        percentCorrect: Math.round(2 / 3 * 100) ,
+        percentCorrect: Math.round(2 / 3 * 100),
       });
     });
 });

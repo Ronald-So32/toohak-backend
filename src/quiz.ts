@@ -597,7 +597,7 @@ export function adminQuizQuestionMove(
   const validQuestionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
   );
-    
+
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     throw new BetterError(
@@ -662,11 +662,11 @@ export function adminQuizQuestionSuggestion(
         inputs: prompt
       }
     });
-    
-  const responseBody = JSON.parse(response.body.toString());
+
+  let responseBody;
 
   try {
-    const responseBody = JSON.parse(response.body.toString());
+    responseBody = JSON.parse(response.body.toString());
   } catch (error) {
     return responseBody.status(error.statusCode).json({ error: error.message });
   }

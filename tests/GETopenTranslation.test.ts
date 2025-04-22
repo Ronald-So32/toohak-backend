@@ -39,51 +39,50 @@ beforeEach(() => {
   quizId = responseCreate.body.quizId;
 
   requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Monarch of England?',
-          timeLimit: 1,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 1,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    );
-  
+    }
+  );
 
   requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Queen of England?',
-          timeLimit: 1,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Queen of England?',
+        timeLimit: 1,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    );
+    }
+  );
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -107,56 +106,56 @@ describe('Testing GET /v1/player/{playerid}', () => {
   });
 
   test('Testing player is not found', () => {
-      const responseTranslation = requestTranslate(playerId + idOffset, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    });
-    
-    test('Testing when game state is invalid', () => {
-      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
-      gameId = responseGameStart.body.gameId;
-  
-      const responsePlayerJoin = requestPlayerJoin(
-        gameId,
-        'Name'
-      );
-  
-      playerId = responsePlayerJoin.body.playerId;
-      let responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-    
-      responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
-    
-      const slync = require('slync');
-      slync(1000);
-    
-      responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-    
-      responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-    
-      responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-    
-      responseTranslation = requestTranslate(playerId, 'Chinese');
-      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-    });
+    const responseTranslation = requestTranslate(playerId + idOffset, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  });
+
+  test('Testing when game state is invalid', () => {
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    gameId = responseGameStart.body.gameId;
+
+    const responsePlayerJoin = requestPlayerJoin(
+      gameId,
+      'Name'
+    );
+
+    playerId = responsePlayerJoin.body.playerId;
+    let responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+
+    responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+
+    const slync = require('slync');
+    slync(1000);
+
+    responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+    responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+
+    responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+    responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+  });
 });

@@ -17,7 +17,6 @@ import {
 
 import { describe } from 'node:test';
 
-
 let session: string;
 let quizId: number;
 let gameId: number;

@@ -69,27 +69,27 @@ beforeEach(() => {
     }
   );
   requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Monarch of England?',
-          timeLimit: 1,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 1,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    );
+    }
+  );
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -118,7 +118,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
-  
+
   test('Testing when game state is invalid', () => {
     const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
     gameId = responseGameStart.body.gameId;
@@ -132,36 +132,36 @@ describe('Testing GET /v1/player/{playerid}', () => {
     let responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-  
+
     responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
-    
+
     responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
     const slync = require('slync');
     slync(1000);
-  
+
     responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-  
+
     responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-  
+
     responseExplain = requestExplain(playerId);
     expect(responseExplain.body).toStrictEqual({ error: expect.any(String) });
     expect(responseExplain.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);

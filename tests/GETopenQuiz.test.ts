@@ -16,8 +16,6 @@ import { describe } from 'node:test';
 let session: string;
 let quizId: number;
 let questionId: number;
-let timeCreated: number;
-let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -33,32 +31,30 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  timeCreated = Math.floor(Date.now() / 1000)
   quizId = responseCreate.body.quizId;
-  
+
   questionId = requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Monarch of England?',
-          timeLimit: 4,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    ).body.questionId;
-  timeLastEdited = Math.floor(Date.now() / 1000)
+    }
+  ).body.questionId;
 });
 
 describe('Testing GET /v1/open/CSV', () => {
@@ -72,7 +68,7 @@ describe('Testing GET /v1/open/CSV', () => {
         numQuestions: 1,
         questions: [
           {
-            questionId: expect.any(Number),
+            questionId: questionId,
             question: 'Who is the Monarch of England?',
             timeLimit: 4,
             points: 5,
@@ -101,40 +97,40 @@ describe('Testing GET /v1/open/CSV', () => {
   });
 
   describe('Testing status code of 401 return values', () => {
-        test.each([
-          {
-            session: session + 'Invalid Session',
-            description: 'Invalid session',
-          },
-          {
-            session: '',
-            description: 'Empty session',
-          }
-        ])('$description', ({ session }) => {
-          const responseQuizExport = requestQuizExport(quizId, session);
-          expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
-        });
-      });
-  
-      describe('Testing status code of 403 return values', () => {
-        test('Testing when quiz is does not exist', () => {
-          const responseQuizExport = requestQuizExport(quizId + idOffset, session);
-          expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
-        });
-  
-        test('Testing when quiz is not owned by user', () => {
-          session = requestAdminAuthRegister(
-            'z7277271@ad.unsw.edu.au',
-            'Password1',
-            'First',
-            'Last'
-          ).body.session;
-  
-          const responseQuizExport = requestQuizExport(quizId, session);
-          expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
-        });
-      });
+    test.each([
+      {
+        session: session + 'Invalid Session',
+        description: 'Invalid session',
+      },
+      {
+        session: '',
+        description: 'Empty session',
+      }
+    ])('$description', ({ session }) => {
+      const responseQuizExport = requestQuizExport(quizId, session);
+      expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+    });
+  });
+
+  describe('Testing status code of 403 return values', () => {
+    test('Testing when quiz is does not exist', () => {
+      const responseQuizExport = requestQuizExport(quizId + idOffset, session);
+      expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
+    });
+
+    test('Testing when quiz is not owned by user', () => {
+      session = requestAdminAuthRegister(
+        'z7277271@ad.unsw.edu.au',
+        'Password1',
+        'First',
+        'Last'
+      ).body.session;
+
+      const responseQuizExport = requestQuizExport(quizId, session);
+      expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
+    });
+  });
 });

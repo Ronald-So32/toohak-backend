@@ -10,13 +10,10 @@ import {
 } from './testsHelper';
 
 import {
-  ErrorCodes,
-  idOffset
+  ErrorCodes
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
-import { error } from 'console';
-import { string } from 'yaml/dist/schema/common/string';
 
 let session: string;
 let session2: string;
@@ -38,30 +35,30 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  
+
   requestAdminQuizQuestionCreateV2(
-      quizId,
-      session,
-      {
-        questionBody: {
-          question: 'Who is the Monarch of England?',
-          timeLimit: 4,
-          points: 5,
-          answerOptions: [
-            {
-              answer: 'Prince Charles',
-              correct: true
-            },
-            {
-              answer: 'Queen Elizibeth',
-              correct: false
-            }
-          ],
-          thumbnailUrl: 'http://google.com/some/image/path.jpg'
-        }
+    quizId,
+    session,
+    {
+      questionBody: {
+        question: 'Who is the Monarch of England?',
+        timeLimit: 4,
+        points: 5,
+        answerOptions: [
+          {
+            answer: 'Prince Charles',
+            correct: true
+          },
+          {
+            answer: 'Queen Elizibeth',
+            correct: false
+          }
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
-    );
-  requestAdminQuizThumbnailUpdate(quizId, session, 'http://google.com/some/image/path.jpg')
+    }
+  );
+  requestAdminQuizThumbnailUpdate(quizId, session, 'http://google.com/some/image/path.jpg');
   fileName = requestQuizExport(quizId, session).body.file;
   const responseRegister2 = requestAdminAuthRegister(
     'z727f7272@ad.unsw.edu.au',

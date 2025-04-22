@@ -60,7 +60,7 @@ beforeEach(() => {
       }
     }
   );
-    
+
   requestAdminQuizQuestionCreateV2(
     quizId,
     session,
@@ -112,13 +112,13 @@ describe('Testing GET /v1/player/{playerid}', () => {
     expect(responseHints.body).toStrictEqual(expect.any(String));
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-  
+
   test('Testing player is not found', () => {
     const responseHints = requestHint(playerId + idOffset);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
-  
+
   test('Testing when game state is invalid', () => {
     const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
     gameId = responseGameStart.body.gameId;
@@ -132,40 +132,38 @@ describe('Testing GET /v1/player/{playerid}', () => {
     let responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
-  
+
     responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
-  
+
     const slync = require('slync');
     slync(1000);
-  
+
     responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
-  
+
     responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
-  
+
     responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-  
+
     requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
-  
+
     responseHints = requestHint(playerId);
     expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
     expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
 });
-
-
