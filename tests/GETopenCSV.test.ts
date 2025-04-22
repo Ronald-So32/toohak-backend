@@ -6,25 +6,22 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestCSV,
-  OK,
-  BADREQUEST,
-  FORBIDDEN,
-  UNAUTHORISED
+  requestCSV
 } from './testsHelper';
+
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
-// const gameIdOffset = 727727;
-const playerIdOffset = 727727;
 
 let session: string;
 let quizId: number;
-// let questionId: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -40,10 +37,9 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -64,8 +60,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
-  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -76,10 +70,10 @@ beforeEach(() => {
   );
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
 });
 
 describe('Testing GET /v1/open/CSV', () => {
@@ -93,14 +87,14 @@ describe('Testing GET /v1/open/CSV', () => {
       'questionId,playersCorrect,averageAnswerTime,percentCorrect\n' +
       '3,,0,0'
     );
-    expect(responseGetGameResult.statusCode).toStrictEqual(OK);
+    expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing when player does not exist in game', () => {
-      const responseGetGameResult = requestCSV(playerId + playerIdOffset, quizId, session);
+      const responseGetGameResult = requestCSV(playerId + idOffset, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game player is in hasn\'t ended', () => {
@@ -113,13 +107,24 @@ describe('Testing GET /v1/open/CSV', () => {
       playerId = responsePlayerJoin.body.playerId;
       const responseGetGameResult = requestCSV(playerId, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
-    test('Testing when the session is invalid', () => {
-      const responseGetGameResult = requestCSV(playerId, quizId, session + 'Session Offset');
-      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(UNAUTHORISED);
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseGetGameResult = requestCSV(playerId, quizId, session + 'Session Offset');
+        expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
 
     test('Testing when session is valid but not the owner of the quiz', () => {
@@ -133,7 +138,7 @@ describe('Testing GET /v1/open/CSV', () => {
 
       const responseGetGameResult = requestCSV(playerId, quizId, session);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGetGameResult.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
   });
 });
