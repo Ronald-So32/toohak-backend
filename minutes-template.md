@@ -224,6 +224,27 @@ Please note this is a a guide/template which you do not need to use.
 
 --------------------------------------------------------------------------------
 
+| Meeting X | 9                                     |
+| --------- | ------------------------------------- |
+| Date/time | 18/04 15:56                           |
+|   Week    | 9                                     |
+| Attendees | Brian, Justin, Ronald, Weiming, Sagar |
+
+### Agenda
+| Item                       | Discussion/decision                                  |
+| -------------------------- | -----------------------------------------------------|
+| Checking in                | Discussed what's been done and what needs to be done | 
+| Assigning task             | Allocated tasks that needs to be done which is organised after meeting |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
+
+
+--------------------------------------------------------------------------------
+
 | Meeting X | 10                                    |
 | --------- | ------------------------------------- |
 | Date/time | 14/04 15:53                           |
@@ -241,4 +262,3 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * 
-
