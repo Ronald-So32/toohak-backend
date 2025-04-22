@@ -220,3 +220,25 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * 
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 10                                    |
+| --------- | ------------------------------------- |
+| Date/time | 14/04 15:53                           |
+|   Week    | 10                                    |
+| Attendees | Brian, Weiming                        |
+
+### Agenda
+| Item                       | Discussion/decision                         |
+| -------------------------- | ------------------------------------------- |
+| Keeping Track              | Discussed the plans with just the two of us | 
+| Assigning task             | Allocated tasks to the two of us            |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
+
