@@ -56,8 +56,10 @@ Anything that is on the internet can be stored as a string.
 If the attachment is not in a string format, no problem.
 Files are just a bunch of ones and zeroes, just base64 encode it into a string.
 End users can decode it afterwards using the same base64 algorithm.
+The attachment is an array of strings, allowing for multiple attachments in one quiz.
 
 ## Usage
+
 
 # Viewing Attachments
 
