@@ -12,7 +12,6 @@ import {
 
 import { describe } from 'node:test';
 
-
 let session: string;
 let quizId: number;
 // let questionId: number;
@@ -99,9 +98,4 @@ describe('Testing GET /v1/open/CSV', () => {
     });
     expect(responseQuizExport.statusCode).toStrictEqual(OK);
   });
-
-
-
-
-
 });

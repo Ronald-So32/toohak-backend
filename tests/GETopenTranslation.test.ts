@@ -105,7 +105,7 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseHints = requestTranslate(playerId, "Chinese");
+    const responseHints = requestTranslate(playerId, 'Chinese');
     expect(responseHints.body).toStrictEqual(expect.any(String));
     expect(responseHints.statusCode).toStrictEqual(OK);
   });

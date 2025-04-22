@@ -780,7 +780,7 @@ export function requestQuizImport(
 ): responseInterface {
   return makeRequest(
     'GET',
-    `/v1/open/import`,
+    '/v1/open/import',
     { fileName },
     { session }
   );

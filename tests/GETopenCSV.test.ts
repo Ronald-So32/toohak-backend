@@ -117,7 +117,7 @@ describe('Testing GET /v1/open/CSV', () => {
     });
 
     test('Testing when the session is invalid', () => {
-      const responseGetGameResult = requestCSV(playerId, quizId, session + "Session Offset");
+      const responseGetGameResult = requestCSV(playerId, quizId, session + 'Session Offset');
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(UNAUTHORISED);
     });

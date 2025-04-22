@@ -81,5 +81,4 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     );
     expect(responseQuiz.statusCode).toStrictEqual(OK);
   });
-
 });

@@ -14,7 +14,6 @@ import {
 
 import { describe } from 'node:test';
 
-
 let session: string;
 let session2: string;
 let quizId: number;
@@ -92,7 +91,7 @@ describe('Testing GET /v1/open/CSV', () => {
     expect(responseList.body).toStrictEqual({
       quizzes: [
         {
-          name: "Name",
+          name: 'Name',
           quizId,
         },
       ],
@@ -103,12 +102,11 @@ describe('Testing GET /v1/open/CSV', () => {
     expect(responseList2.body).toStrictEqual({
       quizzes: [
         {
-          name: "Name",
+          name: 'Name',
           quizId: responseQuizExport.body.quizId,
         },
       ],
     });
     expect(responseList2.statusCode).toStrictEqual(OK);
   });
-
 });

@@ -13,19 +13,19 @@ import {
   adminQuizQuestionCreateV2,
   adminQuizQuestionCreate,
   adminQuizThumbnailUpdate
-} from './quiz'
+} from './quiz';
 import { playerFinalResults } from './player';
 import {
   quizInterface,
   getData
 } from './dataStore';
-import {questionBodyInterface } from '../tests/testsHelper'
+import { questionBodyInterface } from '../tests/testsHelper';
 
 import fs from 'fs';
 import request from 'sync-request-curl';
 
 const CSV_PATH = './csvResults';
-const JSON_PATH = './jsonFiles'
+const JSON_PATH = './jsonFiles';
 
 export function createCSV(
   playerId: number,
@@ -47,10 +47,10 @@ export function createCSV(
     fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
     fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);
   } catch (error) {
-      throw new BetterError(
-        error.message,
-        ErrorCodes.BADREQUEST
-      );
+    throw new BetterError(
+      error.message,
+      ErrorCodes.BADREQUEST
+    );
   }
 
   return combined;
@@ -69,8 +69,8 @@ export function exportJSON(
     questions: quiz.questions,
     timeLimit: quiz.timeLimit,
     thumbnailUrl: quiz.thumbnailUrl || ''
-  }
-  
+  };
+
   const time = getCurrentTimestamp();
 
   try {
@@ -95,7 +95,7 @@ export function importJSON(
     const jsonData = JSON.parse(fs.readFileSync(`${JSON_PATH}/${file}`).toString()) as quizInterface;
 
     quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
-  
+
     for (const question of jsonData.questions) {
       try {
         adminQuizQuestionCreateV2(userId, quizId, question);
@@ -103,7 +103,7 @@ export function importJSON(
         try {
           adminQuizQuestionCreate(userId, quizId, question);
         } catch (error) {
-          
+
         }
       }
     }
@@ -213,7 +213,7 @@ export function hint(
     );
   }
 
-  let generatedHint = responseBody[0].generated_text.slice(prompt.length);
+  const generatedHint = responseBody[0].generated_text.slice(prompt.length);
 
   return generatedHint;
 }
@@ -278,7 +278,7 @@ export function translate(
     );
   }
 
-  let generatedTranslate = responseBody[0].generated_text.slice(prompt.length);
+  const generatedTranslate = responseBody[0].generated_text.slice(prompt.length);
 
   return generatedTranslate;
 }
@@ -347,7 +347,7 @@ export function explain(
     );
   }
 
-  let generatedHint = responseBody[0].generated_text.slice(prompt.length);
+  const generatedHint = responseBody[0].generated_text.slice(prompt.length);
 
   return generatedHint;
 }
