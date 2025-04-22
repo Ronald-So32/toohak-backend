@@ -44,7 +44,7 @@ export function createCSV(
   try {
     fs.writeFileSync(`${CSV_PATH}/usersRankedByScore_${playerId}_${time}.csv`, usersScore);
     fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
-    fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.csv`, combined);
+    fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);
   } catch (error) {
       throw new BetterError(
         error.message,
