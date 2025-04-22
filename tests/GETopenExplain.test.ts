@@ -6,19 +6,20 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestExplain,
-  OK
+  requestExplain
 } from './testsHelper';
+
+import {
+  actions,
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
-// let questionId: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -34,10 +35,9 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
 
-  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -66,9 +66,7 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate2.body.questionId;
-
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -89,7 +87,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -101,15 +98,15 @@ beforeEach(() => {
 
   playerId = responsePlayerJoin.body.playerId;
 
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
-  requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+  requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
 });
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
     const responseHints = requestExplain(playerId);
     expect(responseHints.body).toStrictEqual(expect.any(String));
-    expect(responseHints.statusCode).toStrictEqual(OK);
+    expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
