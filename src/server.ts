@@ -807,15 +807,12 @@ app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/hint
-app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
-  const session = req.headers.session as string;
-  const quizId = parseInt(req.params.quizid);
-  const { attachmentNumber } = req.body;
+// GET /v1/open/hint{playerid}
+app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
 
   try {
-    const userId = findUserIdFromSession(session).userId;
-    const result = seeAttachments(userId, quizId, attachmentNumber);
+    const result = hint(playerId, HUGGINGFACE_API_TOKEN);
 
     return res.status(OK).json(result);
   } catch (error) {
