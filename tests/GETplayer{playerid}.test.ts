@@ -18,8 +18,6 @@ import {
 
 import { describe } from 'node:test';
 
-const playerIdOffset = 727;
-
 let session: string;
 let quizId: number;
 let gameId: number;
