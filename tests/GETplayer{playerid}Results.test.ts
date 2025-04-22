@@ -123,7 +123,41 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'Name'
       );
       playerId = responsePlayerJoin.body.playerId;
-      const responseGetGameResult = requestPlayerFinalResults(playerId);
+
+      let responseGetGameResult = requestPlayerFinalResults(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      // Updates the game state
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+
+      responseGetGameResult = requestPlayerFinalResults(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+
+      responseGetGameResult = requestPlayerFinalResults(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      // Imports slync and then waits for 1 second to get to QUSETION_CLOSE state
+      const slync = require('slync');
+      slync(1000);
+
+      responseGetGameResult = requestPlayerFinalResults(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+      
+      responseGetGameResult = requestPlayerFinalResults(playerId);
+      expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+      
+      responseGetGameResult = requestPlayerFinalResults(playerId);
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
