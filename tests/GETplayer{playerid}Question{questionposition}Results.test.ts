@@ -27,6 +27,9 @@ let gameId: number;
 let playerId: number;
 let currentAnswerOptions: answersInterface[];
 
+// Before each test clears the existing data then registers an user creating a
+// quiz with 2 question in it and starts a game with one player then gets the answerOptions.
+// of the first question and changes the game state to ASNWER_SHOW
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -108,7 +111,10 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results', () => {
   test('Testing the code 200 return value', () => {
+    // Gets the result of the question the game is on
     const requestGetQuestionResult = requestPlayerQuestionResults(playerId, 1);
+    // Checks that a valid request to get question results returns an object
+    // with the results of the question and a status code of 200
     expect(requestGetQuestionResult.body).toStrictEqual({
       questionId: questionId,
       playersCorrect: [],
@@ -121,6 +127,8 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
       const requestGetQuestionResult = requestPlayerQuestionResults(playerId + idOffset, 1);
+      // Checks that a valid request to get question results returns an empty object
+      // and a status code of 400
       expect(requestGetQuestionResult.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
