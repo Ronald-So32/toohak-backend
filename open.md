@@ -108,5 +108,9 @@ Also needs a language to translate to.
 The route is GET /v1/open/explain{playerid}
 
 ## How it works
+Must be used on a running game on the answer state.
+Just call the route and it will explain why the answer is that to the question.
 
 ## Usage
+Don't understand the answer?
+This route will explain it to you.
