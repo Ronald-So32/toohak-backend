@@ -817,3 +817,15 @@ export function requestAttachmentView(
     { session }
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/hint{playerid}
+ */
+export function requestHint(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/hint/${playerId}`
+  );
+}
