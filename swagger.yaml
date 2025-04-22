@@ -1809,6 +1809,11 @@ paths:
           schema:
             $ref: '#/components/return/Empty'
 
+
+
+
+
+
   /v1/open/csv/{quizid}/{playerid}:
     get:
       summary: Generate a CSV file of the game's final results
@@ -1920,6 +1925,69 @@ paths:
           description: Session is empty or invalid (does not refer to valid logged in user session)
           schema:
             $ref: '#/components/return/Error'
+
+  /v1/open/attachment/{quizid}:
+    put:
+      summary: Generate a JSON file of the quiz
+      description:
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            example:
+              attachment: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/components/return/Empty'
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+    get:
+      summary: Generate a JSON file of the quiz
+      description:
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/QuizId'
+        - $ref: '#/components/header/Session'
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            example:
+              attachment: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            example: "attachment727"
+        401:
+          description: Session is empty or invalid (does not refer to valid logged in user session)
+          schema:
+            $ref: '#/components/return/Error'
+        403:
+          description: Valid session is provided, but user is not an owner of this quiz or quiz doesn't exist
+          schema:
+            $ref: '#/components/return/Error'
+
+
+
+
 
 securityDefinitions:
   Iteration 3 Session Authentication:
