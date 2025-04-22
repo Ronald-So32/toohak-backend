@@ -781,7 +781,7 @@ export function adminQuizQuestionSuggestion(
 
   const response = request(
     'POST',
-    'https://api-inference.huggingface.co/models/google/gemma-2-2b-it',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
     {
       headers: {
         Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
