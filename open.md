@@ -62,6 +62,8 @@ The attachment is an array of strings, allowing for multiple attachments in one 
 If you needed to add something that you could not in the base game now its possible.
 With attachments you can attach anything to your quiz.
 Just as long as you can make it into a string, it is possible to attach anything.
+I am only allowed to modify the backend, the frontend can decide how to view this.
+Things like base64 things can be decoded.
 
 # Viewing Attachments
 
