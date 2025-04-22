@@ -819,7 +819,7 @@ export function requestAttachmentView(
 }
 
 /**
- * Wrapper for GET /v1/open/hint{playerid}
+ * Wrapper for GET /v1/open/hint/{playerid}
  */
 export function requestHint(
   playerId: number
@@ -827,5 +827,20 @@ export function requestHint(
   return makeRequest(
     'GET',
     `/v1/open/hint/${playerId}`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/translate/{playerid}
+ */
+export function requestTranslate(
+  playerId: number,
+  language: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/translate/${playerId}`,
+    null,
+    { language }
   );
 }

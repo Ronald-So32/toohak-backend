@@ -6,7 +6,7 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestHint,
+  requestTranslate,
   requestPlayerQuestionInfo,
   requestPlayerAnswerSubmit,
   OK,
@@ -105,7 +105,7 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseHints = requestHint(playerId);
+    const responseHints = requestTranslate(playerId, "Shakespearean");
     expect(responseHints.body).toStrictEqual({test: expect.any(String)});
     expect(responseHints.statusCode).toStrictEqual(OK);
   });
