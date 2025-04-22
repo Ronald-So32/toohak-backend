@@ -17,6 +17,7 @@ import { playerFinalResults } from './player';
 import { quizInterface } from './dataStore';
 
 import fs from 'fs';
+import request from 'sync-request-curl';
 
 const CSV_PATH = './csvResults';
 const JSON_PATH = './jsonFiles'
@@ -140,4 +141,47 @@ export function seeAttachments(
   }
 
   return quiz.attachments[attachmentNumber];
+}
+
+export function hint(
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const question = "who is the best league of legends player"
+  const answer = "faker"
+  const prompt = `You are a helpful assistant that only gives hints. 
+  Please give a hint for the following question but not the answer:
+  
+  Question: "${question}"
+  Answer: "${answer}"
+  
+  The hint should be relevant to the question and answer, clear, and concise. 
+  The hint should be between 5 and 50 characters.
+  
+  Respond with just the hint, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  let generatedQuestion = responseBody[0].generated_text;
+
+  return generatedQuestion;
 }

@@ -46,7 +46,8 @@ import {
   exportJSON,
   importJSON,
   attachments,
-  seeAttachments
+  seeAttachments,
+  hint
 } from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -68,7 +69,7 @@ import process from 'process';
 
 const OK = 200;
 
-const HUGGINGFACE_API_TOKEN = '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';
+const HUGGINGFACE_API_TOKEN = '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';
 const DB_PATH = './DATABASE.json';
 
 // Set up web app
