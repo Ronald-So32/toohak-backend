@@ -5,10 +5,12 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
-  requestPlayerJoin,
-  OK,
-  BADREQUEST
+  requestPlayerJoin
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -73,7 +75,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       'Name'
     );
     expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
-    expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
+    expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -83,7 +85,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'name!@#$%^&*()_+'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing player name entered is not unique', () => {
@@ -92,14 +94,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
 
       responsePlayerJoin = requestPlayerJoin(
         gameId,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing invalid game within quiz', () => {
@@ -108,7 +110,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game state is not in LOBBY', () => {
@@ -118,7 +120,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 });
