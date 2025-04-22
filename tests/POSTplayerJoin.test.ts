@@ -9,6 +9,7 @@ import {
 } from './testsHelper';
 
 import {
+  actions,
   ErrorCodes
 } from '../src/functionsHelper';
 
@@ -18,11 +19,10 @@ const gameIdOffset = 727;
 
 let session: string;
 let quizId: number;
-// let questionId: number;
 let gameId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
+// Before each test clears the data stored and registers a new user and creates
+// a quiz and a question then starts a game, and obtains the user session and all the ids
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -37,10 +37,10 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
+
   quizId = responseCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -61,8 +61,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
-  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -70,10 +68,13 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
+    // Adds a player to a game
     const responsePlayerJoin = requestPlayerJoin(
       gameId,
       'Name'
     );
+    // Checks that a valid request to add player returns an empty object
+    // and a status code of 200
     expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
     expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
   });
@@ -84,6 +85,8 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
         gameId,
         'name!@#$%^&*()_+'
       );
+      // Checks that a invalid request to add player returns an error object
+      // and a status code of 400
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
@@ -114,9 +117,57 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
     });
 
     test('Testing when game state is not in LOBBY', () => {
-      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
-      const responsePlayerJoin = requestPlayerJoin(
-        gameId,
+      let responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
+        'Name'
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      // Updates the game state
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+
+      responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
+        'Name'
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+      // Imports slync and then waits for 1 second to get to QUSETION_CLOSE state
+      const slync = require('slync');
+      slync(1000);
+
+      responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
+        'Name'
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+      
+      responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
+        'Name'
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+      
+      responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
+        'Name'
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+      responsePlayerJoin = requestPlayerJoin(
+        gameId + gameIdOffset,
         'Name'
       );
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
