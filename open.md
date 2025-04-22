@@ -83,6 +83,8 @@ Just call the route to get the specific attachment on a quiz, you will need to b
 The route is GET /v1/open/hint{playerid}
 
 ## How it works
+Must be used on a running game on the question open state.
+It will throw out the hint if all the conditions are met.
 
 ## Usage
 Stuck on a question?
