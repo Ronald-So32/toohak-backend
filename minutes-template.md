@@ -231,9 +231,9 @@ Please note this is a a guide/template which you do not need to use.
 | Attendees | Brian, Justin, Ronald, Weiming, Sagar |
 
 ### Agenda
-| Item                       | Discussion/decision                                  |
-| -------------------------- | -----------------------------------------------------|
-| Checking in                | Discussed what's been done and what needs to be done | 
+| Item                       | Discussion/decision                                                    |
+| -------------------------- | -----------------------------------------------------------------------|
+| Checking in                | Discussed what's been done and what needs to be done                   | 
 | Assigning task             | Allocated tasks that needs to be done which is organised after meeting |
 
 ### Action Items/reminders
@@ -247,7 +247,7 @@ Please note this is a a guide/template which you do not need to use.
 
 | Meeting X | 11                                    |
 | --------- | ------------------------------------- |
-| Date/time | 14/04 15:53                           |
+| Date/time | 22/04 15:53                           |
 |   Week    | 10                                    |
 | Attendees | Brian, Weiming                        |
 
