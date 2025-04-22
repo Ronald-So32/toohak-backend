@@ -333,7 +333,7 @@ export function adminQuizGameResults(
     if (questionResult.playersCorrect.length > 0) {
       questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
       (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
-      
+
       questionResult.percentCorrect = Math.round(
         (questionResult.playersCorrect.length / game.players.length) * 100
       );
@@ -634,7 +634,7 @@ export function playerFinalResults(playerId: number) {
     const questionId = question.questionId;
     const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
 
-    if (questionResult.totalAnswerTime && questionResult.playersCorrect.length > 0) {
+    if (questionResult.playersCorrect.length > 0) {
       questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
       (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
     }
