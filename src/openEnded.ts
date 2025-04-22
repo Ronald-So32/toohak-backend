@@ -48,17 +48,10 @@ export function createCSV(
   const combined = `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`;
 
   const time = getCurrentTimestamp();
-
-  try {
-    fs.writeFileSync(`${CSV_PATH}/usersRankedByScore_${playerId}_${time}.csv`, usersScore);
-    fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
-    fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);
-  } catch (error) {
-    throw new BetterError(
-      error.message,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  
+  fs.writeFileSync(`${CSV_PATH}/usersRankedByScore_${playerId}_${time}.csv`, usersScore);
+  fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
+  fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);
 
   return combined;
 }
@@ -80,14 +73,7 @@ export function exportJSON(
 
   const time = getCurrentTimestamp();
 
-  try {
-    fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
-  } catch (error) {
-    throw new BetterError(
-      error.message,
-      ErrorCodes.BADREQUEST
-    );
-  }
+  fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
 
   return { newJSON, file: `${quiz.name}_${time}.json` };
 }
@@ -106,15 +92,7 @@ export function importJSON(
     quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
 
     for (const question of jsonData.questions) {
-      try {
-        adminQuizQuestionCreateV2(userId, quizId, question);
-      } catch (error) {
-        try {
-          adminQuizQuestionCreate(userId, quizId, question);
-        } catch (error) {
-
-        }
-      }
+      adminQuizQuestionCreateV2(userId, quizId, question);
     }
 
     if (jsonData.thumbnailUrl) {
