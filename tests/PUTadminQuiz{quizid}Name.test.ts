@@ -65,7 +65,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/name', () => {
       ])('$description', ({ session }) => {
         const responseUpdate = requestAdminQuizUpdateName(
           quizId,
-          session + 'Invalid Session',
+          session,
           'New Quiz Name'
         );
         // Checks that an invalid session returns an error object and a status code
