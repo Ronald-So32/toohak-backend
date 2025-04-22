@@ -173,5 +173,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
       expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
+
+    test('Testing player name is empty', () => {
+      const responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        ''
+      );
+      expect(responsePlayerJoin.body).toStrictEqual({ playerId: expect.any(Number) });
+      expect(responsePlayerJoin.statusCode).toStrictEqual(ErrorCodes.OK);
+    });
   });
 });
