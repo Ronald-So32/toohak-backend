@@ -5,20 +5,18 @@ import {
   requestAdminQuizQuestionCreate,
   requestQuizExport,
   requestQuizImport,
-  OK,
   requestGetQuizList
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
 let session: string;
 let session2: string;
 let quizId: number;
-// let questionId: number;
-// let gameId: number;
-// let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 let fileName: string;
 
 beforeEach(() => {
@@ -35,10 +33,9 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
-
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -59,7 +56,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
   fileName = requestQuizExport(quizId, session).body.file;
   const responseRegister2 = requestAdminAuthRegister(
     'z727f7272@ad.unsw.edu.au',
@@ -74,13 +70,13 @@ describe('Testing GET /v1/open/CSV', () => {
   test('Testing the code 200 return value', () => {
     const responseQuizExport = requestQuizImport(fileName, session2);
     expect(responseQuizExport.body).toStrictEqual({ quizId: responseQuizExport.body.quizId });
-    expect(responseQuizExport.statusCode).toStrictEqual(OK);
+    expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   test('Intended', () => {
     const responseQuizExport = requestQuizImport(fileName, session2);
     expect(responseQuizExport.body).toStrictEqual({ quizId: responseQuizExport.body.quizId });
-    expect(responseQuizExport.statusCode).toStrictEqual(OK);
+    expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // See that they both have it
 
@@ -93,7 +89,7 @@ describe('Testing GET /v1/open/CSV', () => {
         },
       ],
     });
-    expect(responseList.statusCode).toStrictEqual(OK);
+    expect(responseList.statusCode).toStrictEqual(ErrorCodes.OK);
 
     const responseList2 = requestGetQuizList(session2);
     expect(responseList2.body).toStrictEqual({
@@ -104,6 +100,6 @@ describe('Testing GET /v1/open/CSV', () => {
         },
       ],
     });
-    expect(responseList2.statusCode).toStrictEqual(OK);
+    expect(responseList2.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
