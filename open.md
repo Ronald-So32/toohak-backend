@@ -85,6 +85,8 @@ The route is GET /v1/open/hint{playerid}
 ## How it works
 
 ## Usage
+Stuck on a question?
+Just call the hint route and you'll get hints for the current question.
 
 # Translate Question
 
