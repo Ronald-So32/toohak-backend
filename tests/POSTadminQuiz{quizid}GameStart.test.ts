@@ -7,13 +7,16 @@ import {
   // requestAdminQuizGameStatus,
   // requestAdminQuizGameStateUpdate,
   requestAdminQuizQuestionCreateV2,
-  // requestPlayerJoin,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  // requestPlayerJoin
 } from './testsHelper';
+
+import {
+  quizStates,
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
+
 
 import { describe } from 'node:test';
 
@@ -71,7 +74,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
     // Checks that a valid request to start game returns a objet with the gameId
     // and also a status code of 200
     expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
-    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -90,17 +93,17 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
         // Checks that a unauthorised request to start game returns an error object
         // and also a status code of 401
         expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGameStart.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseGameStart = requestAdminQuizGameStart(session, quizId + quizIdOffset, 3);
+        const responseGameStart = requestAdminQuizGameStart(session, quizId + idOffset, 3);
         // Checks that a forbidden request to start game returns an error object
         // and also a status code of 403
         expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGameStart.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -113,7 +116,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
 
         const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
         expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseGameStart.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
@@ -122,13 +125,13 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
       expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
       // Checks that a invalid request to start game returns an error object
       // and also a status code of 400
-      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when autoStartNum is a number is exactly 50', () => {
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 50);
       expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number) });
-      expect(responseGameStart.statusCode).toStrictEqual(OK);
+      expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     });
 
     test('Testing when there are 10 games active', () => {
@@ -145,7 +148,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
       responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
     /*
     test('Testing when there are 10 games and one is in END state', () => {
@@ -163,7 +166,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
       requestAdminQuizGameStateUpdate(session, quizId, responseGameStart.gameId, END);
       responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
-      expect(responseGameStart.statusCode).toStrictEqual(OK);
+      expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     });
     */
     test('Testing when a quiz has no questions', () => {
@@ -176,14 +179,14 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
 
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       expect(responseGameStart.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseGameStart.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
   /*
   test('Testing PSOT /v1/admin/quiz/{quizid}/game/start  works as intended', () => {
     let responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
     expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
-    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     // Gets the gameId of the game started
     const gameId1 = responseGameStart.body.gameId;
     // A player joins the game
@@ -233,7 +236,7 @@ describe('Testing POST /v1/admin/quiz/{quizid}/game/start', () => {
     // Checks that it can starts a second game and gets the gameId of it
     responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
     expect(responseGameStart.body).toStrictEqual({ gameId: expect.any(Number)});
-    expect(responseGameStart.statusCode).toStrictEqual(OK);
+    expect(responseGameStart.statusCode).toStrictEqual(ErrorCodes.OK);
     const gameId2 = responseGameStart.body.gameId;
 
     // Updates the game to END state
