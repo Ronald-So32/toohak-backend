@@ -9,14 +9,13 @@ import {
   requestGetQuizV2,
   requestAdminQuizGameStart,
   requestPlayerJoin,
-  requestAdminQuizGameStateUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset,
-  questionIdOffset
+  requestAdminQuizGameStateUpdate
 } from './testsHelper';
+
+import {
+  idOffset,
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -85,7 +84,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       // Checks that a valid deletion returns an empty object and a
       // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
-      expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
 
@@ -109,21 +108,21 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         // Checks that an unauthorised deletion returns an error object and a
         // status code of 401
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionDelete.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
         const responseQuestionDelete = requestDeleteQuizQuestionV2(
-          quizId + quizIdOffset,
+          quizId + idOffset,
           questionId,
           session
         );
         // Checks that a forbidden deletion returns an error object and a
         // status code of 403
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -139,25 +138,25 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
           session
         );
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionDelete.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
     test('Question id is invalid', () => {
       const responseQuestionDelete = requestDeleteQuizQuestionV2(
         quizId,
-        questionId + questionIdOffset,
+        questionId + idOffset,
         session
       );
       // Checks that a invalid deletion returns an error object and a
       // status code of 400
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       // Check quiz has not been deleted
       const responseQuizGet2 = requestGetQuizV2(quizId, session);
       expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
-      expect(responseQuizGet2.statusCode).toStrictEqual(OK);
+      expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
     });
 
     test('Testing when any game for this quiz is not in END state', () => {
@@ -171,7 +170,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       // Update the state of the game
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
@@ -182,7 +181,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
 
@@ -192,7 +191,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
 
@@ -202,7 +201,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
       requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
 
@@ -212,7 +211,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionDelete.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is in END state', () => {
@@ -226,7 +225,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         session
       );
       expect(responseQuestionDelete.body).toStrictEqual({});
-      expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
+      expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
 
@@ -247,12 +246,12 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       'z6969@ad.unsw.edu.au'
     );
     expect(responseTransfer.body).toStrictEqual({});
-    expect(responseTransfer.statusCode).toStrictEqual(OK);
+    expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Fail because its no longer user 1's quiz
     responseQuizGet = requestGetQuizV2(quizId, session);
     expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseQuizGet.statusCode).toStrictEqual(FORBIDDEN);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
 
     // Check it is user 2's quiz
     responseQuizGet = requestGetQuizV2(quizId, session2);
@@ -288,7 +287,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       ],
       timeLimit: 4,
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Start a game with a player then ends it
     const responseGameStart = requestAdminQuizGameStart(session2, quizId, 3);
@@ -304,7 +303,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     );
     timeEdited = Math.floor(Date.now() / 1000);
     expect(responseQuestionDelete.body).toStrictEqual({});
-    expect(responseQuestionDelete.statusCode).toStrictEqual(OK);
+    expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check its gone in user 2
     responseQuizGet = requestGetQuizV2(quizId, session2);
@@ -318,6 +317,6 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       questions: [],
       timeLimit: 0
     });
-    expect(responseQuizGet.statusCode).toStrictEqual(OK);
+    expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
