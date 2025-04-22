@@ -47,7 +47,8 @@ import {
   importJSON,
   attachments,
   seeAttachments,
-  hint
+  hint,
+  translate
 } from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
@@ -813,6 +814,20 @@ app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
 
   try {
     const result = hint(playerId, HUGGINGFACE_API_TOKEN);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/translate{playerid}
+app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+  const language = req.headers.language as string;
+
+  try {
+    const result = translate(playerId, language, HUGGINGFACE_API_TOKEN);
 
     return res.status(OK).json(result);
   } catch (error) {
