@@ -6,23 +6,22 @@ import {
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestPlayerQuestionInfo,
-  OK,
-  BADREQUEST,
+  requestPlayerQuestionInfo
 } from './testsHelper';
 
-import { describe } from 'node:test';
+import {
+  actions,
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
-const playerIdOffset = 727;
+import { describe } from 'node:test';
 
 let session: string;
 let quizId: number;
 let questionId: number;
-// let questionId2: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -38,10 +37,10 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
+
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -62,9 +61,8 @@ beforeEach(() => {
       }
     }
   );
-  questionId = responseQuestionCreate.body.questionId;
 
-  /* const responseQuestionCreate2 = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
@@ -85,7 +83,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId2 = responseQuestionCreate2.body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -123,26 +120,26 @@ describe('Testing GET /v1/player/{playerid}', () => {
         }
       ]
     });
-    expect(requestGetPlayerQuestion.statusCode).toStrictEqual(OK);
+    expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId + playerIdOffset, 1);
+      const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId + idOffset, 1);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when question position given is not valid for the game', () => {
       const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 3);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is not currently on the question', () => {
       const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 2);
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(BADREQUEST);
+      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 
