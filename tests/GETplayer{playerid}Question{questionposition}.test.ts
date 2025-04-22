@@ -20,6 +20,7 @@ import { describe } from 'node:test';
 let session: string;
 let quizId: number;
 let questionId: number;
+let questionId2: number;
 let gameId: number;
 let playerId: number;
 
@@ -43,7 +44,7 @@ beforeEach(() => {
 
   quizId = responseCreate.body.quizId;
 
-  requestAdminQuizQuestionCreateV2(
+  questionId = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -64,9 +65,9 @@ beforeEach(() => {
         thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
-  );
-
-  requestAdminQuizQuestionCreateV2(
+  ).body.questionId;
+  
+  questionId2 = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -87,7 +88,7 @@ beforeEach(() => {
         thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
-  );
+  ).body.questionId;
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -112,7 +113,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     expect(requestGetPlayerQuestion.body).toStrictEqual({
       questionId: questionId,
       question: 'Who is the Monarch of England?',
-      timeLimit: 4,
+      timeLimit: 1,
       thumbnailUrl: 'http://google.com/some/image/path.jpg',
       points: 5,
       answerOptions: [
@@ -153,6 +154,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
     });
 
     test('Testing when game player is in a invalid state', () => {
+      // Start a new game with a player
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
       const responsePlayerJoin = requestPlayerJoin(
@@ -208,7 +210,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(requestGetPlayerQuestion.body).toStrictEqual({
         questionId: questionId,
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         thumbnailUrl: 'http://google.com/some/image/path.jpg',
         points: 5,
         answerOptions: [
@@ -232,7 +234,7 @@ describe('Testing GET /v1/player/{playerid}', () => {
       expect(requestGetPlayerQuestion.body).toStrictEqual({
         questionId: questionId,
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         thumbnailUrl: 'http://google.com/some/image/path.jpg',
         points: 5,
         answerOptions: [
@@ -254,6 +256,67 @@ describe('Testing GET /v1/player/{playerid}', () => {
   });
 
   test('Testing GET /v1/player/{playerid} works as intended', () => {
+    // Starts a new game with a player
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+      gameId = responseGameStart.body.gameId;
+      const responsePlayerJoin = requestPlayerJoin(
+        gameId,
+        'Name'
+      );
+      playerId = responsePlayerJoin.body.playerId;
 
+      // Updates the game state
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+
+      let requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
+      expect(requestGetPlayerQuestion.body).toStrictEqual({
+        questionId: questionId,
+        question: 'Who is the Monarch of England?',
+        timeLimit: 1,
+        thumbnailUrl: 'http://google.com/some/image/path.jpg',
+        points: 5,
+        answerOptions: [
+          {
+            answerId: expect.any(Number),
+            answer: 'Prince Charles',
+            colour: expect.any(String)
+          },
+          {
+            answerId: expect.any(Number),
+            answer: 'Queen Elizibeth',
+            colour: expect.any(String)
+          }
+        ]
+      });
+      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
+      
+      // Go to the next question answers
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+      requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 2);
+      expect(requestGetPlayerQuestion.body).toStrictEqual({
+        questionId: questionId2,
+        question: 'Who is the Queen of England?',
+        timeLimit: 1,
+        thumbnailUrl: 'http://google.com/some/image/path.jpg',
+        points: 5,
+        answerOptions: [
+          {
+            answerId: expect.any(Number),
+            answer: 'Prince Charles',
+            colour: expect.any(String)
+          },
+          {
+            answerId: expect.any(Number),
+            answer: 'Queen Elizibeth',
+            colour: expect.any(String)
+          }
+        ]
+      });
+      expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
