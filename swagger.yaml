@@ -1985,8 +1985,62 @@ paths:
           schema:
             $ref: '#/components/return/Error'
 
+  /v1/open/hint/{playerid}:
+    post:
+      summary: Create a quiz from a JSON file
+      description:
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            example: "llm response"
+        400:
+          description: playerId is invalid
+          schema:
+            $ref: '#/components/return/Error'
 
+  /v1/open/translate/{playerid}:
+    post:
+      summary: Create a quiz from a JSON file
+      description:
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            example: "llm response"
+        400:
+          description: playerId is invalid
+          schema:
+            $ref: '#/components/return/Error'
 
+  /v1/open/explain/{playerid}:
+    post:
+      summary: Create a quiz from a JSON file
+      description:
+      tags:
+        - "Open Ended"
+      parameters:
+        - $ref: '#/components/path/PlayerId'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            example: "llm response"
+        400:
+          description: playerId is invalid
+          schema:
+            $ref: '#/components/return/Error'
 
 
 securityDefinitions:

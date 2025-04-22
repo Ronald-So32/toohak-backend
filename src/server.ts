@@ -809,7 +809,7 @@ app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/hint{playerid}
+// GET /v1/open/hint/{playerid}
 app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -822,7 +822,7 @@ app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/translate{playerid}
+// GET /v1/open/translate/{playerid}
 app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   const language = req.headers.language as string;
@@ -836,7 +836,7 @@ app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/explain{playerid}
+// GET /v1/open/explain/{playerid}
 app.get('/v1/open/explain/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
