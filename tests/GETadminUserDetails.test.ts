@@ -5,11 +5,12 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminUserPasswordUpdate,
-  requestAdminUserDetailsUpdate,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED
+  requestAdminUserDetailsUpdate
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -43,13 +44,13 @@ describe('Testing GET /v1/admin/user/details', () => {
         numFailedPasswordsSinceLastLogin: 0
       }
     });
-    expect(responseUserDetails.statusCode).toStrictEqual(OK);
+    expect(responseUserDetails.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing when the session is invalid', () => {
       expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-      expect(responseRegister.statusCode).toStrictEqual(OK);
+      expect(responseRegister.statusCode).toStrictEqual(ErrorCodes.OK);
 
       // Gets user details of an invalid session
       const responseUserDetails = requestGetUserDetails(
@@ -57,13 +58,13 @@ describe('Testing GET /v1/admin/user/details', () => {
       );
       // Checks that it returns an error object and that the status code is 401
       expect(responseUserDetails.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseUserDetails.statusCode).toStrictEqual(UNAUTHORISED);
+      expect(responseUserDetails.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
     });
   });
 
   test('Testing GET /v1/admin/user/details works as intended', () => {
     expect(responseRegister.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseRegister.statusCode).toStrictEqual(OK);
+    expect(responseRegister.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check user has correct details
     const responseUserDetails = requestGetUserDetails(session);
@@ -76,7 +77,7 @@ describe('Testing GET /v1/admin/user/details', () => {
         numFailedPasswordsSinceLastLogin: 0
       }
     });
-    expect(responseUserDetails.statusCode).toStrictEqual(OK);
+    expect(responseUserDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Change Password
     const requestUpdate = requestAdminUserPasswordUpdate(
@@ -85,7 +86,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       'Password2'
     );
     expect(requestUpdate.body).toStrictEqual({});
-    expect(requestUpdate.statusCode).toStrictEqual(OK);
+    expect(requestUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Login with new password
     const responseLogin2 = requestAdminAuthLogin(
@@ -93,7 +94,7 @@ describe('Testing GET /v1/admin/user/details', () => {
       'Password2'
     );
     expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin2.statusCode).toStrictEqual(OK);
+    expect(responseLogin2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Login with old password
     const responseLogin3 = requestAdminAuthLogin(
@@ -103,7 +104,7 @@ describe('Testing GET /v1/admin/user/details', () => {
     // Checks that logging in with invalid detail returns an error object with
     // the status code 400
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
+    expect(responseLogin3.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
     // Check user has correct details after password is updated
     const responseUserDetails2 = requestGetUserDetails(session);
@@ -116,7 +117,7 @@ describe('Testing GET /v1/admin/user/details', () => {
         numFailedPasswordsSinceLastLogin: 1
       }
     });
-    expect(responseUserDetails2.statusCode).toStrictEqual(OK);
+    expect(responseUserDetails2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Change details
     const responseUpdate = requestAdminUserDetailsUpdate(
@@ -126,14 +127,14 @@ describe('Testing GET /v1/admin/user/details', () => {
       'Lasttt'
     );
     expect(responseUpdate.body).toStrictEqual({});
-    expect(responseUpdate.statusCode).toStrictEqual(OK);
+    expect(responseUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     const responseLogin4 = requestAdminAuthLogin(
       'z7277272@ad.unsw.edu.au',
       'Password2'
     );
     expect(responseLogin4.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin4.statusCode).toStrictEqual(OK);
+    expect(responseLogin4.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check user has correct details after details are updated
     const responseUserDetails3 = requestGetUserDetails(session);
@@ -146,6 +147,6 @@ describe('Testing GET /v1/admin/user/details', () => {
         numFailedPasswordsSinceLastLogin: 0
       }
     });
-    expect(responseUserDetails3.statusCode).toStrictEqual(OK);
+    expect(responseUserDetails3.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

@@ -16,5 +16,8 @@ export function clear(): Record<string, never> {
   data.sessions = [];
   data.games = [];
 
+  data.activeTimers = {};
+  data.timerTimeCreated = [];
+
   return {};
 }

@@ -148,6 +148,8 @@ export interface quizGetDetailsInterface {
   }
 }
 
+export const idOffset: number = 727727;
+
 export enum quizStates {
   LOBBY = 'LOBBY',
   QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
@@ -159,11 +161,11 @@ export enum quizStates {
 }
 
 export enum actions {
-  NEXT_QUESTION,
-  SKIP_COUNTDOWN,
-  GO_TO_ANSWER,
-  GO_TO_FINAL_RESULTS,
-  END
+  NEXT_QUESTION = 'NEXT_QUESTION',
+  SKIP_COUNTDOWN = 'SKIP_COUNTDOWN',
+  GO_TO_ANSWER = 'GO_TO_ANSWER',
+  GO_TO_FINAL_RESULTS = 'GO_TO_FINAL_RESULTS',
+  END = 'END'
 }
 
 export class Errors {
@@ -364,10 +366,6 @@ export class BetterError extends Error {
   }
 }
 
-export function errorThrower(errorObj: errorInterface, code: number): never {
-  throw new BetterError(errorObj.error, code);
-}
-
 /**
  * Creates a unique user id from the current registered users.
  *
@@ -519,31 +517,6 @@ export function generateSession(): string {
   }
 
   return sessionNew;
-}
-
-/**
- * Finds a user's session token by their user ID.
- *
- * @param {number} userId - The user ID to search for
- *
- * @returns {string | errorInterface} - The session token if found, otherwise an error
- */
-export function findSessionFromUserId(userId: number): string {
-  const data = getData();
-  // Finds a session with the given user id
-  const theSession = data.sessions.find(
-    (sessionObj: sessionInterface) => sessionObj.userId === userId
-  );
-
-  // Checks if the session exists
-  if (!theSession) {
-    throw new BetterError(
-      Errors.invalidSession().error,
-      ErrorCodes.UNAUTHORISED
-    );
-  }
-
-  return theSession.session;
 }
 
 /**
@@ -755,6 +728,7 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
  *
  * @returns {null | string} - Either a null or the question string
  */
+
 export function getLongestQuestionLine(text: string): null | string {
   const lines = text.split('\n');
   const questionLines = lines.filter((line: string) => /\?/.test(line));

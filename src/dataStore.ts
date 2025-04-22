@@ -115,6 +115,7 @@ export interface questionResultsInterface {
   questionId: number,
   playersCorrect: string[],
   playersIncorrect: string[],
+  playersAnswerTime: number[],
   averageAnswerTime?: number,
   totalAnswerTime?: number,
   percentCorrect: number
@@ -161,6 +162,7 @@ export interface Data {
   games: gameInterface[];
 
   activeTimers: Record<number, ReturnType<typeof setTimeout>>;
+  timerTimeCreated: number[];
 }
 
 /**
@@ -175,7 +177,9 @@ const data: Data = {
   sessions: [],
   games: [],
 
-  activeTimers: {}
+  activeTimers: {},
+  timerTimeCreated: []
+
 };
 
 /**

@@ -3,16 +3,17 @@ import {
   requestAdminAuthRegister,
   requestDeleteQuizV2,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
-  // requestAdminStartGame,
-  // requestPlayerJoin,
-  // requestAdminUpdateGame,
-  OK,
-  // BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestAdminQuizQuestionCreateV2,
+  requestGetQuizList,
+  requestAdminQuizGameStart,
+  requestPlayerJoin,
+  requestAdminQuizGameStateUpdate
 } from './testsHelper';
+
+import {
+  idOffset,
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -36,7 +37,7 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseQuizCreate.body.quizId;
-  requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -54,7 +55,7 @@ beforeEach(() => {
             correct: false
           }
         ],
-        // thumbnailUrl: 'http://google.com/some/image/path.jpg'
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -67,7 +68,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
     // Checks that the response of the quiz deletion returns an empty object
     // and a status code of 200
     expect(responseDeleteQuiz.body).toStrictEqual({});
-    expect(responseDeleteQuiz.statusCode).toStrictEqual(OK);
+    expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -86,15 +87,17 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
         // Checks that the response of an unauthorised quiz deletion returns an error object
         // and a status code of 401
         expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
-        const responseDeleteQuiz = requestDeleteQuizV2(quizId + quizIdOffset, session);
+        const responseDeleteQuiz = requestDeleteQuizV2(quizId + idOffset, session);
         expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
+        // Checks that the response of an forbidden quiz deletion returns an error object
+        // and a status code of 403
+        expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
@@ -106,56 +109,126 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}', () => {
         ).body.session;
         const responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
         expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseDeleteQuiz.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
-    /*
+
     test('Testing when any game for this quiz is not in END state', () => {
-      const responseGameStart = requestAdminStartGame(session, quizId, 3);
+      // Starts a game
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       const gameId = responseGameStart.body.gameId;
+      // Tries to delete a quiz when there is a game not in END state
       let responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
+      // Checks taht a invalid deltion of an quiz returns an error object and a
+      // status code of 400
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
-      requestAdminUpdateGame(quizId, gameId, session, 'NEXT_QUESTION');
+      // Updates the state of the game that started
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'NEXT_QUESTION');
 
       responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
-      requestAdminUpdateGame(quizId, gameId, session, 'SKIP_COUNTDOWN');
-
-      responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
-      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
-
-      requestAdminUpdateGame(quizId, gameId, session, 'GO_TO_ANSWER');
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'SKIP_COUNTDOWN');
 
       responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
-      requestAdminUpdateGame(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_ANSWER');
 
       responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
       expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'GO_TO_FINAL_RESULTS');
+
+      responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
+      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game is in END state', () => {
-      const responseGameStart = requestAdminStartGame(session, quizId, 3);
+      const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       const gameId = responseGameStart.body.gameId;
-      requestAdminUpdateGame(quizId, gameId, session, 'END');
+      requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
 
-      const  responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
-      expect(responseDeleteQuiz.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseDeleteQuiz.statusCode).toStrictEqual(BADREQUEST);
+      const responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
+      expect(responseDeleteQuiz.body).toStrictEqual({});
+      expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
     });
-  */
   });
 
   test('Testing DELETE /v2/admin/quiz/{quizid} works as intended', () => {
+    // Get the quiz list of the current user to check that there is a quiz
+    let responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: quizId,
+          name: 'Name'
+        },
+      ]
+    });
 
+    // Add another quiz
+    const quizId2 = requestAdminQuizCreate(
+      session,
+      'Name2',
+      'Description2'
+    ).body.quizId;
+
+    responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: quizId,
+          name: 'Name'
+        },
+        {
+          quizId: quizId2,
+          name: 'Name2'
+        },
+      ]
+    });
+    expect(responseList.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Starts a game with a player in it then updates to end state
+    const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
+    const gameId = responseGameStart.body.gameId;
+    requestPlayerJoin(gameId, 'Name');
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, 'END');
+
+    // Checks that a quiz can be deleted when there is a game and a player
+    // during END state
+    let responseDeleteQuiz = requestDeleteQuizV2(quizId, session);
+    expect(responseDeleteQuiz.body).toStrictEqual({});
+    expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    expect(responseDeleteQuiz.body).toStrictEqual({});
+    expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({
+      quizzes: [
+        {
+          quizId: quizId2,
+          name: 'Name2'
+        }
+      ]
+    });
+
+    responseDeleteQuiz = requestDeleteQuizV2(
+      responseList.body.quizzes[0].quizId,
+      session
+    );
+    expect(responseDeleteQuiz.body).toStrictEqual({});
+    expect(responseDeleteQuiz.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    // Checks that the all quizzes are deleted
+    responseList = requestGetQuizList(session);
+    expect(responseList.body).toStrictEqual({ quizzes: [] });
   });
 });

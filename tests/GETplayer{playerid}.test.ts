@@ -4,23 +4,24 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizQuestionCreate,
   requestAdminQuizGameStart,
+  requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
-  requestPlayerStatus,
-  OK,
-  BADREQUEST
+  requestPlayerStatus
 } from './testsHelper';
+
+import {
+  actions,
+  ErrorCodes,
+  idOffset,
+  quizStates
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
-const playerIdOffset = 727;
-
 let session: string;
 let quizId: number;
-// let questionId: number;
 let gameId: number;
 let playerId: number;
-// let timeCreated: number;
-// let timeLastEdited: number;
 
 beforeEach(() => {
   requestClear();
@@ -36,16 +37,16 @@ beforeEach(() => {
     'Name',
     'Description'
   );
-  // timeCreated = Math.floor(Date.now() / 1000);
+
   quizId = responseCreate.body.quizId;
 
-  /* const responseQuestionCreate = */requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreate(
     quizId,
     session,
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -60,8 +61,6 @@ beforeEach(() => {
       }
     }
   );
-  // questionId = responseQuestionCreate.body.questionId;
-  // timeLastEdited = Math.floor(Date.now() / 1000);
 
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
@@ -76,24 +75,98 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const responsePlayerJoin = requestPlayerStatus(playerId);
-    expect(responsePlayerJoin.body).toStrictEqual({
+    const responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
       state: 'LOBBY',
-      numQuestions: expect.any(Number),
-      atQuestion: expect.any(Number)
+      numQuestions: 1,
+      atQuestion: 0
     });
-    expect(responsePlayerJoin.statusCode).toStrictEqual(OK);
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
-      const responsePlayerJoin = requestPlayerStatus(playerId + playerIdOffset);
-      expect(responsePlayerJoin.body).toStrictEqual({ error: expect.any(String) });
-      expect(responsePlayerJoin.statusCode).toStrictEqual(BADREQUEST);
+      const responsePlayerStatus = requestPlayerStatus(playerId + idOffset);
+      expect(responsePlayerStatus.body).toStrictEqual({ error: expect.any(String) });
+      expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
   });
 
   test('Testing GET /v1/player/{playerid} works as intended', () => {
+    // Gets the latest status of the current game and checks the state of the game
+    let responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: 'LOBBY',
+      numQuestions: 1,
+      atQuestion: 0
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
 
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
+
+    // Checks that that game is in QUESTION_COUNTDOWN and atQuestion is 1
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_COUNTDOWN,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
+
+    // Checks that that game is in QUESTION_OPEN
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_OPEN,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    const slync = require('slync');
+    slync(1000);
+
+    // Checks that that game is in QUESTION_CLOSE
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.QUESTION_CLOSE,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.ANSWER_SHOW,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.FINAL_RESULTS,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
+
+    requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
+
+    // Checks that that game is in ANSWER_SHOW
+    responsePlayerStatus = requestPlayerStatus(playerId);
+    expect(responsePlayerStatus.body).toStrictEqual({
+      state: quizStates.END,
+      numQuestions: 1,
+      atQuestion: 1
+    });
+    expect(responsePlayerStatus.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });

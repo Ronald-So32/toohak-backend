@@ -5,10 +5,12 @@ import {
   requestAdminAuthLogin,
   requestGetUserDetails,
   requestAdminUserPasswordUpdate,
-  requestAdminAuthLogout,
-  OK,
-  BADREQUEST
+  requestAdminAuthLogout
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -39,7 +41,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     );
     // Checks that logging in returns the current session and has a status code of 200
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin.statusCode).toStrictEqual(OK);
+    expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Retrieves the new user details checking that the number of successful logins is
     // 1 more than last login
@@ -60,7 +62,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
           'Password1'
         );
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-        expect(responseLogin.statusCode).toStrictEqual(OK);
+        expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
 
         const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
@@ -79,7 +81,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
         // Checks that the login attempt fails, returning an error object
         // and a status code of 400
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
@@ -98,7 +100,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
           'Password1'
         );
         expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-        expect(responseLogin.statusCode).toStrictEqual(OK);
+        expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
 
         const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
@@ -115,7 +117,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
           'Password22'
         );
         expect(responseLogin.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseLogin.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
         const responseDetailsNew = requestGetUserDetails(session);
         expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(
@@ -135,7 +137,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
     // Check user can log out
     const responseLogout = requestAdminAuthLogout(session);
     expect(responseLogout.body).toStrictEqual({});
-    expect(responseLogout.statusCode).toStrictEqual(OK);
+    expect(responseLogout.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Can log back in
     const responseLogin = requestAdminAuthLogin(
@@ -143,7 +145,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
       'Password1'
     );
     expect(responseLogin.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin.statusCode).toStrictEqual(OK);
+    expect(responseLogin.statusCode).toStrictEqual(ErrorCodes.OK);
     session = responseLogin.body.session;
 
     // Updates the current password
@@ -153,7 +155,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
       'Password2'
     );
     expect(requestUpdate.body).toStrictEqual({});
-    expect(requestUpdate.statusCode).toStrictEqual(OK);
+    expect(requestUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Check if user can still login after password update
     const responseLogin2 = requestAdminAuthLogin(
@@ -161,7 +163,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
       'Password2'
     );
     expect(responseLogin2.body).toStrictEqual({ session: expect.any(String) });
-    expect(responseLogin2.statusCode).toStrictEqual(OK);
+    expect(responseLogin2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Make sure the old password doesn't work
     const responseLogin3 = requestAdminAuthLogin(
@@ -169,7 +171,7 @@ describe('Testing POST /v1/admin/auth/login', () => {
       'Password1'
     );
     expect(responseLogin3.body).toStrictEqual({ error: expect.any(String) });
-    expect(responseLogin3.statusCode).toStrictEqual(BADREQUEST);
+    expect(responseLogin3.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
 
     const responseDetailsNew = requestGetUserDetails(session);
     expect(responseDetailsNew.body.user.numSuccessfulLogins).toStrictEqual(

@@ -4,11 +4,12 @@ import {
   responseInterface,
   requestAdminQuizCreate,
   requestGetQuizList,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED
+  requestGetQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -37,22 +38,32 @@ describe('Testing POST /v1/admin/quiz', () => {
     );
     // Checks that the response returns a quizId object and a status code of 200
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
-    expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
-    test('Testing for invalid session', () => {
-      const responseQuizCreate = requestAdminQuizCreate(
-        session + 'Invalid Session',
-        'My Quiz Name',
-        'A description of my quiz'
-      );
-      // Checks that unauthorised attempt to create quiz returns an error object and a
-      // status code 401
-      expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuizCreate.statusCode).toStrictEqual(UNAUTHORISED);
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuizCreate = requestAdminQuizCreate(
+          session + 'Invalid Session',
+          'My Quiz Name',
+          'A description of my quiz'
+        );
+        // Checks that unauthorised attempt to create quiz returns an error object and a
+        // status code 401
+        expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
-
     describe('Testing the names', () => {
       test('Name already used by the user', () => {
         let responseQuizCreate = requestAdminQuizCreate(
@@ -61,7 +72,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           'A description of my quiz'
         );
         expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
-        expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+        expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.OK);
 
         responseQuizCreate = requestAdminQuizCreate(
           session,
@@ -70,7 +81,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         );
         // Checks that a bad request returns an error object and a status code of 400
         expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       describe('Valid quiz names', () => {
@@ -127,7 +138,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
 
           expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
-          expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -162,7 +173,7 @@ describe('Testing POST /v1/admin/quiz', () => {
         );
 
         expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -189,7 +200,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
 
           expect(responseQuizCreate.body).toStrictEqual({ error: expect.any(String) });
-          expect(responseQuizCreate.statusCode).toStrictEqual(BADREQUEST);
+          expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
         });
       });
 
@@ -211,7 +222,7 @@ describe('Testing POST /v1/admin/quiz', () => {
           );
 
           expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
-          expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+          expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.OK);
         });
       });
     });
@@ -226,7 +237,7 @@ describe('Testing POST /v1/admin/quiz', () => {
     const timeCreated = Math.floor(Date.now() / 1000);
     const id = responseQuizCreate.body.quizId;
     expect(responseQuizCreate.body).toStrictEqual({ quizId: expect.any(Number) });
-    expect(responseQuizCreate.statusCode).toStrictEqual(OK);
+    expect(responseQuizCreate.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Gets the details of the quiz created
     const responseQuizDetails = requestGetQuiz(id, session);
@@ -241,7 +252,7 @@ describe('Testing POST /v1/admin/quiz', () => {
       questions: [],
       timeLimit: expect.any(Number)
     });
-    expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+    expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Gets the list of quiz that the current user has
     const responseQuizList = requestGetQuizList(session);
@@ -254,6 +265,6 @@ describe('Testing POST /v1/admin/quiz', () => {
         }
       ]
     });
-    expect(responseQuizList.statusCode).toStrictEqual(OK);
+    expect(responseQuizList.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
