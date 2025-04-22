@@ -4,10 +4,12 @@ import {
   responseInterface,
   requestGetQuizList,
   requestAdminQuizCreate,
-  requestDeleteQuiz,
-  OK,
-  UNAUTHORISED
+  requestDeleteQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -33,7 +35,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
     // Checks that it returns a quizzes object with an empty array
     // and a status code of 200
     expect(responseList.body).toStrictEqual({ quizzes: [] });
-    expect(responseList.statusCode).toStrictEqual(OK);
+    expect(responseList.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -52,7 +54,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
         // Checks that the response when fetching for quiz list of invalid session
         // returns an error object and a status code of 401
         expect(responseList.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseList.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseList.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
   });
@@ -60,7 +62,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
   test('Testing GET /v1/admin/quiz/list works as intended', () => {
     const responseList = requestGetQuizList(session);
     expect(responseList.body).toStrictEqual({ quizzes: [] });
-    expect(responseList.statusCode).toStrictEqual(OK);
+    expect(responseList.statusCode).toStrictEqual(ErrorCodes.OK);
     // Creates a quiz
     requestAdminQuizCreate(
       session,
@@ -77,7 +79,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
         },
       ]
     });
-    expect(responseList2.statusCode).toStrictEqual(OK);
+    expect(responseList2.statusCode).toStrictEqual(ErrorCodes.OK);
 
     // Add another quiz
     requestAdminQuizCreate(
@@ -99,7 +101,7 @@ describe('Testing GET /v1/admin/quiz/list', () => {
         },
       ]
     });
-    expect(responseList3.statusCode).toStrictEqual(OK);
+    expect(responseList3.statusCode).toStrictEqual(ErrorCodes.OK);
     // Deletes a quiz using the quiz list
     requestDeleteQuiz(
       responseList3.body.quizzes[0].quizId,
@@ -116,6 +118,6 @@ describe('Testing GET /v1/admin/quiz/list', () => {
         }
       ]
     });
-    expect(responseList4.statusCode).toStrictEqual(OK);
+    expect(responseList4.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
