@@ -6,12 +6,12 @@ import {
   requestAdminQuizQuestionCreate,
   requestAdminQuizQuestionUpdate,
   requestAdminAuthLogout,
-  requestGetQuiz,
-  OK,
-  BADREQUEST,
-  UNAUTHORISED,
-  FORBIDDEN
+  requestGetQuiz
 } from './testsHelper';
+
+import {
+  ErrorCodes
+} from '../src/functionsHelper';
 
 import { describe } from 'node:test';
 
@@ -95,7 +95,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
     // Checks that a valid call to update question returns an empty object
     // and a status code of 200
     expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
@@ -127,7 +127,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         // Checks that an unauthorised call to update question returns an error object
         // and a status code of 401
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
 
       test('Invalid user session', () => {
@@ -155,7 +155,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(UNAUTHORISED);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
 
@@ -186,7 +186,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         // Checks that invalid call to update question returns an error object and
         // a status code of 400
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       test('Test case for Valid session is provided, but user is not an owner of this quiz', () => {
@@ -251,7 +251,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
         // Checks that forbidden call to update question returns an error object and
         // a status code of 403
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Quiz does not exist', () => {
@@ -278,7 +278,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(FORBIDDEN);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
     });
 
@@ -321,7 +321,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
 
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -440,7 +440,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -529,7 +529,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({});
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
       });
     });
 
@@ -571,7 +571,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
 
       test('Sum of question timeLimits in quiz exceeds 3 minutes', () => {
@@ -628,7 +628,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
 
@@ -670,7 +670,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/qusetion/{questionid}', () => {
           }
         );
         expect(responseQuestionUpdate.body).toStrictEqual({ error: expect.any(String) });
-        expect(responseQuestionUpdate.statusCode).toStrictEqual(BADREQUEST);
+        expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
     });
   });
@@ -715,7 +715,7 @@ describe('Test valid cases', () => {
         }
       );
       expect(responseQuestionUpdate.body).toStrictEqual({});
-      expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+      expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
 
@@ -768,7 +768,7 @@ describe('Test valid cases', () => {
       }
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
 
@@ -806,7 +806,7 @@ describe('Valid timelimit', () => {
       }
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
 
@@ -844,7 +844,7 @@ describe('Valid points awarded', () => {
       }
     );
     expect(responseQuestionUpdate.body).toStrictEqual({});
-    expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+    expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 });
 
@@ -902,7 +902,7 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
   );
   const timeEdited = Math.floor(Date.now() / 1000);
   expect(responseQuestionUpdate.body).toStrictEqual({});
-  expect(responseQuestionUpdate.statusCode).toStrictEqual(OK);
+  expect(responseQuestionUpdate.statusCode).toStrictEqual(ErrorCodes.OK);
 
   // Gets the latest details of the quiz with the first and second question
   const responseQuizDetails = requestGetQuiz(quizId, session);
@@ -965,5 +965,5 @@ test('Testing PUT/v1/admin/quiz/{quizid}/question/{questionid} works as intended
     ],
     timeLimit: expect.any(Number)
   });
-  expect(responseQuizDetails.statusCode).toStrictEqual(OK);
+  expect(responseQuizDetails.statusCode).toStrictEqual(ErrorCodes.OK);
 });
