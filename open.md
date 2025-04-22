@@ -35,6 +35,9 @@ It will capture all the needed parts of the quiz.
 The route is POST /v1/open/import
 
 ## How it works
+This works by extracting the contents of the file.
+It then tries to create a quiz with all of it's questions and thumbnail if any under your name.
+If anything is incorrect then it will throw an error.
 
 ## Usage
 
