@@ -44,7 +44,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -67,7 +67,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who plays league of legends?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -115,8 +115,8 @@ describe('Testing GET /v1/player/{playerid}', () => {
   
   test('Testing player is not found', () => {
     const responseHints = requestHint(playerId + idOffset);
-    expect(responseHints.body).toStrictEqual(expect.any(String));
-    expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
+    expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
   
   test('Testing when game state is invalid', () => {

@@ -44,7 +44,7 @@ beforeEach(() => {
       {
         questionBody: {
           question: 'Who is the Monarch of England?',
-          timeLimit: 4,
+          timeLimit: 1,
           points: 5,
           answerOptions: [
             {
@@ -68,7 +68,7 @@ beforeEach(() => {
       {
         questionBody: {
           question: 'Who is the Queen of England?',
-          timeLimit: 4,
+          timeLimit: 1,
           points: 5,
           answerOptions: [
             {
@@ -101,15 +101,15 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
-    const responseHints = requestTranslate(playerId, 'Chinese');
-    expect(responseHints.body).toStrictEqual(expect.any(String));
-    expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
+    const responseTranslation = requestTranslate(playerId, 'Chinese');
+    expect(responseTranslation.body).toStrictEqual(expect.any(String));
+    expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   test('Testing player is not found', () => {
-      const responseHints = requestTranslate(playerId + idOffset, 'Chinese');
-      expect(responseHints.body).toStrictEqual(expect.any(String));
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.OK);
+      const responseTranslation = requestTranslate(playerId + idOffset, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
     
     test('Testing when game state is invalid', () => {
@@ -122,41 +122,41 @@ describe('Testing GET /v1/player/{playerid}', () => {
       );
   
       playerId = responsePlayerJoin.body.playerId;
-      let responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      let responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
     
-      responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
     
       const slync = require('slync');
       slync(1000);
     
-      responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
     
-      responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_FINAL_RESULTS);
     
-      responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.END);
     
-      responseHints = requestTranslate(playerId, 'Chinese');
-      expect(responseHints.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseHints.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      responseTranslation = requestTranslate(playerId, 'Chinese');
+      expect(responseTranslation.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseTranslation.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 });
