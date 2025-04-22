@@ -20,20 +20,54 @@ You can now export it into a CSV file.
 
 The route is
 
+## How it works
+
+## Usage
 
 # JSON Importing
 
+The route is
+
+## How it works
+
+## Usage
 
 # Adding Attachments
 
+The route is
+
+## How it works
+
+## Usage
 
 # Viewing Attachments
 
+The route is
+
+## How it works
+
+## Usage
 
 # Get Hints
 
+The route is
+
+## How it works
+
+## Usage
 
 # Translate Question
 
+The route is
+
+## How it works
+
+## Usage
 
 # Explain Answer
+
+The route is
+
+## How it works
+
+## Usage
