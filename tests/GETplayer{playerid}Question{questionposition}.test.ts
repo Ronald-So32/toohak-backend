@@ -23,6 +23,9 @@ let questionId: number;
 let gameId: number;
 let playerId: number;
 
+// Before each test clears the existing data then registers an user creating a
+// quiz with 2 question in it and starts a game with one player then gets the answerOptions.
+// of the first question and changes the game state to QUESTION_OPEN
 beforeEach(() => {
   requestClear();
   const responseRegister = requestAdminAuthRegister(
@@ -46,7 +49,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who is the Monarch of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -69,7 +72,7 @@ beforeEach(() => {
     {
       questionBody: {
         question: 'Who is the Queen of England?',
-        timeLimit: 4,
+        timeLimit: 1,
         points: 5,
         answerOptions: [
           {
@@ -102,7 +105,10 @@ beforeEach(() => {
 
 describe('Testing GET /v1/player/{playerid}', () => {
   test('Testing the code 200 return value', () => {
+    // Gets the information of the current question game is on
     const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId, 1);
+    // Checks that a valid requestion to get information returns an object with
+    // the informations and a status code of 200
     expect(requestGetPlayerQuestion.body).toStrictEqual({
       questionId: questionId,
       question: 'Who is the Monarch of England?',
@@ -128,6 +134,8 @@ describe('Testing GET /v1/player/{playerid}', () => {
   describe('Testing for error responses', () => {
     test('Testing player Id does not exist', () => {
       const requestGetPlayerQuestion = requestPlayerQuestionInfo(playerId + idOffset, 1);
+      // Checks that a invalid requestion to get information returns an error object with
+      // the informations and a status code of 400
       expect(requestGetPlayerQuestion.body).toStrictEqual({ error: expect.any(String) });
       expect(requestGetPlayerQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
