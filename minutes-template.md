@@ -224,7 +224,7 @@ Please note this is a a guide/template which you do not need to use.
 
 --------------------------------------------------------------------------------
 
-| Meeting X | 9                                     |
+| Meeting X | 10                                     |
 | --------- | ------------------------------------- |
 | Date/time | 18/04 15:56                           |
 |   Week    | 9                                     |
@@ -245,7 +245,7 @@ Please note this is a a guide/template which you do not need to use.
 
 --------------------------------------------------------------------------------
 
-| Meeting X | 10                                    |
+| Meeting X | 11                                    |
 | --------- | ------------------------------------- |
 | Date/time | 14/04 15:53                           |
 |   Week    | 10                                    |
