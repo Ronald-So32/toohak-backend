@@ -844,3 +844,15 @@ export function requestTranslate(
     { language }
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/explain/{playerid}
+ */
+export function requestExplain(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/explain/${playerId}`
+  );
+}
