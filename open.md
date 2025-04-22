@@ -21,6 +21,8 @@ You can now export it into a CSV file.
 The route is GET /v1/open/export/{quizid}
 
 ## How it works
+Exporting a quiz into a JSON requires you to be the owner of the quiz.
+
 
 ## Usage
 
