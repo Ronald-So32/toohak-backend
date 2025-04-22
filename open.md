@@ -34,7 +34,7 @@ The route is
 
 # Adding Attachments
 
-The route is
+The route is 
 
 ## How it works
 
@@ -42,7 +42,7 @@ The route is
 
 # Viewing Attachments
 
-The route is
+The route is GET /v1/open/attachment/{quizid}
 
 ## How it works
 
@@ -50,7 +50,7 @@ The route is
 
 # Get Hints
 
-The route is
+The route is GET /v1/open/hint{playerid}
 
 ## How it works
 
@@ -58,7 +58,7 @@ The route is
 
 # Translate Question
 
-The route is
+The route is GET /v1/open/translate{playerid}
 
 ## How it works
 
@@ -66,7 +66,7 @@ The route is
 
 # Explain Answer
 
-The route is
+The route is GET /v1/open/explain{playerid}
 
 ## How it works
 
