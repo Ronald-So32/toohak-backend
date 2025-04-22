@@ -22,9 +22,13 @@ The route is GET /v1/open/export/{quizid}
 
 ## How it works
 Exporting a quiz into a JSON requires you to be the owner of the quiz.
-
+Only the important details of the quiz will be exported.
+It will be stored in a JSON file.
 
 ## Usage
+Needing to export a quiz to share with others?
+This is the route to do just that.
+It will capture all the needed parts of the quiz.
 
 # JSON Importing
 
