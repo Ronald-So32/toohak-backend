@@ -95,6 +95,8 @@ Just call the hint route and you'll get hints for the current question.
 The route is GET /v1/open/translate{playerid}
 
 ## How it works
+Must be used on a running game on the question open state.
+It will throw out the translation of the question if all the conditions are met.
 
 ## Usage
 
