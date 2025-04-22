@@ -214,3 +214,68 @@ export function hint(
 
   return generatedHint;
 }
+
+export function translate(
+  playerId: number,
+  language: string,
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+
+  const prompt = `You are a helpful assistant that only does translation. 
+  Please translate the following question into the following language:
+
+  Question: "${question}"
+  language: "${language}"
+
+  The translation should be word for word and accurate to the original language. 
+  
+  Respond with just the translation, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  let generatedTranslate = responseBody[0].generated_text.slice(prompt.length);
+
+  return generatedTranslate;
+}
