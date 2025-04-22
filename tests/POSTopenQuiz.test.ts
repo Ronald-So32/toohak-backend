@@ -5,14 +5,18 @@ import {
   requestAdminQuizQuestionCreateV2,
   requestQuizExport,
   requestQuizImport,
-  requestGetQuizList
+  requestGetQuizList,
+  requestAdminQuizThumbnailUpdate
 } from './testsHelper';
 
 import {
-  ErrorCodes
+  ErrorCodes,
+  idOffset
 } from '../src/functionsHelper';
 
 import { describe } from 'node:test';
+import { error } from 'console';
+import { string } from 'yaml/dist/schema/common/string';
 
 let session: string;
 let session2: string;
@@ -57,6 +61,7 @@ beforeEach(() => {
         }
       }
     );
+  requestAdminQuizThumbnailUpdate(quizId, session, 'http://google.com/some/image/path.jpg')
   fileName = requestQuizExport(quizId, session).body.file;
   const responseRegister2 = requestAdminAuthRegister(
     'z727f7272@ad.unsw.edu.au',
@@ -72,6 +77,29 @@ describe('Testing GET /v1/open/CSV', () => {
     const responseQuizExport = requestQuizImport(fileName, session2);
     expect(responseQuizExport.body).toStrictEqual({ quizId: responseQuizExport.body.quizId });
     expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.OK);
+  });
+
+  describe('Testing status code of 401 return values', () => {
+    test.each([
+      {
+        session: session + 'Invalid Session',
+        description: 'Invalid session',
+      },
+      {
+        session: '',
+        description: 'Empty session',
+      }
+    ])('$description', ({ session }) => {
+      const responseQuizExport = requestQuizImport(fileName, session);
+      expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
+      expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+    });
+  });
+
+  test('Testing the code 400 return value', () => {
+    const responseQuizExport = requestQuizImport('Invalid File', session2);
+    expect(responseQuizExport.body).toStrictEqual({ error: expect.any(String) });
+    expect(responseQuizExport.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
   });
 
   test('Intended', () => {
