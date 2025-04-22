@@ -26,6 +26,14 @@ import request from 'sync-request-curl';
 const CSV_PATH = './csvResults';
 const JSON_PATH = './jsonFiles';
 
+if (!fs.existsSync(CSV_PATH)){
+  fs.mkdirSync(CSV_PATH);
+}
+
+if (!fs.existsSync(JSON_PATH)){
+  fs.mkdirSync(JSON_PATH);
+}
+
 export function createCSV(
   playerId: number,
   quizId: number,
