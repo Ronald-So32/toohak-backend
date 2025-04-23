@@ -121,7 +121,7 @@ export function load(): void {
 
 /**
  * Example get request
- * 
+ *
  * @returns {object} - JSON object with echoed string or an error message
  */
 app.get('/echo', (req: Request, res: Response) => {
@@ -135,9 +135,9 @@ app.get('/echo', (req: Request, res: Response) => {
 
 /**
  * DELETE /v1/clear route
- * 
+ *
  * Clears all stored data on server
- * 
+ *
  * @returns {object} - Returns empty JSON object with status 200 on success
  */
 app.delete('/v1/clear', (req: Request, res: Response) => {
@@ -148,17 +148,17 @@ app.delete('/v1/clear', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/auth/register
- * 
+ *
  * Registers new admin user with given email, password, first name, and last name
- * On successful registration, returns session token 
- * 
+ * On successful registration, returns session token
+ *
  * Request Body:
  * - email: string — User's email address
  * - password: string — User's password
  * - nameFirst: string — User's first name
  * - nameLast: string — User's last name
- * 
- * @returns {object} - Return reuslt on success 
+ *
+ * @returns {object} - Return reuslt on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
@@ -175,15 +175,15 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/auth/login route
- * 
+ *
  * Check an user using the provided email and password
- * If valid, return a session token 
- * 
+ * If valid, return a session token
+ *
  * Request Body:
  * - email: string — user's email address
  * - password: string — user's password
- * 
- * @returns {object} - Return result object on success 
+ *
+ * @returns {object} - Return result object on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
@@ -200,12 +200,12 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
 
 /**
  * GET /v1/admin/user/details route
- * 
+ *
  * Retrieves details of the currently logged-in user using session
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * @returns {object} - Return user details on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -225,17 +225,17 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/user/details route
- * 
+ *
  * Updates details: email, first name, last name of currently logged-in user.
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying user
- * 
+ *
  * Request Body:
  * - email: string — New email address for the user
  * - nameFirst: string — New first name
  * - nameLast: string — New last name
- * 
+ *
  * @returns {Record<string, never>} - Returns nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -256,17 +256,17 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/user/password route
- * 
+ *
  * Update password of user
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Body:
  * - oldPassword: string — The user's current password
  * - newPassword: string — New password
- * 
- * @returns {Record<string, never>} - Returns empty object on success 
+ *
+ * @returns {Record<string, never>} - Returns empty object on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v1/admin/user/password', (req: Request, res: Response) => {
@@ -286,17 +286,17 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/quiz route
- * 
- * Creates new quiz for a user 
- * 
+ *
+ * Creates new quiz for a user
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Body:
  * - name: string — Name of quiz
  * - description: string — Description of quiz
- * 
- * @returns {object} - Return quizId on success 
+ *
+ * @returns {object} - Return quizId on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/quiz', (req: Request, res: Response) => {
@@ -315,13 +315,13 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
 });
 
 /**
- * GET /v1/admin/quiz/list route 
- * 
+ * GET /v1/admin/quiz/list route
+ *
  * Get list of all quizzes created by the currently authenticated admin user
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * @returns {object} - Return quiz list on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -341,16 +341,16 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
 
 /**
  * DELETE /v1/admin/quiz/:quizid route
- * 
+ *
  * Deletes quiz with quizId
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to be deleted
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
@@ -370,16 +370,16 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
 /**
  * DELETE /v2/admin/quiz/:quizid route
- * 
+ *
  * Deletes quiz with quizId
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to be deleted
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
@@ -399,16 +399,16 @@ app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
 
 /**
  * GET /v1/admin/quiz/:quizid route
- * 
+ *
  * Get information of a quiz
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to retrieve
- * 
- * @returns {object} - Returns result upon success 
+ *
+ * @returns {object} - Returns result upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
@@ -426,19 +426,18 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
-
 /**
  * GET /v2/admin/quiz/:quizid route
- * 
+ *
  * Get information of a quiz
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to retrieve
- * 
- * @returns {object} - Returns result upon success 
+ *
+ * @returns {object} - Returns result upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
@@ -458,18 +457,18 @@ app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/quiz/:quizid/question route
- * 
+ *
  * Creates a new question within a in quiz with given quizId
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz where question will be added
- * 
+ *
  * Request Body:
  * - questionBody: object — Quesiton details
- * 
+ *
  * @returns {object} - { questionId: number } on successful creation
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -492,18 +491,18 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
 
 /**
  * POST /v2/admin/quiz/:quizid/question route
- * 
+ *
  * Creates a new question within a in quiz with given quizId
- * 
+ *
  * Request Headers:
  * - session: string — Session token identifying the user
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz where question will be added
- * 
+ *
  * Request Body:
  * - questionBody: object — Quesiton details
- * 
+ *
  * @returns {object} - { questionId: number } on successful creation
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -526,18 +525,18 @@ app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/quiz/:quizid/name route
- * 
+ *
  * Updates the name of a specified quiz
- * 
+ *
  * Request Headers:
  * - session: string — Authenticated user's session token
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to be updated
- * 
+ *
  * Request Body:
  * - name: string — New name for the quiz
- * 
+ *
  * @returns {Record<string, never>} - Return nothing upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -559,19 +558,19 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/quiz/:quizid/description route
- * 
+ *
  * Updates the description of a specified quiz with given quizId
- * 
+ *
  * Request Headers:
  * - session: string — Authenticated user's session token
- * 
+ *
  * Request Params:
  * - quizid: number — ID of the quiz to update
- * 
+ *
  * Request Body:
  * - description: string — New description for the quiz
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with an associated status code
  */
 app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
@@ -592,13 +591,13 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/auth/logout route
- * 
+ *
  * Logs out given user
- * 
+ *
  * Request Headers:
  * - session: string — The session token of the user to be logged out
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with an appropriate status code
  */
 app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
@@ -615,19 +614,19 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/quiz/:quizid/transfer route
- * 
+ *
  * Transfers ownership of a quiz to another based on email
- * 
+ *
  * Request Headers:
  * - session: string — The session token of the current quiz owner
- * 
+ *
  * Request Body:
  * - userEmail: string — Email address of new owner
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz to transfer
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
@@ -648,19 +647,19 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
 /**
  * POST /v2/admin/quiz/:quizid/transfer route
- * 
+ *
  * Transfers ownership of a quiz to another based on email
- * 
+ *
  * Request Headers:
  * - session: string — The session token of the current quiz owner
- * 
+ *
  * Request Body:
  * - userEmail: string — Email address of new owner
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz to transfer
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
@@ -681,20 +680,20 @@ app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/quiz/:quizid/question/:questionid route
- * 
+ *
  * Updates question with given questionid
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the current quiz owner
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz
  * - questionid: number — ID of the question to update
- * 
+ *
  * Request Body:
  * - questionBody: object — Updated question content
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
@@ -717,20 +716,20 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
 
 /**
  * PUT /v2/admin/quiz/:quizid/question/:questionid route
- * 
+ *
  * Updates question with given questionid
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the current quiz owner
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz
  * - questionid: number — ID of the question to update
- * 
+ *
  * Request Body:
  * - questionBody: object — Updated question content
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
@@ -753,17 +752,17 @@ app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
 
 /**
  * DELETE /v1/admin/quiz/:quizid/question/:questionid route
- * 
+ *
  * Deletes question with questionid
- * 
+ *
  * Request Headers:
  * - session: string — The session token of the current user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz with question to be deleted
  * - questionid: number — ID of the question to delete
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
@@ -782,20 +781,19 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   }
 });
 
-
 /**
  * DELETE /v2/admin/quiz/:quizid/question/:questionid route
- * 
+ *
  * Deletes question with questionid
- * 
+ *
  * Request Headers:
  * - session: string — The session token of the current user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz with question to be deleted
  * - questionid: number — ID of the question to delete
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
@@ -816,20 +814,20 @@ app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
 
 /**
  * PUT /v1/admin/quiz/:quizid/question/:questionid/move route
- * 
+ *
  * Moves question in a quiz to a new position in the question order
- * 
+ *
  * Request Headers:
  * - session: string — The session token of currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz containing the question
  * - questionid: number — ID of the question to move
- * 
+ *
  * Request Body:
  * - newPosition: number — New position index to move the question to
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: Response) => {
@@ -851,15 +849,15 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
 
 /**
  * GET /v1/admin/quiz/:quizid/question/suggestion route
- * 
+ *
  * Generate a suggested question based on the quiz's name and description
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of quiz to generate a suggestion for
- * 
+ *
  * @returns {object} - Return reuslt upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -890,15 +888,15 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
 
 /**
  * GET /v1/admin/quiz/:quizid/games route
- * 
+ *
  * Get list of all games in given quiz
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of quiz to get games list from
- * 
+ *
  * @returns {object} - Return games
  * @returns {object} - { error: string } on failure, and associated status code
  */
@@ -925,19 +923,19 @@ app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
 
 /**
  * POST /v1/admin/quiz/:quizid/game/start route
- * 
+ *
  * Start a new game in given quiz
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz where game is being started in
- * 
+ *
  * Request Body:
  * - autoStartNum: number — Number of players required to automatically start the game
- * 
- * @returns {object} - Return gameId on success 
+ *
+ * @returns {object} - Return gameId on success
  * @returns {object} - { error: string } on failure, and associated status code
  */
 
@@ -960,19 +958,19 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
 
 /**
  * PUT /v1/admin/quiz/:quizid/thumbnail route
- * 
+ *
  * Updates the thumbnail URL in given quiz
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of quiz to update
- * 
+ *
  * Request Body:
- * - thumbnailUrl: string — New thumbnail for quiz 
- * 
- * @returns {Record<string, never>} - Return nothing on success 
+ * - thumbnailUrl: string — New thumbnail for quiz
+ *
+ * @returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
@@ -998,17 +996,17 @@ app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
 
 /**
  * GET /v1/admin/quiz/:quizid/game/:gameid route
- * 
+ *
  * Get details of the game with gamid in quiz with quizid
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz the game belongs to
  * - gameid: number — ID of the game
- * 
- * @returns {object} - Returns reuslt upon success 
+ *
+ * @returns {object} - Returns reuslt upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
@@ -1030,20 +1028,20 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
 
 /**
  * PUT /v1/admin/quiz/:quizid/game/:gameid route
- * 
- * Update the state of a specific game in quiz with given quizId 
- * 
+ *
+ * Update the state of a specific game in quiz with given quizId
+ *
  * Request Headers:
  * - session: string — Session token of the currently logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz the game belongs to
  * - gameid: number — ID of the game to update
- * 
+ *
  * Request Body:
  * - action: string — action for changing game state
- * 
- *@returns {Record<string, never>} - Return nothing on success 
+ *
+ *@returns {Record<string, never>} - Return nothing on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
@@ -1066,16 +1064,16 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
 
 /**
  * GET /v1/admin/quiz/:quizid/game/:gameid/results route
- * 
+ *
  * Get final reuslts of game with given gameId
- * 
+ *
  * Request Headers:
  * - session: string — Session token of the logged-in user
- * 
+ *
  * Path Parameters:
  * - quizid: number — ID of the quiz
  * - gameid: number — ID of the game
- * 
+ *
  * @returns {object} - Returns result on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -1100,14 +1098,14 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Respo
 
 /**
  * POST /v1/player/join route
- * 
+ *
  * Allow player to join
- * 
+ *
  * Request Body:
  * - gameId: number — The ID of the game to join
  * - playerName: string — The name of the player joining the game
- * 
- * @returns {object} - Return playerId on success 
+ *
+ * @returns {object} - Return playerId on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/player/join', (req: Request, res: Response) => {
@@ -1124,12 +1122,12 @@ app.post('/v1/player/join', (req: Request, res: Response) => {
 
 /**
  * GET /v1/player/:playerid route
- * 
+ *
  * Retrieves the current game status for the specified player
- * 
+ *
  * Path Parameters:
  * - playerid: number — ID of the player whose game status is being retrieved
- * 
+ *
  * @returns {object} - Return result on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -1147,14 +1145,14 @@ app.get('/v1/player/:playerid', (req: Request, res: Response) => {
 
 /**
  * GET /v1/player/:playerid/question/:questionposition route
- * 
- * Get information for a question 
- * 
+ *
+ * Get information for a question
+ *
  * Path Parameters:
  * - playerid: number — ID of the player
- * - questionposition: number — Index of the question quiz 
- * 
- * @returns {object} - Return reuslt on success 
+ * - questionposition: number — Index of the question quiz
+ *
+ * @returns {object} - Return reuslt on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: Response) => {
@@ -1172,13 +1170,13 @@ app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: R
 
 /**
  * GET /v1/player/:playerid/question/:questionposition/results route
- * 
+ *
  * Get reuslts for a quesiton
- * 
+ *
  * Path Parameters:
  * - playerid: number — ID of the player
  * - questionposition: number — Index of the question in the quiz (1-based)
- * 
+ *
  * @returns {object} -Return result on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
@@ -1280,7 +1278,7 @@ app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
  * GET /v1/open/export/:quizid route
  *
  * Path Parameters:
- * - quizid: number — The ID of the quiz 
+ * - quizid: number — The ID of the quiz
  *
  * Request Headers:
  * - session: string — Session token for user authentication
@@ -1416,7 +1414,7 @@ app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
  * - playerid: number — The ID of the player requesting translation
  *
  * Request Headers:
- * - language: string — Target language 
+ * - language: string — Target language
  *
  * @returns {object} - Return result on success
  * @returns {object} - { error: string } on failure, with associated status code

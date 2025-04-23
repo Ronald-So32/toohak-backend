@@ -22,7 +22,7 @@ let quizId: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -31,7 +31,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz about computer science and extract the quiz ID
   responseCreate = requestAdminQuizCreate(
     session,
@@ -48,7 +48,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       quizId,
       session
     );
-    
+
     // Checks that a valid response returns a question object with suggested
     // quiz and a status code of 200
     expect(responseQuestionSuggestion.body).toStrictEqual({
@@ -75,21 +75,21 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
           quizId,
           session
         );
-        
+
         // Checks that an unauthorized call to suggest question returns an error object
         // and a status code of 401
         expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
-    
+
     test('Testing when the session is valid but the quizId is not', () => {
       // Attempt to get question suggestion for a non-existent quiz
       const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
         quizId + idOffset,
         session
       );
-      
+
       // Checks that a call to suggest from non-existent quiz returns an error object
       // and status code of 403
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });

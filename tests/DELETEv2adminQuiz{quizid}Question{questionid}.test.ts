@@ -33,7 +33,7 @@ let timeEdited: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -42,7 +42,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz for the logged-in user and store creation time
   const responseCreate = requestAdminQuizCreate(
     session,
@@ -51,7 +51,7 @@ beforeEach(() => {
   );
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
-  
+
   // Create a question with thumbnail URL (v2 feature) for the quiz and store the question ID
   const responseQuestion = requestAdminQuizQuestionCreateV2(
     quizId,
@@ -77,7 +77,7 @@ beforeEach(() => {
   );
   timeEdited = Math.floor(Date.now() / 1000);
   questionId = responseQuestion.body.questionId;
-  
+
   // Get the current state of the quiz for comparison in tests
   responseQuizGet = requestGetQuizV2(quizId, session);
 });
@@ -91,7 +91,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
-      
+
       // Checks that a valid deletion returns an empty object and a
       // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
@@ -118,7 +118,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
           questionId,
           session
         );
-        
+
         // Checks that an unauthorised deletion returns an error object and a
         // status code of 401
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
@@ -134,7 +134,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
           questionId,
           session
         );
-        
+
         // Checks that a forbidden deletion returns an error object and a
         // status code of 403
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
@@ -149,14 +149,14 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
           'First',
           'Last'
         ).body.session;
-        
+
         // Attempt to delete a question from a quiz not owned by this user
         const responseQuestionDelete = requestDeleteQuizQuestionV2(
           quizId,
           questionId,
           session
         );
-        
+
         // Verify error is returned with 403 status code
         expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -170,7 +170,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId + idOffset,
         session
       );
-      
+
       // Checks that a invalid deletion returns an error object and a
       // status code of 400
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
@@ -186,7 +186,7 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       // Starts a new game and gets the gameId
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       const gameId = responseGameStart.body.gameId;
-      
+
       // Try to delete a question while game is in LOBBY state
       let responseQuestionDelete = requestDeleteQuizQuestionV2(
         quizId,

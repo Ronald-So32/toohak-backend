@@ -32,7 +32,7 @@ let questionId: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -41,7 +41,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz for the logged-in user and extract the quiz ID
   responseCreate = requestAdminQuizCreate(
     session,
@@ -49,7 +49,7 @@ beforeEach(() => {
     'Description'
   );
   quizId = responseCreate.body.quizId;
-  
+
   // Create a question for the quiz and extract the question ID
   responseQuestionCreate = requestAdminQuizQuestionCreate(
     quizId,
@@ -79,7 +79,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
   test('Testing the code 200 return value', () => {
     // Gets the latest details of the quiz
     const responseQuizDetails = requestGetQuiz(quizId, session);
-    
+
     // Checks that the response from the function is a quiz object and that the
     // status code returned is 200
     expect(responseQuizDetails.body).toStrictEqual({
@@ -131,7 +131,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       ])('$description', ({ session }) => {
         // Attempt to get quiz details with invalid session credentials
         const responseQuizDetails = requestGetQuiz(quizId, session + 'Invalid Session');
-        
+
         // Checks that an unauthorised call to fetch quiz detail returns an error object
         // and a status code of 401
         expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
@@ -142,7 +142,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
     test('Testing when the session is valid but the quizId is not', () => {
       // Attempt to get details for a non-existent quiz
       const responseQuizDetails = requestGetQuiz(quizId + idOffset, session);
-      
+
       // Checks that the non-existent quiz returns an error object and a status code
       // of 403
       expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });
@@ -216,7 +216,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
       session,
       'New Name'
     );
-    
+
     // Update the quiz's description
     requestAdminQuizUpdateDescription(
       quizId,
@@ -254,7 +254,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
     // Overwrites the response of quiz detail to latest
     responseQuizDetails = requestGetQuiz(quizId, session);
-    
+
     // Checks that the response can get the latest quiz details after update
     // and that the status code is 200
     expect(responseQuizDetails.body).toStrictEqual({
@@ -322,7 +322,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
     // Get quiz details after deleting all questions
     responseQuizDetails = requestGetQuiz(quizId, session);
-    
+
     // Checks that the quiz detail can't get the deleted questions
     // and returns it still returns an quiz object and a status code of 200
     expect(responseQuizDetails.body).toStrictEqual({
@@ -342,7 +342,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}', () => {
 
     // Attempt to get details of the deleted quiz
     responseQuizDetails = requestGetQuiz(quizId, session);
-    
+
     // Checks that deleted quiz's details is unavailable and returns an error object and
     // a status code of 403
     expect(responseQuizDetails.body).toStrictEqual({ error: expect.any(String) });

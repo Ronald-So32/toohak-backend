@@ -30,7 +30,7 @@ let gameId: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -39,7 +39,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz for the logged-in user and extract the quiz ID
   const responseCreate = requestAdminQuizCreate(
     session,
@@ -92,7 +92,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
       quizId,
       gameId
     );
-    
+
     // Verify the response contains the expected data structure
     // with empty player list since no players joined
     expect(responseGetGameResult.body).toStrictEqual({
@@ -117,7 +117,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
         quizId,
         gameId + idOffset
       );
-      
+
       // Verify a bad request error is returned
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
@@ -127,14 +127,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
       // Start a new game that isn't in FINAL_RESULTS state
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
-      
+
       // Attempt to get results for a game not in FINAL_RESULTS state
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
         gameId
       );
-      
+
       // Verify a bad request error is returned
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
@@ -158,7 +158,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           quizId,
           gameId
         );
-        
+
         // Verify an unauthorized error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
@@ -173,7 +173,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           quizId + idOffset,
           gameId
         );
-        
+
         // Verify a forbidden error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -194,7 +194,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           quizId,
           gameId
         );
-        
+
         // Verify a forbidden error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);

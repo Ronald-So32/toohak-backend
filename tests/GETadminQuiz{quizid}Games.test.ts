@@ -24,7 +24,7 @@ let quizId: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -33,7 +33,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz for the logged-in user and extract the quiz ID
   const responseCreate = requestAdminQuizCreate(
     session,
@@ -71,7 +71,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
   test('Testing the code 200 return value', () => {
     // Get list of games for a quiz with no games
     const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
-    
+
     // Verify the response contains empty active and inactive games arrays
     expect(responseGetQuizGames.body).toStrictEqual({
       activeGames: [],
@@ -95,7 +95,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       ])('$description', ({ session }) => {
         // Attempt to get games list with invalid session credentials
         const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
-        
+
         // Verify an unauthorized error is returned
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
@@ -106,7 +106,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
       test('Testing when quiz is does not exist', () => {
         // Attempt to get games list for a non-existent quiz
         const responseGetQuizGames = requestAdminQuizGamesList(session, quizId + idOffset);
-        
+
         // Verify a forbidden error is returned
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -123,7 +123,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/games', () => {
 
         // Attempt to get games list for a quiz not owned by this user
         const responseGetQuizGames = requestAdminQuizGamesList(session, quizId);
-        
+
         // Verify a forbidden error is returned
         expect(responseGetQuizGames.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetQuizGames.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);

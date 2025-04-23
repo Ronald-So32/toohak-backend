@@ -30,7 +30,7 @@ let timeLastEdited: number;
 beforeEach(() => {
   // Reset the application state before each test
   requestClear();
-  
+
   // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
@@ -39,7 +39,7 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
-  
+
   // Create a quiz for the logged-in user and store creation time
   const responseCreate = requestAdminQuizCreate(
     session,
@@ -73,7 +73,7 @@ beforeEach(() => {
     }
   );
   questionId = responseQuestionCreate.body.questionId;
-  
+
   // Update the quiz thumbnail and store the edit time
   requestAdminQuizThumbnailUpdate(
     quizId,
@@ -98,7 +98,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
       gameId,
       session
     );
-    
+
     // Verify that the game status response contains correct data
     // including the current state, question position, player list,
     // and all quiz metadata
@@ -164,7 +164,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           gameId,
           session
         );
-        
+
         // Verify that an unauthorized request returns an error
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
@@ -179,7 +179,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           gameId,
           session
         );
-        
+
         // Verify that a forbidden request returns an error
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -200,7 +200,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
           gameId,
           session
         );
-        
+
         // Verify that a forbidden request returns an error
         expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
@@ -214,7 +214,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}', () => {
         gameId + idOffset,
         session
       );
-      
+
       // Verify that an invalid game ID returns a bad request error
       expect(responseGetGame.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGame.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
