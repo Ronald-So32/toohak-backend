@@ -150,6 +150,12 @@ export interface quizGetDetailsInterface {
 
 export const idOffset: number = 727727;
 
+
+/**
+ * Enum for game states
+ *
+ * @enum {string}
+ */
 export enum quizStates {
   LOBBY = 'LOBBY',
   QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
@@ -160,6 +166,11 @@ export enum quizStates {
   END = 'END'
 }
 
+/**
+ * Enum for valid actions used to change game state
+ *
+ * @enum {string}
+ */
 export enum actions {
   NEXT_QUESTION = 'NEXT_QUESTION',
   SKIP_COUNTDOWN = 'SKIP_COUNTDOWN',
@@ -168,6 +179,11 @@ export enum actions {
   END = 'END'
 }
 
+/**
+ * Class for defining errors in 
+ *
+ * @class Errors 
+ */
 export class Errors {
   // Specific validation reasons
   static readonly Specific = {
