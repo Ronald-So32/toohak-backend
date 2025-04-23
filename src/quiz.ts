@@ -69,6 +69,7 @@ export function adminQuizGet(
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Return quiz
   return {
     details: {
       quizId: quiz.quizId,
