@@ -507,7 +507,7 @@ export function validQuizName(name: string): void {
  * @returns {string} - The newly generated session token
  */
 export function generateSession(): string {
-  return uuidv4();;
+  return uuidv4();
 }
 
 /**

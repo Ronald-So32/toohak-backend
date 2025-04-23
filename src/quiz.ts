@@ -577,7 +577,7 @@ export function adminQuizQuestionMove(
   newPosition: number
 ): Record<string, never> {
   const quiz = findQuizByUser(userId, quizId);
-  
+
   const validQuestionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
   );

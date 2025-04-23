@@ -196,7 +196,7 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
         expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
         expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
       });
-      
+
       describe('Invalid NewPosition', () => {
         test.each([
           {

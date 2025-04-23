@@ -63,10 +63,7 @@ import { echo } from './newecho';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import YAML from 'yaml';
-import sui from 'swagger-ui-express';
 import fs from 'fs';
-import path from 'path';
 import process from 'process';
 
 const OK = 200;
@@ -82,8 +79,6 @@ app.use(json());
 app.use(cors());
 // For logging errors (print to terminal)
 app.use(morgan('dev'));
-// For producing the docs that define the API
-const file = fs.readFileSync(path.join(process.cwd(), 'swagger.yaml'), 'utf8');
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
