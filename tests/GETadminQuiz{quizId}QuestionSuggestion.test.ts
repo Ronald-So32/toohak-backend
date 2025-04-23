@@ -11,6 +11,7 @@ import {
   idOffset
 } from '../src/functionsHelper';
 
+// Define variables to store response objects, session token, and quiz ID
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
 let session: string;
@@ -19,7 +20,10 @@ let quizId: number;
 // Before each test clears the data then registers a user and gets
 // the current session then creating a quiz and gets the quiz id
 beforeEach(() => {
+  // Reset the application state before each test
   requestClear();
+  
+  // Register a new admin user and extract the session token
   responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
@@ -27,6 +31,8 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
+  
+  // Create a quiz about computer science and extract the quiz ID
   responseCreate = requestAdminQuizCreate(
     session,
     'Computer Science Quiz',
@@ -42,6 +48,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
       quizId,
       session
     );
+    
     // Checks that a valid response returns a question object with suggested
     // quiz and a status code of 200
     expect(responseQuestionSuggestion.body).toStrictEqual({
@@ -52,6 +59,7 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
 
   describe('Testing for error responses', () => {
     describe('Testing status code of 401 return values', () => {
+      // Test multiple unauthorized scenarios using parametrized tests
       test.each([
         {
           session: session + 'Invalid Session',
@@ -62,21 +70,26 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
+        // Attempt to get question suggestion with invalid session credentials
         const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
           quizId,
           session
         );
-        // Checks that an ErrorCodes.UNAUTHORISED call to suggest question returns an error object
+        
+        // Checks that an unauthorized call to suggest question returns an error object
         // and a status code of 401
         expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
         expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
     });
+    
     test('Testing when the session is valid but the quizId is not', () => {
+      // Attempt to get question suggestion for a non-existent quiz
       const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
         quizId + idOffset,
         session
       );
+      
       // Checks that a call to suggest from non-existent quiz returns an error object
       // and status code of 403
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
