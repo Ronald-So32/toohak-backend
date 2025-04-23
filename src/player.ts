@@ -533,7 +533,8 @@ export function playerJoin(
  *
  * @param {number} playerId - playerId of player
  * 
- * @returns {playerStatus: object | errorInterface} - Returns status of game the 
+ * @returns { { state: string, numQuestions: number, atQuestion: number} | 
+ * errorInterface} - Returns status of game the 
  * player is in or error object
  */
 export function playerStatus(playerid: number) {
@@ -563,9 +564,19 @@ export function playerStatus(playerid: number) {
  * @param {number} playerId - The ID of the user updating game state
  * @param {number} questionPosition - The ID of the quiz
  *
- * @returns {question: object | errorInterface} - Returns question intformation 
- * given player is on or error object
- */
+ * @returns {{
+ *   questionId: number,
+ *   question: string,
+ *   timeLimit: number,
+ *   thumbnailUrl: string,
+ *   points: number,
+ *   answerOptions: {
+ *     answerId: number,
+ *     answer: string,
+ *     colour: string
+ *   }[]
+ * } | errorInterface} - Returns question information for the given position or an error object.
+*/
 export function playerQuestion(
   playerId: number,
   questionPosition: number
@@ -634,11 +645,11 @@ export function playerQuestion(
  * @param {number} questionPosition - The position of the question in the quiz
  *
  * @returns {{
-*   questionId: number,
-*   playersCorrect: number[],
-*   averageAnswerTime: number,
-*   percentCorrect: number
-* } | errorInterface} - Returns an object containing question results or an error 
+ *questionId: number,
+ *playersCorrect: number[],
+ *averageAnswerTime: number,
+ *percentCorrect: number
+ * } | errorInterface} - Returns an object containing question results or an error 
 * object if the request is invalid.
 */
 export function playerQuestionResults(
