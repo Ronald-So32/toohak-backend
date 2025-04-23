@@ -175,7 +175,7 @@ export function adminQuizGameUpdate(
   const actionValue = actions[action as keyof typeof actions];
 
   switch (actionValue) {
-    // If given action is NEXT_QUESTION, transition game state to QUESTION_COUNTDOWN , 
+    // If given action is NEXT_QUESTION, transition game state to QUESTION_COUNTDOWN ,
     // increment question index, and set timers to open and then close the question.
     case actions.NEXT_QUESTION:{
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
@@ -206,8 +206,8 @@ export function adminQuizGameUpdate(
       }, 3000);
 
       break; }
-    
-    // If given action is SKIP_COUNTDOWN, transition into QUESTION_OPEN game state if 
+
+    // If given action is SKIP_COUNTDOWN, transition into QUESTION_OPEN game state if
     // conditions are valid, and set timeout for current question
     case actions.SKIP_COUNTDOWN: {
       if (game.state === quizStates.LOBBY ||
@@ -282,13 +282,12 @@ export function adminQuizGameUpdate(
   return {};
 }
 
-
 /**
  * Allows user to retrieve game status and intformation
  *
  * @param {number} userId - The ID of the user getting game state
  * @param {number} quizId - The ID of the quiz
- * @param {number} gamemId - gameId of the game user is trying to check status of 
+ * @param {number} gamemId - gameId of the game user is trying to check status of
  *
  * @returns {{
  *   state: string,
@@ -305,7 +304,7 @@ export function adminQuizGameUpdate(
  *     timeLimit: number,
  *     thumbnailUrl: string
  *     }
- * }| errorInterface} - Returns game status and info or 
+ * }| errorInterface} - Returns game status and info or
  * error object
  */
 export function adminQuizGameStatus(
@@ -316,7 +315,7 @@ export function adminQuizGameStatus(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-  // Check if game exists in give quiz 
+  // Check if game exists in give quiz
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -352,9 +351,9 @@ export function adminQuizGameStatus(
  *
  * @param {number} userId - The ID of the user getting game result
  * @param {number} quizId - The ID of the quiz
- * @param {number} gamemId - gameId of the game user is getting results of 
+ * @param {number} gamemId - gameId of the game user is getting results of
  *
- * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
+ * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults:
  * Partial<questionResultsInterface>[] | errorInterface} - Returns error object or
  * array of objects usersRankedByScore
  */
@@ -399,7 +398,7 @@ export function adminQuizGameResults(
   game.players.forEach(player => {
     playerScores[player] = 0;
   });
-  // Calculate stats per question, avg time, players correct, etc., award points to 
+  // Calculate stats per question, avg time, players correct, etc., award points to
   // correct players, rank players, store info into game data
   for (const question of game.metadata.questions) {
     const questionId = question.questionId;
@@ -446,14 +445,13 @@ export function adminQuizGameResults(
   };
 }
 
-
 /**
  * Allows player to join a game
  *
  * @param {number} gamemId - gameId of game
  * @param {string} playerName - Given name of player
  *
- * @returns {playerid: number | errorInterface} - Returns playerid on success or 
+ * @returns {playerid: number | errorInterface} - Returns playerid on success or
  * an error object
  */
 export function playerJoin(
@@ -517,8 +515,8 @@ export function playerJoin(
   }
 
   const playerId = createUUID();
-  // Add a player to game, generate unique playerId, check if number of players 
-  // has reached autoStartNum of game 
+  // Add a player to game, generate unique playerId, check if number of players
+  // has reached autoStartNum of game
   game.players.push(playerName);
   game.playersWithId.push({ playerName, playerId });
   if (game.autoStartNum === game.players.length) {
@@ -547,9 +545,9 @@ export function playerJoin(
  * Get the status of a game a player is in
  *
  * @param {number} playerId - playerId of player
- * 
- * @returns {{ state: string, numQuestions: number, atQuestion: number }| 
- * errorInterface} - Returns status of game the 
+ *
+ * @returns {{ state: string, numQuestions: number, atQuestion: number }|
+ * errorInterface} - Returns status of game the
  * player is in or error object
  */
 export function playerStatus(playerid: number) {
@@ -575,7 +573,7 @@ export function playerStatus(playerid: number) {
 
 /**
  * Get information of a specific question in a quiz game for a player
- * 
+ *
  * @param {number} playerId - The ID of the user updating game state
  * @param {number} questionPosition - The ID of the quiz
  *
@@ -654,9 +652,9 @@ export function playerQuestion(
 }
 
 /**
- * Retrieves results of a question for a given player 
+ * Retrieves results of a question for a given player
  *
- * @param {number} playerId - The ID of the player 
+ * @param {number} playerId - The ID of the player
  * @param {number} questionPosition - The position of the question in the quiz
  *
  * @returns {{
@@ -664,7 +662,7 @@ export function playerQuestion(
  *playersCorrect: number[],
  *averageAnswerTime: number,
  *percentCorrect: number
- * } | errorInterface} - Returns an object containing question results or an error 
+ * } | errorInterface} - Returns an object containing question results or an error
 * object if the request is invalid.
 */
 export function playerQuestionResults(
@@ -672,7 +670,7 @@ export function playerQuestionResults(
   questionPosition: number
 ) {
   const data = getData();
-  
+
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerId)
   );
@@ -697,7 +695,7 @@ export function playerQuestionResults(
       ErrorCodes.BADREQUEST
     );
   }
-  // Check if current game question position is same as given quesiton position 
+  // Check if current game question position is same as given quesiton position
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
@@ -725,14 +723,14 @@ export function playerQuestionResults(
 }
 
 /**
- * Retrieves final results of a completed game for given player, when game is in 
+ * Retrieves final results of a completed game for given player, when game is in
  * FINAL_RESULTS state
  *
  * @param {number} playerId - The ID of the player requesting results
  *
- * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
+ * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults:
  * Partial<questionResultsInterface>[]
- *   | errorInterface} - Returns  object containing final results for game, or an 
+ *   | errorInterface} - Returns  object containing final results for game, or an
  * error if the player or game is invalid.
 */
 export function playerFinalResults(playerId: number) {
@@ -821,7 +819,7 @@ export function playerFinalResults(playerId: number) {
  * Allows player with playerId to submit an answer to question of questionPosition
  *
  * @param {number} playerId - The ID of the player
- * @param {number} questionPosition - Position of question in quiz 
+ * @param {number} questionPosition - Position of question in quiz
  * @param {string} answertId - ID of answer
  *
  * @returns {Record<string, never> | errorInterface} - Returns either an empty
@@ -858,7 +856,7 @@ export function playerAnswerSubmit(
       ErrorCodes.BADREQUEST
     );
   }
-  // Check if current game question position is same as given quesiton position 
+  // Check if current game question position is same as given quesiton position
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
