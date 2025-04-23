@@ -6,7 +6,8 @@ import {
   ErrorCodes,
   createUUID,
   Errors,
-  quizStates
+  quizStates,
+  errorInterface
 } from './functionsHelper';
 import {
   adminQuizCreate,
@@ -348,10 +349,10 @@ export function translate(
 
 /**
  * Generates AI-powered explanation for quiz answers
- * @param playerId - ID of the player requesting explanation
- * @param HUGGINGFACE_API_TOKEN - API token for AI service
- * @returns Generated explanation string
- * @throws BetterError for invalid requests
+ * @param {number} playerId - ID of the player requesting explanation
+ * @param {string} HUGGINGFACE_API_TOKEN - API token for AI service
+ * @returns {string | errorInterface} generated hint - Generated explanation string
+ * or throws error is there is error
  */
 export function explain(
   playerId: number,
