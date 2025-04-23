@@ -557,6 +557,15 @@ export function playerStatus(playerid: number) {
   };
 }
 
+/**
+ * Get results of a specific question in a quiz game for a player
+ * 
+ * @param {number} playerId - The ID of the user updating game state
+ * @param {number} questionPosition - The ID of the quiz
+ *
+ * @returns {question: object | errorInterface} - Returns question results for 
+ * given player or error object
+ */
 export function playerQuestion(
   playerId: number,
   questionPosition: number
