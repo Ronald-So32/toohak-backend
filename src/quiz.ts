@@ -536,6 +536,16 @@ export function adminQuizTransfer(
   return {};
 }
 
+/**
+ * V2 implementation of quiz transfer that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz to transfer
+ * @param {number} userId - The ID of the current owner
+ * @param {string} userEmail - The email of the new owner
+ *
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If active games exist or other transfer criteria not met
+ */
 export function adminQuizTransferV2(
   quizId: number,
   userId: number,
