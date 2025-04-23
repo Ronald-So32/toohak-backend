@@ -20,14 +20,15 @@ import {
 
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
-
+  // helper function to check if quizId exists and if user owns this quiz
   findQuizByUser(userId, quizId);
 
   const result = {
     activeGames: [] as number[],
     inactiveGames: [] as number[]
   };
-
+  // check if game state is in END state, if not then put in active games array, else
+  // put in inactive games array
   data.games.forEach(game => {
     if (game.metadata.quizId === quizId) {
       if (game.state !== quizStates.END) {
