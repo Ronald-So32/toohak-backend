@@ -349,6 +349,9 @@ export class Errors {
   }
 }
 
+/**
+ * Enum for error codes
+ */
 export enum ErrorCodes {
   OK = 200,
   BADREQUEST = 400,
@@ -356,6 +359,9 @@ export enum ErrorCodes {
   FORBIDDEN = 403
 }
 
+/**
+ * Export BetterError 
+ */
 export class BetterError extends Error {
   readonly statusCode: number;
 
