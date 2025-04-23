@@ -124,8 +124,8 @@ export function adminQuizGetV2(
  * @param {string} name - Name of the quiz
  * @param {string} description - Description of the quiz
  *
- * @returns {quizIdInterface | errorInterface} - Always return quizId object otherwise an
- * error object with relevant error message
+ * @returns {quizIdInterface} - Object containing the newly created quiz ID
+ * @throws {BetterError} - If name is invalid, already used, or description is too long
  */
 export function adminQuizCreate(
   userId: number,
