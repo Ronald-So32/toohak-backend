@@ -131,6 +131,19 @@ export interface playersInterface{
   playerId: number;
 }
 
+/**
+ * Interface representing the structure of a game object
+ *
+ * @property {number} gameId - ID for the game (optional)
+ * @property {number} quizId - ID of the associated quiz (optional).
+ * @property {quizStates} state - State of the game
+ * @property {number} atQuestion - Current question index the game is at
+ * @property {string[]} players - List of player names in the game
+ * @property {playersInterface[]} playersWithId - Optional list of players with IDs
+ * @property {quizInterface} metadata - Metadata for the quiz current game is based on
+ * @property {number} autoStartNum - Number of players required to automatically start game (optional)
+ * @property {resultsInterface} results - Results for the game
+ */
 export interface gameInterface {
   gameId?:number;
   quizId?: number;
