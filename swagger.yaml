@@ -1835,7 +1835,6 @@ paths:
             If any of the following are true:
             - If player ID does not exist
             - Game is not in FINAL_RESULTS state
-            - The directory ./csvResults does not exist
           schema:
             $ref: '#/components/return/Error'
         401:
@@ -1884,10 +1883,6 @@ paths:
                     $ref: '#/components/prim/Duration'
                   thumbnailUrl:
                     $ref: '#/components/prim/Url'
-        400:
-          description: The directory ./jsonFiles does not exist
-          schema:
-            $ref: '#/components/return/Error'
         401:
           description: Session is empty or invalid (does not refer to valid logged in user session)
           schema:
@@ -1920,7 +1915,6 @@ paths:
         400:
           description: |
             If any of the following are true:
-            - The directory ./jsonFiles does not exist
             - The json file has incorrect values inside
           schema:
             $ref: '#/components/return/Error'
