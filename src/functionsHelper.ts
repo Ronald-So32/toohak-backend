@@ -729,6 +729,14 @@ export function hashString(password: string): string {
   return hash;
 }
 
+
+/**
+ * Converts array of objects into a Comma-Separated(CSV) values formatted string.
+ *
+ * @param {any[]} arr - An array of objects 
+ *
+ * @returns {string} - CSV formatted string 
+ */
 export function checkActiveGames(quizId: number): void {
   const data = getData();
 
@@ -745,6 +753,13 @@ export function checkActiveGames(quizId: number): void {
   }
 }
 
+/**
+ * Converts array of objects into a Comma-Separated(CSV) values formatted string.
+ *
+ * @param {any[]} arr - An array of objects 
+ *
+ * @returns {string} - CSV formatted string 
+ */
 export function convertToCSV(arr: any) {
   const array = [Object.keys(arr[0])].concat(arr);
 
