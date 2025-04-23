@@ -428,7 +428,7 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
 
 
 /**
- * GET /v1/admin/quiz/:quizid route
+ * GET /v2/admin/quiz/:quizid route
  * 
  * Get information of a quiz
  * 
@@ -491,7 +491,7 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
 });
 
 /**
- * POST /v1/admin/quiz/:quizid/question route
+ * POST /v2/admin/quiz/:quizid/question route
  * 
  * Creates a new question within a in quiz with given quizId
  * 
@@ -647,7 +647,7 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
 });
 
 /**
- * POST /v1/admin/quiz/:quizid/transfer route
+ * POST /v2/admin/quiz/:quizid/transfer route
  * 
  * Transfers ownership of a quiz to another based on email
  * 
@@ -679,7 +679,24 @@ app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * PUT /v1/admin/quiz/:quizid/question/:questionid route
+ * 
+ * Updates question with given questionid
+ * 
+ * Request Headers:
+ * - session: string — Session token of the current quiz owner
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz
+ * - questionid: number — ID of the question to update
+ * 
+ * Request Body:
+ * - questionBody: object — Updated question content
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -698,7 +715,24 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   }
 });
 
-// PUT /v2/admin/quiz/{quizid}/question/{questionid}
+/**
+ * PUT /v2/admin/quiz/:quizid/question/:questionid route
+ * 
+ * Updates question with given questionid
+ * 
+ * Request Headers:
+ * - session: string — Session token of the current quiz owner
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz
+ * - questionid: number — ID of the question to update
+ * 
+ * Request Body:
+ * - questionBody: object — Updated question content
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -717,7 +751,21 @@ app.put('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Respo
   }
 });
 
-// DELETE /v1/admin/quiz/{quizid}/question/{questionid}
+/**
+ * DELETE /v1/admin/quiz/:quizid/question/:questionid route
+ * 
+ * Deletes question with questionid
+ * 
+ * Request Headers:
+ * - session: string — The session token of the current user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz with question to be deleted
+ * - questionid: number — ID of the question to delete
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -734,7 +782,22 @@ app.delete('/v1/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   }
 });
 
-// DELETE /v2/admin/quiz/{quizid}/question/{questionid}
+
+/**
+ * DELETE /v2/admin/quiz/:quizid/question/:questionid route
+ * 
+ * Deletes question with questionid
+ * 
+ * Request Headers:
+ * - session: string — The session token of the current user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz with question to be deleted
+ * - questionid: number — ID of the question to delete
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -751,7 +814,24 @@ app.delete('/v2/admin/quiz/:quizid/question/:questionid', (req: Request, res: Re
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/question/{questionid}/move
+/**
+ * PUT /v1/admin/quiz/:quizid/question/:questionid/move route
+ * 
+ * Moves question in a quiz to a new position in the question order
+ * 
+ * Request Headers:
+ * - session: string — The session token of currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz containing the question
+ * - questionid: number — ID of the question to move
+ * 
+ * Request Body:
+ * - newPosition: number — New position index to move the question to
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -769,7 +849,20 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
   }
 });
 
-// GET /v1/admin/quiz/{quizId}/question/suggestion
+/**
+ * GET /v1/admin/quiz/:quizid/question/suggestion route
+ * 
+ * Generate a suggested question based on the quiz's name and description
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of quiz to generate a suggestion for
+ * 
+ * @returns {object} - { question: string } containing a generated quiz question
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
   (req: Request, res: Response) => {
     const session = req.headers.session as string;
