@@ -59,8 +59,8 @@ export function adminQuizList(
  * @param {number} userId - The ID of the user requesting the quiz
  * @param {number} quizId - The ID of the quiz to retrieve
  *
- * @returns {quizGetDetailsInterface | errorInterface} - Returns either the quiz
- * details or an error object
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, time limits, and other metadata
  */
 export function adminQuizGet(
   userId: number,
