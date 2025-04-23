@@ -507,16 +507,7 @@ export function validQuizName(name: string): void {
  * @returns {string} - The newly generated session token
  */
 export function generateSession(): string {
-  const data = getData();
-  // Generates a session string using uuidv4
-  let sessionNew = uuidv4();
-
-  // Generates a new session string if it already exist
-  while (data.sessions.some((sessionObj: sessionInterface) => sessionObj.session === sessionNew)) {
-    sessionNew = uuidv4();
-  }
-
-  return sessionNew;
+  return uuidv4();;
 }
 
 /**
