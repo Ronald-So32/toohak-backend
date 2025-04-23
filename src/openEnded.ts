@@ -147,7 +147,7 @@ export function hint(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -209,7 +209,7 @@ export function translate(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -266,7 +266,7 @@ export function explain(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {

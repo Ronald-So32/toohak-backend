@@ -186,36 +186,41 @@ describe('Testing PUT /v1/admin/quiz/{quizid}/question/{questionid}/move', () =>
     });
 
     describe('Error response 400 test cases', () => {
-      test.each([
-        {
-          description: 'Question Id does not refer to a valid question within this quiz',
-          questionId: questionId + idOffset,
-          newPosition: 1
-        },
-        {
-          description: 'NewPosition is less than 0',
-          questionId: questionId,
-          newPosition: -2
-        },
-        {
-          description: 'NewPosition is greater than n-1 where n is the number of questions',
-          questionId: questionId,
-          newPosition: 6
-        },
-        {
-          description: 'NewPosition is the same as current one',
-          questionId: questionId,
-          newPosition: 0
-        }
-      ])('$description', ({ questionId, newPosition }) => {
+      test('Question does not exist', () => {
         const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
           quizId,
-          questionId,
+          questionId + idOffset,
           session,
-          newPosition
+          1
         );
         expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
         expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+      });
+
+      describe('Invalid NewPosition', () => {
+        test.each([
+          {
+            description: 'NewPosition is less than 0',
+            newPosition: -2
+          },
+          {
+            description: 'NewPosition is greater than n-1 where n is the number of questions',
+            newPosition: 6
+          },
+          {
+            description: 'NewPosition is the same as current one',
+            newPosition: 0
+          }
+        ])('$description', ({ newPosition }) => {
+          const responseMoveQuizQuestion = requestAdminQuizQuestionMove(
+            quizId,
+            questionId,
+            session,
+            newPosition
+          );
+          expect(responseMoveQuizQuestion.body).toStrictEqual({ error: expect.any(String) });
+          expect(responseMoveQuizQuestion.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
+        });
       });
     });
   });

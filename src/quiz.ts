@@ -578,6 +578,17 @@ export function adminQuizQuestionMove(
 ): Record<string, never> {
   const quiz = findQuizByUser(userId, quizId);
 
+  const validQuestionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
+
+  if (validQuestionIndex === -1) {
+    throw new BetterError(
+      Errors.invalidQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
   // Position is less than 0
   if (newPosition < 0) {
     throw new BetterError(
@@ -594,21 +605,10 @@ export function adminQuizQuestionMove(
     );
   }
 
-  const validQuestionIndex = quiz.questions.findIndex(
-    (question: questionsInterface) => question.questionId === questionId
-  );
-
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME).error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
-  if (validQuestionIndex === -1) {
-    throw new BetterError(
-      Errors.invalidQuestion().error,
       ErrorCodes.BADREQUEST
     );
   }
@@ -663,15 +663,9 @@ export function adminQuizQuestionSuggestion(
       }
     });
 
-  let responseBody;
+  const responseBody = JSON.parse(response.body.toString());
 
-  try {
-    responseBody = JSON.parse(response.body.toString());
-  } catch (error) {
-    return responseBody.status(error.statusCode).json({ error: error.message });
-  }
-
-  const generatedQuestion = responseBody[0].generated_text;
+  const generatedQuestion = responseBody[0].generated_text.slice(prompt.length);
 
   return { question: generatedQuestion };
 }
