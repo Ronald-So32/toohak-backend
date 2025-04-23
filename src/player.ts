@@ -548,7 +548,7 @@ export function playerJoin(
  *
  * @param {number} playerId - playerId of player
  * 
- * @returns { { state: string, numQuestions: number, atQuestion: number} | 
+ * @returns {{ state: string, numQuestions: number, atQuestion: number }| 
  * errorInterface} - Returns status of game the 
  * player is in or error object
  */

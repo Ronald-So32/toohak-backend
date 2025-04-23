@@ -423,7 +423,7 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  // Validate thumbnail
+  // Validate thumbnail URL not empty
   if (!questionBody.thumbnailUrl || questionBody.thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -433,6 +433,7 @@ export function adminQuizQuestionCreateV2(
 
   const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -440,6 +441,7 @@ export function adminQuizQuestionCreateV2(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnailUrl.endsWith('jpg') &&
     !thumbnailUrl.endsWith('jpeg') &&
     !thumbnailUrl.endsWith('png')) {
@@ -449,14 +451,16 @@ export function adminQuizQuestionCreateV2(
     );
   }
 
+  // Call the v1 function to create the question
   const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
 
+  // Get the quiz and newly created question
   const quiz = findQuizByUser(userId, quizId);
-
   const question = quiz.questions.find(
     (q: questionsInterface) => q.questionId === v1.questionId
   );
 
+  // Add the thumbnail URL to the question
   question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
