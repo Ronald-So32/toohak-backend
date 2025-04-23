@@ -721,6 +721,7 @@ export function adminQuizQuestionSuggestion(
   
   Respond with just the question text, nothing else.`;
 
+  // API request to HuggingFace
   const response = request(
     'POST',
     'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -742,6 +743,7 @@ export function adminQuizQuestionSuggestion(
     return responseBody.status(error.statusCode).json({ error: error.message });
   }
 
+  // Extract just the generated question text
   const generatedQuestion = responseBody[0].generated_text;
 
   return { question: generatedQuestion };
