@@ -179,8 +179,8 @@ export function adminQuizCreate(
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
  */
 export function adminQuizRemove(
   userId: number,
