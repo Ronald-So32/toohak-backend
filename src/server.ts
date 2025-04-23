@@ -68,7 +68,7 @@ import process from 'process';
 
 const OK = 200;
 
-const HUGGINGFACE_API_TOKEN = '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';
+const HUGGINGFACE_API_TOKEN = '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';
 const DB_PATH = './DATABASE.json';
 
 // Set up web app
