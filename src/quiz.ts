@@ -551,8 +551,10 @@ export function adminQuizTransferV2(
   userId: number,
   userEmail: string
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with transfer
   adminQuizTransfer(quizId, userId, userEmail);
 
   return {};
