@@ -367,6 +367,8 @@ export class Errors {
 
 /**
  * Enum for error codes
+ * 
+ * @enum {number}
  */
 export enum ErrorCodes {
   OK = 200,
@@ -376,7 +378,13 @@ export enum ErrorCodes {
 }
 
 /**
- * Export BetterError 
+ * Custom error class for returning errors with status codes.
+ * 
+ * @class BetterError
+ * @extends {Error}
+ *
+ * @param {string} message - The error message to display.
+ * @param {number} statusCode - The HTTP status code associated with the error.
  */
 export class BetterError extends Error {
   readonly statusCode: number;
