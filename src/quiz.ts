@@ -83,6 +83,17 @@ export function adminQuizGet(
   };
 }
 
+/**
+ * V2 implementation to retrieve all information about a specific quiz,
+ * including thumbnail URL.
+ *
+ * @param {number} userId - The ID of the user requesting the quiz
+ * @param {number} quizId - The ID of the quiz to retrieve
+ *
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, thumbnail URL, time limits, and other metadata
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
+ */
 export function adminQuizGetV2(
   userId: number,
   quizId: number
