@@ -617,8 +617,10 @@ export function adminDeleteQuizQuestionV2(
   userId: number,
   questionId: number
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with question deletion
   adminDeleteQuizQuestion(quizId, userId, questionId);
 
   return {};
