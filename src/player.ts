@@ -797,6 +797,16 @@ export function playerFinalResults(playerId: number) {
   };
 }
 
+/**
+ * Allows player with playerId to submit an answer to question of questionPosition
+ *
+ * @param {number} playerId - The ID of the player
+ * @param {number} questionPosition - Position of question in quiz 
+ * @param {string} answertId - ID of answer
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function playerAnswerSubmit(
   playerId: number,
   questionPosition: number,

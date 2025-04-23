@@ -31,9 +31,8 @@ import request from 'sync-request-curl';
  *
  * @param {number} userId - The ID of the user
  *
- * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
- * an object, quizzes with an array of quizSummariesInterface inside of it unless
- * there is an error which returns errorInterface
+ * @returns {{ quizzes: quizSummariesInterface[] }} - Object containing an array of quiz summaries
+ * owned by the specified user
  */
 export function adminQuizList(
   userId: number
@@ -59,8 +58,8 @@ export function adminQuizList(
  * @param {number} userId - The ID of the user requesting the quiz
  * @param {number} quizId - The ID of the quiz to retrieve
  *
- * @returns {quizGetDetailsInterface | errorInterface} - Returns either the quiz
- * details or an error object
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, time limits, and other metadata
  */
 export function adminQuizGet(
   userId: number,
@@ -69,6 +68,7 @@ export function adminQuizGet(
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Return quiz
   return {
     details: {
       quizId: quiz.quizId,
@@ -90,6 +90,7 @@ export function adminQuizGetV2(
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Return quiz
   return {
     details: {
       quizId: quiz.quizId,
@@ -177,8 +178,8 @@ export function adminQuizCreate(
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
  */
 export function adminQuizRemove(
   userId: number,
