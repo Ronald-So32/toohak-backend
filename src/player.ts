@@ -333,6 +333,17 @@ export function adminQuizGameStatus(
   };
 }
 
+/**
+ * Allows user get game results
+ *
+ * @param {number} userId - The ID of the user getting game result
+ * @param {number} quizId - The ID of the quiz
+ * @param {number} gamemId - gameId of the game user is getting results of 
+ *
+ * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
+ * Partial<questionResultsInterface>[] | errorInterface} - Returns error object or
+ * array of objects usersRankedByScore
+ */
 export function adminQuizGameResults(
   userId: number,
   quizId: number,
@@ -352,7 +363,7 @@ export function adminQuizGameResults(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if game state is in FINAL_RESULTS state
   if (game.state !== quizStates.FINAL_RESULTS) {
     throw new BetterError(
       Errors.invalidGame().error,
@@ -361,6 +372,7 @@ export function adminQuizGameResults(
   }
 
   // From here
+  // Initialise results and player scores for each player
   const results: {
     usersRankedByScore: usersRankedByScoreInterface[];
     questionResults: questionResultsInterface[];
@@ -373,7 +385,8 @@ export function adminQuizGameResults(
   game.players.forEach(player => {
     playerScores[player] = 0;
   });
-
+  // Calculate stats per question, avg time, players correct, etc., award points to 
+  // correct players, rank players, store info into game data
   for (const question of game.metadata.questions) {
     const questionId = question.questionId;
     const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
