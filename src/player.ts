@@ -160,10 +160,12 @@ export function adminQuizGameUpdate(
     clearTimeout(data.activeTimers[gameId]);
     delete data.activeTimers[gameId];
   }
-
+  // Get string value from actions enum
   const actionValue = actions[action as keyof typeof actions];
   
   switch (actionValue) {
+    // If given action is NEXT_QUESTION, transition game state to QUESTION_COUNTDOWN , 
+    // increment question index, and set timers to open and then close the question.
     case actions.NEXT_QUESTION:{
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
         game.state === quizStates.QUESTION_OPEN ||
@@ -193,7 +195,9 @@ export function adminQuizGameUpdate(
       }, 3000);
 
       break; }
-
+    
+    // If given action is SKIP_COUNTDOWN, transition into QUESTION_OPEN game state if 
+    // conditions are valid, and set timeout for current question
     case actions.SKIP_COUNTDOWN: {
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_OPEN ||
