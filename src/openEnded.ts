@@ -70,9 +70,9 @@ export function createCSV(
 
 /**
  * Exports quiz data to JSON file format
- * @param quizId - ID of the quiz to export
- * @param userId - ID of the user owning the quiz
- * @returns Object containing exported JSON and filename
+ * @param {number} quizId - ID of the quiz to export
+ * @param {number} userId - ID of the user owning the quiz
+ * @returns {object} - Object containing exported JSON and filename
  */
 export function exportJSON(
   quizId: number,
