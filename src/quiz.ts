@@ -857,7 +857,7 @@ export function adminQuizQuestionUpdateV2(
 ): Record<string, never> {
   const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
-  // Validate thumbnail
+  // Validate thumbnail is not empty
   if (thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -865,6 +865,7 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -872,6 +873,7 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnailUrl.endsWith('jpg') &&
     !thumbnailUrl.endsWith('jpeg') &&
     !thumbnailUrl.endsWith('png')) {
@@ -881,14 +883,17 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Use v1 function to update the question
   const v1 = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
 
+  // Get the quiz and updated question
   const quiz = findQuizByUser(userId, quizId);
 
   const question = quiz.questions.find(
     (q: questionsInterface) => q.questionId === questionId
   );
 
+  // Add the thumbnail URL to the questio
   question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
