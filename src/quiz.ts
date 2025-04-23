@@ -914,6 +914,7 @@ export function adminQuizThumbnailUpdate(
   quizId: number,
   userId: number
 ): Record<string, never> {
+  // Validate thumbnail is not empty
   if (!thumbnail || thumbnail === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -921,6 +922,7 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnail.startsWith('http://') && !thumbnail.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -928,6 +930,7 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnail.endsWith('jpg') &&
     !thumbnail.endsWith('jpeg') &&
     !thumbnail.endsWith('png')) {
@@ -937,10 +940,13 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Update the quiz thumbnail URL
   quiz.thumbnailUrl = thumbnail;
 
+  // Update the last edited timestamp
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
