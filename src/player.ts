@@ -137,32 +137,32 @@ export function adminQuizGameUpdate(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-
+  // Check if game exists
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
-
+  
   if (!game) {
     throw new BetterError(
       Errors.invalidGame().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if given action is valid
   if (!(<any>Object).values(actions).includes(action)) {
     throw new BetterError(
       Errors.invalidAction().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Delete the times for given gameId if it exists
   if (data.activeTimers[gameId]) {
     clearTimeout(data.activeTimers[gameId]);
     delete data.activeTimers[gameId];
   }
 
   const actionValue = actions[action as keyof typeof actions];
-
+  
   switch (actionValue) {
     case actions.NEXT_QUESTION:{
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
