@@ -38,10 +38,10 @@ if (!fs.existsSync(JSON_PATH)) {
 
 /**
  * Generates CSV files from quiz results and saves them to disk
- * @param playerId - ID of the player requesting results
- * @param quizId - ID of the quiz to process
- * @param userId - ID of the user owning the quiz
- * @returns Combined CSV data as string
+ * @param {number} playerId - ID of the player requesting results
+ * @param {number} quizId - ID of the quiz to process
+ * @param {number} userId - ID of the user owning the quiz
+ * @returns {string} Returns Combined CSV data as string
  */
 export function createCSV(
   playerId: number,
