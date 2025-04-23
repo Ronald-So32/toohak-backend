@@ -13,7 +13,8 @@ import {
   quizStates,
   gameIdInterface,
   createUUID,
-  actions
+  actions,
+  calculateGameResults
 } from './functionsHelper';
 
 // change types for all

@@ -757,7 +757,7 @@ export function convertToCSV(arr: any) {
 }
 
 
-function calculateGameResults(game: gameInterface): {
+export function calculateGameResults(game: gameInterface): {
   usersRankedByScore: usersRankedByScoreInterface[],
   questionResults: questionResultsInterface[]
 } {
