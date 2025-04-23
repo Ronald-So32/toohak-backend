@@ -339,6 +339,7 @@ export function adminQuizQuestionCreate(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
+  // Check if quiz exists and belongs to the user
   const quiz = findQuizByUser(userId, quizId);
 
   const { question, timeLimit, points, answerOptions } = questionBody;
