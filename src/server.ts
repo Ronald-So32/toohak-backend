@@ -1098,7 +1098,18 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Respo
   }
 });
 
-// POST /v1/player/join
+/**
+ * POST /v1/player/join route
+ * 
+ * Allow player to join
+ * 
+ * Request Body:
+ * - gameId: number — The ID of the game to join
+ * - playerName: string — The name of the player joining the game
+ * 
+ * @returns {object} - Return playerId on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/player/join', (req: Request, res: Response) => {
   const { gameId, playerName } = req.body;
 
@@ -1111,7 +1122,17 @@ app.post('/v1/player/join', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/player/{playerid}
+/**
+ * GET /v1/player/:playerid route
+ * 
+ * Retrieves the current game status for the specified player
+ * 
+ * Path Parameters:
+ * - playerid: number — ID of the player whose game status is being retrieved
+ * 
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/player/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -1124,7 +1145,18 @@ app.get('/v1/player/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/player/{playerid}/question/{questionposition}
+/**
+ * GET /v1/player/:playerid/question/:questionposition route
+ * 
+ * Get information for a question 
+ * 
+ * Path Parameters:
+ * - playerid: number — ID of the player
+ * - questionposition: number — Index of the question quiz 
+ * 
+ * @returns {object} - Return reuslt on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   const questionPosition = parseInt(req.params.questionposition);
@@ -1138,7 +1170,18 @@ app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: R
   }
 });
 
-// GET /v1/player/playerid/question/questionposition/results
+/**
+ * GET /v1/player/:playerid/question/:questionposition/results route
+ * 
+ * Get reuslts for a quesiton
+ * 
+ * Path Parameters:
+ * - playerid: number — ID of the player
+ * - questionposition: number — Index of the question in the quiz (1-based)
+ * 
+ * @returns {object} -Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/player/:playerid/question/:questionposition/results',
   (req: Request, res: Response) => {
     const playerId = parseInt(req.params.playerid);
@@ -1152,7 +1195,16 @@ app.get('/v1/player/:playerid/question/:questionposition/results',
     }
   });
 
-// GET /v1/player/playerid/results
+/**
+ * GET /v1/player/{playerid}/results route
+ *
+ * Get final results for a player after a quiz has ended.
+ *
+ * @param {number} playerid - The unique ID of the player
+ *
+ * @returns {object} - Return reuslt upon success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -1165,7 +1217,21 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/player/{playerid}/question/{questionposition}/answer
+/**
+ * PUT /v1/player/:playerid/question/:questionposition/answer route
+ *
+ * Submits a player's answer
+ *
+ * Path Parameters:
+ * - playerid: number — ID of the player
+ * - questionposition: number — The position/index of the question
+ *
+ * Request Body:
+ * - answerIds: string[] — Array of submitted answer IDs
+ *
+ * @returns {object} - Return result object upon success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/player/:playerid/question/:questionposition/answer',
   (req: Request, res: Response) => {
     const playerId = parseInt(req.params.playerid);
@@ -1181,7 +1247,20 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
     }
   });
 
-// GET /v1/open/csv/{quizid}/{playerid}
+/**
+ * GET /v1/open/csv/:quizid/:playerid route
+ *
+ *
+ * Path Parameters:
+ * - quizid: number — The ID of the quiz
+ * - playerid: number — The ID of the player
+ *
+ * Request Headers:
+ * - session: string — Session token for user authentication
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   const session = req.headers.session as string;
@@ -1197,7 +1276,18 @@ app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/export/{quizid}
+/**
+ * GET /v1/open/export/:quizid route
+ *
+ * Path Parameters:
+ * - quizid: number — The ID of the quiz 
+ *
+ * Request Headers:
+ * - session: string — Session token for user authentication
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/export/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -1212,7 +1302,18 @@ app.get('/v1/open/export/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/open/import
+/**
+ * GET /v1/open/import route
+ *
+ * Request Headers:
+ * - session: string — Session token for user authentication
+ *
+ * Request Body:
+ * - fileName: string — name of file
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/import', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { fileName } = req.body;
@@ -1227,7 +1328,21 @@ app.get('/v1/open/import', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/open/attachment/{quizid}
+/**
+ * PUT /v1/open/attachment/:quizid route
+ *
+ * Request Headers:
+ * - session: string — Session token for user authentication
+ *
+ * Path Parameters:
+ * - quizid: number — ID of the quiz to attach the file to
+ *
+ * Request Body:
+ * - attachment: string — The attachment content (e.g., base64 or URL string)
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -1243,7 +1358,21 @@ app.put('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/attachment/{quizid}
+/**
+ * GET /v1/open/attachment/:quizid route
+ *
+ * Request Headers:
+ * - session: string — Session token for user authentication
+ *
+ * Path Parameters:
+ * - quizid: number — of the quiz from which to retrieve the attachment
+ *
+ * Request Body:
+ * - attachmentNumber: number — The index of the attachment to retrieve
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -1259,7 +1388,15 @@ app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/hint/{playerid}
+/**
+ * GET /v1/open/hint/:playerid route
+ *
+ * Path Parameters:
+ * - playerid: number — ID of player requesting the hint
+ *
+ * @returns {object} - return hint on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -1272,7 +1409,18 @@ app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/translate/{playerid}
+/**
+ * GET /v1/open/translate/:playerid route
+ *
+ * Path Parameters:
+ * - playerid: number — The ID of the player requesting translation
+ *
+ * Request Headers:
+ * - language: string — Target language 
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
   const language = req.headers.language as string;
@@ -1286,7 +1434,15 @@ app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/open/explain/{playerid}
+/**
+ * GET /v1/open/explain/:playerid route
+ *
+ * Path Parameters:
+ * - playerid: number — The ID of the player requesting the explanation
+ *
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/open/explain/:playerid', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
