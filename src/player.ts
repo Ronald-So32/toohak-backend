@@ -432,6 +432,16 @@ export function adminQuizGameResults(
   };
 }
 
+
+/**
+ * Allows player to join a game
+ *
+ * @param {number} gamemId - gameId of game
+ * @param {string} playerName - Given name of player
+ *
+ * @returns {playerid: number | errorInterface} - Returns playerid on success or 
+ * an error object
+ */
 export function playerJoin(
   gameId: number,
   playerName: string
@@ -493,7 +503,8 @@ export function playerJoin(
   }
 
   const playerId = createUUID();
-
+  // Add a player to game, generate unique playerId, check if number of players 
+  // has reached autoStartNum of game 
   game.players.push(playerName);
   game.playersWithId.push({ playerName, playerId });
   if (game.autoStartNum === game.players.length) {
