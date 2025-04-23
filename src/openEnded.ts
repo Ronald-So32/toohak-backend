@@ -207,7 +207,7 @@ export function hint(
 
   // Find game containing player
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -282,7 +282,7 @@ export function translate(
 
   // Find game containing player
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -351,7 +351,7 @@ export function explain(
 
   // Find game containing player
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {

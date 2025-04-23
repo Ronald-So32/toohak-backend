@@ -648,7 +648,18 @@ export function adminQuizQuestionMove(
   // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
-  // Validate position is not negative
+  const validQuestionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
+
+  if (validQuestionIndex === -1) {
+    throw new BetterError(
+      Errors.invalidQuestion().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  // Position is less than 0
   if (newPosition < 0) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT).error,
@@ -664,10 +675,6 @@ export function adminQuizQuestionMove(
     );
   }
 
-  const validQuestionIndex = quiz.questions.findIndex(
-    (question: questionsInterface) => question.questionId === questionId
-  );
-
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     throw new BetterError(
@@ -676,15 +683,6 @@ export function adminQuizQuestionMove(
     );
   }
 
-  // Check if question exists in the quiz
-  if (validQuestionIndex === -1) {
-    throw new BetterError(
-      Errors.invalidQuestion().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
-  // Store the question to move
   const question = quiz.questions[validQuestionIndex];
   // Changes the position of the questions
   quiz.questions.splice(validQuestionIndex, 1);
@@ -737,16 +735,9 @@ export function adminQuizQuestionSuggestion(
       }
     });
 
-  let responseBody;
+  const responseBody = JSON.parse(response.body.toString());
 
-  try {
-    responseBody = JSON.parse(response.body.toString());
-  } catch (error) {
-    return responseBody.status(error.statusCode).json({ error: error.message });
-  }
-
-  // Extract just the generated question text
-  const generatedQuestion = responseBody[0].generated_text;
+  const generatedQuestion = responseBody[0].generated_text.slice(prompt.length);
 
   return { question: generatedQuestion };
 }
