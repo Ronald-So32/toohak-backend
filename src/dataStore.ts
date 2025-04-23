@@ -106,11 +106,28 @@ export interface sessionInterface {
   session: string;
 }
 
+/**
+ * Interface representing a player's score ranking
+ *
+ * @property {string} playerName - Nme of the player.
+ * @property {number} score - Score of the player
+ */
 export interface usersRankedByScoreInterface {
   playerName: string,
   score: number
 }
 
+/**
+ * Interface representing the result of a quiz question
+ *
+ * @property {number} questionId - ID of the question
+ * @property {string[]} playersCorrect - List of player names who answered correctly
+ * @property {string[]} playersIncorrect - List of player names who answered incorrectly
+ * @property {number[]} playersAnswerTime - List of answer times per player in seconds
+ * @property {number} averageAnswerTime - Average time players took to answer
+ * @property {number} totalAnswerTime - Total time taken by all players to answer
+ * @property {number} percentCorrect - Percentage of players who answered correctly
+ */
 export interface questionResultsInterface {
   questionId: number,
   playersCorrect: string[],
