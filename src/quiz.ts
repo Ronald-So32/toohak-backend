@@ -831,13 +831,24 @@ export function adminQuizQuestionUpdate(
 
   // Update last edited timestamp
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
-  
+
   // Update total quiz time limit
   quiz.timeLimit = totalTime;
 
   return {};
 }
 
+/**
+ * V2 implementation of question update that includes thumbnail validation
+ *
+ * @param {number} userId - The ID of the user updating the question
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} questionId - The ID of the question to update
+ * @param {questionsInterface} questionBody - The new question details with thumbnail
+ *
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If thumbnail is invalid or other update criteria not met
+ */
 export function adminQuizQuestionUpdateV2(
   userId: number,
   quizId: number,
