@@ -331,8 +331,8 @@ export function adminQuizDescriptionUpdate(
  * @param {questionsInterface} questionBody - The question details including
  * text, time limit, points, and answers
  *
- * @returns {questionIdInterface | errorInterface} - Returns either the new question
- * ID or an error object
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question parameters are invalid
  */
 export function adminQuizQuestionCreate(
   userId: number,
