@@ -473,8 +473,8 @@ export function adminQuizQuestionCreateV2(
  * @param {number} userId - The ID of the current owner
  * @param {string} userEmail - The email of the new owner
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, target user invalid/self, or name conflict
  */
 export function adminQuizTransfer(
   quizId: number,
