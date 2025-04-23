@@ -460,7 +460,7 @@ export function playerStatus(playerid: number) {
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerid)
+    g.playersWithId.some(p => p.playerId === playerid)
   );
 
   if (!game) {
@@ -484,7 +484,7 @@ export function playerQuestion(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -528,7 +528,7 @@ export function playerQuestion(
     questionId: question.questionId,
     question: question.question,
     timeLimit: question.timeLimit,
-    thumbnailUrl: question.thumbnailUrl || '',
+    thumbnailUrl: question.thumbnailUrl,
     points: question.points,
     answerOptions: question.answerOptions.map(option => ({
       answerId: option.answerId,
@@ -545,7 +545,7 @@ export function playerQuestionResults(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -599,7 +599,7 @@ export function playerFinalResults(playerId: number) {
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
@@ -685,7 +685,7 @@ export function playerAnswerSubmit(
   const data = getData();
 
   const game = data.games.find(g =>
-    g.playersWithId?.some(p => p.playerId === playerId)
+    g.playersWithId.some(p => p.playerId === playerId)
   );
 
   if (!game) {
