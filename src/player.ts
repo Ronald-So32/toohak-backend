@@ -29,14 +29,14 @@ import {
  */
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
-  // helper function to check if quizId exists and if user owns this quiz
+  // Helper function to check if quizId exists and if user owns this quiz
   findQuizByUser(userId, quizId);
 
   const result = {
     activeGames: [] as number[],
     inactiveGames: [] as number[]
   };
-  // check if game state is in END state, if not then put in active games array, else
+  // Check if game state is in END state, if not then put in active games array, else
   // put in inactive games array
   data.games.forEach(game => {
     if (game.metadata.quizId === quizId) {
@@ -59,21 +59,21 @@ export function adminQuizGameStart(
   const data = getData();
 
   const quiz = findQuizByUser(userId, quizId);
-
+  // Check if quiz question length is valid, ie. if there is a question
   if (quiz.questions.length === 0) {
     throw new BetterError(
       Errors.noQuestion().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if autStartNum is valid
   if (autoStartNum > 50) {
     throw new BetterError(
       Errors.invalidString('AutoStartNum', Errors.Specific.AutoStartNum.TOO_LONG).error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if there is 10 or more active games, if so then throw error
   if (data.games.filter((game: gameInterface) =>
     game.quizId === quizId && game.state !== quizStates.END).length >= 10) {
     throw new BetterError(
@@ -88,7 +88,7 @@ export function adminQuizGameStart(
     usersRankedByScore: [],
     questionResults: []
   };
-
+  
   data.games.push({
     gameId: id,
     quizId: quizId,
