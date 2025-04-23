@@ -721,6 +721,13 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
   return quiz;
 }
 
+/**
+ * Hash a given password and return as hexadecimal string
+ *
+ * @param {string} password - password to be hashed 
+ *
+ * @returns {string} - Returns a hexadecimal string that is the hashed password
+ */
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
   shaObj.update(password);
@@ -728,7 +735,6 @@ export function hashString(password: string): string {
 
   return hash;
 }
-
 
 /**
  * Check active games in quiz with quizId
