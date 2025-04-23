@@ -128,7 +128,6 @@ export function adminQuizGameStart(
   return { gameId: id };
 }
 
-
 /**
  * Allows user to update game state
  *
@@ -529,9 +528,17 @@ export function playerJoin(
   return { playerId };
 }
 
+/**
+ * Get the status of a game a player is in
+ *
+ * @param {number} playerId - playerId of player
+ * 
+ * @returns {playerStatus: object | errorInterface} - Returns status of game the 
+ * player is in or error object
+ */
 export function playerStatus(playerid: number) {
   const data = getData();
-
+  // Check if game exists
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerid)
   );
