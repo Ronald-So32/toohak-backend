@@ -698,9 +698,26 @@ export function playerQuestionResults(
   };
 }
 
+/**
+ * Retrieves final results of a completed game for given player, when game is in 
+ * FINAL_RESULTS state
+ *
+ * @param {number} playerId - The ID of the player requesting results
+ *
+ * @returns {{
+*   usersRankedByScore: usersRankedByScoreInterface[],
+*   questionResults: {
+*     questionId: number,
+*     playersCorrect: number[],
+*     averageAnswerTime: number,
+*     percentCorrect: number
+*   }[]
+* } | errorInterface} - Returns  object containing final results for game, or an 
+* error if the player or game is invalid.
+*/
 export function playerFinalResults(playerId: number) {
   const data = getData();
-
+  // Check if given player is in game
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerId)
   );
@@ -711,7 +728,7 @@ export function playerFinalResults(playerId: number) {
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if game state is in FINAL_RESULTS state
   if (game.state !== quizStates.FINAL_RESULTS) {
     throw new BetterError(
       Errors.invalidPlayer().error,
@@ -768,7 +785,7 @@ export function playerFinalResults(playerId: number) {
   // To Here
   // Should be moved into a helper that updates the results every state
   // Could be optimised to not overwrite and recalcate if possible
-
+  // Return usersRankedByScore and questionResults
   return {
     usersRankedByScore: results.usersRankedByScore,
     questionResults: results.questionResults.map(qr => ({
