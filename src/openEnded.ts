@@ -37,7 +37,7 @@ export function createCSV(
   if (!fs.existsSync(CSV_PATH)) {
     fs.mkdirSync(CSV_PATH);
   }
-  
+
   const usersScore = convertToCSV(result.usersRankedByScore);
   const questionResults = convertToCSV(result.questionResults);
   const combined = `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`;
@@ -128,7 +128,7 @@ export function seeAttachments(
       ErrorCodes.BADREQUEST
     );
   }
-  
+
   const quiz = findQuizByUser(userId, quizId);
 
   if (!quiz || !quiz.attachments || attachmentNumber >= quiz.attachments.length) {
