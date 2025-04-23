@@ -24,7 +24,7 @@ import {
  * @param {number} userId - The ID of the user retrieving the quiz
  * @param {number} quizId - The ID of the quiz
  *
- * @returns {{ result: object }} - An object containing
+ * @returns {result: object} - An object containing
  * the following arrays: activeGames and inactiveGames
  */
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
@@ -58,7 +58,7 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
  * @param {number} quizId - The ID of the quiz
  * @param {number} autoStartNum - Number
  *
- * @returns {{ gameIdInterface: number }} - The gameId of a game
+ * @returns {gameIdInterface: number | errorInterface} - The gameId of a game
  */
 export function adminQuizGameStart(
   userId: number,
@@ -290,7 +290,22 @@ export function adminQuizGameUpdate(
  * @param {number} quizId - The ID of the quiz
  * @param {number} gamemId - gameId of the game user is trying to check status of 
  *
- * @returns {gameStatus: object | errorInterface} - Returns game status and info or 
+ * @returns {{
+ *   state: string,
+ *   atQuestion: number,
+ *   players: string[],
+ *   metadata: {
+ *     quizId: number,
+ *     name: string,
+ *     timeCreated: number,
+ *     timeLastEdited: number,
+ *     description: string,
+ *     numQuestions: number,
+ *     questions: questionInterface[],
+ *     timeLimit: number,
+ *     thumbnailUrl: string
+ *     }
+ * }| errorInterface} - Returns game status and info or 
  * error object
  */
 export function adminQuizGameStatus(
@@ -533,7 +548,8 @@ export function playerJoin(
  *
  * @param {number} playerId - playerId of player
  * 
- * @returns {playerStatus: object | errorInterface} - Returns status of game the 
+ * @returns {{ state: string, numQuestions: number, atQuestion: number }| 
+ * errorInterface} - Returns status of game the 
  * player is in or error object
  */
 export function playerStatus(playerid: number) {
@@ -563,9 +579,19 @@ export function playerStatus(playerid: number) {
  * @param {number} playerId - The ID of the user updating game state
  * @param {number} questionPosition - The ID of the quiz
  *
- * @returns {question: object | errorInterface} - Returns question intformation 
- * given player is on or error object
- */
+ * @returns {{
+ *   questionId: number,
+ *   question: string,
+ *   timeLimit: number,
+ *   thumbnailUrl: string,
+ *   points: number,
+ *   answerOptions: {
+ *     answerId: number,
+ *     answer: string,
+ *     colour: string
+ *   }[]
+ * } | errorInterface} - Returns question information for the given position or an error object.
+*/
 export function playerQuestion(
   playerId: number,
   questionPosition: number
@@ -634,11 +660,11 @@ export function playerQuestion(
  * @param {number} questionPosition - The position of the question in the quiz
  *
  * @returns {{
-*   questionId: number,
-*   playersCorrect: number[],
-*   averageAnswerTime: number,
-*   percentCorrect: number
-* } | errorInterface} - Returns an object containing question results or an error 
+ *questionId: number,
+ *playersCorrect: number[],
+ *averageAnswerTime: number,
+ *percentCorrect: number
+ * } | errorInterface} - Returns an object containing question results or an error 
 * object if the request is invalid.
 */
 export function playerQuestionResults(
@@ -704,15 +730,9 @@ export function playerQuestionResults(
  *
  * @param {number} playerId - The ID of the player requesting results
  *
- * @returns {{
-*   usersRankedByScore: usersRankedByScoreInterface[],
-*   questionResults: {
-*     questionId: number,
-*     playersCorrect: number[],
-*     averageAnswerTime: number,
-*     percentCorrect: number
-*   }[]
-* } | errorInterface} - Returns  object containing final results for game, or an 
+ * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
+ * Partial<questionResultsInterface>[]
+*   | errorInterface} - Returns  object containing final results for game, or an 
 * error if the player or game is invalid.
 */
 export function playerFinalResults(playerId: number) {

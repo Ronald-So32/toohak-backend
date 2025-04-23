@@ -302,7 +302,7 @@ export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
   description: string
-): Record<string, never> {\
+): Record<string, never> {
   // Check if the quiz exists and is owned by the user
   const quiz = findQuizByUser(userId, quizId);
 
