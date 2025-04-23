@@ -269,11 +269,11 @@ export function hint(
 
 /**
  * Translates quiz question using AI service
- * @param playerId - ID of the player requesting translation
- * @param language - Target language for translation
- * @param HUGGINGFACE_API_TOKEN - API token for AI service
- * @returns Translated question string
- * @throws BetterError for invalid requests
+ * @param {number} playerId - ID of the player requesting translation
+ * @param {string} language - Target language for translation
+ * @param {string} HUGGINGFACE_API_TOKEN - API token for AI service
+ * @returns {string | errorInterface} generatedTranslation - Translated question string, 
+ * or error object if there is error
  */
 export function translate(
   playerId: number,
