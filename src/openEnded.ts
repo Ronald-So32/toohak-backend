@@ -25,14 +25,6 @@ import request from 'sync-request-curl';
 const CSV_PATH = './csvResults';
 const JSON_PATH = './jsonFiles';
 
-if (!fs.existsSync(CSV_PATH)) {
-  fs.mkdirSync(CSV_PATH);
-}
-
-if (!fs.existsSync(JSON_PATH)) {
-  fs.mkdirSync(JSON_PATH);
-}
-
 export function createCSV(
   playerId: number,
   quizId: number,
@@ -41,6 +33,10 @@ export function createCSV(
   findQuizByUser(userId, quizId);
 
   const result = playerFinalResults(playerId);
+
+  if (!fs.existsSync(CSV_PATH)) {
+    fs.mkdirSync(CSV_PATH);
+  }
 
   const usersScore = convertToCSV(result.usersRankedByScore);
   const questionResults = convertToCSV(result.questionResults);
@@ -69,7 +65,9 @@ export function exportJSON(
     timeLimit: quiz.timeLimit,
     thumbnailUrl: quiz.thumbnailUrl || ''
   };
-
+  if (!fs.existsSync(JSON_PATH)) {
+    fs.mkdirSync(JSON_PATH);
+  }
   const time = getCurrentTimestamp();
 
   fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
@@ -124,15 +122,21 @@ export function seeAttachments(
   quizId: number,
   attachmentNumber: number
 ) {
-  const quiz = findQuizByUser(userId, quizId);
-
-  if (!quiz.attachments || attachmentNumber < 0 || attachmentNumber >= quiz.attachments.length) {
+  if (attachmentNumber < 0) {
     throw new BetterError(
       Errors.invalidAttachmentNumber().error,
       ErrorCodes.BADREQUEST
     );
   }
 
+  const quiz = findQuizByUser(userId, quizId);
+
+  if (!quiz || !quiz.attachments || attachmentNumber >= quiz.attachments.length) {
+    throw new BetterError(
+      Errors.invalidAttachmentNumber().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
   return quiz.attachments[attachmentNumber];
 }
 
@@ -192,13 +196,6 @@ export function hint(
 
   const responseBody = JSON.parse(response.body.toString());
 
-  if ('error' in responseBody) {
-    throw new BetterError(
-      { error: responseBody.error }.error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   const generatedHint = responseBody[0].generated_text.slice(prompt.length);
 
   return generatedHint;
@@ -256,13 +253,6 @@ export function translate(
     });
 
   const responseBody = JSON.parse(response.body.toString());
-
-  if ('error' in responseBody) {
-    throw new BetterError(
-      { error: responseBody.error }.error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const generatedTranslate = responseBody[0].generated_text.slice(prompt.length);
 
@@ -325,13 +315,6 @@ export function explain(
     });
 
   const responseBody = JSON.parse(response.body.toString());
-
-  if ('error' in responseBody) {
-    throw new BetterError(
-      { error: responseBody.error }.error,
-      ErrorCodes.BADREQUEST
-    );
-  }
 
   const generatedHint = responseBody[0].generated_text.slice(prompt.length);
 
