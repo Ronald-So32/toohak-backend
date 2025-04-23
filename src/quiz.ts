@@ -665,7 +665,7 @@ export function adminQuizQuestionSuggestion(
 
   const responseBody = JSON.parse(response.body.toString());
 
-  const generatedQuestion = responseBody[0].generated_text.slice(prompt.length);;
+  const generatedQuestion = responseBody[0].generated_text.slice(prompt.length);
 
   return { question: generatedQuestion };
 }
