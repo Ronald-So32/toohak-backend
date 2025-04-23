@@ -170,7 +170,7 @@ export interface playersInterface{
  * @property {string[]} players - List of player names in the game
  * @property {playersInterface[]} playersWithId - Optional list of players with IDs
  * @property {quizInterface} metadata - Metadata for the quiz current game is based on
- * @property {number} autoStartNum - Number of players required to automatically start game (optional)
+ * @property {number} autoStartNum - No. of players required to automatically start game (optional)
  * @property {resultsInterface} results - Results for the game
  */
 export interface gameInterface {
