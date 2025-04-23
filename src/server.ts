@@ -93,14 +93,22 @@ app.use('/docs', sui.serve, sui.setup(
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || '127.0.0.1';
 
-// Save the current state of the data into the json file
+/**
+ * Save the current state of the data into the json file
+ *
+ * @returns {Record<string, never>}
+ */
 export function save(): void {
   console.log(`Updating ${DB_PATH}`);
   const jsonData = JSON.stringify(getData(), null, 2);
   fs.writeFileSync(DB_PATH, jsonData);
 }
 
-// Load data from whatever is stored in the json file
+/**
+ * Load data from whatever is stored in the json file
+ *
+ * @returns {Record<string, never>}
+ */
 export function load(): void {
   const data = getData();
   if (fs.existsSync(DB_PATH)) {
@@ -111,7 +119,11 @@ export function load(): void {
   }
 }
 
-// Example get request
+/**
+ * Example get request
+ * 
+ * @returns {object} - JSON object withechoed string or an error message
+ */
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
   if ('error' in result) {
@@ -121,7 +133,13 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(result);
 });
 
-// DELETE /v1/clear route
+/**
+ * DELETE /v1/clear route
+ * 
+ * Clears all stored data on server
+ * 
+ * @returns {object} - Returns empty JSON object with status 200 on success
+ */
 app.delete('/v1/clear', (req: Request, res: Response) => {
   clear();
 
