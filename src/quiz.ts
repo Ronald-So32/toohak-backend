@@ -602,6 +602,16 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+/**
+ * V2 implementation of question deletion that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user deleting the question
+ * @param {number} questionId - The ID of the question to delete
+ *
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz has active games or other deletion criteria not met
+ */
 export function adminDeleteQuizQuestionV2(
   quizId: number,
   userId: number,
