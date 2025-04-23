@@ -283,6 +283,17 @@ export function adminQuizGameUpdate(
   return {};
 }
 
+
+/**
+ * Allows user to retrieve game status and intformation
+ *
+ * @param {number} userId - The ID of the user getting game state
+ * @param {number} quizId - The ID of the quiz
+ * @param {number} gamemId - gameId of the game user is trying to check status of 
+ *
+ * @returns {gameStatus: object | errorInterface} - Returns game status and info or 
+ * error object
+ */
 export function adminQuizGameStatus(
   userId: number,
   quizId: number,
@@ -291,7 +302,7 @@ export function adminQuizGameStatus(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-
+  // Check if game exists
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -302,7 +313,7 @@ export function adminQuizGameStatus(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Return object containing game info and status
   return {
     state: game.state,
     atQuestion: game.atQuestion,
