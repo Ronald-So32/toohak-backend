@@ -187,10 +187,10 @@ export function seeAttachments(
 
 /**
  * Generates AI-powered hint for current question
- * @param playerId - ID of the player requesting hint
- * @param HUGGINGFACE_API_TOKEN - API token for AI service
- * @returns Generated hint string
- * @throws BetterError for invalid requests
+ * @param {number} playerId - ID of the player requesting hint
+ * @param {string} HUGGINGFACE_API_TOKEN - API token for AI service
+ * @returns {string | errorInterface} geberatedHint - Generated hint string or error
+ * object if there is error
  */
 export function hint(
   playerId: number,
