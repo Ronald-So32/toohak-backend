@@ -251,8 +251,8 @@ export function adminQuizRemoveV2(
  * @param {number} quizId - Id of the quiz
  * @param {string} name - The new name of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or name is invalid/already used
  */
 export function adminQuizNameUpdate(
   userId: number,
