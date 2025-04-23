@@ -757,8 +757,8 @@ export function adminQuizQuestionSuggestion(
  * @param {number} questionId - The ID of the question to update
  * @param {questionsInterface} questionBody - The new question details
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner, or parameters are invalid
  */
 export function adminQuizQuestionUpdate(
   userId: number,
