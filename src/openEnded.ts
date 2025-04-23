@@ -161,11 +161,11 @@ export function attachments(
 
 /**
  * Retrieves specific quiz attachment
- * @param userId - ID of the user owning the quiz
- * @param quizId - ID of the quiz to access
- * @param attachmentNumber - Index of attachment to retrieve
- * @returns Requested attachment string
- * @throws BetterError if invalid attachment number
+ * @param {number} userId - ID of the user owning the quiz
+ * @param {number} quizId - ID of the quiz to access
+ * @param {number} attachmentNumber - Index of attachment to retrieve
+ * @returns {string | errorinterface} quiz.attachements[attacehmentNumber] - 
+ * Requested attachment string or error object if there is error
  */
 export function seeAttachments(
   userId: number,
