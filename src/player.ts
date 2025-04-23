@@ -632,7 +632,7 @@ export function playerQuestionResults(
   questionPosition: number
 ) {
   const data = getData();
-
+  
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerId)
   );
@@ -643,28 +643,28 @@ export function playerQuestionResults(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check game state is not in ANSWER_SHOW
   if (game.state !== quizStates.ANSWER_SHOW) {
     throw new BetterError(
       Errors.invalidGame().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check given questionposition validity
   if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if game question position is same as given quesiton position 
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Return avg answer time, correct percent of question position
   const question = game.results.questionResults[questionPosition - 1];
   question.percentCorrect = Math.round(
     (question.playersCorrect.length / game.players.length) * 100);
