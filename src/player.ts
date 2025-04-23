@@ -732,8 +732,8 @@ export function playerQuestionResults(
  *
  * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
  * Partial<questionResultsInterface>[]
-*   | errorInterface} - Returns  object containing final results for game, or an 
-* error if the player or game is invalid.
+ *   | errorInterface} - Returns  object containing final results for game, or an 
+ * error if the player or game is invalid.
 */
 export function playerFinalResults(playerId: number) {
   const data = getData();
