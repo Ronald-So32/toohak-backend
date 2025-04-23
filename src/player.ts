@@ -223,6 +223,7 @@ export function adminQuizGameUpdate(
 
       break;
     }
+    // If action is GO_TO_ANSWER, change game state to ANSWER_SHOW
     case actions.GO_TO_ANSWER:{
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
@@ -238,6 +239,7 @@ export function adminQuizGameUpdate(
       game.state = quizStates.ANSWER_SHOW;
       break;
     }
+    // If game state is GO_TO_FINAL_RESULTS, change game state to FINAL_RESULTS
     case actions.GO_TO_FINAL_RESULTS:{
       if (game.state === quizStates.LOBBY ||
         game.state === quizStates.QUESTION_COUNTDOWN ||
@@ -253,6 +255,7 @@ export function adminQuizGameUpdate(
       game.state = quizStates.FINAL_RESULTS;
       break;
     }
+    // If game state is END, change game state to END
     case actions.END:{
       if (game.state === quizStates.END) {
         throw new BetterError(
