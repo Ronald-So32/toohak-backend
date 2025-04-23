@@ -141,10 +141,10 @@ export function importJSON(
 
 /**
  * Manages quiz attachments
- * @param userId - ID of the user owning the quiz
- * @param quizId - ID of the quiz to modify
- * @param attachment - Attachment string to add
- * @returns Empty object
+ * @param {number} userId - ID of the user owning the quiz
+ * @param {number} quizId - ID of the quiz to modify
+ * @param {number} attachment - Attachment string to add
+ * @returns {Record<string, never>} - returns nothing
  */
 export function attachments(
   userId: number,
