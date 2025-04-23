@@ -83,6 +83,17 @@ export function adminQuizGet(
   };
 }
 
+/**
+ * V2 implementation to retrieve all information about a specific quiz,
+ * including thumbnail URL.
+ *
+ * @param {number} userId - The ID of the user requesting the quiz
+ * @param {number} quizId - The ID of the quiz to retrieve
+ *
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, thumbnail URL, time limits, and other metadata
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
+ */
 export function adminQuizGetV2(
   userId: number,
   quizId: number
@@ -113,8 +124,8 @@ export function adminQuizGetV2(
  * @param {string} name - Name of the quiz
  * @param {string} description - Description of the quiz
  *
- * @returns {quizIdInterface | errorInterface} - Always return quizId object otherwise an
- * error object with relevant error message
+ * @returns {quizIdInterface} - Object containing the newly created quiz ID
+ * @throws {BetterError} - If name is invalid, already used, or description is too long
  */
 export function adminQuizCreate(
   userId: number,
@@ -126,7 +137,7 @@ export function adminQuizCreate(
   // Checks if the name of the quiz is valid
   validQuizName(name);
 
-  // Checks if the name is already in use
+  // Checks if the name is already in use by the current user
   const duplicate = data.quizzes.some(
     (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
   );
@@ -213,6 +224,15 @@ export function adminQuizRemove(
   return {};
 }
 
+/**
+ * Version 2 implementation of removing a quiz - checks for active games first
+ *
+ * @param {number} userId - ID of the user attempting to remove the quiz
+ * @param {number} quizId - ID of the quiz to be removed
+ *
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist, user isn't the owner, or active games exist
+ */
 export function adminQuizRemoveV2(
   userId: number,
   quizId: number
@@ -231,8 +251,8 @@ export function adminQuizRemoveV2(
  * @param {number} quizId - Id of the quiz
  * @param {string} name - The new name of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or name is invalid/already used
  */
 export function adminQuizNameUpdate(
   userId: number,
@@ -275,16 +295,18 @@ export function adminQuizNameUpdate(
  * @param {number} quizId - Id of the quiz
  * @param {string} description - The new description of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or description is too long
  */
 export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
   description: string
-): Record<string, never> {
+): Record<string, never> {\
+  // Check if the quiz exists and is owned by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Validate description length (maximum 100 characters)
   if (description.length > 100) {
     throw new BetterError(
       Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG).error,
@@ -295,6 +317,7 @@ export function adminQuizDescriptionUpdate(
   // Update the quiz description
   quiz.description = description;
 
+  // Update the last edited timestamp to current time
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
@@ -308,14 +331,15 @@ export function adminQuizDescriptionUpdate(
  * @param {questionsInterface} questionBody - The question details including
  * text, time limit, points, and answers
  *
- * @returns {questionIdInterface | errorInterface} - Returns either the new question
- * ID or an error object
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question parameters are invalid
  */
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
+  // Check if quiz exists and belongs to the user
   const quiz = findQuizByUser(userId, quizId);
 
   const { question, timeLimit, points, answerOptions } = questionBody;
@@ -369,10 +393,12 @@ export function adminQuizQuestionCreate(
     points,
     answerOptions: updatedAnswerOptions
   };
+
   // Appends the new question to the questionsInterface array of current quiz
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
+
   // Updates the count for numbers of questions in quiz
   quiz.numQuestions += 1;
 
@@ -381,6 +407,17 @@ export function adminQuizQuestionCreate(
   };
 }
 
+/**
+ * V2 implementation of question creation that includes thumbnail validation
+ *
+ * @param {number} userId - The ID of the user creating the question
+ * @param {number} quizId - The ID of the quiz to add the question to
+ * @param {questionsInterface} questionBody - The question details including
+ * text, time limit, points, answers, and thumbnail URL
+ *
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or parameters are invalid
+ */
 export function adminQuizQuestionCreateV2(
   userId: number,
   quizId: number,
