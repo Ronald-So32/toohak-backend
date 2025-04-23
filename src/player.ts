@@ -17,7 +17,16 @@ import {
 } from './functionsHelper';
 
 // change types for all
-
+/**
+ * Provides a list of all active and inactive games associated with the given 
+ * quiz owned by the user with Id userId
+ *
+ * @param {number} userId - The ID of the user retrieving the quiz 
+ * @param {number} quizId - The ID of the quiz
+ *
+ * @returns {{ activeGames: number[], inactiveGames: number[] }} - An object containing
+ * the following arrays: activeGames and inactiveGames
+ */
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
   const data = getData();
   // helper function to check if quizId exists and if user owns this quiz
