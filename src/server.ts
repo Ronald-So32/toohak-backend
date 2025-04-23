@@ -146,7 +146,21 @@ app.delete('/v1/clear', (req: Request, res: Response) => {
   return res.status(OK).json({});
 });
 
-// POST /v1/admin/auth/register
+/**
+ * POST /v1/admin/auth/register
+ * 
+ * Registers new admin user with given email, password, first name, and last name
+ * On successful registration, returns session token 
+ * 
+ * Request Body:
+ * - email: string — User's email address
+ * - password: string — User's password
+ * - nameFirst: string — User's first name
+ * - nameLast: string — User's last name
+ * 
+ * @returns {object} - { session: string } on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
 
@@ -159,7 +173,19 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/auth/login
+/**
+ * POST /v1/admin/auth/login route
+ * 
+ * Check an user using the provided email and password
+ * If valid, return a session token 
+ * 
+ * Request Body:
+ * - email: string — user's email address
+ * - password: string — user's password
+ * 
+ * @returns {object} - { session: string } on successful login
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -172,7 +198,17 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/admin/user/details
+/**
+ * GET /v1/admin/user/details route
+ * 
+ * Retrieves details of the currently logged-in user using session
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the authenticated user
+ * 
+ * @returns {object} - { user: userDetailsInterface } on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
