@@ -567,8 +567,8 @@ export function adminQuizTransferV2(
  * @param {number} userId - The ID of the user deleting the question
  * @param {number} questionId - The ID of the question to delete
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question doesn't exist
  */
 export function adminDeleteQuizQuestion(
   quizId: number,
@@ -588,6 +588,7 @@ export function adminDeleteQuizQuestion(
     );
   }
 
+  // Store the question before deleting for updating time limits
   const deletedQuestion = quiz.questions[validQuestionIndex];
 
   // Updates the time limit of the quiz after the questions deleted
