@@ -663,13 +663,7 @@ export function adminQuizQuestionSuggestion(
       }
     });
 
-  let responseBody;
-
-  try {
-    responseBody = JSON.parse(response.body.toString());
-  } catch (error) {
-    return responseBody.status(error.statusCode).json({ error: error.message });
-  }
+  const responseBody = JSON.parse(response.body.toString());
 
   const generatedQuestion = responseBody[0].generated_text;
 
