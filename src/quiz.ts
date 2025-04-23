@@ -634,8 +634,8 @@ export function adminDeleteQuizQuestionV2(
  * @param {number} questionId - The ID of the question to move
  * @param {number} newPosition - The new position for the question
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful move
+ * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner, or position is invalid
  */
 export function adminQuizQuestionMove(
   quizId: number,
