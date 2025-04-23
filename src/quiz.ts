@@ -31,9 +31,8 @@ import request from 'sync-request-curl';
  *
  * @param {number} userId - The ID of the user
  *
- * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
- * an object, quizzes with an array of quizSummariesInterface inside of it unless
- * there is an error which returns errorInterface
+ * @returns {{ quizzes: quizSummariesInterface[] }} - Object containing an array of quiz summaries
+ * owned by the specified user
  */
 export function adminQuizList(
   userId: number
