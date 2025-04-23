@@ -41,6 +41,16 @@ import {
   playerFinalResults,
   playerAnswerSubmit
 } from './player';
+import {
+  createCSV,
+  exportJSON,
+  importJSON,
+  attachments,
+  seeAttachments,
+  hint,
+  translate,
+  explain
+} from './openEnded';
 import { findUserIdFromSession } from './functionsHelper';
 import { getData } from './dataStore';
 
@@ -61,7 +71,7 @@ import process from 'process';
 
 const OK = 200;
 
-const HUGGINGFACE_API_TOKEN = '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';
+const HUGGINGFACE_API_TOKEN = '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';
 const DB_PATH = './DATABASE.json';
 
 // Set up web app
@@ -618,7 +628,7 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   }
 });
 
-// GET/v1/admin/quiz/quizid/game/gameid/results
+// GET /v1/admin/quiz/quizid/game/gameid/results
 app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -678,7 +688,7 @@ app.get('/v1/player/:playerid/question/:questionposition', (req: Request, res: R
   }
 });
 
-// GET/v1/player/playerid/question/questionposition/results
+// GET /v1/player/playerid/question/questionposition/results
 app.get('/v1/player/:playerid/question/:questionposition/results',
   (req: Request, res: Response) => {
     const playerId = parseInt(req.params.playerid);
@@ -692,7 +702,7 @@ app.get('/v1/player/:playerid/question/:questionposition/results',
     }
   });
 
-// GET/v1/player/playerid/results
+// GET /v1/player/playerid/results
 app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   const playerId = parseInt(req.params.playerid);
 
@@ -705,7 +715,7 @@ app.get('/v1/player/:playerid/results', (req: Request, res: Response) => {
   }
 });
 
-// PUT/v1/player/{playerid}/question/{questionposition}/answer
+// PUT /v1/player/{playerid}/question/{questionposition}/answer
 app.put('/v1/player/:playerid/question/:questionposition/answer',
   (req: Request, res: Response) => {
     const playerId = parseInt(req.params.playerid);
@@ -720,6 +730,124 @@ app.put('/v1/player/:playerid/question/:questionposition/answer',
       return res.status(error.statusCode).json({ error: error.message });
     }
   });
+
+// GET /v1/open/csv/{quizid}/{playerid}
+app.get('/v1/open/csv/:quizid/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = createCSV(playerId, quizId, userId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/export/{quizid}
+app.get('/v1/open/export/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = exportJSON(quizId, userId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// POST /v1/open/import
+app.get('/v1/open/import', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const { fileName } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = importJSON(fileName, userId);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// PUT /v1/open/attachment/{quizid}
+app.put('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { attachment } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = attachments(userId, quizId, attachment);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/attachment/{quizid}
+app.get('/v1/open/attachment/:quizid', (req: Request, res: Response) => {
+  const session = req.headers.session as string;
+  const quizId = parseInt(req.params.quizid);
+  const { attachmentNumber } = req.body;
+
+  try {
+    const userId = findUserIdFromSession(session).userId;
+    const result = seeAttachments(userId, quizId, attachmentNumber);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/hint/{playerid}
+app.get('/v1/open/hint/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+
+  try {
+    const result = hint(playerId, HUGGINGFACE_API_TOKEN);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/translate/{playerid}
+app.get('/v1/open/translate/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+  const language = req.headers.language as string;
+
+  try {
+    const result = translate(playerId, language, HUGGINGFACE_API_TOKEN);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
+
+// GET /v1/open/explain/{playerid}
+app.get('/v1/open/explain/:playerid', (req: Request, res: Response) => {
+  const playerId = parseInt(req.params.playerid);
+
+  try {
+    const result = explain(playerId, HUGGINGFACE_API_TOKEN);
+
+    return res.status(OK).json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+});
 
 app.use((req: Request, res: Response) => {
   const error = `

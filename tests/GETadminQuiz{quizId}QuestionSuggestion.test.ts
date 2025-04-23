@@ -1,19 +1,15 @@
-test('TMP test', () => {
-
-});
-
-/*
 import {
   requestClear,
   requestAdminAuthRegister,
   responseInterface,
   requestAdminQuizCreate,
-  requestGetQuizQuestionSuggestion,
-  OK,
-  UNAUTHORISED,
-  FORBIDDEN,
-  quizIdOffset
+  requestGetQuizQuestionSuggestion
 } from './testsHelper';
+
+import {
+  ErrorCodes,
+  idOffset
+} from '../src/functionsHelper';
 
 let responseRegister: responseInterface;
 let responseCreate: responseInterface;
@@ -51,30 +47,40 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
     expect(responseQuestionSuggestion.body).toStrictEqual({
       question: expect.any(String)
     });
-    expect(responseQuestionSuggestion.statusCode).toStrictEqual(OK);
+    expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.OK);
   });
 
   describe('Testing for error responses', () => {
-    test('Testing when the session is invalid', () => {
-      const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
-        quizId,
-        session + 'Invalid Session'
-      );
-      // Checks that an unauthorised call to suggest question returns an error object
-      // and a status code of 401
-      expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionSuggestion.statusCode).toStrictEqual(UNAUTHORISED);
+    describe('Testing status code of 401 return values', () => {
+      test.each([
+        {
+          session: session + 'Invalid Session',
+          description: 'Invalid session',
+        },
+        {
+          session: '',
+          description: 'Empty session',
+        }
+      ])('$description', ({ session }) => {
+        const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
+          quizId,
+          session
+        );
+        // Checks that an ErrorCodes.UNAUTHORISED call to suggest question returns an error object
+        // and a status code of 401
+        expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
+        expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
+      });
     });
-
     test('Testing when the session is valid but the quizId is not', () => {
       const responseQuestionSuggestion = requestGetQuizQuestionSuggestion(
-        quizId + quizIdOffset,
+        quizId + idOffset,
         session
       );
       // Checks that a call to suggest from non-existent quiz returns an error object
       // and status code of 403
       expect(responseQuestionSuggestion.body).toStrictEqual({ error: expect.any(String) });
-      expect(responseQuestionSuggestion.statusCode).toStrictEqual(FORBIDDEN);
+      expect(responseQuestionSuggestion.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
     });
   });
 
@@ -100,13 +106,12 @@ describe('Testing GET /v1/admin/quiz/{quizid}/question/suggestion', () => {
     );
 
     // Both should return valid suggestions that also match the question create's requirements
-    expect(computerQuizSuggestion.statusCode).toStrictEqual(OK);
+    expect(computerQuizSuggestion.statusCode).toStrictEqual(ErrorCodes.OK);
     expect(computerQuizSuggestion.body).toHaveProperty('question');
     expect(computerQuizSuggestion.body.question.length).toBeGreaterThan(0);
 
-    expect(historyQuizSuggestion.statusCode).toStrictEqual(OK);
+    expect(historyQuizSuggestion.statusCode).toStrictEqual(ErrorCodes.OK);
     expect(historyQuizSuggestion.body).toHaveProperty('question');
     expect(historyQuizSuggestion.body.question.length).toBeGreaterThan(0);
   });
 });
-*/

@@ -731,3 +731,120 @@ export function requestPlayerFinalResults(
     `/v1/player/${playerId}/results`
   );
 }
+
+/**
+ * Wrapper for GET /v1/open/csv/{quizid}/{playerid}
+ */
+export function requestCSV(
+  playerId: number,
+  quizId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/csv/${quizId}/${playerId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/export/{quizid}
+ */
+export function requestQuizExport(
+  quizId: number,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/export/${quizId}`,
+    null,
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/import
+ */
+export function requestQuizImport(
+  fileName: string,
+  session: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    '/v1/open/import',
+    { fileName },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for PUT /v1/open/attachment/{quizid}
+ */
+export function requestAttachment(
+  session: string,
+  quizId: number,
+  attachment: string
+): responseInterface {
+  return makeRequest(
+    'PUT',
+    `/v1/open/attachment/${quizId}`,
+    { attachment },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/attachment/{quizid}
+ */
+export function requestAttachmentView(
+  session: string,
+  quizId: number,
+  attachmentNumber: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/attachment/${quizId}`,
+    { attachmentNumber },
+    { session }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/hint/{playerid}
+ */
+export function requestHint(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/hint/${playerId}`
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/translate/{playerid}
+ */
+export function requestTranslate(
+  playerId: number,
+  language: string
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/translate/${playerId}`,
+    null,
+    { language }
+  );
+}
+
+/**
+ * Wrapper for GET /v1/open/explain/{playerid}
+ */
+export function requestExplain(
+  playerId: number
+): responseInterface {
+  return makeRequest(
+    'GET',
+    `/v1/open/explain/${playerId}`
+  );
+}

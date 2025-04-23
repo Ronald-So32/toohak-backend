@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestAdminQuizGameResults,
@@ -41,7 +41,7 @@ beforeEach(() => {
 
   quizId = responseCreate.body.quizId;
 
-  const reponseQuestionCreate = requestAdminQuizQuestionCreate(
+  const reponseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -58,7 +58,8 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -326,7 +327,7 @@ test('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results works as intende
           'Name'
         ],
         averageAnswerTime: 0,
-        percentCorrect: Math.ceil(2 / 3 * 100),
+        percentCorrect: Math.round(2 / 3 * 100),
       }
     ]
   });

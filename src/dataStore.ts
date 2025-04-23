@@ -80,16 +80,17 @@ export interface questionsInterface {
  * @property {number} timeLimit - Total time limit for the quiz in seconds
  */
 export interface quizInterface {
-  quizId: number;
+  quizId?: number;
   name: string;
-  timeCreated: number;
-  timeLastEdited: number;
+  timeCreated?: number;
+  timeLastEdited?: number;
   description: string;
-  createdBy: number;
+  createdBy?: number;
   numQuestions: number;
   questions: questionsInterface[];
   timeLimit: number;
   thumbnailUrl?: string;
+  attachments?: string[];
 }
 
 /**

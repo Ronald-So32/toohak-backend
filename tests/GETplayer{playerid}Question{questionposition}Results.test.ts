@@ -2,7 +2,7 @@ import {
   requestClear,
   requestAdminAuthRegister,
   requestAdminQuizCreate,
-  requestAdminQuizQuestionCreate,
+  requestAdminQuizQuestionCreateV2,
   requestAdminQuizGameStart,
   requestAdminQuizGameStateUpdate,
   requestPlayerJoin,
@@ -46,7 +46,7 @@ beforeEach(() => {
   );
   quizId = responseCreate.body.quizId;
 
-  const responseQuestionCreate = requestAdminQuizQuestionCreate(
+  const responseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -63,13 +63,14 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
   questionId = responseQuestionCreate.body.questionId;
 
-  requestAdminQuizQuestionCreate(
+  requestAdminQuizQuestionCreateV2(
     quizId,
     session,
     {
@@ -86,7 +87,8 @@ beforeEach(() => {
             answer: 'Queen Elizibeth',
             correct: false
           }
-        ]
+        ],
+        thumbnailUrl: 'http://google.com/some/image/path.jpg'
       }
     }
   );
@@ -118,8 +120,8 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
     expect(requestGetQuestionResult.body).toStrictEqual({
       questionId: questionId,
       playersCorrect: [],
-      averageAnswerTime: expect.any(Number),
-      percentCorrect: expect.any(Number)
+      averageAnswerTime: 0,
+      percentCorrect: 0
     });
     expect(requestGetQuestionResult.statusCode).toStrictEqual(ErrorCodes.OK);
   });
@@ -310,9 +312,6 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
       expect(responsePlayerSubmit.body).toStrictEqual({});
       expect(responsePlayerSubmit.statusCode).toStrictEqual(ErrorCodes.OK);
 
-      const slync = require('slync');
-      slync(1000);
-
       requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
 
       // Gets the id of the current quiz
@@ -327,7 +326,7 @@ describe('Testing GET /v1/player/{playerid}/question/{questionposition}/results'
           'Name'
         ],
         averageAnswerTime: 0,
-        percentCorrect: 2 / 3 * 100,
+        percentCorrect: Math.round(2 / 3 * 100),
       });
     });
 });

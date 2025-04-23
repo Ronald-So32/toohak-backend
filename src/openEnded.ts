@@ -1,0 +1,339 @@
+import {
+  convertToCSV,
+  getCurrentTimestamp,
+  findQuizByUser,
+  BetterError,
+  ErrorCodes,
+  createUUID,
+  Errors,
+  quizStates
+} from './functionsHelper';
+import {
+  adminQuizCreate,
+  adminQuizQuestionCreateV2,
+  adminQuizThumbnailUpdate
+} from './quiz';
+import { playerFinalResults } from './player';
+import {
+  quizInterface,
+  getData
+} from './dataStore';
+
+import fs from 'fs';
+import request from 'sync-request-curl';
+
+const CSV_PATH = './csvResults';
+const JSON_PATH = './jsonFiles';
+
+if (!fs.existsSync(CSV_PATH)) {
+  fs.mkdirSync(CSV_PATH);
+}
+
+if (!fs.existsSync(JSON_PATH)) {
+  fs.mkdirSync(JSON_PATH);
+}
+
+export function createCSV(
+  playerId: number,
+  quizId: number,
+  userId: number
+) {
+  findQuizByUser(userId, quizId);
+
+  const result = playerFinalResults(playerId);
+
+  const usersScore = convertToCSV(result.usersRankedByScore);
+  const questionResults = convertToCSV(result.questionResults);
+  const combined = `usersRankedByScore\n${usersScore}\n\nquestionResults\n${questionResults}`;
+
+  const time = getCurrentTimestamp();
+
+  fs.writeFileSync(`${CSV_PATH}/usersRankedByScore_${playerId}_${time}.csv`, usersScore);
+  fs.writeFileSync(`${CSV_PATH}/questionResults_${playerId}_${time}.csv`, questionResults);
+  fs.writeFileSync(`${CSV_PATH}/combined_${playerId}_${time}.txt`, combined);
+
+  return combined;
+}
+
+export function exportJSON(
+  quizId: number,
+  userId: number
+) {
+  const quiz = findQuizByUser(userId, quizId);
+
+  const newJSON = {
+    name: quiz.name,
+    description: quiz.description,
+    numQuestions: quiz.numQuestions,
+    questions: quiz.questions,
+    timeLimit: quiz.timeLimit,
+    thumbnailUrl: quiz.thumbnailUrl || ''
+  };
+
+  const time = getCurrentTimestamp();
+
+  fs.writeFileSync(`${JSON_PATH}/${quiz.name}_${time}.json`, JSON.stringify(newJSON, null, 2));
+
+  return { newJSON, file: `${quiz.name}_${time}.json` };
+}
+
+export function importJSON(
+  file: string,
+  userId: number
+) {
+  let quizId = createUUID();
+
+  try {
+    const jsonData = JSON.parse(
+      fs.readFileSync(`${JSON_PATH}/${file}`).toString()
+    ) as quizInterface;
+
+    quizId = adminQuizCreate(userId, jsonData.name, jsonData.description).quizId;
+
+    for (const question of jsonData.questions) {
+      adminQuizQuestionCreateV2(userId, quizId, question);
+    }
+
+    if (jsonData.thumbnailUrl) {
+      adminQuizThumbnailUpdate(jsonData.thumbnailUrl, quizId, userId);
+    }
+  } catch (error) {
+    throw new BetterError(
+      error.message,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return { quizId };
+}
+
+export function attachments(
+  userId: number,
+  quizId: number,
+  attachment: string
+) {
+  const quiz = findQuizByUser(userId, quizId);
+
+  quiz.attachments.push(attachment);
+
+  return {};
+}
+
+export function seeAttachments(
+  userId: number,
+  quizId: number,
+  attachmentNumber: number
+) {
+  const quiz = findQuizByUser(userId, quizId);
+
+  if (!quiz.attachments || attachmentNumber < 0 || attachmentNumber >= quiz.attachments.length) {
+    throw new BetterError(
+      Errors.invalidAttachmentNumber().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  return quiz.attachments[attachmentNumber];
+}
+
+export function hint(
+  playerId: number,
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+  const answer = game.metadata.questions[currentQuestion - 1].answerOptions.find(
+    option => option.correct
+  ).answer;
+
+  const prompt = `You are a helpful assistant that only gives hints. 
+  Please give a hint for the following question but not the answer:
+  
+  Question: "${question}"
+  Answer: "${answer}"
+  
+  The hint should be relevant to the question and answer, clear, and concise. 
+  The hint should be between 5 and 50 characters.
+  
+  Respond with just the hint, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const generatedHint = responseBody[0].generated_text.slice(prompt.length);
+
+  return generatedHint;
+}
+
+export function translate(
+  playerId: number,
+  language: string,
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.QUESTION_OPEN) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+
+  const prompt = `You are a helpful assistant that only does translation. 
+  Please translate the following question into the following language:
+
+  Question: "${question}"
+  language: "${language}"
+
+  The translation should be word for word and accurate to the original language. 
+  
+  Respond with just the translation, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const generatedTranslate = responseBody[0].generated_text.slice(prompt.length);
+
+  return generatedTranslate;
+}
+
+export function explain(
+  playerId: number,
+  HUGGINGFACE_API_TOKEN: string
+) {
+  const data = getData();
+
+  const game = data.games.find(g =>
+    g.playersWithId?.some(p => p.playerId === playerId)
+  );
+
+  if (!game) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (game.state !== quizStates.ANSWER_SHOW) {
+    throw new BetterError(
+      Errors.invalidPlayer().error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const currentQuestion = game.atQuestion;
+  const question = game.metadata.questions[currentQuestion - 1].question;
+  const correctAnswers = game.metadata.questions[currentQuestion - 1].answerOptions
+    .filter(option => option.correct)
+    .map(option => option.answer);
+  const answer = correctAnswers.join(', ');
+
+  const prompt = `You are a helpful assistant that explains. 
+  Please explain the answer(s) for the following question:
+
+  Question: "${question}"
+  Answer(s): "${answer}"
+
+  The explanation should be relevant to the question and answer, clear, and concise. 
+  The explanation should be between 5 and 100 characters.
+
+  Respond with just the explanation, nothing else.`;
+
+  const response = request(
+    'POST',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+    {
+      headers: {
+        Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      json: {
+        inputs: prompt
+      }
+    });
+
+  const responseBody = JSON.parse(response.body.toString());
+
+  if ('error' in responseBody) {
+    throw new BetterError(
+      { error: responseBody.error }.error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  const generatedHint = responseBody[0].generated_text.slice(prompt.length);
+
+  return generatedHint;
+}

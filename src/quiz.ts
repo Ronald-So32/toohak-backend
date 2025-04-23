@@ -19,7 +19,6 @@ import {
   validateAnswers,
   getCurrentTimestamp,
   findQuizByUser,
-  getLongestQuestionLine,
   BetterError,
   ErrorCodes,
   checkActiveGames,
@@ -164,6 +163,7 @@ export function adminQuizCreate(
     numQuestions: 0,
     questions: questionsArray,
     timeLimit: 0,
+    attachments: []
   });
 
   return {
@@ -385,15 +385,15 @@ export function adminQuizQuestionCreateV2(
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
-
   // Validate thumbnail
-  if (thumbnailUrl === '') {
+  if (!questionBody.thumbnailUrl || questionBody.thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
     );
   }
+
+  const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
@@ -578,16 +578,6 @@ export function adminQuizQuestionMove(
 ): Record<string, never> {
   const quiz = findQuizByUser(userId, quizId);
 
-  const validQuestionIndex = quiz.questions.findIndex(
-    (question: questionsInterface) => question.questionId === questionId
-  );
-  if (validQuestionIndex === -1) {
-    throw new BetterError(
-      Errors.invalidQuestion().error,
-      ErrorCodes.BADREQUEST
-    );
-  }
-
   // Position is less than 0
   if (newPosition < 0) {
     throw new BetterError(
@@ -604,10 +594,21 @@ export function adminQuizQuestionMove(
     );
   }
 
+  const validQuestionIndex = quiz.questions.findIndex(
+    (question: questionsInterface) => question.questionId === questionId
+  );
+
   // Position is the same as current position of question
   if (validQuestionIndex === newPosition) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.OLD_SAME).error,
+      ErrorCodes.BADREQUEST
+    );
+  }
+
+  if (validQuestionIndex === -1) {
+    throw new BetterError(
+      Errors.invalidQuestion().error,
       ErrorCodes.BADREQUEST
     );
   }
@@ -651,7 +652,7 @@ export function adminQuizQuestionSuggestion(
 
   const response = request(
     'POST',
-    'https://api-inference.huggingface.co/models/google/gemma-2-2b-it',
+    'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
     {
       headers: {
         Authorization: `Bearer ${HUGGINGFACE_API_TOKEN}`,
@@ -662,27 +663,15 @@ export function adminQuizQuestionSuggestion(
       }
     });
 
-  const responseBody = JSON.parse(response.body.toString());
+  let responseBody;
 
-  if ('error' in responseBody) {
-    throw new BetterError(
-      { error: responseBody.error }.error,
-      ErrorCodes.BADREQUEST
-    );
+  try {
+    responseBody = JSON.parse(response.body.toString());
+  } catch (error) {
+    return responseBody.status(error.statusCode).json({ error: error.message });
   }
 
-  let generatedQuestion = responseBody[0].generated_text;
-  const questionMatch = getLongestQuestionLine(generatedQuestion);
-  if (!questionMatch) {
-    generatedQuestion = `What is ${quizName} about?`;
-  } else {
-    generatedQuestion = questionMatch;
-  }
-
-  // Ensure the question meets our requirements
-  if (generatedQuestion.length < 5) {
-    generatedQuestion = `What is ${quizName} about?`;
-  }
+  const generatedQuestion = responseBody[0].generated_text;
 
   return { question: generatedQuestion };
 }
@@ -817,7 +806,7 @@ export function adminQuizThumbnailUpdate(
   quizId: number,
   userId: number
 ): Record<string, never> {
-  if (thumbnail === '') {
+  if (!thumbnail || thumbnail === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
       ErrorCodes.BADREQUEST
