@@ -899,6 +899,16 @@ export function adminQuizQuestionUpdateV2(
   return v1;
 }
 
+/**
+ * Updates the thumbnail URL for a quiz
+ *
+ * @param {string} thumbnail - The URL of the new thumbnail
+ * @param {number} quizId - The ID of the quiz to update
+ * @param {number} userId - The ID of the user updating the quiz
+ *
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or thumbnail URL is invalid
+ */
 export function adminQuizThumbnailUpdate(
   thumbnail: string,
   quizId: number,
