@@ -580,30 +580,30 @@ export function playerQuestion(
     'FINAL_RESULTS',
     'END'
   ];
-
+  // check if current game state is valid
   if (invalidStates.includes(game.state)) {
     throw new BetterError(
       Errors.invalidGame().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if question position is valid
   if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if question position in game is the same as given question position
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Get correct quesiton
   const question = game.metadata.questions[questionPosition - 1];
-
+  // Rerutn question info
   return {
     questionId: question.questionId,
     question: question.question,
