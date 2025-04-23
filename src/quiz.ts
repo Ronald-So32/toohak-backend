@@ -295,8 +295,8 @@ export function adminQuizNameUpdate(
  * @param {number} quizId - Id of the quiz
  * @param {string} description - The new description of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or description is too long
  */
 export function adminQuizDescriptionUpdate(
   userId: number,
