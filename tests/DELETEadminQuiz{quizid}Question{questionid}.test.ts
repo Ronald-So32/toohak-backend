@@ -7,27 +7,31 @@ import {
   requestDeleteQuizQuestion,
   requestAdminQuizTransfer,
   requestGetQuiz
-} from './testsHelper';
-
-import {
+ } from './testsHelper';
+ 
+ import {
   idOffset,
   ErrorCodes
-} from '../src/functionsHelper';
-
-import { describe } from 'node:test';
-
-let responseQuizGet: responseInterface;
-let session: string;
-let quizId: number;
-let questionId: number;
-let timeCreated: number;
-let timeEdited: number;
-
-// Before each test clears the data then registers a user, gets the
-// current session then creates a quiz and gets the quiz and question id
-// with the quiz details
-beforeEach(() => {
+ } from '../src/functionsHelper';
+ 
+ import { describe } from 'node:test';
+ 
+ // Define variables to store response objects, session tokens, and IDs
+ let responseQuizGet: responseInterface;
+ let session: string;
+ let quizId: number;
+ let questionId: number;
+ let timeCreated: number;
+ let timeEdited: number;
+ 
+ // Before each test clears the data then registers a user, gets the
+ // current session then creates a quiz and gets the quiz and question id
+ // with the quiz details
+ beforeEach(() => {
+  // Reset the application state before each test
   requestClear();
+  
+  // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
@@ -35,6 +39,8 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
+  
+  // Create a quiz for the logged-in user and extract the quiz ID
   const responseCreate = requestAdminQuizCreate(
     session,
     'Name',
@@ -42,6 +48,8 @@ beforeEach(() => {
   );
   timeCreated = Math.floor(Date.now() / 1000);
   quizId = responseCreate.body.quizId;
+  
+  // Create a question for the quiz and extract the question ID
   const responseQuestion = requestAdminQuizQuestionCreate(
     quizId,
     session,
@@ -65,10 +73,12 @@ beforeEach(() => {
   );
   timeEdited = Math.floor(Date.now() / 1000);
   questionId = responseQuestion.body.questionId;
+  
+  // Get the current state of the quiz for comparison in tests
   responseQuizGet = requestGetQuiz(quizId, session);
-});
-
-describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
+ });
+ 
+ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
   describe('Test correct return type and normal usage case', () => {
     test('Testing the code 200 return value', () => {
       // Deletes the question and gets the response
@@ -77,66 +87,75 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
         questionId,
         session
       );
+      
       // Checks that a valid deletion returns an empty object and a
       // status code of 200
       expect(responseQuestionDelete.body).toStrictEqual({});
       expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
-
+ 
   describe('Test error cases', () => {
     test('Session is invalid', () => {
+      // Attempt to delete a question with an invalid session token
       const responseQuestionDelete = requestDeleteQuizQuestion(
         quizId,
         questionId,
         session + 'Invalid Session'
       );
+      
       // Checks that an unauthorised deletion returns an error object and a
       // status code of 401
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
-
-      // Check quiz has not been deleted
+ 
+      // Check quiz has not been modified (question still exists)
       const responseQuizGet2 = requestGetQuiz(quizId, session);
       expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
       expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
     });
-
+ 
     test('Quiz id is invalid', () => {
+      // Attempt to delete a question from a non-existent quiz
       const responseQuestionDelete = requestDeleteQuizQuestion(
         quizId + idOffset,
         questionId,
         session
       );
+      
       // Checks that a forbidden deletion returns an error object and a
       // status code of 403
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
-
-      // Check quiz has not been deleted
+ 
+      // Check quiz has not been modified (question still exists)
       const responseQuizGet2 = requestGetQuiz(quizId, session);
       expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
       expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
     });
-
+ 
     test('Question id is invalid', () => {
+      // Attempt to delete a non-existent question from an existing quiz
       const responseQuestionDelete = requestDeleteQuizQuestion(
         quizId,
         questionId + idOffset,
         session
       );
+      
+      // Checks that an invalid question deletion returns an error object and a
+      // status code of 400
       expect(responseQuestionDelete.body).toStrictEqual({ error: expect.any(String) });
       expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
-
-      // Check quiz has not been deleted
+ 
+      // Check quiz has not been modified (question still exists)
       const responseQuizGet2 = requestGetQuiz(quizId, session);
       expect(responseQuizGet2.body).toStrictEqual(responseQuizGet.body);
       expect(responseQuizGet2.statusCode).toStrictEqual(ErrorCodes.OK);
     });
   });
-
+ 
   test('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid} works as intended', () => {
-    // Registers a second user and gets it's session
+    // Registers a second user and gets its session token
     const responseRegister2 = requestAdminAuthRegister(
       'z6969@ad.unsw.edu.au',
       'Password2',
@@ -144,8 +163,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       'Lastt'
     );
     const session2 = responseRegister2.body.session;
-
-    // Transfer ownership to user 2
+ 
+    // Transfer ownership of the quiz from first user to second user
     const responseTransfer = requestAdminQuizTransfer(
       quizId,
       session,
@@ -153,13 +172,13 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     );
     expect(responseTransfer.body).toStrictEqual({});
     expect(responseTransfer.statusCode).toStrictEqual(ErrorCodes.OK);
-
-    // Fail because its no longer user 1's quiz
+ 
+    // Verify first user can no longer access the quiz
     responseQuizGet = requestGetQuiz(quizId, session);
     expect(responseQuizGet.body).toStrictEqual({ error: expect.any(String) });
     expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
-
-    // Check it is user 2's quiz
+ 
+    // Verify second user can access the quiz with the question
     responseQuizGet = requestGetQuiz(quizId, session2);
     expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
@@ -193,8 +212,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
       timeLimit: 4,
     });
     expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
-
-    // Delete from user 2
+ 
+    // Second user deletes the question
     const responseQuestionDelete = requestDeleteQuizQuestion(
       quizId,
       questionId,
@@ -203,8 +222,8 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     timeEdited = Math.floor(Date.now() / 1000);
     expect(responseQuestionDelete.body).toStrictEqual({});
     expect(responseQuestionDelete.statusCode).toStrictEqual(ErrorCodes.OK);
-
-    // Check its gone in user 2
+ 
+    // Verify the question is gone from the second user's quiz view
     responseQuizGet = requestGetQuiz(quizId, session2);
     expect(responseQuizGet.body).toStrictEqual({
       description: 'Description',
@@ -218,4 +237,4 @@ describe('Testing DELETE /v1/admin/quiz/{quizid}/question/{questionid}', () => {
     });
     expect(responseQuizGet.statusCode).toStrictEqual(ErrorCodes.OK);
   });
-});
+ });
