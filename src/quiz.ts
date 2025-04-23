@@ -302,9 +302,11 @@ export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
   description: string
-): Record<string, never> {
+): Record<string, never> {\
+  // Check if the quiz exists and is owned by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Validate description length (maximum 100 characters)
   if (description.length > 100) {
     throw new BetterError(
       Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG).error,
@@ -315,6 +317,7 @@ export function adminQuizDescriptionUpdate(
   // Update the quiz description
   quiz.description = description;
 
+  // Update the last edited timestamp to current time
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
