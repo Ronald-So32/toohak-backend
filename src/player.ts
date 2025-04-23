@@ -671,7 +671,7 @@ export function playerQuestionResults(
       ErrorCodes.BADREQUEST
     );
   }
-  // Check if game question position is same as given quesiton position 
+  // Check if current game question position is same as given quesiton position 
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
@@ -797,6 +797,16 @@ export function playerFinalResults(playerId: number) {
   };
 }
 
+/**
+ * Allows player with playerId to submit an answer to question of questionPosition
+ *
+ * @param {number} playerId - The ID of the player
+ * @param {number} questionPosition - Position of question in quiz 
+ * @param {string} answertId - ID of answer
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function playerAnswerSubmit(
   playerId: number,
   questionPosition: number,
@@ -814,35 +824,35 @@ export function playerAnswerSubmit(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if game state is in QUESTION_OPEN state
   if (game.state !== quizStates.QUESTION_OPEN) {
     throw new BetterError(
       Errors.invalidGame().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check given questionposition validity
   if (questionPosition < 1 || questionPosition > game.metadata.numQuestions) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if current game question position is same as given quesiton position 
   if (game.atQuestion !== questionPosition) {
     throw new BetterError(
       Errors.invalidQuestionPosition().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check answerId validity
   if (answerIds.length < 1) {
     throw new BetterError(
       Errors.invalidAnswer().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Checks if same answer is repeatedly submitted by user
   const uniqueAnswerIds = new Set(answerIds);
   if (uniqueAnswerIds.size !== answerIds.length) {
     throw new BetterError(
@@ -850,7 +860,7 @@ export function playerAnswerSubmit(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Get possible answer options, their answerId's and check their validity
   const currentQuestionAnswers = game.metadata.questions[questionPosition - 1].answerOptions;
   const validAnswerIds = currentQuestionAnswers.map(answer => answer.answerId);
   const allAnswersValid = answerIds.every(id => validAnswerIds.includes(id));
@@ -862,6 +872,8 @@ export function playerAnswerSubmit(
     );
   }
 
+  // Track time player quesiton answer time, checks answer correctness, updates t
+  // game state accordingly, handle resubmission
   const question = game.results.questionResults[questionPosition - 1];
 
   question.playersAnswerTime[playerId] = Math.floor(Date.now() / 1000) -
