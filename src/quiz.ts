@@ -473,8 +473,8 @@ export function adminQuizQuestionCreateV2(
  * @param {number} userId - The ID of the current owner
  * @param {string} userEmail - The email of the new owner
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, target user invalid/self, or name conflict
  */
 export function adminQuizTransfer(
   quizId: number,
@@ -536,13 +536,25 @@ export function adminQuizTransfer(
   return {};
 }
 
+/**
+ * V2 implementation of quiz transfer that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz to transfer
+ * @param {number} userId - The ID of the current owner
+ * @param {string} userEmail - The email of the new owner
+ *
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If active games exist or other transfer criteria not met
+ */
 export function adminQuizTransferV2(
   quizId: number,
   userId: number,
   userEmail: string
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with transfer
   adminQuizTransfer(quizId, userId, userEmail);
 
   return {};
@@ -555,8 +567,8 @@ export function adminQuizTransferV2(
  * @param {number} userId - The ID of the user deleting the question
  * @param {number} questionId - The ID of the question to delete
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question doesn't exist
  */
 export function adminDeleteQuizQuestion(
   quizId: number,
@@ -576,6 +588,7 @@ export function adminDeleteQuizQuestion(
     );
   }
 
+  // Store the question before deleting for updating time limits
   const deletedQuestion = quiz.questions[validQuestionIndex];
 
   // Updates the time limit of the quiz after the questions deleted
@@ -589,13 +602,25 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+/**
+ * V2 implementation of question deletion that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user deleting the question
+ * @param {number} questionId - The ID of the question to delete
+ *
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz has active games or other deletion criteria not met
+ */
 export function adminDeleteQuizQuestionV2(
   quizId: number,
   userId: number,
   questionId: number
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with question deletion
   adminDeleteQuizQuestion(quizId, userId, questionId);
 
   return {};
