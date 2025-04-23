@@ -204,7 +204,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
  * Retrieves details of the currently logged-in user using session
  * 
  * Request Headers:
- * - session: string — Session token identifying the authenticated user
+ * - session: string — Session token identifying the user
  * 
  * @returns {object} - { user: userDetailsInterface } on success
  * @returns {object} - { error: string } on failure, with associated status code
@@ -223,7 +223,22 @@ app.get('/v1/admin/user/details', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/user/details
+/**
+ * PUT /v1/admin/user/details route
+ * 
+ * Updates details: email, first name, last name of currently logged-in user.
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying user
+ * 
+ * Request Body:
+ * - email: string — New email address for the user
+ * - nameFirst: string — New first name
+ * - nameLast: string — New last name
+ * 
+ * @returns {Record<string, never>} - Returns nothing on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { email, nameFirst, nameLast } = req.body;
@@ -239,7 +254,21 @@ app.put('/v1/admin/user/details', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/user/password
+/**
+ * PUT /v1/admin/user/password route
+ * 
+ * Update password of user
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Body:
+ * - oldPassword: string — The user's current password
+ * - newPassword: string — New password
+ * 
+ * @returns {Record<string, never>} - Returns empty object on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { oldPassword, newPassword } = req.body;
@@ -255,7 +284,21 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/quiz
+/**
+ * POST /v1/admin/quiz route
+ * 
+ * Creates new quiz for a user 
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Body:
+ * - name: string — Name of quiz
+ * - description: string — Description of quiz
+ * 
+ * @returns {object} - { quizId: number } on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const { name, description } = req.body;
