@@ -138,11 +138,23 @@ export interface questionResultsInterface {
   percentCorrect: number
 }
 
+/**
+ * Interface representing final results of a quiz game
+ *
+ * @property {usersRankedByScoreInterface[]} usersRankedByScore - Array of players ranked by socre
+ * @property {questionResultsInterface[]} questionResults - Array of question results 
+ */
 export interface resultsInterface {
   usersRankedByScore: usersRankedByScoreInterface[];
   questionResults: questionResultsInterface[];
 }
 
+/**
+ * Interface representing a player with byname and ID
+ *
+ * @property {string} playerName - Name of the player
+ * @property {number} playerId - ID of the player
+ */
 export interface playersInterface{
   playerName: string;
   playerId: number;
