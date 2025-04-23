@@ -81,14 +81,14 @@ export function adminQuizGameStart(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // No errors so do the below:
   const id = createUUID();
-
+  // Initialise empty resultsInterface
   const initialiseResults: resultsInterface = {
     usersRankedByScore: [],
     questionResults: []
   };
-  
+  // Add a new game to games array
   data.games.push({
     gameId: id,
     quizId: quizId,
@@ -100,7 +100,7 @@ export function adminQuizGameStart(
     autoStartNum: autoStartNum,
     results: initialiseResults
   });
-
+  // For each question, add object(results) which contains question results and stats
   for (const question of data.games[data.games.length - 1].metadata.questions) {
     const questionId = question.questionId;
     data.games[data.games.length - 1].results.questionResults.push(
