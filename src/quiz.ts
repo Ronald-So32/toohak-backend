@@ -766,8 +766,10 @@ export function adminQuizQuestionUpdate(
   questionId: number,
   questionBody: questionsInterface
 ): Record<string, never> {
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Find the question in the quiz
   const questionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
   );
@@ -780,8 +782,10 @@ export function adminQuizQuestionUpdate(
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
+  // Validate question string format and length
   validQuestionString(question);
 
+  // Validate answer options (quantity, length, uniqueness, has correct answer)
   validateAnswers(answerOptions);
   if (timeLimit <= 0) {
     throw new BetterError(
@@ -802,8 +806,10 @@ export function adminQuizQuestionUpdate(
     );
   }
 
+  // Validate points are within acceptable range
   validatePoints(points);
 
+  // Generate IDs and random colors for each answer option
   let answerId = 0;
   const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
     answerId++;
@@ -814,7 +820,7 @@ export function adminQuizQuestionUpdate(
     };
   });
 
-  // Update the question
+  // Update the question with new values
   quiz.questions[questionIndex] = {
     questionId,
     question,
@@ -823,7 +829,10 @@ export function adminQuizQuestionUpdate(
     answerOptions: updatedAnswerOptions
   };
 
+  // Update last edited timestamp
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+  
+  // Update total quiz time limit
   quiz.timeLimit = totalTime;
 
   return {};
