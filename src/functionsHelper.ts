@@ -731,11 +731,12 @@ export function hashString(password: string): string {
 
 
 /**
- * Converts array of objects into a Comma-Separated(CSV) values formatted string.
+ * Check active games in quiz with quizId
  *
- * @param {any[]} arr - An array of objects 
+ * @param {number} quizId - ID of quiz for checking active games in
  *
- * @returns {string} - CSV formatted string 
+ * @returns {Record<string, never> | errorInterface} - Returns nothing if successful 
+ * or error object if there is error
  */
 export function checkActiveGames(quizId: number): void {
   const data = getData();
