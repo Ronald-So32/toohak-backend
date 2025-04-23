@@ -448,7 +448,7 @@ export function playerJoin(
       ErrorCodes.BADREQUEST
     );
   }
-
+  // If entered player name is empty string, generate random five letter 3 number name
   if (playerName === '') {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
     let randomLetters = '';
@@ -470,21 +470,21 @@ export function playerJoin(
 
     playerName = randomLetters + randomNumbers;
   }
-
+  // Check if playername is alphanumeric
   if (!/^[a-zA-Z0-9]+$/.test(playerName)) {
     throw new BetterError(
       Errors.invalidPlayerName().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if player name already exists
   if (game.players.some(p => p === playerName)) {
     throw new BetterError(
       Errors.invalidPlayerName().error,
       ErrorCodes.BADREQUEST
     );
   }
-
+  // Check if game state is LOBBY
   if (game.state !== quizStates.LOBBY) {
     throw new BetterError(
       Errors.invalidPlayerName().error,
