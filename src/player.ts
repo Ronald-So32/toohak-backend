@@ -18,10 +18,10 @@ import {
 
 // change types for all
 /**
- * Provides a list of all active and inactive games associated with the given 
+ * Provides a list of all active and inactive games associated with the given
  * quiz owned by the user with Id userId
  *
- * @param {number} userId - The ID of the user retrieving the quiz 
+ * @param {number} userId - The ID of the user retrieving the quiz
  * @param {number} quizId - The ID of the quiz
  *
  * @returns {{ result: object }} - An object containing
@@ -56,7 +56,7 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
  *
  * @param {number} userId - The ID of the user starting the game
  * @param {number} quizId - The ID of the quiz
- * @param {number} autoStartNum - Number 
+ * @param {number} autoStartNum - Number
  *
  * @returns {{ gameIdInterface: number }} - The gameId of a game
  */
@@ -141,7 +141,7 @@ export function adminQuizGameUpdate(
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
-  
+
   if (!game) {
     throw new BetterError(
       Errors.invalidGame().error,
@@ -162,7 +162,7 @@ export function adminQuizGameUpdate(
   }
 
   const actionValue = actions[action as keyof typeof actions];
-  
+
   switch (actionValue) {
     case actions.NEXT_QUESTION:{
       if (game.state === quizStates.QUESTION_COUNTDOWN ||
