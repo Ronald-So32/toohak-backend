@@ -643,9 +643,10 @@ export function adminQuizQuestionMove(
   questionId: number,
   newPosition: number
 ): Record<string, never> {
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
-  // Position is less than 0
+  // Validate position is not negative
   if (newPosition < 0) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT).error,
@@ -673,6 +674,7 @@ export function adminQuizQuestionMove(
     );
   }
 
+  // Check if question exists in the quiz
   if (validQuestionIndex === -1) {
     throw new BetterError(
       Errors.invalidQuestion().error,
@@ -680,11 +682,13 @@ export function adminQuizQuestionMove(
     );
   }
 
+  // Store the question to move
   const question = quiz.questions[validQuestionIndex];
   // Changes the position of the questions
   quiz.questions.splice(validQuestionIndex, 1);
   quiz.questions.splice(newPosition, 0, question);
 
+  // Update the last edited timestamp
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
