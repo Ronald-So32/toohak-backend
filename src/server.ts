@@ -860,7 +860,7 @@ app.put('/v1/admin/quiz/:quizid/question/:questionid/move', (req: Request, res: 
  * Path Parameters:
  * - quizid: number — ID of quiz to generate a suggestion for
  * 
- * @returns {object} - { question: string } containing a generated quiz question
+ * @returns {object} - Return reuslt upon success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/admin/quiz/:quizid/question/suggestion',
@@ -888,7 +888,20 @@ app.get('/v1/admin/quiz/:quizid/question/suggestion',
     }
   });
 
-// GET /v1/admin/quiz/{quizid}/games
+/**
+ * GET /v1/admin/quiz/:quizid/games route
+ * 
+ * Get list of all games in given quiz
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of quiz to get games list from
+ * 
+ * @returns {object} - Return games
+ * @returns {object} - { error: string } on failure, and associated status code
+ */
 app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -910,7 +923,24 @@ app.get('/v1/admin/quiz/:quizid/games', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/quiz/{quizid}/game/start
+/**
+ * POST /v1/admin/quiz/:quizid/game/start route
+ * 
+ * Start a new game in given quiz
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz where game is being started in
+ * 
+ * Request Body:
+ * - autoStartNum: number — Number of players required to automatically start the game
+ * 
+ * @returns {object} - Return gameId on success 
+ * @returns {object} - { error: string } on failure, and associated status code
+ */
+
 app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -928,7 +958,23 @@ app.post('/v1/admin/quiz/:quizid/game/start', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/thumbnail
+/**
+ * PUT /v1/admin/quiz/:quizid/thumbnail route
+ * 
+ * Updates the thumbnail URL in given quiz
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of quiz to update
+ * 
+ * Request Body:
+ * - thumbnailUrl: string — New thumbnail for quiz 
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -950,7 +996,21 @@ app.put('/v1/admin/quiz/:quizid/thumbnail', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/admin/quiz/{quizid}/game/{gameid}
+/**
+ * GET /v1/admin/quiz/:quizid/game/:gameid route
+ * 
+ * Get details of the game with gamid in quiz with quizid
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz the game belongs to
+ * - gameid: number — ID of the game
+ * 
+ * @returns {object} - Returns reuslt upon success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -968,7 +1028,24 @@ app.get('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/game/{gameid}
+/**
+ * PUT /v1/admin/quiz/:quizid/game/:gameid route
+ * 
+ * Update the state of a specific game in quiz with given quizId 
+ * 
+ * Request Headers:
+ * - session: string — Session token of the currently logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz the game belongs to
+ * - gameid: number — ID of the game to update
+ * 
+ * Request Body:
+ * - action: string — action for changing game state
+ * 
+ *@returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -987,7 +1064,21 @@ app.put('/v1/admin/quiz/:quizid/game/:gameid', (req: Request, res: Response) => 
   }
 });
 
-// GET /v1/admin/quiz/quizid/game/gameid/results
+/**
+ * GET /v1/admin/quiz/:quizid/game/:gameid/results route
+ * 
+ * Get final reuslts of game with given gameId
+ * 
+ * Request Headers:
+ * - session: string — Session token of the logged-in user
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz
+ * - gameid: number — ID of the game
+ * 
+ * @returns {object} - Returns result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/quiz/:quizid/game/:gameid/results', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
