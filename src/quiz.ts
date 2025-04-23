@@ -332,7 +332,8 @@ export function adminQuizDescriptionUpdate(
  * text, time limit, points, and answers
  *
  * @returns {questionIdInterface} - Object containing the newly created question ID
- * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question parameters are invalid
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner,
+ * or question parameters are invalid
  */
 export function adminQuizQuestionCreate(
   userId: number,
@@ -474,7 +475,8 @@ export function adminQuizQuestionCreateV2(
  * @param {string} userEmail - The email of the new owner
  *
  * @returns {Record<string, never>} - Empty object on successful transfer
- * @throws {BetterError} - If quiz doesn't exist, user isn't owner, target user invalid/self, or name conflict
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner,
+ * target user invalid/self, or name conflict
  */
 export function adminQuizTransfer(
   quizId: number,
@@ -758,7 +760,8 @@ export function adminQuizQuestionSuggestion(
  * @param {questionsInterface} questionBody - The new question details
  *
  * @returns {Record<string, never>} - Empty object on successful update
- * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner, or parameters are invalid
+ * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner,
+ * or parameters are invalid
  */
 export function adminQuizQuestionUpdate(
   userId: number,
