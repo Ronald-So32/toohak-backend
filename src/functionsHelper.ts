@@ -474,7 +474,7 @@ export function validName(name: string, isFirst: boolean): void {
  *
  * @param {string} password - Intended password of user
  *
- * @returns {boolean | errorInterface} - Retursn true for valid password else an
+ * @returns {boolean | errorInterface} - Return true for valid password else an
  * object with relevant error message
  */
 export function validPassword(password: string): void {

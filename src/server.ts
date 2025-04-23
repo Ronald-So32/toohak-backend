@@ -339,7 +339,20 @@ app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   }
 });
 
-// DELETE /v1/admin/quiz/{quizid}
+/**
+ * DELETE /v1/admin/quiz/:quizid route
+ * 
+ * Deletes quiz with quizId
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to be deleted
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -355,7 +368,20 @@ app.delete('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// DELETE /v2/admin/quiz/{quizid}
+/**
+ * DELETE /v2/admin/quiz/:quizid route
+ * 
+ * Deletes quiz with quizId
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to be deleted
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -371,7 +397,20 @@ app.delete('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/admin/quiz/{quizid}
+/**
+ * GET /v1/admin/quiz/:quizid route
+ * 
+ * Get information of a quiz
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to retrieve
+ * 
+ * @returns {object} - Returns result upon success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -387,7 +426,21 @@ app.get('/v1/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// GET /v2/admin/quiz/{quizid}
+
+/**
+ * GET /v1/admin/quiz/:quizid route
+ * 
+ * Get information of a quiz
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to retrieve
+ * 
+ * @returns {object} - Returns result upon success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
