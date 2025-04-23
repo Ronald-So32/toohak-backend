@@ -101,9 +101,10 @@ export function exportJSON(
 
 /**
  * Imports quiz data from JSON file
- * @param file - Filename to import from JSON_PATH directory
- * @param userId - ID of the user importing the quiz
- * @returns Object containing new quiz ID
+ * @param {string} file - Filename to import from JSON_PATH directory
+ * @param {number} userId - ID of the user importing the quiz
+ * @returns {object | errorInterface} Returns Object containing new quiz ID,
+ * or error object if there is error
  */
 export function importJSON(
   file: string,
