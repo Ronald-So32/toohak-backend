@@ -165,7 +165,7 @@ export function attachments(
  * @param {number} userId - ID of the user owning the quiz
  * @param {number} quizId - ID of the quiz to access
  * @param {number} attachmentNumber - Index of attachment to retrieve
- * @returns {string | errorinterface} quiz.attachements[attacehmentNumber] - 
+ * @returns {string | errorinterface} quiz.attachements[attacehmentNumber] -
  * Requested attachment string or error object if there is error
  */
 export function seeAttachments(
@@ -273,7 +273,7 @@ export function hint(
  * @param {number} playerId - ID of the player requesting translation
  * @param {string} language - Target language for translation
  * @param {string} HUGGINGFACE_API_TOKEN - API token for AI service
- * @returns {string | errorInterface} generatedTranslation - Translated question string, 
+ * @returns {string | errorInterface} generatedTranslation - Translated question string,
  * or error object if there is error
  */
 export function translate(

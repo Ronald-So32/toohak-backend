@@ -142,7 +142,7 @@ export interface questionResultsInterface {
  * Interface representing final results of a quiz game
  *
  * @property {usersRankedByScoreInterface[]} usersRankedByScore - Array of players ranked by socre
- * @property {questionResultsInterface[]} questionResults - Array of question results 
+ * @property {questionResultsInterface[]} questionResults - Array of question results
  */
 export interface resultsInterface {
   usersRankedByScore: usersRankedByScoreInterface[];
@@ -221,7 +221,6 @@ const data: Data = {
 
   activeTimers: {},
   timerTimeCreated: []
-
 };
 
 /**

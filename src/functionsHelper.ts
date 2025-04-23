@@ -186,7 +186,7 @@ export enum actions {
 /**
  * Class for defining errors in quizzes, questions, game etc.
  *
- * @class Errors 
+ * @class Errors
  */
 export class Errors {
   // Specific validation reasons
@@ -371,7 +371,7 @@ export class Errors {
 
 /**
  * Enum for error codes
- * 
+ *
  * @enum {number}
  */
 export enum ErrorCodes {
@@ -383,7 +383,7 @@ export enum ErrorCodes {
 
 /**
  * Custom error class for returning errors with status codes.
- * 
+ *
  * @class BetterError
  * @extends {Error}
  *
@@ -758,7 +758,7 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
 /**
  * Hash a given password and return as hexadecimal string
  *
- * @param {string} password - password to be hashed 
+ * @param {string} password - password to be hashed
  *
  * @returns {string} - Returns a hexadecimal string that is the hashed password
  */
@@ -775,7 +775,7 @@ export function hashString(password: string): string {
  *
  * @param {number} quizId - ID of quiz for checking active games in
  *
- * @returns {Record<string, never> | errorInterface} - Returns nothing if successful 
+ * @returns {Record<string, never> | errorInterface} - Returns nothing if successful
  * or error object if there is error
  */
 export function checkActiveGames(quizId: number): void {
@@ -797,9 +797,9 @@ export function checkActiveGames(quizId: number): void {
 /**
  * Converts array of objects into a Comma-Separated(CSV) values formatted string.
  *
- * @param {any[]} arr - An array of objects 
+ * @param {any[]} arr - An array of objects
  *
- * @returns {string} - CSV formatted string 
+ * @returns {string} - CSV formatted string
  */
 export function convertToCSV(arr: any) {
   const array = [Object.keys(arr[0])].concat(arr);
