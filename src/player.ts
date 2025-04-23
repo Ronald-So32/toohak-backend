@@ -24,7 +24,7 @@ import {
  * @param {number} userId - The ID of the user retrieving the quiz
  * @param {number} quizId - The ID of the quiz
  *
- * @returns {{ result: object }} - An object containing
+ * @returns {result: object} - An object containing
  * the following arrays: activeGames and inactiveGames
  */
 export function adminGetQuizGames(userId: number, quizId: number): any { // change type
@@ -58,7 +58,7 @@ export function adminGetQuizGames(userId: number, quizId: number): any { // chan
  * @param {number} quizId - The ID of the quiz
  * @param {number} autoStartNum - Number
  *
- * @returns {{ gameIdInterface: number }} - The gameId of a game
+ * @returns {gameIdInterface: number | errorInterface} - The gameId of a game
  */
 export function adminQuizGameStart(
   userId: number,
@@ -290,7 +290,22 @@ export function adminQuizGameUpdate(
  * @param {number} quizId - The ID of the quiz
  * @param {number} gamemId - gameId of the game user is trying to check status of 
  *
- * @returns {gameStatus: object | errorInterface} - Returns game status and info or 
+ * @returns {{
+ *   state: string,
+ *   atQuestion: number,
+ *   players: string[],
+ *   metadata: {
+ *     quizId: number,
+ *     name: string,
+ *     timeCreated: number,
+ *     timeLastEdited: number,
+ *     description: string,
+ *     numQuestions: number,
+ *     questions: questionInterface[],
+ *     timeLimit: number,
+ *     thumbnailUrl: string
+ *     }
+ * }| errorInterface} - Returns game status and info or 
  * error object
  */
 export function adminQuizGameStatus(
@@ -715,15 +730,9 @@ export function playerQuestionResults(
  *
  * @param {number} playerId - The ID of the player requesting results
  *
- * @returns {{
-*   usersRankedByScore: usersRankedByScoreInterface[],
-*   questionResults: {
-*     questionId: number,
-*     playersCorrect: number[],
-*     averageAnswerTime: number,
-*     percentCorrect: number
-*   }[]
-* } | errorInterface} - Returns  object containing final results for game, or an 
+ * @returns {usersRankedByScore: usersRankedByScoreInterface[], questionResults: 
+ * Partial<questionResultsInterface>[]
+*   | errorInterface} - Returns  object containing final results for game, or an 
 * error if the player or game is invalid.
 */
 export function playerFinalResults(playerId: number) {
