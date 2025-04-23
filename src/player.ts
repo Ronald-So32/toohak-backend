@@ -128,6 +128,18 @@ export function adminQuizGameStart(
   return { gameId: id };
 }
 
+
+/**
+ * Allows user to update game state
+ *
+ * @param {number} userId - The ID of the user updating game state
+ * @param {number} quizId - The ID of the quiz
+ * @param {number} gamemId - gameId of the game user is trying to update
+ * @param {string} action - Action given by user to change game state
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns either an empty
+ * object on success or an error object
+ */
 export function adminQuizGameUpdate(
   userId: number,
   quizId: number,
