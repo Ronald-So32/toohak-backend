@@ -148,8 +148,12 @@ export interface quizGetDetailsInterface {
   }
 }
 
+/**
+ * Export offset for quizId, userId, etc used in test cases for Id tests
+ *
+ * @constant {number} idOffset - Added to valid id to test invalid id cases
+ */
 export const idOffset: number = 727727;
-
 
 /**
  * Enum for game states
