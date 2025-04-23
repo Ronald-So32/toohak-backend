@@ -180,7 +180,7 @@ export enum actions {
 }
 
 /**
- * Class for defining errors in 
+ * Class for defining errors in quizzes, questions, game etc.
  *
  * @class Errors 
  */
