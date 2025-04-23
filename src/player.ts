@@ -627,6 +627,20 @@ export function playerQuestion(
   };
 }
 
+/**
+ * Retrieves results of a question for a given player 
+ *
+ * @param {number} playerId - The ID of the player 
+ * @param {number} questionPosition - The position of the question in the quiz
+ *
+ * @returns {{
+*   questionId: number,
+*   playersCorrect: number[],
+*   averageAnswerTime: number,
+*   percentCorrect: number
+* } | errorInterface} - Returns an object containing question results or an error 
+* object if the request is invalid.
+*/
 export function playerQuestionResults(
   playerId: number,
   questionPosition: number
