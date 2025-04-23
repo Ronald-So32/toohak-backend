@@ -137,7 +137,7 @@ export function adminQuizCreate(
   // Checks if the name of the quiz is valid
   validQuizName(name);
 
-  // Checks if the name is already in use
+  // Checks if the name is already in use by the current user
   const duplicate = data.quizzes.some(
     (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
   );
@@ -224,6 +224,15 @@ export function adminQuizRemove(
   return {};
 }
 
+/**
+ * Version 2 implementation of removing a quiz - checks for active games first
+ *
+ * @param {number} userId - ID of the user attempting to remove the quiz
+ * @param {number} quizId - ID of the quiz to be removed
+ *
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist, user isn't the owner, or active games exist
+ */
 export function adminQuizRemoveV2(
   userId: number,
   quizId: number
