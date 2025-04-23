@@ -122,7 +122,7 @@ export function load(): void {
 /**
  * Example get request
  * 
- * @returns {object} - JSON object withechoed string or an error message
+ * @returns {object} - JSON object with echoed string or an error message
  */
 app.get('/echo', (req: Request, res: Response) => {
   const result = echo(req.query.echo as string);
@@ -158,7 +158,7 @@ app.delete('/v1/clear', (req: Request, res: Response) => {
  * - nameFirst: string — User's first name
  * - nameLast: string — User's last name
  * 
- * @returns {object} - { session: string } on success
+ * @returns {object} - Return reuslt on success 
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
@@ -183,7 +183,7 @@ app.post('/v1/admin/auth/register', (req: Request, res: Response) => {
  * - email: string — user's email address
  * - password: string — user's password
  * 
- * @returns {object} - { session: string } on successful login
+ * @returns {object} - Return result object on success 
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
@@ -206,7 +206,7 @@ app.post('/v1/admin/auth/login', (req: Request, res: Response) => {
  * Request Headers:
  * - session: string — Session token identifying the user
  * 
- * @returns {object} - { user: userDetailsInterface } on success
+ * @returns {object} - Return user details on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/admin/user/details', (req: Request, res: Response) => {
@@ -296,7 +296,7 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
  * - name: string — Name of quiz
  * - description: string — Description of quiz
  * 
- * @returns {object} - { quizId: number } on success
+ * @returns {object} - Return result on success 
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/quiz', (req: Request, res: Response) => {
@@ -314,7 +314,17 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
   }
 });
 
-// GET /v1/admin/quiz/list
+/**
+ * GET /v1/admin/quiz/list route 
+ * 
+ * Get list of all quizzes created by the currently authenticated admin user
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * @returns {object} - Return result on success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
