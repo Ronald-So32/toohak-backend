@@ -148,7 +148,7 @@ export function adminQuizGameUpdate(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-  // Check if game exists
+  // Check if game exists in given quiz
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -301,7 +301,7 @@ export function adminQuizGameStatus(
   const data = getData();
 
   findQuizByUser(userId, quizId);
-  // Check if game exists
+  // Check if game exists in give quiz 
   const game = data.games.find(
     g => g.gameId === gameId && g.metadata.quizId === quizId
   );
@@ -538,7 +538,7 @@ export function playerJoin(
  */
 export function playerStatus(playerid: number) {
   const data = getData();
-  // Check if game exists
+  // Check if given player exists in games
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerid)
   );
@@ -562,7 +562,7 @@ export function playerQuestion(
   questionPosition: number
 ) {
   const data = getData();
-
+  // Check player exists in games
   const game = data.games.find(g =>
     g.playersWithId?.some(p => p.playerId === playerId)
   );
