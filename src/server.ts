@@ -296,7 +296,7 @@ app.put('/v1/admin/user/password', (req: Request, res: Response) => {
  * - name: string — Name of quiz
  * - description: string — Description of quiz
  * 
- * @returns {object} - Return result on success 
+ * @returns {object} - Return quizId on success 
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.post('/v1/admin/quiz', (req: Request, res: Response) => {
@@ -322,7 +322,7 @@ app.post('/v1/admin/quiz', (req: Request, res: Response) => {
  * Request Headers:
  * - session: string — Session token identifying the user
  * 
- * @returns {object} - Return result on success
+ * @returns {object} - Return quiz list on success
  * @returns {object} - { error: string } on failure, with associated status code
  */
 app.get('/v1/admin/quiz/list', (req: Request, res: Response) => {
@@ -456,7 +456,23 @@ app.get('/v2/admin/quiz/:quizid', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/quiz/{quizid}/question
+/**
+ * POST /v1/admin/quiz/:quizid/question route
+ * 
+ * Creates a new question within a in quiz with given quizId
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz where question will be added
+ * 
+ * Request Body:
+ * - questionBody: object — Quesiton details
+ * 
+ * @returns {object} - { questionId: number } on successful creation
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -474,7 +490,23 @@ app.post('/v1/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   }
 });
 
-// POST /v2/admin/quiz/{quizid}/question
+/**
+ * POST /v1/admin/quiz/:quizid/question route
+ * 
+ * Creates a new question within a in quiz with given quizId
+ * 
+ * Request Headers:
+ * - session: string — Session token identifying the user
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz where question will be added
+ * 
+ * Request Body:
+ * - questionBody: object — Quesiton details
+ * 
+ * @returns {object} - { questionId: number } on successful creation
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -492,7 +524,23 @@ app.post('/v2/admin/quiz/:quizid/question', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/name
+/**
+ * PUT /v1/admin/quiz/:quizid/name route
+ * 
+ * Updates the name of a specified quiz
+ * 
+ * Request Headers:
+ * - session: string — Authenticated user's session token
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to be updated
+ * 
+ * Request Body:
+ * - name: string — New name for the quiz
+ * 
+ * @returns {Record<string, never>} - Return nothing upon success
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -509,7 +557,23 @@ app.put('/v1/admin/quiz/:quizid/name', (req: Request, res: Response) => {
   }
 });
 
-// PUT /v1/admin/quiz/{quizid}/description
+/**
+ * PUT /v1/admin/quiz/:quizid/description route
+ * 
+ * Updates the description of a specified quiz with given quizId
+ * 
+ * Request Headers:
+ * - session: string — Authenticated user's session token
+ * 
+ * Request Params:
+ * - quizid: number — ID of the quiz to update
+ * 
+ * Request Body:
+ * - description: string — New description for the quiz
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with an associated status code
+ */
 app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -526,7 +590,17 @@ app.put('/v1/admin/quiz/:quizid/description', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/auth/logout
+/**
+ * POST /v1/admin/auth/logout route
+ * 
+ * Logs out given user
+ * 
+ * Request Headers:
+ * - session: string — The session token of the user to be logged out
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with an appropriate status code
+ */
 app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   const session = req.headers.session as string;
 
@@ -539,7 +613,23 @@ app.post('/v1/admin/auth/logout', (req: Request, res: Response) => {
   }
 });
 
-// POST /v1/admin/quiz/{quizid}/transfer
+/**
+ * POST /v1/admin/quiz/:quizid/transfer route
+ * 
+ * Transfers ownership of a quiz to another based on email
+ * 
+ * Request Headers:
+ * - session: string — The session token of the current quiz owner
+ * 
+ * Request Body:
+ * - userEmail: string — Email address of new owner
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz to transfer
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
@@ -556,7 +646,23 @@ app.post('/v1/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   }
 });
 
-// POST /v2/admin/quiz/{quizid}/transfer
+/**
+ * POST /v1/admin/quiz/:quizid/transfer route
+ * 
+ * Transfers ownership of a quiz to another based on email
+ * 
+ * Request Headers:
+ * - session: string — The session token of the current quiz owner
+ * 
+ * Request Body:
+ * - userEmail: string — Email address of new owner
+ * 
+ * Path Parameters:
+ * - quizid: number — ID of the quiz to transfer
+ * 
+ * @returns {Record<string, never>} - Return nothing on success 
+ * @returns {object} - { error: string } on failure, with associated status code
+ */
 app.post('/v2/admin/quiz/:quizid/transfer', (req: Request, res: Response) => {
   const session = req.headers.session as string;
   const quizId = parseInt(req.params.quizid);
