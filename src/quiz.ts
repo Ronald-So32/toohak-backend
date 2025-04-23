@@ -398,7 +398,7 @@ export function adminQuizQuestionCreate(
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
-  
+
   // Updates the count for numbers of questions in quiz
   quiz.numQuestions += 1;
 
@@ -407,6 +407,17 @@ export function adminQuizQuestionCreate(
   };
 }
 
+/**
+ * V2 implementation of question creation that includes thumbnail validation
+ *
+ * @param {number} userId - The ID of the user creating the question
+ * @param {number} quizId - The ID of the quiz to add the question to
+ * @param {questionsInterface} questionBody - The question details including
+ * text, time limit, points, answers, and thumbnail URL
+ *
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or parameters are invalid
+ */
 export function adminQuizQuestionCreateV2(
   userId: number,
   quizId: number,
