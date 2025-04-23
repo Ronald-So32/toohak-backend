@@ -7,7 +7,6 @@ import {
   createUUID,
   Errors,
   quizStates,
-  errorInterface
 } from './functionsHelper';
 import {
   adminQuizCreate,
