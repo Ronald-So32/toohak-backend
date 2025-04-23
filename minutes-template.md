@@ -262,3 +262,23 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * 
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 12                                    |
+| --------- | ------------------------------------- |
+| Date/time | 23/04 16:15                           |
+|   Week    | 10                                    |
+| Attendees | Brian, Weiming, Ronald, Justin, Sagar                       |
+
+### Agenda
+| Item                       | Discussion/decision                         |
+| -------------------------- | ------------------------------------------- |
+| Keeping Track              | Checkin with their progress | 
+| Assigning task             | Allocated what ever task for what ever is not done            |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
