@@ -701,8 +701,8 @@ export function adminQuizQuestionMove(
  * @param {string} quizDescription - The description of the quiz
  * @param {string} HUGGINGFACE_API_TOKEN - The API token for HuggingFace
  *
- * @returns {{ question: string } | errorInterface} - Returns either the generated
- * question or an error object
+ * @returns {{ question: string }} - Object containing the generated question
+ * @throws {BetterError} - If API call fails or returns invalid response
  */
 export function adminQuizQuestionSuggestion(
   quizName: string,
