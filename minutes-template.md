@@ -179,3 +179,106 @@ Please note this is a a guide/template which you do not need to use.
 
 ### Questions for tutor
 * Do we need to add defaults to the question create?
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 8                                                  |
+| --------- | -------------------------------------------------- |
+| Date/time | 11/04 15:00                                        |
+|   Week    | 8                                                  |
+| Attendees | Brian, Justin, Ronald, Weiming                     |
+
+### Agenda
+| Item                       | Discussion/decision            |
+| -------------------------- | ------------------------------ |
+| Assigning task             | Allocated tasks to each person |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* Final presentation booking
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 9                                     |
+| --------- | ------------------------------------- |
+| Date/time | 14/04 14:30                           |
+|   Week    | 9                                     |
+| Attendees | Brian, Justin, Ronald, Weiming, Sagar |
+
+### Agenda
+| Item                       | Discussion/decision            |
+| -------------------------- | ------------------------------ |
+| Keeping Track              | Discussed our plans as a group | 
+| Assigning task             | Allocated tasks to each person |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 10                                     |
+| --------- | ------------------------------------- |
+| Date/time | 18/04 15:56                           |
+|   Week    | 9                                     |
+| Attendees | Brian, Justin, Ronald, Weiming, Sagar |
+
+### Agenda
+| Item                       | Discussion/decision                                                    |
+| -------------------------- | -----------------------------------------------------------------------|
+| Checking in                | Discussed what's been done and what needs to be done                   | 
+| Assigning task             | Allocated tasks that needs to be done which is organised after meeting |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
+
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 11                                    |
+| --------- | ------------------------------------- |
+| Date/time | 22/04 15:53                           |
+|   Week    | 10                                    |
+| Attendees | Brian, Weiming                        |
+
+### Agenda
+| Item                       | Discussion/decision                         |
+| -------------------------- | ------------------------------------------- |
+| Keeping Track              | Discussed the plans with just the two of us | 
+| Assigning task             | Allocated tasks to the two of us            |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
+
+--------------------------------------------------------------------------------
+
+| Meeting X | 12                                    |
+| --------- | ------------------------------------- |
+| Date/time | 23/04 16:15                           |
+|   Week    | 10                                    |
+| Attendees | Brian, Weiming, Ronald, Justin, Sagar                       |
+
+### Agenda
+| Item                       | Discussion/decision                         |
+| -------------------------- | ------------------------------------------- |
+| Keeping Track              | Checkin with their progress | 
+| Assigning task             | Allocated what ever task for what ever is not done            |
+
+### Action Items/reminders
+- [ ] 
+
+### Questions for tutor
+* 
