@@ -106,11 +106,28 @@ export interface sessionInterface {
   session: string;
 }
 
+/**
+ * Interface representing a player's score ranking
+ *
+ * @property {string} playerName - Nme of the player.
+ * @property {number} score - Score of the player
+ */
 export interface usersRankedByScoreInterface {
   playerName: string,
   score: number
 }
 
+/**
+ * Interface representing the result of a quiz question
+ *
+ * @property {number} questionId - ID of the question
+ * @property {string[]} playersCorrect - List of player names who answered correctly
+ * @property {string[]} playersIncorrect - List of player names who answered incorrectly
+ * @property {number[]} playersAnswerTime - List of answer times per player in seconds
+ * @property {number} averageAnswerTime - Average time players took to answer
+ * @property {number} totalAnswerTime - Total time taken by all players to answer
+ * @property {number} percentCorrect - Percentage of players who answered correctly
+ */
 export interface questionResultsInterface {
   questionId: number,
   playersCorrect: string[],
@@ -121,16 +138,41 @@ export interface questionResultsInterface {
   percentCorrect: number
 }
 
+/**
+ * Interface representing final results of a quiz game
+ *
+ * @property {usersRankedByScoreInterface[]} usersRankedByScore - Array of players ranked by socre
+ * @property {questionResultsInterface[]} questionResults - Array of question results
+ */
 export interface resultsInterface {
   usersRankedByScore: usersRankedByScoreInterface[];
   questionResults: questionResultsInterface[];
 }
 
+/**
+ * Interface representing a player with byname and ID
+ *
+ * @property {string} playerName - Name of the player
+ * @property {number} playerId - ID of the player
+ */
 export interface playersInterface{
   playerName: string;
   playerId: number;
 }
 
+/**
+ * Interface representing the structure of a game object
+ *
+ * @property {number} gameId - ID for the game (optional)
+ * @property {number} quizId - ID of the associated quiz (optional).
+ * @property {quizStates} state - State of the game
+ * @property {number} atQuestion - Current question index the game is at
+ * @property {string[]} players - List of player names in the game
+ * @property {playersInterface[]} playersWithId - Optional list of players with IDs
+ * @property {quizInterface} metadata - Metadata for the quiz current game is based on
+ * @property {number} autoStartNum - No. of players required to automatically start game (optional)
+ * @property {resultsInterface} results - Results for the game
+ */
 export interface gameInterface {
   gameId?:number;
   quizId?: number;
@@ -179,7 +221,6 @@ const data: Data = {
 
   activeTimers: {},
   timerTimeCreated: []
-
 };
 
 /**

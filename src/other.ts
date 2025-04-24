@@ -1,4 +1,5 @@
 import { getData } from './dataStore';
+import fs from 'fs';
 
 /**
  * Resets the application state to its initial empty state.
@@ -19,5 +20,7 @@ export function clear(): Record<string, never> {
   data.activeTimers = {};
   data.timerTimeCreated = [];
 
+  fs.rmSync('./csvResults', { recursive: true, force: true });
+  fs.rmSync('./jsonFiles', { recursive: true, force: true });
   return {};
 }

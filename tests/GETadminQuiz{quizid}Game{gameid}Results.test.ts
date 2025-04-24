@@ -19,13 +19,19 @@ import {
 
 import { describe } from 'node:test';
 
+// Define variables to store session token and IDs
 let session: string;
 let quizId: number;
 let questionId: number;
 let gameId: number;
 
+// Before each test clears the data then registers a user, creates a quiz with a question,
+// starts a game, and moves the game to FINAL_RESULTS state
 beforeEach(() => {
+  // Reset the application state before each test
   requestClear();
+
+  // Register a new admin user and extract the session token
   const responseRegister = requestAdminAuthRegister(
     'z7277272@ad.unsw.edu.au',
     'Password1',
@@ -33,14 +39,16 @@ beforeEach(() => {
     'Last'
   );
   session = responseRegister.body.session;
+
+  // Create a quiz for the logged-in user and extract the quiz ID
   const responseCreate = requestAdminQuizCreate(
     session,
     'Name',
     'Description'
   );
-
   quizId = responseCreate.body.quizId;
 
+  // Create a question with thumbnail URL for the quiz
   const reponseQuestionCreate = requestAdminQuizQuestionCreateV2(
     quizId,
     session,
@@ -65,9 +73,11 @@ beforeEach(() => {
   );
   questionId = reponseQuestionCreate.body.questionId;
 
+  // Start a game for the quiz with autoStartNum of 3
   const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
   gameId = responseGameStart.body.gameId;
 
+  // Move game through various states to FINAL_RESULTS
   requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.NEXT_QUESTION);
   requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.SKIP_COUNTDOWN);
   requestAdminQuizGameStateUpdate(quizId, gameId, session, actions.GO_TO_ANSWER);
@@ -76,11 +86,15 @@ beforeEach(() => {
 
 describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
   test('Testing the code 200 return value', () => {
+    // Get game results for a game in FINAL_RESULTS state
     const responseGetGameResult = requestAdminQuizGameResults(
       session,
       quizId,
       gameId
     );
+
+    // Verify the response contains the expected data structure
+    // with empty player list since no players joined
     expect(responseGetGameResult.body).toStrictEqual({
       usersRankedByScore: [],
       questionResults: [
@@ -97,28 +111,37 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
 
   describe('Testing for error responses', () => {
     test('Testing invalid game within quiz', () => {
+      // Attempt to get results for a non-existent game
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
         gameId + idOffset
       );
+
+      // Verify a bad request error is returned
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     test('Testing when game hasn\'t ended', () => {
+      // Start a new game that isn't in FINAL_RESULTS state
       const responseGameStart = requestAdminQuizGameStart(session, quizId, 3);
       gameId = responseGameStart.body.gameId;
+
+      // Attempt to get results for a game not in FINAL_RESULTS state
       const responseGetGameResult = requestAdminQuizGameResults(
         session,
         quizId,
         gameId
       );
+
+      // Verify a bad request error is returned
       expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
       expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.BADREQUEST);
     });
 
     describe('Testing status code of 401 return values', () => {
+      // Test multiple unauthorized scenarios using parametrized tests
       test.each([
         {
           session: session + 'Invalid Session',
@@ -129,11 +152,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           description: 'Empty session',
         }
       ])('$description', ({ session }) => {
+        // Attempt to get game results with invalid session credentials
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId,
           gameId
         );
+
+        // Verify an unauthorized error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.UNAUTHORISED);
       });
@@ -141,16 +167,20 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
 
     describe('Testing status code of 403 return values', () => {
       test('Testing when quiz is does not exist', () => {
+        // Attempt to get game results for a non-existent quiz
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId + idOffset,
           gameId
         );
+
+        // Verify a forbidden error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
 
       test('Testing when quiz is not owned by user', () => {
+        // Register a second user who doesn't own the quiz
         session = requestAdminAuthRegister(
           'z7277271@ad.unsw.edu.au',
           'Password1',
@@ -158,11 +188,14 @@ describe('Testing GET /v1/admin/quiz/{quizid}/game/{gameid}/results', () => {
           'Last'
         ).body.session;
 
+        // Attempt to get game results for a quiz not owned by this user
         const responseGetGameResult = requestAdminQuizGameResults(
           session,
           quizId,
           gameId
         );
+
+        // Verify a forbidden error is returned
         expect(responseGetGameResult.body).toStrictEqual({ error: expect.any(String) });
         expect(responseGetGameResult.statusCode).toStrictEqual(ErrorCodes.FORBIDDEN);
       });
