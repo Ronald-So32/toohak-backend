@@ -3,7 +3,10 @@ import {
   questionsInterface,
   answersInterface,
   quizInterface,
-  sessionInterface
+  sessionInterface,
+  usersRankedByScoreInterface,
+  questionResultsInterface,
+  gameInterface
 } from './dataStore';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -798,4 +801,52 @@ export function convertToCSV(arr: any) {
   return array.map(it => {
     return Object.values(it).toString();
   }).join('\n');
+}
+
+export function calculateGameResults(game: gameInterface): {
+  usersRankedByScore: usersRankedByScoreInterface[],
+  questionResults: questionResultsInterface[]
+} {
+  const results = {
+    usersRankedByScore: [] as usersRankedByScoreInterface[],
+    questionResults: [] as questionResultsInterface[]
+  };
+
+  const playerScores: Record<string, number> = {};
+  game.players.forEach((player:string) => {
+    playerScores[player] = 0;
+  });
+
+  for (const question of game.metadata.questions) {
+    const questionId = question.questionId;
+    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
+
+    if (questionResult.playersCorrect.length > 0) {
+      questionResult.averageAnswerTime = Math.round(
+        questionResult.totalAnswerTime /
+        (questionResult.playersCorrect.length + questionResult.playersIncorrect.length)
+      );
+
+      questionResult.percentCorrect = Math.round(
+        (questionResult.playersCorrect.length / game.players.length) * 100
+      );
+    }
+
+    questionResult.playersCorrect.forEach((player: string, index: number) => {
+      const position = index + 1;
+      const scalingFactor = 1 / position;
+      const questionScore = question.points * scalingFactor;
+      playerScores[player] += questionScore;
+    });
+
+    results.questionResults.push(questionResult);
+  }
+
+  results.usersRankedByScore = Object.entries(playerScores)
+    .map(([playerName, score]) => ({ playerName, score }))
+    .sort((a, b) => b.score - a.score);
+
+  game.results.usersRankedByScore = results.usersRankedByScore;
+
+  return results;
 }

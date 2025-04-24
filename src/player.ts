@@ -2,8 +2,6 @@ import {
   getData,
   gameInterface,
   resultsInterface,
-  usersRankedByScoreInterface,
-  questionResultsInterface
 } from './dataStore';
 import {
   Errors,
@@ -13,7 +11,8 @@ import {
   quizStates,
   gameIdInterface,
   createUUID,
-  actions
+  actions,
+  calculateGameResults
 } from './functionsHelper';
 
 // change types for all
@@ -384,55 +383,7 @@ export function adminQuizGameResults(
     );
   }
 
-  // From here
-  // Initialise results and player scores for each player
-  const results: {
-    usersRankedByScore: usersRankedByScoreInterface[];
-    questionResults: questionResultsInterface[];
-  } = {
-    usersRankedByScore: [],
-    questionResults: []
-  };
-
-  const playerScores: Record<string, number> = {};
-  game.players.forEach(player => {
-    playerScores[player] = 0;
-  });
-  // Calculate stats per question, avg time, players correct, etc., award points to
-  // correct players, rank players, store info into game data
-  for (const question of game.metadata.questions) {
-    const questionId = question.questionId;
-    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
-
-    if (questionResult.playersCorrect.length > 0) {
-      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
-      (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
-
-      questionResult.percentCorrect = Math.round(
-        (questionResult.playersCorrect.length / game.players.length) * 100
-      );
-    }
-
-    questionResult.playersCorrect.forEach((player, index) => {
-      const position = index + 1;
-      const scalingFactor = 1 / position;
-      const points = question.points;
-      const questionScore = points * scalingFactor;
-
-      playerScores[player] += questionScore;
-    });
-
-    results.questionResults.push(questionResult);
-  }
-
-  results.usersRankedByScore = Object.entries(playerScores)
-    .map(([playerName, score]) => ({ playerName, score }))
-    .sort((a, b) => b.score - a.score);
-
-  game.results.usersRankedByScore = results.usersRankedByScore;
-  // To Here
-  // Should be moved into a helper that updates the results every state
-  // Could be optimised to not overwrite and recalcate if possible
+  const results = calculateGameResults(game);
 
   return {
     usersRankedByScore: results.usersRankedByScore,
@@ -754,56 +705,8 @@ export function playerFinalResults(playerId: number) {
     );
   }
 
-  // From here
-  const results: {
-    usersRankedByScore: usersRankedByScoreInterface[];
-    questionResults: questionResultsInterface[];
-  } = {
-    usersRankedByScore: [],
-    questionResults: []
-  };
+  const results = calculateGameResults(game);
 
-  const playerScores: Record<string, number> = {};
-  game.players.forEach(player => {
-    playerScores[player] = 0;
-  });
-
-  for (const question of game.metadata.questions) {
-    const questionId = question.questionId;
-    const questionResult = game.results.questionResults.find(qr => qr.questionId === questionId);
-
-    if (questionResult.playersCorrect.length > 0) {
-      questionResult.averageAnswerTime = Math.round(questionResult.totalAnswerTime /
-      (questionResult.playersCorrect.length + questionResult.playersIncorrect.length));
-    }
-
-    if (questionResult.playersCorrect.length > 0) {
-      questionResult.percentCorrect = Math.round(
-        (questionResult.playersCorrect.length / game.players.length) * 100
-      );
-    }
-
-    questionResult.playersCorrect.forEach((player, index) => {
-      const position = index + 1;
-      const scalingFactor = 1 / position;
-      const points = question.points;
-      const questionScore = points * scalingFactor;
-
-      playerScores[player] += questionScore;
-    });
-
-    results.questionResults.push(questionResult);
-  }
-
-  results.usersRankedByScore = Object.entries(playerScores)
-    .map(([playerName, score]) => ({ playerName, score }))
-    .sort((a, b) => b.score - a.score);
-
-  game.results.usersRankedByScore = results.usersRankedByScore;
-  // To Here
-  // Should be moved into a helper that updates the results every state
-  // Could be optimised to not overwrite and recalcate if possible
-  // Return usersRankedByScore and questionResults
   return {
     usersRankedByScore: results.usersRankedByScore,
     questionResults: results.questionResults.map(qr => ({
