@@ -2,8 +2,6 @@ import {
   getData,
   gameInterface,
   resultsInterface,
-  usersRankedByScoreInterface,
-  questionResultsInterface
 } from './dataStore';
 import {
   Errors,

@@ -803,7 +803,6 @@ export function convertToCSV(arr: any) {
   }).join('\n');
 }
 
-
 export function calculateGameResults(game: gameInterface): {
   usersRankedByScore: usersRankedByScoreInterface[],
   questionResults: questionResultsInterface[]
