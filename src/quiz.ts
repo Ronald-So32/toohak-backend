@@ -31,9 +31,8 @@ import request from 'sync-request-curl';
  *
  * @param {number} userId - The ID of the user
  *
- * @returns {{ quizzes: quizSummariesInterface[] } | errorInterface} - Always returns
- * an object, quizzes with an array of quizSummariesInterface inside of it unless
- * there is an error which returns errorInterface
+ * @returns {{ quizzes: quizSummariesInterface[] }} - Object containing an array of quiz summaries
+ * owned by the specified user
  */
 export function adminQuizList(
   userId: number
@@ -59,8 +58,8 @@ export function adminQuizList(
  * @param {number} userId - The ID of the user requesting the quiz
  * @param {number} quizId - The ID of the quiz to retrieve
  *
- * @returns {quizGetDetailsInterface | errorInterface} - Returns either the quiz
- * details or an error object
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, time limits, and other metadata
  */
 export function adminQuizGet(
   userId: number,
@@ -69,6 +68,7 @@ export function adminQuizGet(
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Return quiz
   return {
     details: {
       quizId: quiz.quizId,
@@ -83,6 +83,17 @@ export function adminQuizGet(
   };
 }
 
+/**
+ * V2 implementation to retrieve all information about a specific quiz,
+ * including thumbnail URL.
+ *
+ * @param {number} userId - The ID of the user requesting the quiz
+ * @param {number} quizId - The ID of the quiz to retrieve
+ *
+ * @returns {quizGetDetailsInterface} - Object containing detailed information about the quiz
+ * including questions, thumbnail URL, time limits, and other metadata
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
+ */
 export function adminQuizGetV2(
   userId: number,
   quizId: number
@@ -90,6 +101,7 @@ export function adminQuizGetV2(
   // Checks if the quiz exists and created by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Return quiz
   return {
     details: {
       quizId: quiz.quizId,
@@ -112,8 +124,8 @@ export function adminQuizGetV2(
  * @param {string} name - Name of the quiz
  * @param {string} description - Description of the quiz
  *
- * @returns {quizIdInterface | errorInterface} - Always return quizId object otherwise an
- * error object with relevant error message
+ * @returns {quizIdInterface} - Object containing the newly created quiz ID
+ * @throws {BetterError} - If name is invalid, already used, or description is too long
  */
 export function adminQuizCreate(
   userId: number,
@@ -125,7 +137,7 @@ export function adminQuizCreate(
   // Checks if the name of the quiz is valid
   validQuizName(name);
 
-  // Checks if the name is already in use
+  // Checks if the name is already in use by the current user
   const duplicate = data.quizzes.some(
     (quiz: quizInterface) => quiz.name === name && quiz.createdBy === userId
   );
@@ -177,8 +189,8 @@ export function adminQuizCreate(
  * @param {number} userId - Id of the user
  * @param {number} quizId - Id of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist or user isn't the owner
  */
 export function adminQuizRemove(
   userId: number,
@@ -212,6 +224,15 @@ export function adminQuizRemove(
   return {};
 }
 
+/**
+ * Version 2 implementation of removing a quiz - checks for active games first
+ *
+ * @param {number} userId - ID of the user attempting to remove the quiz
+ * @param {number} quizId - ID of the quiz to be removed
+ *
+ * @returns {Record<string, never>} - Empty object on successful removal
+ * @throws {BetterError} - If quiz doesn't exist, user isn't the owner, or active games exist
+ */
 export function adminQuizRemoveV2(
   userId: number,
   quizId: number
@@ -230,8 +251,8 @@ export function adminQuizRemoveV2(
  * @param {number} quizId - Id of the quiz
  * @param {string} name - The new name of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or name is invalid/already used
  */
 export function adminQuizNameUpdate(
   userId: number,
@@ -274,16 +295,18 @@ export function adminQuizNameUpdate(
  * @param {number} quizId - Id of the quiz
  * @param {string} description - The new description of the quiz
  *
- * @returns {Record<string, never> | errorInterface} - Always return an empty
- * object otherwise an error object with relevant error message
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or description is too long
  */
 export function adminQuizDescriptionUpdate(
   userId: number,
   quizId: number,
   description: string
 ): Record<string, never> {
+  // Check if the quiz exists and is owned by the user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Validate description length (maximum 100 characters)
   if (description.length > 100) {
     throw new BetterError(
       Errors.invalidString('Quiz description', Errors.Specific.Description.TOO_LONG).error,
@@ -294,6 +317,7 @@ export function adminQuizDescriptionUpdate(
   // Update the quiz description
   quiz.description = description;
 
+  // Update the last edited timestamp to current time
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
@@ -307,14 +331,16 @@ export function adminQuizDescriptionUpdate(
  * @param {questionsInterface} questionBody - The question details including
  * text, time limit, points, and answers
  *
- * @returns {questionIdInterface | errorInterface} - Returns either the new question
- * ID or an error object
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner,
+ * or question parameters are invalid
  */
 export function adminQuizQuestionCreate(
   userId: number,
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
+  // Check if quiz exists and belongs to the user
   const quiz = findQuizByUser(userId, quizId);
 
   const { question, timeLimit, points, answerOptions } = questionBody;
@@ -368,10 +394,12 @@ export function adminQuizQuestionCreate(
     points,
     answerOptions: updatedAnswerOptions
   };
+
   // Appends the new question to the questionsInterface array of current quiz
   quiz.questions.push(newQuestion);
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
   quiz.timeLimit += timeLimit;
+
   // Updates the count for numbers of questions in quiz
   quiz.numQuestions += 1;
 
@@ -380,12 +408,23 @@ export function adminQuizQuestionCreate(
   };
 }
 
+/**
+ * V2 implementation of question creation that includes thumbnail validation
+ *
+ * @param {number} userId - The ID of the user creating the question
+ * @param {number} quizId - The ID of the quiz to add the question to
+ * @param {questionsInterface} questionBody - The question details including
+ * text, time limit, points, answers, and thumbnail URL
+ *
+ * @returns {questionIdInterface} - Object containing the newly created question ID
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or parameters are invalid
+ */
 export function adminQuizQuestionCreateV2(
   userId: number,
   quizId: number,
   questionBody: questionsInterface
 ): questionIdInterface {
-  // Validate thumbnail
+  // Validate thumbnail URL not empty
   if (!questionBody.thumbnailUrl || questionBody.thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -395,6 +434,7 @@ export function adminQuizQuestionCreateV2(
 
   const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -402,6 +442,7 @@ export function adminQuizQuestionCreateV2(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnailUrl.endsWith('jpg') &&
     !thumbnailUrl.endsWith('jpeg') &&
     !thumbnailUrl.endsWith('png')) {
@@ -411,14 +452,16 @@ export function adminQuizQuestionCreateV2(
     );
   }
 
+  // Call the v1 function to create the question
   const v1 = adminQuizQuestionCreate(userId, quizId, questionBody);
 
+  // Get the quiz and newly created question
   const quiz = findQuizByUser(userId, quizId);
-
   const question = quiz.questions.find(
     (q: questionsInterface) => q.questionId === v1.questionId
   );
 
+  // Add the thumbnail URL to the question
   question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
@@ -431,8 +474,9 @@ export function adminQuizQuestionCreateV2(
  * @param {number} userId - The ID of the current owner
  * @param {string} userEmail - The email of the new owner
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner,
+ * target user invalid/self, or name conflict
  */
 export function adminQuizTransfer(
   quizId: number,
@@ -494,13 +538,25 @@ export function adminQuizTransfer(
   return {};
 }
 
+/**
+ * V2 implementation of quiz transfer that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz to transfer
+ * @param {number} userId - The ID of the current owner
+ * @param {string} userEmail - The email of the new owner
+ *
+ * @returns {Record<string, never>} - Empty object on successful transfer
+ * @throws {BetterError} - If active games exist or other transfer criteria not met
+ */
 export function adminQuizTransferV2(
   quizId: number,
   userId: number,
   userEmail: string
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with transfer
   adminQuizTransfer(quizId, userId, userEmail);
 
   return {};
@@ -513,8 +569,8 @@ export function adminQuizTransferV2(
  * @param {number} userId - The ID of the user deleting the question
  * @param {number} questionId - The ID of the question to delete
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or question doesn't exist
  */
 export function adminDeleteQuizQuestion(
   quizId: number,
@@ -534,6 +590,7 @@ export function adminDeleteQuizQuestion(
     );
   }
 
+  // Store the question before deleting for updating time limits
   const deletedQuestion = quiz.questions[validQuestionIndex];
 
   // Updates the time limit of the quiz after the questions deleted
@@ -547,13 +604,25 @@ export function adminDeleteQuizQuestion(
   return {};
 }
 
+/**
+ * V2 implementation of question deletion that checks for active games first
+ *
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} userId - The ID of the user deleting the question
+ * @param {number} questionId - The ID of the question to delete
+ *
+ * @returns {Record<string, never>} - Empty object on successful deletion
+ * @throws {BetterError} - If quiz has active games or other deletion criteria not met
+ */
 export function adminDeleteQuizQuestionV2(
   quizId: number,
   userId: number,
   questionId: number
 ): Record<string, never> {
+  // Check if there are any active games for this quiz
   checkActiveGames(quizId);
 
+  // If no active games, proceed with question deletion
   adminDeleteQuizQuestion(quizId, userId, questionId);
 
   return {};
@@ -567,8 +636,8 @@ export function adminDeleteQuizQuestionV2(
  * @param {number} questionId - The ID of the question to move
  * @param {number} newPosition - The new position for the question
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful move
+ * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner, or position is invalid
  */
 export function adminQuizQuestionMove(
   quizId: number,
@@ -576,9 +645,10 @@ export function adminQuizQuestionMove(
   questionId: number,
   newPosition: number
 ): Record<string, never> {
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
-  // Position is less than 0
+  // Validate position is not negative
   if (newPosition < 0) {
     throw new BetterError(
       Errors.invalidString('Position', Errors.Specific.Position.TOO_SHORT).error,
@@ -606,6 +676,7 @@ export function adminQuizQuestionMove(
     );
   }
 
+  // Check if question exists in the quiz
   if (validQuestionIndex === -1) {
     throw new BetterError(
       Errors.invalidQuestion().error,
@@ -613,11 +684,13 @@ export function adminQuizQuestionMove(
     );
   }
 
+  // Store the question to move
   const question = quiz.questions[validQuestionIndex];
   // Changes the position of the questions
   quiz.questions.splice(validQuestionIndex, 1);
   quiz.questions.splice(newPosition, 0, question);
 
+  // Update the last edited timestamp
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};
@@ -630,8 +703,8 @@ export function adminQuizQuestionMove(
  * @param {string} quizDescription - The description of the quiz
  * @param {string} HUGGINGFACE_API_TOKEN - The API token for HuggingFace
  *
- * @returns {{ question: string } | errorInterface} - Returns either the generated
- * question or an error object
+ * @returns {{ question: string }} - Object containing the generated question
+ * @throws {BetterError} - If API call fails or returns invalid response
  */
 export function adminQuizQuestionSuggestion(
   quizName: string,
@@ -650,6 +723,7 @@ export function adminQuizQuestionSuggestion(
   
   Respond with just the question text, nothing else.`;
 
+  // API request to HuggingFace
   const response = request(
     'POST',
     'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -671,6 +745,7 @@ export function adminQuizQuestionSuggestion(
     return responseBody.status(error.statusCode).json({ error: error.message });
   }
 
+  // Extract just the generated question text
   const generatedQuestion = responseBody[0].generated_text;
 
   return { question: generatedQuestion };
@@ -684,8 +759,9 @@ export function adminQuizQuestionSuggestion(
  * @param {number} questionId - The ID of the question to update
  * @param {questionsInterface} questionBody - The new question details
  *
- * @returns {Record<string, never> | errorInterface} - Returns either an empty
- * object on success or an error object
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz/question doesn't exist, user isn't owner,
+ * or parameters are invalid
  */
 export function adminQuizQuestionUpdate(
   userId: number,
@@ -693,8 +769,10 @@ export function adminQuizQuestionUpdate(
   questionId: number,
   questionBody: questionsInterface
 ): Record<string, never> {
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Find the question in the quiz
   const questionIndex = quiz.questions.findIndex(
     (question: questionsInterface) => question.questionId === questionId
   );
@@ -707,8 +785,10 @@ export function adminQuizQuestionUpdate(
 
   const { question, timeLimit, points, answerOptions } = questionBody;
 
+  // Validate question string format and length
   validQuestionString(question);
 
+  // Validate answer options (quantity, length, uniqueness, has correct answer)
   validateAnswers(answerOptions);
   if (timeLimit <= 0) {
     throw new BetterError(
@@ -729,8 +809,10 @@ export function adminQuizQuestionUpdate(
     );
   }
 
+  // Validate points are within acceptable range
   validatePoints(points);
 
+  // Generate IDs and random colors for each answer option
   let answerId = 0;
   const updatedAnswerOptions = answerOptions.map((option: answersInterface) => {
     answerId++;
@@ -741,7 +823,7 @@ export function adminQuizQuestionUpdate(
     };
   });
 
-  // Update the question
+  // Update the question with new values
   quiz.questions[questionIndex] = {
     questionId,
     question,
@@ -750,12 +832,26 @@ export function adminQuizQuestionUpdate(
     answerOptions: updatedAnswerOptions
   };
 
+  // Update last edited timestamp
   quiz.timeLastEdited = Math.floor(Date.now() / 1000);
+
+  // Update total quiz time limit
   quiz.timeLimit = totalTime;
 
   return {};
 }
 
+/**
+ * V2 implementation of question update that includes thumbnail validation
+ *
+ * @param {number} userId - The ID of the user updating the question
+ * @param {number} quizId - The ID of the quiz containing the question
+ * @param {number} questionId - The ID of the question to update
+ * @param {questionsInterface} questionBody - The new question details with thumbnail
+ *
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If thumbnail is invalid or other update criteria not met
+ */
 export function adminQuizQuestionUpdateV2(
   userId: number,
   quizId: number,
@@ -764,7 +860,7 @@ export function adminQuizQuestionUpdateV2(
 ): Record<string, never> {
   const thumbnailUrl = questionBody.thumbnailUrl.toLowerCase();
 
-  // Validate thumbnail
+  // Validate thumbnail is not empty
   if (thumbnailUrl === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -772,6 +868,7 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnailUrl.startsWith('http://') && !thumbnailUrl.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -779,6 +876,7 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnailUrl.endsWith('jpg') &&
     !thumbnailUrl.endsWith('jpeg') &&
     !thumbnailUrl.endsWith('png')) {
@@ -788,24 +886,38 @@ export function adminQuizQuestionUpdateV2(
     );
   }
 
+  // Use v1 function to update the question
   const v1 = adminQuizQuestionUpdate(userId, quizId, questionId, questionBody);
 
+  // Get the quiz and updated question
   const quiz = findQuizByUser(userId, quizId);
 
   const question = quiz.questions.find(
     (q: questionsInterface) => q.questionId === questionId
   );
 
+  // Add the thumbnail URL to the questio
   question.thumbnailUrl = questionBody.thumbnailUrl;
 
   return v1;
 }
 
+/**
+ * Updates the thumbnail URL for a quiz
+ *
+ * @param {string} thumbnail - The URL of the new thumbnail
+ * @param {number} quizId - The ID of the quiz to update
+ * @param {number} userId - The ID of the user updating the quiz
+ *
+ * @returns {Record<string, never>} - Empty object on successful update
+ * @throws {BetterError} - If quiz doesn't exist, user isn't owner, or thumbnail URL is invalid
+ */
 export function adminQuizThumbnailUpdate(
   thumbnail: string,
   quizId: number,
   userId: number
 ): Record<string, never> {
+  // Validate thumbnail is not empty
   if (!thumbnail || thumbnail === '') {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.EMPTY).error,
@@ -813,6 +925,7 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Validate thumbnail URL starts with http:// or https://
   if (!thumbnail.startsWith('http://') && !thumbnail.startsWith('https://')) {
     throw new BetterError(
       Errors.invalidString('Thumbnail', Errors.Specific.Thumbnail.START).error,
@@ -820,6 +933,7 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Validate thumbnail URL ends with valid image extension
   if (!thumbnail.endsWith('jpg') &&
     !thumbnail.endsWith('jpeg') &&
     !thumbnail.endsWith('png')) {
@@ -829,10 +943,13 @@ export function adminQuizThumbnailUpdate(
     );
   }
 
+  // Check if quiz exists and belongs to user
   const quiz = findQuizByUser(userId, quizId);
 
+  // Update the quiz thumbnail URL
   quiz.thumbnailUrl = thumbnail;
 
+  // Update the last edited timestamp
   quiz.timeLastEdited = getCurrentTimestamp();
 
   return {};

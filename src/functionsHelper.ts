@@ -151,8 +151,18 @@ export interface quizGetDetailsInterface {
   }
 }
 
+/**
+ * Export offset for quizId, userId, etc used in test cases for Id tests
+ *
+ * @constant {number} idOffset - Added to valid id to test invalid id cases
+ */
 export const idOffset: number = 727727;
 
+/**
+ * Enum for game states
+ *
+ * @enum {string}
+ */
 export enum quizStates {
   LOBBY = 'LOBBY',
   QUESTION_COUNTDOWN = 'QUESTION_COUNTDOWN',
@@ -163,6 +173,11 @@ export enum quizStates {
   END = 'END'
 }
 
+/**
+ * Enum for valid actions used to change game state
+ *
+ * @enum {string}
+ */
 export enum actions {
   NEXT_QUESTION = 'NEXT_QUESTION',
   SKIP_COUNTDOWN = 'SKIP_COUNTDOWN',
@@ -171,6 +186,11 @@ export enum actions {
   END = 'END'
 }
 
+/**
+ * Class for defining errors in quizzes, questions, game etc.
+ *
+ * @class Errors
+ */
 export class Errors {
   // Specific validation reasons
   static readonly Specific = {
@@ -352,6 +372,11 @@ export class Errors {
   }
 }
 
+/**
+ * Enum for error codes
+ *
+ * @enum {number}
+ */
 export enum ErrorCodes {
   OK = 200,
   BADREQUEST = 400,
@@ -359,6 +384,15 @@ export enum ErrorCodes {
   FORBIDDEN = 403
 }
 
+/**
+ * Custom error class for returning errors with status codes.
+ *
+ * @class BetterError
+ * @extends {Error}
+ *
+ * @param {string} message - The error message to display.
+ * @param {number} statusCode - The HTTP status code associated with the error.
+ */
 export class BetterError extends Error {
   readonly statusCode: number;
 
@@ -443,7 +477,7 @@ export function validName(name: string, isFirst: boolean): void {
  *
  * @param {string} password - Intended password of user
  *
- * @returns {boolean | errorInterface} - Retursn true for valid password else an
+ * @returns {boolean | errorInterface} - Return true for valid password else an
  * object with relevant error message
  */
 export function validPassword(password: string): void {
@@ -724,6 +758,13 @@ export function findQuizByUser(userId: number, quizId: number): quizInterface {
   return quiz;
 }
 
+/**
+ * Hash a given password and return as hexadecimal string
+ *
+ * @param {string} password - password to be hashed
+ *
+ * @returns {string} - Returns a hexadecimal string that is the hashed password
+ */
 export function hashString(password: string): string {
   const shaObj = new JSSHA('SHA-512', 'TEXT');
   shaObj.update(password);
@@ -732,6 +773,14 @@ export function hashString(password: string): string {
   return hash;
 }
 
+/**
+ * Check active games in quiz with quizId
+ *
+ * @param {number} quizId - ID of quiz for checking active games in
+ *
+ * @returns {Record<string, never> | errorInterface} - Returns nothing if successful
+ * or error object if there is error
+ */
 export function checkActiveGames(quizId: number): void {
   const data = getData();
 
@@ -748,6 +797,13 @@ export function checkActiveGames(quizId: number): void {
   }
 }
 
+/**
+ * Converts array of objects into a Comma-Separated(CSV) values formatted string.
+ *
+ * @param {any[]} arr - An array of objects
+ *
+ * @returns {string} - CSV formatted string
+ */
 export function convertToCSV(arr: any) {
   const array = [Object.keys(arr[0])].concat(arr);
 
